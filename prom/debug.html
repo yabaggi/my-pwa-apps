@@ -132,7 +132,7 @@
             log('Checking Manifest...');
             
             try {
-                const response = await fetch('../manifest.json');
+                const response = await fetch('./manifest.json');
                 const manifest = await response.json();
                 
                 manifestDiv.innerHTML = `
