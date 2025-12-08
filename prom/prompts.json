@@ -1,0 +1,600 @@
+[
+  {
+    "id": 16,
+    "number": 16,
+    "category": "User Interface Modifications",
+    "prompt": "Add a responsive navigation bar to the top of the app, including links for Home, About, and Contact pages, using the existing header component as a base.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 17,
+    "number": 17,
+    "category": "User Interface Modifications",
+    "prompt": "Remove the sidebar menu from the dashboard view and replace it with a collapsible accordion layout for better mobile compatibility.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 18,
+    "number": 18,
+    "category": "User Interface Modifications",
+    "prompt": "Modify the login form by adding a password visibility toggle icon next to the password field, ensuring it switches between text and password input types.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 19,
+    "number": 19,
+    "category": "User Interface Modifications",
+    "prompt": "Insert an image carousel in the product gallery section, supporting swipe gestures and auto-play, integrated with the current grid layout.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 20,
+    "number": 20,
+    "category": "User Interface Modifications",
+    "prompt": "Adjust the footer layout to include social media icons aligned to the right, with hover effects, while keeping the copyright text centered.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 21,
+    "number": 21,
+    "category": "User Interface Modifications",
+    "prompt": "Add a modal popup for user confirmation on delete actions, triggered by the existing delete button, with customizable title and message.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 22,
+    "number": 22,
+    "category": "User Interface Modifications",
+    "prompt": "Reposition the search bar from the header to a sticky position at the top of the results page, with a close button for mobile devices.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 23,
+    "number": 23,
+    "category": "User Interface Modifications",
+    "prompt": "Convert the static table in the data view to a sortable, paginated list with filter dropdowns for columns like date and status.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 24,
+    "number": 24,
+    "category": "Styling and Theming",
+    "prompt": "Update the primary color scheme to a dark mode theme, changing background to #121212, text to #ffffff, and accents to #bb86fc, applying it globally with CSS variables.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 25,
+    "number": 25,
+    "category": "Styling and Theming",
+    "prompt": "Increase font sizes across all headings by 20% and body text by 10%, using a sans-serif font like Inter for better readability, while maintaining line-height at 1.5.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 26,
+    "number": 26,
+    "category": "Styling and Theming",
+    "prompt": "Adjust spacing in the card components by adding 16px margins between elements and 8px padding inside, ensuring consistency with the overall grid system.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 27,
+    "number": 27,
+    "category": "Styling and Theming",
+    "prompt": "Apply a gradient background to the hero section, from #667eea to #764ba2, with a subtle overlay for text contrast, and animate the fade-in on page load.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 28,
+    "number": 28,
+    "category": "Styling and Theming",
+    "prompt": "Switch the button styles to rounded corners (border-radius: 8px) with a shadow effect on hover, using the current primary color but with 0.2 opacity transition.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 29,
+    "number": 29,
+    "category": "Styling and Theming",
+    "prompt": "Implement a responsive theme toggle button that switches between light and dark modes, storing the preference in localStorage and updating root CSS classes.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 30,
+    "number": 30,
+    "category": "Styling and Theming",
+    "prompt": "Reduce element sizes on mobile by scaling down images to 100% width with max-height: 300px, and adjust button padding to 12px for touch-friendly interactions.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 31,
+    "number": 31,
+    "category": "Styling and Theming",
+    "prompt": "Customize the loading spinner with a blue theme (#007bff), 4px border width, and 1s rotation speed, replacing the default in all async components.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 1,
+    "number": 1,
+    "category": "Challenge my thinking",
+    "prompt": "Here’s what I’m planning: [insert your idea, plan, or strategy]. Act as a critical thinker. Question my assumptions, logic, or blind spots — but don’t rewrite anything. I want to stress-test my own thinking, not get new ideas.",
+    "placeholders": [
+      "[insert your idea, plan, or strategy]"
+    ],
+    "subcat": "initial prompts"
+  },
+  {
+    "id": 2,
+    "number": 2,
+    "category": "Reframe through a different lens",
+    "prompt": "Here’s the core idea I’m working with: [insert your idea]. Help me reframe it through a different lens — like a new audience POV, emotional trigger, or brand positioning angle.",
+    "placeholders": [
+      "[insert your idea]"
+    ],
+    "subcat": "initial prompts"
+  },
+  {
+    "id": 3,
+    "number": 3,
+    "category": "Surface the deeper question",
+    "prompt": "Here’s the situation I’m thinking through: [insert idea or challenge]. Help me uncover the real strategic question underneath this. What should I actually be asking myself?",
+    "placeholders": [
+      "[insert idea or challenge]"
+    ],
+    "subcat": "initial prompts"
+  },
+  {
+    "id": 4,
+    "number": 4,
+    "category": "Translate my gut feeling",
+    "prompt": "Something about this feels off, but I can’t explain why: [describe the situation, message, or tactic]. Help me put words to the tension I’m sensing. What might be misaligned or unclear?",
+    "placeholders": [
+      "[describe the situation, message, or tactic]"
+    ],
+    "subcat": "initial prompts"
+  },
+  {
+    "id": 5,
+    "number": 5,
+    "category": "Find the second-order effects",
+    "prompt": "Here’s the decision or idea I’m considering: [insert]. Help me think through the second- and third-order consequences — what might happen after the obvious outcomes?",
+    "placeholders": [
+      "[insert]"
+    ],
+    "subcat": "initial prompts"
+  },
+  {
+    "id": 6,
+    "number": 6,
+    "category": "Reveal the unseen variable",
+    "prompt": "Here’s the plan or situation I’m analyzing: [insert]. What critical factor might I be overlooking — the hidden variable that could completely change the outcome if noticed?",
+    "placeholders": [
+      "[insert]"
+    ],
+    "subcat": "initial prompts"
+  },
+  {
+    "id": 7,
+    "number": 7,
+    "category": "Extract the core principle",
+    "prompt": "Here’s something that worked (or failed): [describe it]. Help me extract the underlying principle so I can apply it elsewhere.",
+    "placeholders": [
+      "[describe it]"
+    ],
+    "subcat": "initial prompts"
+  },
+  {
+    "id": 8,
+    "number": 8,
+    "category": "Reverse-engineer my instinct",
+    "prompt": "Here’s my idea, and it feels right to me: [insert idea or insight]. Help me unpack why this might make sense — even if I can’t fully explain it yet.",
+    "placeholders": [
+      "[insert idea or insight]"
+    ],
+    "subcat": "initial prompts"
+  },
+  {
+    "id": 9,
+    "number": 9,
+    "category": "Find the hidden pattern",
+    "prompt": "Here are a few examples or situations I’ve noticed: [describe them]. Help me identify the hidden pattern or principle connecting them.",
+    "placeholders": [
+      "[describe them]"
+    ],
+    "subcat": "initial prompts"
+  },
+  {
+    "id": 10,
+    "number": 10,
+    "category": "Think in reverse",
+    "prompt": "Here’s my goal: [insert]. Instead of moving forward, walk me backward from the desired result — what would need to be true at each step for this to succeed?",
+    "placeholders": [
+      "[insert]"
+    ],
+    "subcat": "initial prompts"
+  },
+  {
+    "id": 11,
+    "number": 11,
+    "category": "Validate my app idea",
+    "prompt": "Here’s my app idea: [describe it]. Act as a product strategist. Tell me if it solves a real problem, who would use it, and what early validation steps I should take.",
+    "placeholders": [
+      "[describe it]"
+    ],
+    "subcat": "initial prompts"
+  },
+  {
+    "id": 12,
+    "number": 12,
+    "category": "Define my MVP",
+    "prompt": "Here’s my app concept: [describe it]. Help me list only the essential features for an MVP — what’s the smallest version that still delivers real value?",
+    "placeholders": [
+      "[describe it]"
+    ],
+    "subcat": "initial prompts"
+  },
+  {
+    "id": 13,
+    "number": 13,
+    "category": "Clarify my user journey",
+    "prompt": "Here’s what my app does: [describe it]. Map the ideal user flow from first open to main goal. Where could users drop off or get confused?",
+    "placeholders": [
+      "[describe it]"
+    ],
+    "subcat": "initial prompts"
+  },
+  {
+    "id": 15,
+    "number": 15,
+    "category": "Spot growth levers early",
+    "prompt": "Here’s my app’s main function: [describe]. Help me find 3 low-cost ways to attract first users and get feedback before launch.",
+    "placeholders": [
+      "[describe]"
+    ],
+    "subcat": "initial prompts"
+  },
+  {
+    "id": 14,
+    "number": 14,
+    "category": "Find the technical stack fit",
+    "prompt": "Here’s what I want my app to do: [describe core functions]. Suggest the simplest and cheapest tech stack (frontend, backend, database, hosting) that fits my needs.",
+    "placeholders": [
+      "[describe core functions]"
+    ],
+    "subcat": "initial prompts"
+  },
+  {
+    "id": 32,
+    "number": 32,
+    "category": "Functional Enhancements",
+    "prompt": "Integrate a real-time chat feature using WebSockets, adding a chat window to the user profile page with message sending and emoji support.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 33,
+    "number": 33,
+    "category": "Functional Enhancements",
+    "prompt": "Add user authentication via Firebase, including signup, login, and logout flows, securing the dashboard route to require valid tokens.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 34,
+    "number": 34,
+    "category": "Functional Enhancements",
+    "prompt": "Implement drag-and-drop functionality for reordering items in the task list, updating the backend API on drop completion with optimistic updates.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 35,
+    "number": 35,
+    "category": "Functional Enhancements",
+    "prompt": "Add export options to the reports page, allowing CSV and PDF downloads of the table data using libraries like PapaParse and jsPDF.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 36,
+    "number": 36,
+    "category": "Functional Enhancements",
+    "prompt": "Integrate Google Maps API for location-based search in the e-commerce app, displaying markers and directions from user input.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 37,
+    "number": 37,
+    "category": "Functional Enhancements",
+    "prompt": "Enhance the form validation with real-time feedback, adding email regex checks and password strength metering before submission.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 38,
+    "number": 38,
+    "category": "Functional Enhancements",
+    "prompt": "Add offline support using Service Workers, caching static assets and showing a fallback UI when the network is unavailable.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 39,
+    "number": 39,
+    "category": "Functional Enhancements",
+    "prompt": "Implement push notifications for order updates, using the Web Push API to alert users on new statuses like \"shipped\" or \"delivered\".",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 40,
+    "number": 40,
+    "category": "Error Handling and Debugging",
+    "prompt": "Identify and fix any console errors in the current code, particularly related to undefined variables in the fetch API calls, and add try-catch blocks around async functions.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 41,
+    "number": 41,
+    "category": "Error Handling and Debugging",
+    "prompt": "Improve input validation in the contact form by checking for empty fields, invalid emails, and file size limits, displaying inline error messages in red.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 42,
+    "number": 42,
+    "category": "Error Handling and Debugging",
+    "prompt": "Add comprehensive error logging to Sentry for all API endpoints, capturing stack traces and user context without exposing sensitive data.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 43,
+    "number": 43,
+    "category": "Error Handling and Debugging",
+    "prompt": "Debug the infinite loop in the state update hook, refactoring it to use useCallback and memoization to prevent unnecessary re-renders.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 44,
+    "number": 44,
+    "category": "Error Handling and Debugging",
+    "prompt": "Enhance error messages for network failures by checking response status codes (e.g., 404 for not found, 500 for server error) and showing user-friendly alerts.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 45,
+    "number": 45,
+    "category": "Error Handling and Debugging",
+    "prompt": "Fix accessibility issues in form submissions by ensuring error states are announced via ARIA-live regions for screen readers.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 46,
+    "number": 46,
+    "category": "Error Handling and Debugging",
+    "prompt": "Add fallback handling for third-party API failures, like image loading errors, by displaying placeholder icons and retry buttons.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 47,
+    "number": 47,
+    "category": "Error Handling and Debugging",
+    "prompt": "Review and resolve any prop type warnings in React components, enforcing PropTypes and default values for optional props.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 48,
+    "number": 48,
+    "category": "Performance and Optimization",
+    "prompt": "Optimize image loading by implementing lazy loading with the loading=\"lazy\" attribute and adding WebP format support for faster page speeds.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 49,
+    "number": 49,
+    "category": "Performance and Optimization",
+    "prompt": "Reduce bundle size by code-splitting the large vendor chunks, using dynamic imports for heavy components like charts and modals.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 50,
+    "number": 50,
+    "category": "Performance and Optimization",
+    "prompt": "Improve search functionality by debouncing the input handler to 300ms, preventing excessive API calls during typing.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 51,
+    "number": 51,
+    "category": "Performance and Optimization",
+    "prompt": "Memoize expensive computations in the data processing function, using useMemo to cache results based on input dependencies.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 52,
+    "number": 52,
+    "category": "Performance and Optimization",
+    "prompt": "Compress CSS and JS files with minification and tree-shaking, targeting a sub-100KB initial load for the homepage.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 53,
+    "number": 53,
+    "category": "Performance and Optimization",
+    "prompt": "Add virtual scrolling to the long list component using react-window, rendering only visible items to handle 1000+ entries smoothly.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 54,
+    "number": 54,
+    "category": "Performance and Optimization",
+    "prompt": "Profile and fix memory leaks from event listeners in the modal component, ensuring proper cleanup on unmount.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 55,
+    "number": 55,
+    "category": "Performance and Optimization",
+    "prompt": "Enable server-side rendering for the initial page load, pre-rendering static content to improve Time to First Byte (TTFB).",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 56,
+    "number": 56,
+    "category": "Accessibility Improvements",
+    "prompt": "Add ARIA labels to all interactive elements, such as buttons and links, describing their purpose (e.g., aria-label=\"Close menu\") for screen reader users.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 57,
+    "number": 57,
+    "category": "Accessibility Improvements",
+    "prompt": "Ensure keyboard navigation support by adding focus management with tabIndex and onKeyDown handlers for arrow key controls in the menu.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 58,
+    "number": 58,
+    "category": "Accessibility Improvements",
+    "prompt": "Improve color contrast ratios to meet WCAG 2.1 AA standards, adjusting text colors against backgrounds (e.g., minimum 4.5:1 for normal text).",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 59,
+    "number": 59,
+    "category": "Accessibility Improvements",
+    "prompt": "Add alt text to all images dynamically based on context, and skip decorative images with empty alt attributes.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 60,
+    "number": 60,
+    "category": "Accessibility Improvements",
+    "prompt": "Implement skip links at the top of the page for direct navigation to main content, styled to be visible only on focus.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 61,
+    "number": 61,
+    "category": "Accessibility Improvements",
+    "prompt": "Enhance form elements with proper labeling using <label> and role=\"textbox\" for custom inputs, including error announcements.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 62,
+    "number": 62,
+    "category": "Accessibility Improvements",
+    "prompt": "Support reduced motion preferences by detecting prefers-reduced-motion media query and disabling animations in the CSS.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 63,
+    "number": 63,
+    "category": "Accessibility Improvements",
+    "prompt": "Audit and fix landmark roles (e.g., role=\"main\", role=\"navigation\") on page sections for better structure in assistive technologies.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 64,
+    "number": 64,
+    "category": "Content Updates",
+    "prompt": "Replace all placeholder text in the about page with actual company description: \"We are a leading AI development firm specializing in prompt engineering.\"",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 65,
+    "number": 65,
+    "category": "Content Updates",
+    "prompt": "Update product images in the catalog by swapping the current URLs with new high-res versions from /assets/new-products/, maintaining aspect ratios.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 66,
+    "number": 66,
+    "category": "Content Updates",
+    "prompt": "Revise the welcome message in the header to: \"Discover innovative AI tools for your next project,\" and translate it to Spanish as a toggle option.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 67,
+    "number": 67,
+    "category": "Content Updates",
+    "prompt": "Add dynamic content loading for blog posts, pulling titles and excerpts from a JSON file and rendering them in the feed component.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 68,
+    "number": 68,
+    "category": "Content Updates",
+    "prompt": "Update the footer links to point to new privacy policy (/privacy) and terms (/terms), with updated copyright year to 2025.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 69,
+    "number": 69,
+    "category": "Content Updates",
+    "prompt": "Replace static testimonials with fetched data from an API, displaying user names, quotes, and avatars in a slider format.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 70,
+    "number": 70,
+    "category": "Content Updates",
+    "prompt": "Modify error page content to include a friendly message: \"Oops! Page not found. Try searching or return home,\" with a search bar integration.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  },
+  {
+    "id": 71,
+    "number": 71,
+    "category": "Content Updates",
+    "prompt": "Refresh the FAQ section by adding three new questions and answers about AI ethics, data privacy, and integration guides, formatted as accordions.",
+    "placeholders": {},
+    "subcat": "followup prompts"
+  }
+]

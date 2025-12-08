@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prompt Explorer</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="theme-color" content="#2196f3">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Prompt Explo">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+</head>
+<body class="bg-gray-100 text-gray-900">
+
+  <!-- Hero Section -->
+  <header class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-10 text-center shadow-lg">
+    <h1 class="text-3xl font-bold mb-2">Prompt Explorer</h1>
+    <p class="text-lg opacity-90">Browse and copy ready-to-use AI prompts</p>
+  </header>
+
+  <!-- Dynamic Buttons -->
+  <section id="subcategory-buttons" class="flex flex-wrap justify-center gap-3 mt-6"></section>
+
+  <!-- Category Filter (for followup prompts) -->
+  <section id="category-section" class="flex justify-center mt-4 hidden">
+    <select id="category-dropdown" class="px-4 py-2 border rounded shadow">
+      <option value="">All Categories</option>
+    </select>
+  </section>
+
+  <!-- Prompt List -->
+  <main class="max-w-xl mx-auto mt-8 p-4" id="prompt-list">
+    <p class="text-center text-gray-600">Loading prompts...</p>
+  </main>
+
+  <!-- Data Logic -->
+  <script type="module">
+    // --- DOM Elements ---
+    const subcatButtonsContainer = document.getElementById("subcategory-buttons");
+    const categorySection = document.getElementById("category-section");
+    const categoryDropdown = document.getElementById("category-dropdown");
+    const promptList = document.getElementById("prompt-list");
+
+    let activeSubcat = null;
+    let allPrompts = [];
+
+    // --- Load data from JSON file ---
+    async function loadData() {
+      try {
+        const response = await fetch('prompts.json');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        allPrompts = await response.json();
+        loadSubcategories();
+      } catch (e) {
+        console.error("Failed to load prompts.json", e);
+        promptList.innerHTML = `<p class="text-red-500 text-center">Error loading prompts data.</p>`;
+      }
+    }
+
+    // --- Load distinct subcategories dynamically ---
+    function loadSubcategories() {
+      let subcats = [...new Set(allPrompts.map(d => d.subcat))];
+      
+      // Custom sort order: "initial prompts" first, then "followup prompts", then the rest alphabetically
+      subcats.sort((a, b) => {
+        if (a === "initial prompts") return -1;
+        if (b === "initial prompts") return 1;
+        if (a === "followup prompts" && b !== "initial prompts") return -1;
+        if (b === "followup prompts" && a !== "initial prompts") return 1;
+        return a.localeCompare(b);
+      });
+
+      renderSubcategoryButtons(subcats);
+
+      // Load the first subcategory by default
+      if (subcats.length > 0) {
+        loadPrompts(subcats[0]);
+        const firstBtn = document.querySelector(".subcat-btn");
+        if(firstBtn) setActiveButton(firstBtn);
+      }
+    }
+
+    // --- Render buttons for subcategories ---
+    function renderSubcategoryButtons(subcats) {
+      subcatButtonsContainer.innerHTML = subcats
+        .map(
+          (sub) => `
+          <button 
+            class="subcat-btn bg-gray-400 text-white px-4 py-2 rounded shadow transition-colors duration-200"
+            data-subcat="${sub}">
+            ${sub.charAt(0).toUpperCase() + sub.slice(1)}
+          </button>`
+        )
+        .join("");
+
+      // Add click events
+      document.querySelectorAll(".subcat-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const subcat = btn.getAttribute("data-subcat");
+          // Reset category dropdown when changing subcategory
+          categoryDropdown.value = "";
+          loadPrompts(subcat);
+          setActiveButton(btn);
+        });
+      });
+    }
+
+    // --- Highlight active subcategory button ---
+    function setActiveButton(activeBtn) {
+      document.querySelectorAll(".subcat-btn").forEach((btn) => {
+        btn.classList.remove("bg-blue-600");
+        btn.classList.add("bg-gray-400");
+      });
+      activeBtn.classList.add("bg-blue-600");
+      activeBtn.classList.remove("bg-gray-400");
+    }
+
+    // --- Load prompts based on subcategory and category (if followup) ---
+    function loadPrompts(subcat, selectedCategory = "") {
+      activeSubcat = subcat;
+      promptList.innerHTML = `<p class="text-center text-gray-600">Loading ${subcat}...</p>`;
+
+      const subcatPrompts = allPrompts.filter(p => p.subcat === subcat);
+
+      if (subcatPrompts.length === 0) {
+        promptList.innerHTML = `<p class="text-gray-600 text-center">No prompts found for "${subcat}".</p>`;
+        categorySection.classList.add("hidden");
+        return;
+      }
+
+      // If this is a followup prompt, show category dropdown
+      if (subcat.toLowerCase().includes("followup")) {
+        const categories = [...new Set(subcatPrompts.map(d => d.category))].sort();
+        renderCategoryDropdown(categories, selectedCategory);
+        categorySection.classList.remove("hidden");
+      } else {
+        categorySection.classList.add("hidden");
+      }
+
+      let dataToRender = subcatPrompts;
+      if (selectedCategory) {
+        dataToRender = subcatPrompts.filter(p => p.category === selectedCategory);
+      }
+
+      if (dataToRender.length > 0) {
+        renderPromptCards(dataToRender);
+      } else {
+        promptList.innerHTML = `<p class="text-gray-600 text-center">No prompts found for "${subcat}" with the selected filter.</p>`;
+      }
+    }
+
+    // --- Render category dropdown ---
+    function renderCategoryDropdown(categories, selectedCat = "") {
+      categoryDropdown.innerHTML = `<option value="">All Categories</option>`;
+      categories.forEach((cat) => {
+        const option = document.createElement("option");
+        option.value = cat;
+        option.textContent = cat;
+        categoryDropdown.appendChild(option);
+      });
+      
+      categoryDropdown.value = selectedCat;
+
+      if (!categoryDropdown.onchange) {
+          categoryDropdown.onchange = () => {
+            loadPrompts(activeSubcat, categoryDropdown.value);
+          };
+      }
+    }
+
+    // --- Render prompt cards ---
+    function renderPromptCards(data) {
+      promptList.innerHTML = data
+        .map(
+          (p) => `
+          <div class="p-4 border rounded-lg shadow-sm mb-3 bg-white hover:shadow-md transition-shadow">
+            <h3 class="font-semibold mb-1">${p.category}</h3>
+            <p class="text-gray-700 mb-2">${p.prompt}</p>
+            <button onclick="navigator.clipboard.writeText('${p.prompt.replace(/'/g, "\\'")}')" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">Copy</button>
+          </div>`
+        )
+        .join("");
+    }
+
+    // --- Load everything on start ---
+    loadData();
+  </script>
+
+
+    <script>
+        // PWA Service Worker Registration
+        // Generated by PWA Converter v2.0.1
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Use RELATIVE path for service worker (works with multi-app setup)
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('✓ Service Worker registered:', registration.scope);
+                        console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
+                        console.log('✓ App: Prompt Explorer');
+                        console.log('✓ Folder: prom');
+                        console.log('✓ Total files cached: 5'); // +3 for manifest, sw, offline
+                        
+                        // Check for updates periodically
+                        setInterval(() => {
+                            registration.update();
+                        }, 60000); // Check every minute
+                    })
+                    .catch(error => {
+                        console.error('✗ Service Worker registration failed:', error);
+                    });
+            });
+        } else {
+            console.warn('⚠ Service Workers not supported in this browser');
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('💡 PWA install prompt available');
+            // Show custom install UI
+            showInstallPromotion();
+        });
+
+        function showInstallPromotion() {
+            // You can implement custom install UI here
+            console.log('📱 App can be installed - Click browser menu or use custom UI');
+        }
+
+        // Install PWA function (call from your custom install button)
+        async function installPWA() {
+            if (!deferredPrompt) {
+                console.log('❌ Install prompt not available');
+                return;
+            }
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to install prompt: ${outcome}`);
+            deferredPrompt = null;
+        }
+
+        // Track installation
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA installed successfully!');
+            console.log('✅ App: Prompt Explorer');
+            console.log('✅ App ID: prom-id');
+            console.log('✅ Folder: prom');
+            deferredPrompt = null;
+        });
+
+        // Display mode detection
+        function getPWADisplayMode() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            if (document.referrer.startsWith('android-app://')) {
+                return 'twa';
+            } else if (navigator.standalone || isStandalone) {
+                return 'standalone';
+            }
+            return 'browser';
+        }
+
+        const displayMode = getPWADisplayMode();
+        console.log('🖥️ Display mode:', displayMode);
+        
+        // Log PWA configuration
+        console.log('⚙️ PWA Configuration:');
+        console.log('  - App Name: Prompt Explorer');
+        console.log('  - App ID: prom-id');
+        console.log('  - Start URL: /prom/');
+        console.log('  - Scope: /prom/');
+        console.log('  - Folder: prom');
+        console.log('  - Files included: 2');
+    </script>
+</body>
+</html>
