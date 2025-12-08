@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prom App - Debug Info</title>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #00ff00;
+            line-height: 1.6;
+        }
+        h1 { color: #00ff00; }
+        h2 { color: #ffff00; margin-top: 30px; }
+        .info { 
+            background: #2d2d2d;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            border-left: 4px solid #00ff00;
+        }
+        .success { color: #00ff00; }
+        .error { color: #ff0000; }
+        .warning { color: #ffaa00; }
+        button {
+            background: #00ff00;
+            color: #1e1e1e;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        #output {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Prom App - Debug Info</h1>
+    
+    <button onclick="checkServiceWorker()">Check Service Worker</button>
+    <button onclick="checkManifest()">Check Manifest</button>
+    <button onclick="checkCache()">Check Cache</button>
+    <button onclick="checkInstallation()">Check Installation</button>
+    <button onclick="testOffline()">Test Offline</button>
+    <button onclick="clearData()">Clear All Data</button>
+
+    <div id="output"></div>
+
+    <h2>Basic Info</h2>
+    <div class="info" id="basic-info">Loading...</div>
+
+    <h2>Service Worker Status</h2>
+    <div class="info" id="sw-status">Checking...</div>
+
+    <h2>Manifest Info</h2>
+    <div class="info" id="manifest-info">Loading...</div>
+
+    <h2>Cache Storage</h2>
+    <div class="info" id="cache-info">Checking...</div>
+
+    <h2>Installation Status</h2>
+    <div class="info" id="install-status">Checking...</div>
+
+    <script>
+        const output = document.getElementById('output');
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : '';
+            output.innerHTML += `<div class="${className}">[${timestamp}] ${message}</div>`;
+        }
+
+        // Basic Info
+        function showBasicInfo() {
+            const info = document.getElementById('basic-info');
+            info.innerHTML = `
+                <strong>URL:</strong> ${window.location.href}<br>
+                <strong>Origin:</strong> ${window.location.origin}<br>
+                <strong>Protocol:</strong> ${window.location.protocol}<br>
+                <strong>User Agent:</strong> ${navigator.userAgent}<br>
+                <strong>Online:</strong> ${navigator.onLine ? '✅ Yes' : '❌ No'}<br>
+                <strong>Service Worker Support:</strong> ${'serviceWorker' in navigator ? '✅ Yes' : '❌ No'}<br>
+                <strong>Cache API Support:</strong> ${'caches' in window ? '✅ Yes' : '❌ No'}
+            `;
+        }
+
+        // Check Service Worker
+        async function checkServiceWorker() {
+            const statusDiv = document.getElementById('sw-status');
+            log('Checking Service Worker...');
+            
+            if (!('serviceWorker' in navigator)) {
+                statusDiv.innerHTML = '<span class="error">❌ Service Workers not supported</span>';
+                log('Service Workers not supported', 'error');
+                return;
+            }
+
+            try {
+                const registration = await navigator.serviceWorker.getRegistration();
+                
+                if (registration) {
+                    const sw = registration.active || registration.installing || registration.waiting;
+                    statusDiv.innerHTML = `
+                        <strong>Status:</strong> <span class="success">✅ Registered</span><br>
+                        <strong>Scope:</strong> ${registration.scope}<br>
+                        <strong>Script URL:</strong> ${sw ? sw.scriptURL : 'N/A'}<br>
+                        <strong>State:</strong> ${sw ? sw.state : 'N/A'}<br>
+                        <strong>Active:</strong> ${registration.active ? '✅ Yes' : '❌ No'}<br>
+                        <strong>Installing:</strong> ${registration.installing ? '⏳ Yes' : '✅ No'}<br>
+                        <strong>Waiting:</strong> ${registration.waiting ? '⏳ Yes' : '✅ No'}
+                    `;
+                    log('Service Worker is registered and active', 'success');
+                } else {
+                    statusDiv.innerHTML = '<span class="error">❌ No Service Worker registered</span>';
+                    log('No Service Worker found', 'error');
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+                log(`Error checking Service Worker: ${error.message}`, 'error');
+            }
+        }
+
+        // Check Manifest
+        async function checkManifest() {
+            const manifestDiv = document.getElementById('manifest-info');
+            log('Checking Manifest...');
+            
+            try {
+                const response = await fetch('../manifest.json');
+                const manifest = await response.json();
+                
+                manifestDiv.innerHTML = `
+                    <strong>Name:</strong> ${manifest.name || 'Not set'}<br>
+                    <strong>Short Name:</strong> ${manifest.short_name || 'Not set'}<br>
+                    <strong>Start URL:</strong> ${manifest.start_url || 'Not set'}<br>
+                    <strong>Scope:</strong> ${manifest.scope || 'Not set'}<br>
+                    <strong>Display:</strong> ${manifest.display || 'Not set'}<br>
+                    <strong>Theme Color:</strong> ${manifest.theme_color || 'Not set'}<br>
+                    <strong>Icons:</strong> ${manifest.icons ? manifest.icons.length + ' icon(s)' : 'None'}<br>
+                    ${manifest.icons ? manifest.icons.map(icon => 
+                        `<br>  📱 ${icon.sizes} - ${icon.src}`
+                    ).join('') : ''}
+                `;
+                log('Manifest loaded successfully', 'success');
+            } catch (error) {
+                manifestDiv.innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+                log(`Error loading manifest: ${error.message}`, 'error');
+            }
+        }
+
+        // Check Cache
+        async function checkCache() {
+            const cacheDiv = document.getElementById('cache-info');
+            log('Checking Cache Storage...');
+            
+            if (!('caches' in window)) {
+                cacheDiv.innerHTML = '<span class="error">❌ Cache API not supported</span>';
+                return;
+            }
+
+            try {
+                const cacheNames = await caches.keys();
+                
+                if (cacheNames.length === 0) {
+                    cacheDiv.innerHTML = '<span class="warning">⚠️ No caches found</span>';
+                    log('No caches found', 'warning');
+                    return;
+                }
+
+                let html = `<strong>Total Caches:</strong> ${cacheNames.length}<br><br>`;
+                
+                for (const cacheName of cacheNames) {
+                    const cache = await caches.open(cacheName);
+                    const cachedRequests = await cache.keys();
+                    
+                    html += `<strong>📦 ${cacheName}</strong> (${cachedRequests.length} items)<br>`;
+                    cachedRequests.forEach(req => {
+                        html += `  - ${req.url}<br>`;
+                    });
+                    html += '<br>';
+                }
+                
+                cacheDiv.innerHTML = html;
+                log(`Found ${cacheNames.length} cache(s)`, 'success');
+            } catch (error) {
+                cacheDiv.innerHTML = `<span class="error">❌ Error: ${error.message}</span>`;
+                log(`Error checking cache: ${error.message}`, 'error');
+            }
+        }
+
+        // Check Installation Status
+        function checkInstallation() {
+            const installDiv = document.getElementById('install-status');
+            log('Checking Installation Status...');
+            
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches ||
+                                window.navigator.standalone ||
+                                document.referrer.includes('android-app://');
+            
+            installDiv.innerHTML = `
+                <strong>Display Mode:</strong> ${isStandalone ? '✅ Standalone (Installed)' : '⚠️ Browser Tab (Not Installed)'}<br>
+                <strong>Standalone:</strong> ${window.navigator.standalone ? '✅ Yes' : '❌ No'}<br>
+                <strong>Match Media:</strong> ${window.matchMedia('(display-mode: standalone)').matches ? '✅ Standalone' : '❌ Browser'}
+            `;
+            
+            if (isStandalone) {
+                log('App is installed and running in standalone mode', 'success');
+            } else {
+                log('App is running in browser (not installed)', 'warning');
+            }
+        }
+
+        // Test Offline
+        async function testOffline() {
+            log('Testing offline capability...');
+            
+            if (!navigator.onLine) {
+                log('Device is already offline', 'warning');
+                return;
+            }
+            
+            log('Please turn on airplane mode and reload this page', 'warning');
+            log('If the page loads, offline mode is working!', 'success');
+        }
+
+        // Clear All Data
+        async function clearData() {
+            if (!confirm('This will unregister service workers and clear all caches. Continue?')) {
+                return;
+            }
+            
+            log('Clearing all data...');
+            
+            try {
+                // Unregister service workers
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                for (const registration of registrations) {
+                    await registration.unregister();
+                    log('Service Worker unregistered', 'success');
+                }
+                
+                // Clear caches
+                const cacheNames = await caches.keys();
+                for (const cacheName of cacheNames) {
+                    await caches.delete(cacheName);
+                    log(`Cache "${cacheName}" deleted`, 'success');
+                }
+                
+                log('All data cleared! Reload the page to start fresh.', 'success');
+                
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+                
+            } catch (error) {
+                log(`Error clearing data: ${error.message}`, 'error');
+            }
+        }
+
+        // Initialize
+        window.addEventListener('load', () => {
+            showBasicInfo();
+            checkServiceWorker();
+            checkManifest();
+            checkCache();
+            checkInstallation();
+        });
+
+        // Monitor online/offline
+        window.addEventListener('online', () => {
+            log('📡 Device is online', 'success');
+        });
+
+        window.addEventListener('offline', () => {
+            log('📡 Device is offline', 'warning');
+        });
+    </script>
+</body>
+</html>
