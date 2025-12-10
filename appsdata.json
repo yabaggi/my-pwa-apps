@@ -1,0 +1,74 @@
+[
+  {
+    "href": "prom/",
+    "category": "utilities",
+    "keywords": "math calculate numbers",
+    "icon": "🔢",
+    "name": "Calculator",
+    "description": "A simple and beautiful calculator with offline support. Perfect for quick calculations on the go with a clean interface.",
+    "badges": ["new"]
+  },
+  {
+    "href": "games/",
+    "category": "productivity",
+    "keywords": "tasks organize list notes",
+    "icon": "✅",
+    "name": "Todo List",
+    "description": "Keep track of your tasks with this elegant todo app. Works offline and syncs automatically when online. Never forget a task!",
+    "badges": []
+  },
+  {
+    "href": "game-2048/",
+    "category": "games",
+    "keywords": "puzzle game numbers 2048",
+    "icon": "🎮",
+    "name": "2048 Game",
+    "description": "Classic 2048 puzzle game. Slide tiles to reach 2048 and beyond. Fully playable offline with smooth animations!",
+    "badges": ["new"]
+  },
+  {
+    "href": "photo-editor/",
+    "category": "creative",
+    "keywords": "photo edit image filter",
+    "icon": "📸",
+    "name": "Photo Editor",
+    "description": "Edit photos with filters, effects, and adjustments. All processing done locally in your browser. No uploads needed!",
+    "badges": []
+  },
+  {
+    "href": "notes/",
+    "category": "productivity",
+    "keywords": "notes write memo text",
+    "icon": "📝",
+    "name": "Notes",
+    "description": "Simple note-taking app with markdown support. Organize your thoughts and ideas with ease. Auto-saves everything!",
+    "badges": []
+  },
+  {
+    "href": "weather/",
+    "category": "utilities",
+    "keywords": "weather forecast temperature",
+    "icon": "🌤️",
+    "name": "Weather",
+    "description": "Check weather forecasts for your location. Beautiful interface with detailed weather information and 7-day forecast.",
+    "badges": []
+  },
+  {
+    "href": "timer/",
+    "category": "productivity",
+    "keywords": "timer stopwatch alarm clock",
+    "icon": "⏱️",
+    "name": "Timer",
+    "description": "Countdown timer and stopwatch for productivity. Perfect for time management, workouts, and cooking!",
+    "badges": []
+  },
+  {
+    "href": "drawing/",
+    "category": "creative",
+    "keywords": "draw paint sketch art",
+    "icon": "🎨",
+    "name": "Drawing Pad",
+    "description": "Digital drawing pad with multiple brushes and colors. Create art, doodle, or sketch on the go. Save your masterpieces!",
+    "badges": ["new"]
+  }
+]

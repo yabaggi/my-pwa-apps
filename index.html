@@ -525,144 +525,7 @@
 
         <!-- Apps Grid -->
         <div class="apps-grid" id="apps-grid">
-            
-            <!-- Calculator App -->
-            <a href="calculator/" class="app-card" data-category="utilities" data-keywords="math calculate numbers">
-                <div class="app-icon">🔢</div>
-                <div class="app-name">Calculator</div>
-                <div class="app-description">
-                    A simple and beautiful calculator with offline support. 
-                    Perfect for quick calculations on the go with a clean interface.
-                </div>
-                <div class="app-badges">
-                    <span class="app-badge" data-install-status>
-                        📲 Install Available
-                    </span>
-                    <span class="app-badge new">
-                        ✨ New
-                    </span>
-                </div>
-                <span class="app-category-badge">Utilities</span>
-            </a>
-
-            <!-- Todo List App -->
-            <a href="todo-list/" class="app-card" data-category="productivity" data-keywords="tasks organize list notes">
-                <div class="app-icon">✅</div>
-                <div class="app-name">Todo List</div>
-                <div class="app-description">
-                    Keep track of your tasks with this elegant todo app. 
-                    Works offline and syncs automatically when online. Never forget a task!
-                </div>
-                <div class="app-badges">
-                    <span class="app-badge" data-install-status>
-                        📲 Install Available
-                    </span>
-                </div>
-                <span class="app-category-badge">Productivity</span>
-            </a>
-
-            <!-- Game 2048 -->
-            <a href="game-2048/" class="app-card" data-category="games" data-keywords="puzzle game numbers 2048">
-                <div class="app-icon">🎮</div>
-                <div class="app-name">2048 Game</div>
-                <div class="app-description">
-                    Classic 2048 puzzle game. Slide tiles to reach 2048 and beyond. 
-                    Fully playable offline with smooth animations!
-                </div>
-                <div class="app-badges">
-                    <span class="app-badge" data-install-status>
-                        📲 Install Available
-                    </span>
-                    <span class="app-badge new">
-                        ✨ New
-                    </span>
-                </div>
-                <span class="app-category-badge">Games</span>
-            </a>
-
-            <!-- Photo Editor -->
-            <a href="photo-editor/" class="app-card" data-category="creative" data-keywords="photo edit image filter">
-                <div class="app-icon">📸</div>
-                <div class="app-name">Photo Editor</div>
-                <div class="app-description">
-                    Edit photos with filters, effects, and adjustments. 
-                    All processing done locally in your browser. No uploads needed!
-                </div>
-                <div class="app-badges">
-                    <span class="app-badge" data-install-status>
-                        📲 Install Available
-                    </span>
-                </div>
-                <span class="app-category-badge">Creative</span>
-            </a>
-
-            <!-- Notes App -->
-            <a href="notes/" class="app-card" data-category="productivity" data-keywords="notes write memo text">
-                <div class="app-icon">📝</div>
-                <div class="app-name">Notes</div>
-                <div class="app-description">
-                    Simple note-taking app with markdown support. 
-                    Organize your thoughts and ideas with ease. Auto-saves everything!
-                </div>
-                <div class="app-badges">
-                    <span class="app-badge" data-install-status>
-                        📲 Install Available
-                    </span>
-                </div>
-                <span class="app-category-badge">Productivity</span>
-            </a>
-
-            <!-- Weather App -->
-            <a href="weather/" class="app-card" data-category="utilities" data-keywords="weather forecast temperature">
-                <div class="app-icon">🌤️</div>
-                <div class="app-name">Weather</div>
-                <div class="app-description">
-                    Check weather forecasts for your location. 
-                    Beautiful interface with detailed weather information and 7-day forecast.
-                </div>
-                <div class="app-badges">
-                    <span class="app-badge" data-install-status>
-                        📲 Install Available
-                    </span>
-                </div>
-                <span class="app-category-badge">Utilities</span>
-            </a>
-
-            <!-- Timer App -->
-            <a href="timer/" class="app-card" data-category="productivity" data-keywords="timer stopwatch alarm clock">
-                <div class="app-icon">⏱️</div>
-                <div class="app-name">Timer</div>
-                <div class="app-description">
-                    Countdown timer and stopwatch for productivity. 
-                    Perfect for time management, workouts, and cooking!
-                </div>
-                <div class="app-badges">
-                    <span class="app-badge" data-install-status>
-                        📲 Install Available
-                    </span>
-                </div>
-                <span class="app-category-badge">Productivity</span>
-            </a>
-
-            <!-- Drawing App -->
-            <a href="drawing/" class="app-card" data-category="creative" data-keywords="draw paint sketch art">
-                <div class="app-icon">🎨</div>
-                <div class="app-name">Drawing Pad</div>
-                <div class="app-description">
-                    Digital drawing pad with multiple brushes and colors. 
-                    Create art, doodle, or sketch on the go. Save your masterpieces!
-                </div>
-                <div class="app-badges">
-                    <span class="app-badge" data-install-status>
-                        📲 Install Available
-                    </span>
-                    <span class="app-badge new">
-                        ✨ New
-                    </span>
-                </div>
-                <span class="app-category-badge">Creative</span>
-            </a>
-
+            <!-- App cards will be dynamically loaded here -->
         </div>
 
         <!-- Empty State -->
@@ -716,12 +579,70 @@
         // ============================================================================
 
         document.addEventListener('DOMContentLoaded', () => {
-            initializeApps();
-            setupEventListeners();
-            updateStats();
-            checkInstalledApps();
-            animateOnScroll();
+            loadAndDisplayApps();
         });
+
+        async function loadAndDisplayApps() {
+            const loadingElement = document.getElementById('loading');
+            const grid = document.getElementById('apps-grid');
+            loadingElement.style.display = 'block';
+            grid.style.display = 'none';
+
+            try {
+                const response = await fetch('appsdata.json');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const appsData = await response.json();
+                
+                renderApps(appsData);
+
+                // Now that apps are in the DOM, initialize everything
+                initializeApps();
+                setupEventListeners();
+                updateStats();
+                checkInstalledApps();
+                animateOnScroll();
+
+            } catch (error) {
+                console.error('❌ Error loading or rendering apps:', error);
+                grid.innerHTML = '<p style="color: white; text-align: center;">Could not load apps. Please try again later.</p>';
+            } finally {
+                loadingElement.style.display = 'none';
+                if (document.querySelector('.app-card')) {
+                    grid.style.display = 'grid';
+                }
+            }
+        }
+        
+        function renderApps(appsData) {
+            const grid = document.getElementById('apps-grid');
+            grid.innerHTML = ''; // Clear existing content
+
+            appsData.forEach(app => {
+                const newBadgeHtml = app.badges && app.badges.includes('new') 
+                    ? `<span class="app-badge new">✨ New</span>`
+                    : '';
+                
+                const categoryName = app.category.charAt(0).toUpperCase() + app.category.slice(1);
+
+                const cardHtml = `
+                    <a href="${app.href}" class="app-card" data-category="${app.category}" data-keywords="${app.keywords}">
+                        <div class="app-icon">${app.icon}</div>
+                        <div class="app-name">${app.name}</div>
+                        <div class="app-description">${app.description}</div>
+                        <div class="app-badges">
+                            <span class="app-badge" data-install-status>
+                                📲 Install Available
+                            </span>
+                            ${newBadgeHtml}
+                        </div>
+                        <span class="app-category-badge">${categoryName}</span>
+                    </a>
+                `;
+                grid.innerHTML += cardHtml;
+            });
+        }
 
         // ============================================================================
         // App Initialization
