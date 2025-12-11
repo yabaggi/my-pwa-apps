@@ -45,12 +45,12 @@
     "badges": []
   },
   {
-    "href": "weather/",
-    "category": "utilities",
-    "keywords": "weather forecast temperature",
+    "href": "discoverquran/",
+    "category": "Quran",
+    "keywords": "Disciver Quran, search, read listen, cooy",
     "icon": "🌤️",
-    "name": "Weather",
-    "description": "Check weather forecasts for your location. Beautiful interface with detailed weather information and 7-day forecast.",
+    "name": "Disciver Quran",
+    "description": "Disciver Quran, search, read, search, listen, tafsur and more.",
     "badges": []
   },
   {
