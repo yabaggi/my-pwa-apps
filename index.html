@@ -464,13 +464,43 @@
     </style>
 </head>
 <body>
+    
+    
+    <style>
+        .custom-emoji {
+            /* Set the size relative to the surrounding font size (1.2em is standard for emojis) */
+            width: 1.2em;
+            height: 1.2em;
+            /* Use vertical-align to align the image with the text baseline */
+            vertical-align: -0.2em;
+            display: inline-block; /* Helps with sizing and alignment */
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Optional: Add a small right margin if you want a space between the image and the following text */
+        .custom-emoji.right-spacer {
+            margin-right: 5px;
+        }
+    </style>
+
     <div class="container">
-        <!-- Header -->
+        <div class="header">
+            <h1>
+                <img src="baggi_emoji2.png" class="custom-emoji right-spacer" alt="Baggi Symbol">
+                My PWA Apps Collection
+            </h1>
+            <p>Progressive Web Apps • Install • Use Offline • Fast & Reliable</p>
+        </div>
+        </div>
+        <!--
+    
+    <div class="container">
+        
         <div class="header">
             <h1>📱 My PWA Apps Collection</h1>
             <p>Progressive Web Apps • Install • Use Offline • Fast & Reliable</p>
-        </div>
-
+        </div>-->
         <!-- Search Bar -->
         <div class="search-container">
             <input 
@@ -973,3 +1003,4 @@
     </script>
 </body>
 </html>
+
