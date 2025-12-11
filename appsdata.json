@@ -2,9 +2,9 @@
   {
     "href": "prom/",
     "category": "utilities",
-    "keywords": "math calculate numbers",
+    "keywords": "Search copy creative ai prompts",
     "icon": "🔢",
-    "name": "Calculator",
+    "name": "Ai Prompts",
     "description": "A simple and beautiful calculator with offline support. Perfect for quick calculations on the go with a clean interface.",
     "badges": ["new"]
   },
@@ -18,20 +18,20 @@
     "badges": []
   },
   {
-    "href": "game-2048/",
-    "category": "games",
-    "keywords": "puzzle game numbers 2048",
+    "href": "quransearch/",
+    "category": "Quran",
+    "keywords": "search a word in quran",
     "icon": "🎮",
-    "name": "2048 Game",
+    "name": "Quran Search",
     "description": "Classic 2048 puzzle game. Slide tiles to reach 2048 and beyond. Fully playable offline with smooth animations!",
     "badges": ["new"]
   },
   {
-    "href": "photo-editor/",
+    "href": "promaker/",
     "category": "creative",
-    "keywords": "photo edit image filter",
+    "keywords": "App builders prompt",
     "icon": "📸",
-    "name": "Photo Editor",
+    "name": "Prompt Generator",
     "description": "Edit photos with filters, effects, and adjustments. All processing done locally in your browser. No uploads needed!",
     "badges": []
   },
@@ -72,3 +72,4 @@
     "badges": ["new"]
   }
 ]
+
