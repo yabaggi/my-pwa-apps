@@ -1,0 +1,186 @@
+{
+  "aiTools": [
+    {
+      "name": "Gemini",
+      "description": "A powerful, versatile AI from Google for a wide range of development tasks.",
+      "url": "https://gemini.google.com/"
+    },
+    {
+      "name": "Blink",
+      "description": "An AI-powered platform for creating web apps and internal tools from prompts.",
+      "url": "https://blink.co/"
+    },
+    {
+      "name": "Lovable",
+      "description": "An AI tool that helps you build and maintain your product's frontend with ease.",
+      "url": "https://lovable.ai/"
+    },
+    {
+      "name": "Tabnine",
+      "description": "AI-powered code completion tool supporting over 25 programming languages with natural language processing.",
+      "url": "https://www.tabnine.com/"
+    },
+    {
+      "name": "Amazon CodeWhisperer",
+      "description": "AI coding companion integrated in IDEs providing real-time code generation and security-focused suggestions.",
+      "url": "https://aws.amazon.com/codewhisperer/"
+    },
+    {
+      "name": "Claude",
+      "description": "Advanced AI assistant focusing on natural language understanding and safe AI interaction, supporting coding and development workflows.",
+      "url": "https://www.anthropic.com/claude"
+    },
+    {
+      "name": "Google AI Studio",
+      "description": "Comprehensive AI and machine learning platform for building, training, and deploying ML models supporting development workflows.",
+      "url": "https://ai.google/studio/"
+    },
+    {
+      "name": "Perplexity AI",
+      "description": "Next-gen AI assistant focused on accurate information retrieval and conversational assistance to enhance developer research and productivity.",
+      "url": "https://www.perplexity.ai/"
+    },
+    {
+      "name": "GitHub Copilot",
+      "description": "Context-aware AI code completion tool integrated in IDEs to boost frontend and full-stack coding speed.",
+      "url": "https://github.com/features/copilot"
+    },
+    {
+      "name": "Vercel v0",
+      "description": "AI-powered prompt-based UI generator turning text prompts into production-ready React components.",
+      "url": "https://vercel.com/v0"
+    }
+  ],
+
+    "componentCategories": {
+        "general": {
+            "title": "General App/Webpage Setup",
+            "icon": "✨",
+            "components": {
+                "Personal Use": [
+                    "Personal portfolio website",
+                    "Resume/CV website with downloadable PDF",
+                    "Personal blog with newsletter signup",
+                    "Artist/photographer portfolio with galleries",
+                    "Wedding or invitation website with RSVP form"
+                ],
+                "Business & Professional": [
+                    "Company profile website with about us, services, and contact page",
+                    "Landing page for a business/product",
+                    "SaaS product landing page with signup and pricing plans",
+                    "Consulting or freelancer services website",
+                    "Medical clinic website with doctor profiles and appointment booking",
+                    "Fitness/gym website with classes and membership plans",
+                    "Real estate listings website with property search",
+                    "Restaurant website with menu, online ordering, and reservations",
+                    "Travel or tourism website with guides, places, and booking",
+                    "Job board website with postings and applications"
+                ],
+                "Commerce & Online Stores": [
+                    "E-commerce store with product listings and checkout",
+                    "Marketplace website where users can post and sell items",
+                    "Portfolio + shop site for digital downloads",
+                    "Travel booking website (flights, hotels, packages)"
+                ],
+                "Events & Communities": [
+                    "Simple event website with schedule, speakers, and registration",
+                    "Non-profit or charity website with donation option",
+                    "Church/mosque/temple website with events and sermons",
+                    "Forum or community discussion site",
+                    "Sports team website with schedules, news, and results"
+                ],
+                "Media & Content": [
+                    "Blog website with categories and posts",
+                    "News or magazine-style website",
+                    "Podcast website with episode list and audio player",
+                    "Music band or DJ website with tracks and tour dates",
+                    "School/university website with courses and admissions info"
+                ]
+            }
+        },
+        "basic": {
+            "title": "Basic Components",
+            "icon": "📝",
+            "components": {
+                "Logo": ["Text-logo", "Image-logo", "Combination logo (image + text)"],
+                "Header": ["Classic", "Magazine-style", "Hero header", "Sticky/fixed", "Transparent", "Full-screen", "Hidden", "Mega menu", "Mobile-friendly", "Vertical"],
+                "Search Bar": ["Standard input with button", "Autocomplete suggestion", "Filtered search"],
+                "Hero Section": ["Static image", "Video background", "Carousel slider", "Animated or interactive hero", "Fullscreen hero"],
+                "Navigation Bar": ["Horizontal menu", "Vertical sidebar menu", "Dropdown menus", "Mega menus", "Hamburger menus", "Sticky navigation"],
+                "Breadcrumbs": ["Text breadcrumb trail", "Icon-based breadcrumbs", "Dynamic breadcrumbs"],
+                "Call to Action (CTA)": ["Buttons", "Banners", "Popups/Modals", "Inline text links"],
+                "Content Area": ["Single column", "Multi-column layouts", "Grid layouts", "Masonry layouts"],
+                "Slider": ["Image slider", "Content slider", "Fullwidth slider", "Thumbnail navigation slider"],
+                "Sidebar": ["Static sidebar", "Sticky or floating sidebar", "Collapsible sidebar"],
+                "Forms": ["Contact form", "Membership registration", "Feedback or survey", "Subscription form"],
+                "Blog Section": ["List view", "Grid view", "Single post view"],
+                "Social Media Links": ["Icon buttons", "Text links", "Floating social bar", "Footer social links"],
+                "Footer": ["Standard", "Multi-column"]
+            }
+        },
+        "advanced": {
+            "title": "Advanced Features",
+            "icon": "🚀",
+            "components": {
+                "Notification/Alert Bar": ["Static banner", "Dismissible alert", "Animated scrolling ticker", "Sticky notification bar"],
+                "Loading/Preloader Screen": ["Spinner/progress bar", "Animated logo or graphic", "Skeleton screens"],
+                "Modal/Popup Windows": ["Entry popups", "Exit intent popups", "Lightboxes", "Form modals"],
+                "Chatbot/Live Chat Interface": ["Rule-based chatbots", "AI-powered conversational bots", "Live agent chat"],
+                "Feature/Product Cards": ["Static cards", "Interactive or hover-effect cards", "Flippable or expandable cards"],
+                "Pagination/Infinite Scroll": ["Numeric pagination", "Load more button", "Infinite scroll"],
+                "User Profile/Account Section": ["Dropdown menu profile", "Sidebar profile panel", "Full profile page"],
+                "Analytics and Tracking Scripts": ["Google Analytics/Tag Manager", "Heatmaps"],
+                "Accessibility Features": ["Keyboard navigation aids", "Screen reader support", "Contrast toggles", "Text resize controls"],
+                "SEO Markup": ["Meta tags", "Structured data (JSON-LD)", "Open Graph tags"],
+                "Progressive Web App (PWA) Features": ["Service worker caching", "App manifest configuration"],
+                "Micro-Interactions": ["Button animations", "Loading animations", "Scroll-triggered effects"]
+            }
+        }
+    },
+    "projectTemplates": {
+        "Startup Landing Page": {
+            "general": { "component": "Business & Professional", "type": "SaaS product landing page with signup and pricing plans" },
+            "basic": [
+                { "component": "Logo", "type": "Combination logo (image + text)" },
+                { "component": "Header", "type": "Hero header" },
+                { "component": "Hero Section", "type": "Animated or interactive hero" },
+                { "component": "Navigation Bar", "type": "Sticky navigation" },
+                { "component": "Call to Action (CTA)", "type": "Buttons" }
+            ],
+            "advanced": [
+                { "component": "Modal/Popup Windows", "type": "Entry popups" },
+                { "component": "SEO Markup", "type": "Meta tags" }
+            ]
+        },
+        "E-commerce Store": {
+            "general": { "component": "Commerce & Online Stores", "type": "E-commerce store with product listings and checkout" },
+            "basic": [
+                { "component": "Logo", "type": "Image-logo" },
+                { "component": "Header", "type": "Mega menu" },
+                { "component": "Search Bar", "type": "Filtered search" },
+                { "component": "Navigation Bar", "type": "Mega menus" },
+                { "component": "Sidebar", "type": "Collapsible sidebar" }
+            ],
+            "advanced": [
+                { "component": "Feature/Product Cards", "type": "Interactive or hover-effect cards" },
+                { "component": "Pagination/Infinite Scroll", "type": "Load more button" },
+                { "component": "User Profile/Account Section", "type": "Dropdown menu profile" }
+            ]
+        },
+        "Personal Portfolio": {
+            "general": { "component": "Personal Use", "type": "Personal portfolio website" },
+            "basic": [
+                { "component": "Logo", "type": "Text-logo" },
+                { "component": "Header", "type": "Transparent" },
+                { "component": "Hero Section", "type": "Fullscreen hero" },
+                { "component": "Navigation Bar", "type": "Horizontal menu" },
+                { "component": "Social Media Links", "type": "Icon buttons" }
+            ],
+            "advanced": [
+                { "component": "Micro-Interactions", "type": "Scroll-triggered effects" },
+                { "component": "SEO Markup", "type": "Open Graph tags" }
+            ]
+        }
+    }
+}
+

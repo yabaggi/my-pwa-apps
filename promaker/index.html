@@ -1,0 +1,414 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Website Prompt Builder - HTML/CSS/JS</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+        /* AI Tools Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(17, 24, 39, 0.75); /* Dark overlay, based on #111827 */
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-content {
+            background-color: #f9fafb; /* Light background from body */
+            color: #111827; /* Dark text from body */
+            padding: 2rem;
+            border-radius: 0.75rem; /* Match .card */
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1), 0 8px 10px -6px rgba(0,0,0,0.1);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            max-height: 85vh;
+        }
+        
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            /* Give some space for the scrollbar to avoid content overlap */
+            padding-right: 1rem;
+            margin-right: -1rem;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e5e7eb; /* border color from .card */
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-button {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #4b5563; /* secondary text color */
+            transition: color 0.2s;
+        }
+        .close-button:hover {
+            color: #111827;
+        }
+
+        .ai-tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .ai-tool-card {
+            background-color: #ffffff; /* white from .card */
+            border-radius: 0.75rem; /* match .card */
+            padding: 1.5rem;
+            border: 1px solid #e5e7eb; /* border from .card */
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+
+        .ai-tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .ai-tool-card h3 {
+            margin-top: 0;
+            margin-bottom: 0.75rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #4f46e5; /* primary purple */
+        }
+
+        .ai-tool-card p {
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            color: #374151; /* A slightly softer dark gray for paragraph */
+            flex-grow: 1;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .ai-tool-link {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            background: linear-gradient(to right, #6d28d9, #4f46e5); /* from .btn-primary */
+            color: white !important;
+            border-radius: 0.375rem; /* from .btn */
+            text-decoration: none;
+            font-weight: 500; /* from .btn */
+            text-align: center;
+            transition: background-color 0.2s;
+            border: none;
+            margin-top: auto; /* Pushes button to the bottom */
+        }
+
+        .ai-tool-link:hover {
+            background: linear-gradient(to right, #5b21b6, #4338ca); /* from .btn-primary:hover */
+        }
+    </style>
+    <meta name="theme-color" content="#2196f3">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Website Prom">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <div class="logo-icon">🎨</div>
+                <div>
+                    <h1>Website Prompt Builder</h1>
+                    <p>Create professional web development prompts</p>
+                </div>
+            </div>
+            <!-- <div class="header-actions">
+                <button id="try-manus-ai" class="btn btn-primary">
+                    ✨ Try Manus AI
+                </button>
+            </div> -->
+        </div>
+    </header>
+
+    <main class="container py-8">
+        <div class="main-grid">
+            <div class="main-content">
+                <!-- Templates Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">🚀 Quick Start Templates</h2>
+                        <p class="card-description">
+                            Choose a template to get started quickly, then customize as
+                            needed.
+                        </p>
+                    </div>
+                    <div id="templates-container" class="card-content grid-cols-3">
+                        <!-- Templates will be injected here by JS -->
+                    </div>
+                </div>
+
+                <!-- Component Selection -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Component Selection</h2>
+                        <p class="card-description">
+                            Choose the components and features for your website.
+                        </p>
+                    </div>
+                    <div class="card-content">
+                        <div id="tabs" class="tabs">
+                            <div id="tabs-list" class="tabs-list">
+                                <!-- Tabs will be injected here by JS -->
+                            </div>
+                            <div id="tabs-content" class="tabs-content">
+                                <!-- Tab content will be injected here by JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button id="generate-prompt" class="btn btn-primary">
+                        ✨ Generate Prompt
+                    </button>
+                    <button id="clear-all" class="btn btn-outline">Clear All</button>
+                </div>
+            </div>
+
+            <div class="sidebar">
+                <div class="tabs">
+                    <div class="tabs-list" id="sidebar-tabs-list">
+                        <button class="tab-trigger active" data-tab="components-tab">Components</button>
+                        <button class="tab-trigger" data-tab="preview-tab">Preview</button>
+                        <button class="tab-trigger" data-tab="prompt-tab">Prompt</button>
+                    </div>
+
+                    <div id="sidebar-tabs-content">
+                        <div id="components-tab" class="tab-content active">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Selected Components</h3>
+                                    <p class="card-description" id="selected-components-count">0 components selected</p>
+                                </div>
+                                <div class="card-content">
+                                    <div id="selected-components-list" class="selected-components-list">
+                                        <div class="empty-state">
+                                            <div class="empty-icon">📝</div>
+                                            <p>No components selected yet</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="preview-tab" class="tab-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <div class="preview-header">
+                                        <h3 class="card-title">Visual Preview</h3>
+                                        <div id="view-mode-toggles" class="view-mode-toggles">
+                                            <button class="view-mode-btn active" data-view="desktop">🖥️</button>
+                                            <button class="view-mode-btn" data-view="tablet">📱</button>
+                                            <button class="view-mode-btn" data-view="mobile">📲</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <div class="preview-container">
+                                        <div id="preview-viewport" class="preview-viewport desktop">
+                                            <div id="mockup-components-container">
+                                                <div class="empty-state">
+                                                    <div class="empty-icon">🖼️</div>
+                                                    <p>Select components to see a preview</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="preview-description" class="preview-description"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="prompt-tab" class="tab-content">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">Generated Prompt</h3>
+                                     <p class="card-description">Ready to use with AI development tools</p>
+                                </div>
+                                <div class="card-content">
+                                    <div id="generated-prompt-container" class="generated-prompt-container">
+                                        <div class="empty-state">
+                                            <div class="empty-icon">✨</div>
+                                             <p>Generate a prompt to see it here</p>
+                                        </div>
+                                    </div>
+                                    <div id="prompt-actions" class="prompt-actions" style="display: none; margin-bottom: 1rem;">
+                                        <button id="copy-prompt" class="btn btn-secondary">
+                                            📋 Copy
+                                        </button>
+                                        <!-- <button id="download-prompt" class="btn btn-outline">
+                                            💾 Download
+                                        </button> -->
+                                        <button id="try-prompt-btn" class="btn btn-primary">🚀 Try it now</button>
+                                    </div>
+                                    <textarea id="prompt-textarea" class="textarea" readonly style="display: none;"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <!-- <div>
+                <p>
+                    Built with ❤️ using
+                    <a href="https://manus.im/invitation/0KURKXPMTH4IIY" target="_blank">Manus AI</a>
+                </p>
+                <p class="footer-subtext">
+                    Create amazing applications with AI assistance
+                </p>
+            </div>
+            <button id="footer-try-manus" class="btn btn-outline-purple">
+                ✨ Get Started with Manus
+            </button> -->
+        </div>
+    </footer>
+
+    <div id="ai-tools-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Try your prompt with...</h2>
+                <button id="close-modal-btn" class="close-button">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="ai-tools-grid">
+                    <!-- AI Tools will be injected here by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+    <script>
+        // PWA Service Worker Registration
+        // Generated by PWA Converter v2.0.1
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Use RELATIVE path for service worker (works with multi-app setup)
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('✓ Service Worker registered:', registration.scope);
+                        console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
+                        console.log('✓ App: Website Prompt Builder - HTML/CSS/JS');
+                        console.log('✓ Folder: promaker');
+                        console.log('✓ Total files cached: 8'); // +3 for manifest, sw, offline
+                        
+                        // Check for updates periodically
+                        setInterval(() => {
+                            registration.update();
+                        }, 60000); // Check every minute
+                    })
+                    .catch(error => {
+                        console.error('✗ Service Worker registration failed:', error);
+                    });
+            });
+        } else {
+            console.warn('⚠ Service Workers not supported in this browser');
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('💡 PWA install prompt available');
+            // Show custom install UI
+            showInstallPromotion();
+        });
+
+        function showInstallPromotion() {
+            // You can implement custom install UI here
+            console.log('📱 App can be installed - Click browser menu or use custom UI');
+        }
+
+        // Install PWA function (call from your custom install button)
+        async function installPWA() {
+            if (!deferredPrompt) {
+                console.log('❌ Install prompt not available');
+                return;
+            }
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to install prompt: ${outcome}`);
+            deferredPrompt = null;
+        }
+
+        // Track installation
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA installed successfully!');
+            console.log('✅ App: Website Prompt Builder - HTML/CSS/JS');
+            console.log('✅ App ID: promaker-id');
+            console.log('✅ Folder: promaker');
+            deferredPrompt = null;
+        });
+
+        // Display mode detection
+        function getPWADisplayMode() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            if (document.referrer.startsWith('android-app://')) {
+                return 'twa';
+            } else if (navigator.standalone || isStandalone) {
+                return 'standalone';
+            }
+            return 'browser';
+        }
+
+        const displayMode = getPWADisplayMode();
+        console.log('🖥️ Display mode:', displayMode);
+        
+        // Log PWA configuration
+        console.log('⚙️ PWA Configuration:');
+        console.log('  - App Name: Website Prompt Builder - HTML/CSS/JS');
+        console.log('  - App ID: promaker-id');
+        console.log('  - Start URL: /promaker/');
+        console.log('  - Scope: /promaker/');
+        console.log('  - Folder: promaker');
+        console.log('  - Files included: 5');
+    </script>
+</body>
+</html>
