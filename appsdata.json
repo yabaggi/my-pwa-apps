@@ -54,22 +54,13 @@
     "badges": []
   },
   {
-    "href": "timer/",
-    "category": "productivity",
-    "keywords": "timer stopwatch alarm clock",
+    "href": "nextapp/",
+    "category": "Next",
+    "keywords": "Next application",
     "icon": "⏱️",
-    "name": "Timer",
-    "description": "Countdown timer and stopwatch for productivity. Perfect for time management, workouts, and cooking!",
+    "name": "Comming Soon",
+    "description": "In progress!",
     "badges": []
-  },
-  {
-    "href": "drawing/",
-    "category": "creative",
-    "keywords": "draw paint sketch art",
-    "icon": "🎨",
-    "name": "Drawing Pad",
-    "description": "Digital drawing pad with multiple brushes and colors. Create art, doodle, or sketch on the go. Save your masterpieces!",
-    "badges": ["new"]
   }
 ]
 
