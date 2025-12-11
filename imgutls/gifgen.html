@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GIF Generator</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --info-color: #0ea5e9;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --border: #e2e8f0;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            margin: 0;
+            padding: 2.5rem;
+            background: transparent;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        h1 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            text-align: left;
+            margin: 0 0 2rem;
+            color: var(--text-primary);
+            letter-spacing: -0.025em;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            background: var(--background);
+            padding: 3rem 2rem;
+            text-align: center;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 2rem;
+        }
+
+        .upload-area p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary-color);
+            background: #eff6ff;
+            transform: translateY(-2px);
+        }
+
+        .upload-area.drag-over {
+            border-color: var(--success-color);
+            background: #f0fdf4;
+            transform: scale(1.01);
+        }
+
+        .file-list {
+            margin: 2rem 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .file-list:empty::after {
+            content: 'No files selected';
+            display: block;
+            text-align: center;
+            padding: 2rem;
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: var(--background);
+            border-radius: var(--radius-sm);
+            margin-bottom: 0.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .file-item:hover {
+            background: #e2e8f0;
+        }
+
+        .file-name {
+            flex-grow: 1;
+            font-size: 0.9375rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .remove-btn {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+            border-radius: var(--radius-sm);
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .remove-btn:hover {
+            background-color: #fecaca;
+            transform: translateY(-1px);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .delay-control {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .delay-control label {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .delay-control input {
+            width: 80px;
+            padding: 0.625rem;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.9375rem;
+            transition: all 0.2s ease;
+        }
+
+        .delay-control input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .generate-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.875rem 1.5rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .generate-btn:not(:disabled):hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .generate-btn:disabled {
+            background-color: #cbd5e1;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .download-btn {
+            display: none;
+            width: 100%;
+            background-color: var(--success-color);
+            color: white;
+            border: none;
+            padding: 0.875rem 1.5rem;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            margin-top: 1.5rem;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .download-btn:hover {
+            background-color: #059669;
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .status {
+            display: none;
+            margin-top: 1.5rem;
+            padding: 1rem 1.25rem;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-weight: 500;
+            font-size: 0.9375rem;
+        }
+
+        .status.success {
+            display: block;
+            background: #d1fae5;
+            color: #065f46;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .status.error {
+            display: block;
+            background: #fee2e2;
+            color: #991b1b;
+            border-left: 4px solid var(--error-color);
+        }
+
+        .status.loading {
+            display: block;
+            background: #dbeafe;
+            color: #1e40af;
+            border-left: 4px solid var(--info-color);
+        }
+
+        .preview-image {
+            max-width: 100%;
+            margin-top: 2rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .generate-btn {
+                width: 100%;
+            }
+
+            .upload-area {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>GIF Generator</h1>
+
+        <div class="upload-area" id="uploadArea">
+            <p>📁 Drag & drop images here or click to select files</p>
+            <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
+        </div>
+
+        <div class="file-list" id="fileList"></div>
+
+        <div class="controls">
+            <div class="delay-control">
+                <label for="delayInput">Frame Delay (ms):</label>
+                <input type="number" id="delayInput" value="500" min="10" max="10000">
+            </div>
+            <button class="generate-btn" id="generateBtn" disabled>Generate GIF</button>
+        </div>
+
+        <div class="status" id="status"></div>
+
+        <button class="download-btn" id="downloadBtn">📥 Download GIF</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const fileList = document.getElementById('fileList');
+            const delayInput = document.getElementById('delayInput');
+            const generateBtn = document.getElementById('generateBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const statusDiv = document.getElementById('status');
+
+            let files = [];
+            let gifBlob = null;
+
+            uploadArea.addEventListener('click', () => fileInput.click());
+            fileInput.addEventListener('change', handleFiles);
+
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('drag-over');
+            });
+
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('drag-over');
+            });
+
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('drag-over');
+                if (e.dataTransfer.files.length) {
+                    handleFiles({ target: { files: e.dataTransfer.files } });
+                }
+            });
+
+            function handleFiles(e) {
+                const newFiles = Array.from(e.target.files);
+                files = [...files, ...newFiles];
+                updateFileList();
+                updateGenerateButton();
+            }
+
+            function updateFileList() {
+                fileList.innerHTML = '';
+
+                if (files.length === 0) {
+                    return;
+                }
+
+                files.forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+
+                    const fileName = document.createElement('span');
+                    fileName.className = 'file-name';
+                    fileName.textContent = `${index + 1}. ${file.name}`;
+
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'remove-btn';
+                    removeBtn.textContent = 'Remove';
+                    removeBtn.addEventListener('click', () => {
+                        files.splice(index, 1);
+                        updateFileList();
+                        updateGenerateButton();
+                    });
+
+                    fileItem.appendChild(fileName);
+                    fileItem.appendChild(removeBtn);
+                    fileList.appendChild(fileItem);
+                });
+            }
+
+            function updateGenerateButton() {
+                generateBtn.disabled = files.length < 2;
+            }
+
+            generateBtn.addEventListener('click', async () => {
+                if (files.length < 2) return;
+
+                setStatus('Generating GIF... Please wait', 'loading');
+                generateBtn.disabled = true;
+
+                const formData = new FormData();
+                files.forEach(file => {
+                    formData.append('images', file);
+                });
+                formData.append('delay', delayInput.value);
+
+                try {
+                    const response = await fetch('https://gifgener8.vercel.app/create-gif', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Server error: ${response.status}`);
+                    }
+
+                    gifBlob = await response.blob();
+                    const gifUrl = URL.createObjectURL(gifBlob);
+
+                    const existingImage = document.querySelector('.preview-image');
+                    if (existingImage) {
+                        existingImage.remove();
+                    }
+
+                    const img = document.createElement('img');
+                    img.src = gifUrl;
+                    img.className = 'preview-image';
+                    img.alt = 'Generated GIF preview';
+                    document.querySelector('.container').appendChild(img);
+
+                    setStatus('✅ GIF generated successfully!', 'success');
+                    downloadBtn.style.display = 'block';
+                } catch (error) {
+                    setStatus(`❌ Error: ${error.message}`, 'error');
+                    console.error('Error generating GIF:', error);
+                } finally {
+                    generateBtn.disabled = false;
+                }
+            });
+
+            downloadBtn.addEventListener('click', () => {
+                if (!gifBlob) return;
+
+                const url = URL.createObjectURL(gifBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `animated-${Date.now()}.gif`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            });
+
+            function setStatus(message, type) {
+                statusDiv.textContent = message;
+                statusDiv.className = 'status ' + type;
+            }
+        });
+    </script>
+</body>
+</html>

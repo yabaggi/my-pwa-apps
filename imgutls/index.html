@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Toolkit</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;600;700&family=Lobster&family=Pacifico&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#2196f3">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Utility Tool">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+</head>
+<body>
+    <div class="container">
+        <div class="app-header">
+            <h1 class="app-title">🛠️ Utility Toolkit</h1>
+            <p class="app-subtitle">Generate QR codes, icons, favicons, hero images, and animated GIFs</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" data-tab="qrcode-tab">QR Code</button>
+            <button class="tab-button" data-tab="icons-tab">Icons & Logos</button>
+            <button class="tab-button" data-tab="favicon-tab">Favicon</button>
+            <button class="tab-button" data-tab="hero-tab">Hero Image</button>
+            <button class="tab-button" data-tab="gif-generator-tab">GIF Generator</button>
+            <button class="tab-button" data-tab="image-resize-tab">Image resize</button>
+        </div>
+
+        <div id="qrcode-tab" class="tab-content active">
+            <h1>QR Code Generator</h1>
+            <div class="form">
+                <div class="form-group">
+                    <label for="url">URL</label>
+                    <input type="text" id="url" placeholder="https://example.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="appName">App Name</label>
+                    <input type="text" id="appName" placeholder="My Awesome App" required>
+                </div>
+                <div class="form-group">
+                    <label for="filename">Output File Name</label>
+                    <input type="text" id="filename" placeholder="qr-code" required>
+                </div>
+                <button id="generate-qr">Generate QR Code</button>
+            </div>
+            <div id="qrcode-container" class="qrcode-container">
+                <canvas id="qrcode"></canvas>
+                <a id="download-qr" class="button" style="display:none;">Download QR Code</a>
+            </div>
+        </div>
+
+        <div id="icons-tab" class="tab-content">
+            <h1>Icon & Logo Generator</h1>
+            <div class="form">
+                <div class="form-group">
+                    <label>Creation Method</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" id="icon-creation-scratch" name="icon-creation" value="scratch" checked>
+                            <span>From Scratch</span>
+                        </label>
+                        <label>
+                            <input type="radio" id="icon-creation-image" name="icon-creation" value="image">
+                            <span>From Image</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="icon-scratch-options">
+                    <!-- Icon Properties -->
+                    <h2>Icon Design</h2>
+                    <div class="form-group">
+                        <label>Shape</label>
+                        <div class="radio-group">
+                            <label>
+                                <input type="radio" id="square-shape" name="shape" value="square" checked>
+                                <span>Square</span>
+                            </label>
+                            <label>
+                                <input type="radio" id="round-shape" name="shape" value="round">
+                                <span>Round</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="icon-size">Size</label>
+                        <input list="sizes" id="icon-size" name="size" value="512x512">
+                        <datalist id="sizes">
+                            <option value="192x192">
+                            <option value="512x512">
+                            <option value="1024x1024">
+                        </datalist>
+                    </div>
+                    <div class="form-group">
+                        <label>Gradient Colors</label>
+                        <div class="color-group">
+                            <input type="color" id="color1" value="#0f172a" title="Color 1">
+                            <input type="color" id="color2" value="#38bdf8" title="Color 2">
+                        </div>
+                    </div>
+                    
+                    <!-- Text Properties -->
+                    <h3>Text Overlay</h3>
+                    <div class="form-group">
+                        <label for="icon-text">Text</label>
+                        <input type="text" id="icon-text" value="QR" placeholder="Enter text">
+                    </div>
+                    <div class="form-group">
+                        <label for="icon-font">Font</label>
+                        <select id="icon-font">
+                            <option value="Roboto">Roboto</option>
+                            <option value="Lobster">Lobster</option>
+                            <option value="Pacifico">Pacifico</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Verdana">Verdana</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="font-size">Font Size</label>
+                        <input type="number" id="font-size" value="180" min="10" max="1000">
+                    </div>
+                    <div class="form-group">
+                        <label for="text-color">Text Color</label>
+                        <input type="color" id="text-color" value="#ffffff">
+                    </div>
+                    <div class="form-group">
+                        <label for="gravity">Text Position</label>
+                        <select id="gravity">
+                            <option value="center">Center</option>
+                            <option value="north">Top</option>
+                            <option value="south">Bottom</option>
+                            <option value="east">Right</option>
+                            <option value="west">Left</option>
+                        </select>
+                    </div>
+
+                    <!-- Drawing Section -->
+                    <h2>Custom Shapes</h2>
+                    <div class="form-group">
+                        <label for="draw-shape">Shape to Draw</label>
+                        <select id="draw-shape">
+                            <option value="line">Line</option>
+                            <option value="rectangle">Rectangle</option>
+                            <option value="circle">Circle</option>
+                            <option value="polygon">Polygon</option>
+                        </select>
+                    </div>
+                    <div id="draw-options"></div>
+
+                    <div class="form-group" id="predefined-polygon-group" style="display: none;">
+                        <label for="predefined-polygon">Predefined Polygon</label>
+                        <select id="predefined-polygon">
+                            <option value="">Select a shape</option>
+                            <option value="pentagon">Pentagon</option>
+                            <option value="hexagon">Hexagon</option>
+                            <option value="five-point-star">Five-point Star</option>
+                            <option value="triangle">Triangle</option>
+                            <option value="irregular-7-point">Irregular 7-point</option>
+                            <option value="diamond">Diamond</option>
+                            <option value="abstract">Abstract</option>
+                            <option value="house">House</option>
+                            <option value="octagon">Octagon</option>
+                            <option value="irregular-star-flower">Star Flower</option>
+                        </select>
+                    </div>
+
+                    <div class="button-group">
+                        <button id="add-drawing" type="button" class="button-secondary">Add Shape</button>
+                        <button id="clear-drawings" type="button" class="button-danger">Clear All Shapes</button>
+                    </div>
+                </div>
+
+                <div id="icon-image-options" style="display: none;">
+                    <h2>Upload Image</h2>
+                    <div class="form-group">
+                        <label for="icon-image-upload">Select Image</label>
+                        <input type="file" id="icon-image-upload" accept="image/*">
+                    </div>
+
+                    <div id="icon-image-edit-options" style="display: none;">
+                        <h2>Edit Image</h2>
+
+                        <!-- Cropping -->
+                        <h3>Cropping</h3>
+                        <div class="form-group-grid-4">
+                            <div class="form-group">
+                                <label for="icon-crop-top">Top</label>
+                                <input type="number" id="icon-crop-top" value="0" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="icon-crop-bottom">Bottom</label>
+                                <input type="number" id="icon-crop-bottom" value="0" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="icon-crop-left">Left</label>
+                                <input type="number" id="icon-crop-left" value="0" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label for="icon-crop-right">Right</label>
+                                <input type="number" id="icon-crop-right" value="0" min="0">
+                            </div>
+                        </div>
+
+                        <!-- Color Adjustments -->
+                        <h3>Color Adjustments</h3>
+                        <div class="form-group">
+                            <label for="icon-brightness">Brightness: <span id="brightness-value">100</span>%</label>
+                            <input type="range" id="icon-brightness" min="0" max="200" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="icon-saturation">Saturation: <span id="saturation-value">100</span>%</label>
+                            <input type="range" id="icon-saturation" min="0" max="200" value="100">
+                        </div>
+                        <div class="form-group">
+                            <label for="icon-hue">Hue: <span id="hue-value">0</span>°</label>
+                            <input type="range" id="icon-hue" min="0" max="360" value="0">
+                        </div>
+
+                        <!-- Transparency -->
+                        <h3>Transparency</h3>
+                        <div class="form-group">
+                            <label for="icon-transparent-color">Target Color</label>
+                            <input type="color" id="icon-transparent-color" value="#FFFFFF">
+                        </div>
+                        <div class="form-group">
+                            <label for="icon-fuzz">Fuzz: <span id="fuzz-value">10</span>%</label>
+                            <input type="range" id="icon-fuzz" min="0" max="100" value="10">
+                        </div>
+                        <div class="form-group">
+                            <div class="checkbox-group">
+                                <label>
+                                    <input type="checkbox" id="icon-apply-transparency">
+                                    <span>Apply Transparency</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Text Overlay -->
+                        <h3>Text Overlay</h3>
+                        <div class="form-group">
+                            <label for="icon-text-overlay">Text</label>
+                            <input type="text" id="icon-text-overlay" placeholder="Enter text to overlay">
+                        </div>
+                        <div class="form-group">
+                            <label for="icon-font-overlay">Font</label>
+                            <select id="icon-font-overlay">
+                                <option value="Roboto">Roboto</option>
+                                <option value="Lobster">Lobster</option>
+                                <option value="Pacifico">Pacifico</option>
+                                <option value="Arial">Arial</option>
+                                <option value="Verdana">Verdana</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="font-size-overlay">Font Size</label>
+                            <input type="number" id="font-size-overlay" value="90" min="10" max="500">
+                        </div>
+                        <div class="form-group">
+                            <label for="text-color-overlay">Text Color</label>
+                            <input type="color" id="text-color-overlay" value="#000000">
+                        </div>
+                    </div>
+                </div>
+
+                <h2>Export Settings</h2>
+
+                <div class="form-group">
+                    <label for="icon-filename">Filename</label>
+                    <input type="text" id="icon-filename" value="icon" placeholder="icon">
+                </div>
+
+                <div class="form-group">
+                    <label for="icon-format">Format</label>
+                    <select id="icon-format">
+                        <option value="image/png">PNG</option>
+                        <option value="image/jpeg">JPEG</option>
+                        <option value="image/webp">WebP</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="icon-global-opacity">Opacity: <span id="opacity-value">100</span>%</label>
+                    <input type="range" id="icon-global-opacity" min="0" max="1" step="0.05" value="1">
+                </div>
+
+                <button id="generate-icon">Generate Icon</button>
+            </div>
+            <div class="icon-container">
+                <canvas id="icon-canvas"></canvas>
+                <a id="download-icon" class="button" style="display:none;">Download Icon</a>
+            </div>
+        </div>
+
+        <div id="favicon-tab" class="tab-content">
+            <h1>Favicon Generator</h1>
+            <div class="form">
+                <div class="form-group">
+                    <label>Creation Method</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" id="favicon-creation-scratch" name="favicon-creation" value="scratch" checked>
+                            <span>From Scratch</span>
+                        </label>
+                        <label>
+                            <input type="radio" id="favicon-creation-image" name="favicon-creation" value="image">
+                            <span>From Image</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="favicon-scratch-options">
+                    <h2>Design</h2>
+                    <div class="form-group">
+                        <label>Gradient Colors</label>
+                        <div class="color-group">
+                            <input type="color" id="favicon-color1" value="#0f172a" title="Color 1">
+                            <input type="color" id="favicon-color2" value="#38bdf8" title="Color 2">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="favicon-text">Text</label>
+                        <input type="text" id="favicon-text" value="Fv" placeholder="Enter text">
+                    </div>
+                     <div class="form-group">
+                        <label for="favicon-font">Font</label>
+                        <select id="favicon-font">
+                            <option value="Roboto">Roboto</option>
+                            <option value="Lobster">Lobster</option>
+                            <option value="Pacifico">Pacifico</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Verdana">Verdana</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="favicon-font-size">Font Size</label>
+                        <input type="number" id="favicon-font-size" value="256" min="10" max="512">
+                    </div>
+                    <div class="form-group">
+                        <label for="favicon-text-color">Text Color</label>
+                        <input type="color" id="favicon-text-color" value="#ffffff">
+                    </div>
+                </div>
+
+                <div id="favicon-image-options" style="display: none;">
+                    <h2>Upload Image</h2>
+                    <div class="form-group">
+                        <label for="favicon-image-upload">Select Image</label>
+                        <input type="file" id="favicon-image-upload" accept="image/*">
+                    </div>
+                </div>
+
+                <h2>Export Settings</h2>
+
+                <div class="form-group">
+                    <label>Favicon Sizes (PNG)</label>
+                    <div class="checkbox-group">
+                        <label>
+                            <input type="checkbox" class="favicon-size" value="16">
+                            <span>16×16</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" class="favicon-size" value="32" checked>
+                            <span>32×32</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" class="favicon-size" value="48">
+                            <span>48×48</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" class="favicon-size" value="180">
+                            <span>180×180 (Apple)</span>
+                        </label>
+                        <label>
+                            <input type="checkbox" class="favicon-size" value="192">
+                            <span>192×192 (Android)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="favicon-filename">Filename Prefix</label>
+                    <input type="text" id="favicon-filename" value="favicon" placeholder="favicon">
+                </div>
+
+                <button id="generate-favicon">Generate Favicon Pack (ZIP)</button>
+            </div>
+            <div id="favicon-preview-container">
+                <h3 style="margin-top: 0;">Preview</h3>
+                <canvas id="favicon-canvas-preview"></canvas>
+            </div>
+        </div>
+
+        <div id="hero-tab" class="tab-content">
+            <h1>Hero Image Editor</h1>
+            <div class="form">
+                <div class="form-group">
+                    <label for="image-upload">Upload Image</label>
+                    <input type="file" id="image-upload" accept="image/*">
+                </div>
+
+                <div id="original-size-info" class="info-box"></div>
+
+                <h2>Cropping</h2>
+                <div class="form-group-grid-4">
+                    <div class="form-group">
+                        <label for="crop-top">Top</label>
+                        <input type="number" id="crop-top" value="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="crop-bottom">Bottom</label>
+                        <input type="number" id="crop-bottom" value="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="crop-left">Left</label>
+                        <input type="number" id="crop-left" value="0" min="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="crop-right">Right</label>
+                        <input type="number" id="crop-right" value="0" min="0">
+                    </div>
+                </div>
+
+                <h2>Output Size</h2>
+                <div class="form-group">
+                    <label for="output-width">Width (px)</label>
+                    <input type="number" id="output-width" placeholder="auto" min="1">
+                </div>
+                <div class="form-group">
+                    <label for="output-height">Height (px)</label>
+                    <input type="number" id="output-height" placeholder="auto" min="1">
+                </div>
+
+                <h2>Optimization</h2>
+                <div class="form-group">
+                    <label for="output-format">Output Format</label>
+                    <select id="output-format">
+                        <option value="image/jpeg">JPEG</option>
+                        <option value="image/png">PNG</option>
+                        <option value="image/webp">WebP</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quality">Quality: <span id="quality-value">90</span>%</label>
+                    <input type="range" id="quality" min="0" max="1" step="0.1" value="0.9">
+                </div>
+
+                <div id="generated-size-info" class="info-box"></div>
+
+                <div class="form-group">
+                    <label for="hero-filename">Filename</label>
+                    <input type="text" id="hero-filename" value="hero-image" placeholder="hero-image">
+                </div>
+
+                <button id="download-hero">Download Image</button>
+            </div>
+            <div class="hero-preview-container">
+                <h3 style="margin-top: 0;">Preview</h3>
+                <canvas id="hero-canvas"></canvas>
+            </div>
+        </div>
+
+        <div id="gif-generator-tab" class="tab-content" style="padding: 0;">
+            <iframe src="gifgen.html" style="width: 100%; height: 800px; border: none;"></iframe>
+        </div>
+
+        <div id="image-resize-tab" class="tab-content" style="padding: 0;">
+            <iframe src="imgresize.html" style="width: 100%; height: 800px; border: none;"></iframe>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+        // PWA Service Worker Registration
+        // Generated by PWA Converter v2.0.1
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Use RELATIVE path for service worker (works with multi-app setup)
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('✓ Service Worker registered:', registration.scope);
+                        console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
+                        console.log('✓ App: Utility Toolkit');
+                        console.log('✓ Folder: imgutls');
+                        console.log('✓ Total files cached: 9'); // +3 for manifest, sw, offline
+                        
+                        // Check for updates periodically
+                        setInterval(() => {
+                            registration.update();
+                        }, 60000); // Check every minute
+                    })
+                    .catch(error => {
+                        console.error('✗ Service Worker registration failed:', error);
+                    });
+            });
+        } else {
+            console.warn('⚠ Service Workers not supported in this browser');
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('💡 PWA install prompt available');
+            // Show custom install UI
+            showInstallPromotion();
+        });
+
+        function showInstallPromotion() {
+            // You can implement custom install UI here
+            console.log('📱 App can be installed - Click browser menu or use custom UI');
+        }
+
+        // Install PWA function (call from your custom install button)
+        async function installPWA() {
+            if (!deferredPrompt) {
+                console.log('❌ Install prompt not available');
+                return;
+            }
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to install prompt: ${outcome}`);
+            deferredPrompt = null;
+        }
+
+        // Track installation
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA installed successfully!');
+            console.log('✅ App: Utility Toolkit');
+            console.log('✅ App ID: imgutls-id');
+            console.log('✅ Folder: imgutls');
+            deferredPrompt = null;
+        });
+
+        // Display mode detection
+        function getPWADisplayMode() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            if (document.referrer.startsWith('android-app://')) {
+                return 'twa';
+            } else if (navigator.standalone || isStandalone) {
+                return 'standalone';
+            }
+            return 'browser';
+        }
+
+        const displayMode = getPWADisplayMode();
+        console.log('🖥️ Display mode:', displayMode);
+        
+        // Log PWA configuration
+        console.log('⚙️ PWA Configuration:');
+        console.log('  - App Name: Utility Toolkit');
+        console.log('  - App ID: imgutls-id');
+        console.log('  - Start URL: /imgutls/');
+        console.log('  - Scope: /imgutls/');
+        console.log('  - Folder: imgutls');
+        console.log('  - Files included: 6');
+    </script>
+</body>
+</html>

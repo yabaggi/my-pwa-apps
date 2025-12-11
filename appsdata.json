@@ -13,7 +13,7 @@
     "category": "productivity",
     "keywords": "tasks organize list notes",
     "icon": "✅",
-    "name": "Todo List",
+    "name": "Games hub",
     "description": "Keep track of your tasks with this elegant todo app. Works offline and syncs automatically when online. Never forget a task!",
     "badges": []
   },
@@ -36,11 +36,11 @@
     "badges": []
   },
   {
-    "href": "notes/",
+    "href": "imgutls/",
     "category": "productivity",
-    "keywords": "notes write memo text",
+    "keywords": "Image edit/create",
     "icon": "📝",
-    "name": "Notes",
+    "name": "Images",
     "description": "Simple note-taking app with markdown support. Organize your thoughts and ideas with ease. Auto-saves everything!",
     "badges": []
   },
