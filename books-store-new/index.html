@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Finder</title>
+    <style>
+        /* --- General & Mobile-First Styles --- */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --background-color: #ecf0f1;
+            --card-bg-color: #ffffff;
+            --text-color: #34495e;
+            --light-gray: #bdc3c7;
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        /* --- Header & Search Bar --- */
+        header {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 1.5rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        .search-form {
+            margin: 1.5rem 0;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .search-input {
+            flex-grow: 1;
+            padding: 0.75rem;
+            font-size: 1rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.3);
+        }
+
+        .search-button {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-button:hover {
+            background-color: #2980b9;
+        }
+
+        /* --- Book List (Responsive Grid) --- */
+        .book-list {
+            display: grid;
+            /* Creates a responsive grid that fits as many columns as possible with a min-width of 280px */
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .book-card {
+            background-color: var(--card-bg-color);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background-color: var(--light-gray);
+        }
+
+        .book-info {
+            padding: 1rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin: 0 0 0.5rem;
+        }
+
+        .book-author {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+            margin: 0 0 1rem;
+            flex-grow: 1;
+        }
+
+        .book-link {
+            display: inline-block;
+            text-decoration: none;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.6rem 1rem;
+            border-radius: 4px;
+            text-align: center;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .book-link:hover {
+            background-color: #34495e;
+        }
+
+        /* --- Pagination & Loader --- */
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .pagination-button {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .pagination-button:disabled {
+            background-color: var(--light-gray);
+            cursor: not-allowed;
+        }
+
+        .loader {
+            display: none; /* Hidden by default */
+            margin: 4rem auto;
+            border: 8px solid var(--background-color);
+            border-top: 8px solid var(--primary-color);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+        }
+        
+        .message-area {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 1.2rem;
+            color: #7f8c8d;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+    <meta name="theme-color" content="#2196f3">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Book Finder">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+</head>
+<body>
+
+    <header>
+        <h1>Book Finder</h1>
+    </header>
+
+    <main class="container">
+        <form class="search-form" id="search-form">
+            <input 
+                type="search" 
+                id="search-input"
+                class="search-input" 
+                placeholder="e.g., shakespeare hamlet"
+                aria-label="Search for books by title or author"
+            >
+            <button type="submit" class="search-button">Search</button>
+        </form>
+
+        <div id="loader" class="loader"></div>
+        <div id="message-area" class="message-area"></div>
+        
+        <div class="book-list" id="book-list">
+            <!-- Book cards will be inserted here by JavaScript -->
+        </div>
+
+        <nav class="pagination" id="pagination">
+            <button class="pagination-button" id="prev-button" disabled>Previous</button>
+            <button class="pagination-button" id="next-button" disabled>Next</button>
+        </nav>
+    </main>
+
+    <script>
+        const API_BASE_URL = 'https://gutendex.com/books';
+
+        // DOM Elements
+        const searchForm = document.getElementById('search-form');
+        const searchInput = document.getElementById('search-input');
+        const bookList = document.getElementById('book-list');
+        const loader = document.getElementById('loader');
+        const messageArea = document.getElementById('message-area');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const paginationNav = document.getElementById('pagination');
+
+        // State to hold pagination URLs
+        let nextPageUrl = null;
+        let prevPageUrl = null;
+
+        /**
+         * Fetches books from the API and renders them.
+         * @param {string} url - The API URL to fetch.
+         */
+        async function fetchAndRenderBooks(url) {
+            // 1. Show loader and clear previous results
+            loader.style.display = 'block';
+            bookList.innerHTML = '';
+            messageArea.textContent = '';
+            paginationNav.style.display = 'none';
+
+            try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.detail || 'An unknown error occurred.');
+                }
+                const data = await response.json();
+
+                // 2. Update state with pagination URLs
+                nextPageUrl = data.next;
+                prevPageUrl = data.previous;
+
+                // 3. Render books or show a message if no results
+                if (data.results.length > 0) {
+                    renderBooks(data.results);
+                    paginationNav.style.display = 'flex';
+                } else {
+                    messageArea.textContent = 'No books found. Try a different search.';
+                }
+                
+                // 4. Update pagination buttons
+                updatePagination();
+
+            } catch (error) {
+                console.error('Error fetching books:', error);
+                messageArea.textContent = `Error: ${error.message}`;
+            } finally {
+                // 5. Hide loader
+                loader.style.display = 'none';
+            }
+        }
+
+        /**
+         * Renders an array of book objects into the DOM.
+         * @param {Array<Object>} books - The array of book objects from the API.
+         */
+        function renderBooks(books) {
+            const fragment = document.createDocumentFragment();
+            books.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'book-card';
+
+                // Find a link to read online or the project gutenberg page
+                const readLink = book.formats['text/html'] || `https://www.gutenberg.org/ebooks/${book.id}`;
+                const coverUrl = book.formats['image/jpeg'] || 'https://www.gutenberg.org/gutenberg/images/logo-128x128.png'; // Fallback image
+
+                card.innerHTML = `
+                    <img src="${coverUrl}" alt="Cover for ${book.title}" class="book-cover" loading="lazy">
+                    <div class="book-info">
+                        <h3 class="book-title">${book.title}</h3>
+                        <p class="book-author">${book.authors.map(a => a.name).join(', ') || 'Unknown Author'}</p>
+                        <a href="${readLink}" class="book-link" target="_blank" rel="noopener noreferrer">Read Online</a>
+                    </div>
+                `;
+                fragment.appendChild(card);
+            });
+            bookList.appendChild(fragment);
+        }
+
+        /**
+         * Updates the state and visibility of pagination buttons.
+         */
+        function updatePagination() {
+            prevButton.disabled = !prevPageUrl;
+            nextButton.disabled = !nextPageUrl;
+        }
+
+        // --- Event Listeners ---
+
+        // Handle search form submission
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const searchTerm = searchInput.value.trim();
+            if (searchTerm) {
+                // URL-encode the search term to handle spaces and special characters
+                const searchUrl = `${API_BASE_URL}?search=${encodeURIComponent(searchTerm)}`;
+                fetchAndRenderBooks(searchUrl);
+            } else {
+                // If search is empty, load the default popular books
+                fetchAndRenderBooks(API_BASE_URL);
+            }
+        });
+
+        // Handle 'Next' button click
+        nextButton.addEventListener('click', () => {
+            if (nextPageUrl) {
+                fetchAndRenderBooks(nextPageUrl);
+            }
+        });
+
+        // Handle 'Previous' button click
+        prevButton.addEventListener('click', () => {
+            if (prevPageUrl) {
+                fetchAndRenderBooks(prevPageUrl);
+            }
+        });
+
+        // Initial load of popular books when the page is ready
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAndRenderBooks(API_BASE_URL);
+        });
+    </script>
+
+
+    <script>
+        // PWA Service Worker Registration
+        // Generated by PWA Converter v2.0.1
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Use RELATIVE path for service worker (works with multi-app setup)
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('✓ Service Worker registered:', registration.scope);
+                        console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
+                        console.log('✓ App: Book Finder');
+                        console.log('✓ Folder: books-store-new');
+                        console.log('✓ Total files cached: 4'); // +3 for manifest, sw, offline
+                        
+                        // Check for updates periodically
+                        setInterval(() => {
+                            registration.update();
+                        }, 60000); // Check every minute
+                    })
+                    .catch(error => {
+                        console.error('✗ Service Worker registration failed:', error);
+                    });
+            });
+        } else {
+            console.warn('⚠ Service Workers not supported in this browser');
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('💡 PWA install prompt available');
+            // Show custom install UI
+            showInstallPromotion();
+        });
+
+        function showInstallPromotion() {
+            // You can implement custom install UI here
+            console.log('📱 App can be installed - Click browser menu or use custom UI');
+        }
+
+        // Install PWA function (call from your custom install button)
+        async function installPWA() {
+            if (!deferredPrompt) {
+                console.log('❌ Install prompt not available');
+                return;
+            }
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to install prompt: ${outcome}`);
+            deferredPrompt = null;
+        }
+
+        // Track installation
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA installed successfully!');
+            console.log('✅ App: Book Finder');
+            console.log('✅ App ID: books-store-id');
+            console.log('✅ Folder: books-store-new');
+            deferredPrompt = null;
+        });
+
+        // Display mode detection
+        function getPWADisplayMode() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            if (document.referrer.startsWith('android-app://')) {
+                return 'twa';
+            } else if (navigator.standalone || isStandalone) {
+                return 'standalone';
+            }
+            return 'browser';
+        }
+
+        const displayMode = getPWADisplayMode();
+        console.log('🖥️ Display mode:', displayMode);
+        
+        // Log PWA configuration
+        console.log('⚙️ PWA Configuration:');
+        console.log('  - App Name: Book Finder');
+        console.log('  - App ID: books-store-id');
+        console.log('  - Start URL: /books-store-new/');
+        console.log('  - Scope: /books-store-new/');
+        console.log('  - Folder: books-store-new');
+        console.log('  - Files included: 1');
+    </script>
+</body>
+</html>

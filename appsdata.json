@@ -1,79 +1,89 @@
 [
   {
+    "href": "books-store-new/",
+    "category": "utilities",
+    "keywords": "Search and read books",
+    "icon": "\ud83d\udd22",
+    "name": "Books Store",
+    "description": "This PWA, 'Book Finder,' allows users to search for books using the Gutendex API. It dynamically displays book covers, titles, and authors, with options to read books online. The app features pagination for browsing results and includes service worker registration for offline capabilities and a seamless install experience, enhancing user engagement and accessibility.",
+    "badges": [
+      "new"
+    ]
+  },
+  {
     "href": "prom/",
     "category": "utilities",
     "keywords": "Search copy creative ai prompts",
-    "icon": "🔢",
+    "icon": "\ud83d\udd22",
     "name": "Ai Prompts",
-    "description": "A simple and beautiful calculator with offline support. Perfect for quick calculations on the go with a clean interface.",
-    "badges": ["new"]
+    "description": "This PWA, 'Prompt Explorer,' helps users efficiently browse and copy ready-to-use AI prompts. Prompts are organized by subcategories like 'initial prompts' and 'followup prompts,' and further filtered by category. It provides a convenient interface to discover and utilize various AI prompts for different needs, ensuring quick access and easy copying.",
+    "badges": [
+      "new"
+    ]
   },
   {
     "href": "games/",
     "category": "productivity",
     "keywords": "tasks organize list notes",
-    "icon": "✅",
+    "icon": "\u2705",
     "name": "Games hub",
-    "description": "Keep track of your tasks with this elegant todo app. Works offline and syncs automatically when online. Never forget a task!",
+    "description": "'GameHub' is a PWA designed for discovering free-to-play games across diverse genres and platforms. Users can search, filter by category, and sort games to find new titles. Each game features a detailed card with descriptions, platform information, and a direct link to play. The app provides an intuitive interface for exploring thousands of free games.",
     "badges": []
   },
-  
-  
-   {
+  {
     "href": "openverse/",
     "category": "productivity",
     "keywords": "Media collection",
-    "icon": "✅",
+    "icon": "\u2705",
     "name": "Media collection",
-    "description": "Keep track of your tasks with this elegant todo app. Works offline and syncs automatically when online. Never forget a task!",
+    "description": "This PWA, 'Simple Media Browser,' enables users to efficiently search for openly-licensed images and audio. It offers robust filtering options by license type, source, and specific image or audio categories, simplifying the discovery of creative commons media. The app also features an 'Advice of the Day' widget and pagination for an enhanced browsing experience.",
     "badges": []
   },
-  
   {
     "href": "quransearch/",
     "category": "Quran",
     "keywords": "search a word in quran",
-    "icon": "🎮",
+    "icon": "\ud83c\udfae",
     "name": "Quran Search",
-    "description": "Classic 2048 puzzle game. Slide tiles to reach 2048 and beyond. Fully playable offline with smooth animations!",
-    "badges": ["new"]
+    "description": "'Quran Search' is a PWA designed for searching the Holy Quran. Users can quickly find verses by typing keywords, with an option for auto-search. Search results display detailed Surah and Ayah information, and users can listen to audio recitations of individual verses. The app also allows copying all search results and offers a light/dark theme toggle for enhanced readability.",
+    "badges": [
+      "new"
+    ]
   },
   {
     "href": "promaker/",
     "category": "creative",
     "keywords": "App builders prompt",
-    "icon": "📸",
+    "icon": "\ud83d\udcf8",
     "name": "Prompt Generator",
-    "description": "Edit photos with filters, effects, and adjustments. All processing done locally in your browser. No uploads needed!",
+    "description": "'Website Prompt Builder' is a PWA designed to help users generate professional web development prompts. It offers quick-start templates, allows selection of various website components, and provides a visual preview of the chosen elements. The app then generates a comprehensive prompt, which users can copy and utilize with AI development tools to streamline their web project creation process.",
     "badges": []
   },
   {
     "href": "imgutls/",
     "category": "productivity",
     "keywords": "Image edit/create",
-    "icon": "📝",
+    "icon": "\ud83d\udcdd",
     "name": "Images",
-    "description": "Simple note-taking app with markdown support. Organize your thoughts and ideas with ease. Auto-saves everything!",
+    "description": "The 'Utility Toolkit' is a versatile PWA offering a suite of image manipulation tools. Users can generate QR codes, create custom icons and favicons from scratch or existing images, and edit hero images with cropping and optimization features. It also includes dedicated tools for generating animated GIFs and resizing images, making it a comprehensive solution for various visual asset needs.",
     "badges": []
   },
   {
     "href": "discoverquran/",
     "category": "Quran",
     "keywords": "Disciver Quran, search, read listen, cooy",
-    "icon": "🌤️",
+    "icon": "\ud83c\udf24\ufe0f",
     "name": "Disciver Quran",
-    "description": "Disciver Quran, search, read, search, listen, tafsur and more.",
+    "description": "'\u0645\u0639 \u0627\u0644\u0642\u0631\u0622\u0646 \u0627\u0644\u0643\u0631\u064a\u0645' (With the Holy Quran) is a comprehensive PWA for exploring the Quran. It enables users to read Arabic verses, access English and Urdu translations, and delve into various Tafsir (exegesis) interpretations. The app also features audio recitations by multiple Qaris, with options for sequential playback, a search function, adjustable font sizes, and a dark mode for comfortable reading.",
     "badges": []
   },
   {
     "href": "nextapp/",
     "category": "Next",
     "keywords": "Next application",
-    "icon": "⏱️",
+    "icon": "\u23f1\ufe0f",
     "name": "Comming Soon",
     "description": "In progress!",
     "badges": []
   }
 ]
-
-
