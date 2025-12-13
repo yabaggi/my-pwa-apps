@@ -3,7 +3,7 @@
     "href": "books-store-new/",
     "category": "utilities",
     "keywords": "Search and read books",
-    "icon": "\ud83d\udd22",
+    "icon": "\u2600\uFE0F ",
     "name": "Books Store",
     "description": "This PWA, 'Book Finder,' allows users to search for books using the Gutendex API. It dynamically displays book covers, titles, and authors, with options to read books online. The app features pagination for browsing results and includes service worker registration for offline capabilities and a seamless install experience, enhancing user engagement and accessibility.",
     "badges": [
@@ -14,7 +14,7 @@
     "href": "prom/",
     "category": "utilities",
     "keywords": "Search copy creative ai prompts",
-    "icon": "\ud83d\udd22",
+    "icon": "  \u26A1   ",
     "name": "Ai Prompts",
     "description": "This PWA, 'Prompt Explorer,' helps users efficiently browse and copy ready-to-use AI prompts. Prompts are organized by subcategories like 'initial prompts' and 'followup prompts,' and further filtered by category. It provides a convenient interface to discover and utilize various AI prompts for different needs, ensuring quick access and easy copying.",
     "badges": [
@@ -25,7 +25,7 @@
     "href": "games/",
     "category": "productivity",
     "keywords": "tasks organize list notes",
-    "icon": "\u2705",
+    "icon": "  \ud83c\udfae   ",
     "name": "Games hub",
     "description": "'GameHub' is a PWA designed for discovering free-to-play games across diverse genres and platforms. Users can search, filter by category, and sort games to find new titles. Each game features a detailed card with descriptions, platform information, and a direct link to play. The app provides an intuitive interface for exploring thousands of free games.",
     "badges": []
@@ -34,7 +34,7 @@
     "href": "openverse/",
     "category": "productivity",
     "keywords": "Media collection",
-    "icon": "\u2705",
+    "icon": "  \u23F8\uFE0F   ",
     "name": "Media collection",
     "description": "This PWA, 'Simple Media Browser,' enables users to efficiently search for openly-licensed images and audio. It offers robust filtering options by license type, source, and specific image or audio categories, simplifying the discovery of creative commons media. The app also features an 'Advice of the Day' widget and pagination for an enhanced browsing experience.",
     "badges": []
@@ -43,7 +43,7 @@
     "href": "quransearch/",
     "category": "Quran",
     "keywords": "search a word in quran",
-    "icon": "\ud83c\udfae",
+    "icon": "  \u26C5   ",
     "name": "Quran Search",
     "description": "'Quran Search' is a PWA designed for searching the Holy Quran. Users can quickly find verses by typing keywords, with an option for auto-search. Search results display detailed Surah and Ayah information, and users can listen to audio recitations of individual verses. The app also allows copying all search results and offers a light/dark theme toggle for enhanced readability.",
     "badges": [
@@ -54,7 +54,7 @@
     "href": "promaker/",
     "category": "creative",
     "keywords": "App builders prompt",
-    "icon": "\ud83d\udcf8",
+    "icon": "  \u2728   ",
     "name": "Prompt Generator",
     "description": "'Website Prompt Builder' is a PWA designed to help users generate professional web development prompts. It offers quick-start templates, allows selection of various website components, and provides a visual preview of the chosen elements. The app then generates a comprehensive prompt, which users can copy and utilize with AI development tools to streamline their web project creation process.",
     "badges": []
@@ -63,7 +63,7 @@
     "href": "imgutls/",
     "category": "productivity",
     "keywords": "Image edit/create",
-    "icon": "\ud83d\udcdd",
+    "icon": " \u2692\uFE0F  ",
     "name": "Images",
     "description": "The 'Utility Toolkit' is a versatile PWA offering a suite of image manipulation tools. Users can generate QR codes, create custom icons and favicons from scratch or existing images, and edit hero images with cropping and optimization features. It also includes dedicated tools for generating animated GIFs and resizing images, making it a comprehensive solution for various visual asset needs.",
     "badges": []
