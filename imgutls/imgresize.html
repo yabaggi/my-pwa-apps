@@ -754,6 +754,7 @@
         function resetPreviews() {
             processedImages = [];
             downloadBtn.style.display = 'none';
+            downloadBtn.disabled = true;
             if (selectedFiles.length > 0) {
                 updatePreview();
             }
@@ -774,6 +775,7 @@
             processedImages = [];
             originalDimensions = [];
             downloadBtn.style.display = 'none';
+            downloadBtn.disabled = true;
             updatePreview();
             updateUI();
         }
@@ -892,6 +894,7 @@
             updatePreview();
             updateUI();
             downloadBtn.style.display = 'none';
+            downloadBtn.disabled = true;
         });
 
         // Process images (generate previews)
@@ -921,6 +924,7 @@
             try {
                 await generatePreviews(selectedFiles, targetWidth, targetHeight, quality, format, maintainAspect);
                 downloadBtn.style.display = 'block';
+                downloadBtn.disabled = false;
                 processBtn.textContent = '✅ Previews Generated';
                 setTimeout(() => {
                     processBtn.textContent = '🔄 Regenerate Previews';
