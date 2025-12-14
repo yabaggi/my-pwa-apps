@@ -567,11 +567,11 @@
         <div class="quick-presets">
             <div class="presets-title">⚡ Quick Presets</div>
             <div class="preset-buttons">
-                <button class="preset-btn" id="presetOriginal">
+                <button class="preset-btn active" id="presetOriginal">
                     <span class="preset-icon">📐</span>
                     <span>Original Size</span>
                 </button>
-                <button class="preset-btn active" id="presetCustom">
+                <button class="preset-btn" id="presetCustom">
                     <span class="preset-icon">🎯</span>
                     <span>Custom (800×600)</span>
                 </button>
@@ -581,11 +581,11 @@
         <div class="settings">
             <div class="setting-group">
                 <label for="width">Width (px)</label>
-                <input type="number" id="width" value="800" min="1" max="10000">
+                <input type="number" id="width" value="0" min="1" max="10000" disabled>
             </div>
             <div class="setting-group">
                 <label for="height">Height (px)</label>
-                <input type="number" id="height" value="600" min="1" max="10000">
+                <input type="number" id="height" value="0" min="1" max="10000" disabled>
             </div>
             <div class="setting-group">
                 <label for="quality">
@@ -657,7 +657,7 @@
         // Global variables
         let selectedFiles = [];
         let processedImages = [];
-        let currentPreset = 'custom';
+        let currentPreset = 'original';
         let originalDimensions = [];
         
         // DOM elements
@@ -1067,21 +1067,21 @@
             
             const format = formatInput.value;
             processedImages.forEach((result, index) => {
-                downloadBlob(result.blob, result.originalName, format);
+                downloadBlob(result.blob, result.originalName, format, result.width, result.height);
             });
             
             alert(`✅ Downloaded ${processedImages.length} image${processedImages.length !== 1 ? 's' : ''}!`);
         });
 
         // Download blob
-        function downloadBlob(blob, originalName, format) {
+        function downloadBlob(blob, originalName, format, width, height) {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
             
-            const extension = format.split('/')[1];
+            const extension = format.split('/')[1].split('+')[0]; // Handle cases like image/jpeg, image/webp
             const nameWithoutExt = originalName.replace(/\.[^/.]+$/, '');
-            a.download = `${nameWithoutExt}_resized.${extension}`;
+            a.download = `${nameWithoutExt}-${width}x${height}.${extension}`;
             
             document.body.appendChild(a);
             a.click();
