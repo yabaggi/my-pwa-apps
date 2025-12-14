@@ -1,0 +1,553 @@
+[
+  {
+    "unicode": "\u231B",
+    "description": "HOURGLASS",
+    "category": "Time"
+  },
+  {
+    "unicode": "\u23F0",
+    "description": "ALARM CLOCK",
+    "category": "Time"
+  },
+  {
+    "unicode": "\u231A",
+    "description": "WATCH",
+    "category": "Time"
+  },
+  {
+    "unicode": "\u260E",
+    "description": "BLACK TELEPHONE",
+    "category": "Communication"
+  },
+  {
+    "unicode": "\u2709\ufe0f",
+    "description": "ENVELOPE (Email)",
+    "category": "Communication"
+  },
+  {
+    "unicode": "\u2706",
+    "description": "TELEPHONE LOCATION SIGN",
+    "category": "Communication"
+  },
+  {
+    "unicode": "\u26F5",
+    "description": "SAILBOAT",
+    "category": "Travel/Nature"
+  },
+  {
+    "unicode": "\u26F2",
+    "description": "UMBRELLA",
+    "category": "Weather/Object"
+  },
+  {
+    "unicode": "\u2615",
+    "description": "HOT BEVERAGE (Coffee/Tea)",
+    "category": "Food/Drink"
+  },
+  {
+    "unicode": "\u26AA",
+    "description": "MEDIUM WHITE CIRCLE (Placeholder/Radio)",
+    "category": "UI/Status"
+  },
+  {
+    "unicode": "\u26AB",
+    "description": "MEDIUM BLACK CIRCLE (Placeholder/Radio)",
+    "category": "UI/Status"
+  },
+  {
+    "unicode": "\u2699\ufe0f",
+    "description": "GEAR (Settings)",
+    "category": "UI/Settings"
+  },
+  {
+    "unicode": "\u270F\ufe0f",
+    "description": "PENCIL (Edit)",
+    "category": "UI/Edit"
+  },
+  {
+    "unicode": "\u2714\ufe0f",
+    "description": "HEAVY CHECK MARK (Confirm)",
+    "category": "UI/Status"
+  },
+  {
+    "unicode": "\u2716\ufe0f",
+    "description": "HEAVY MULTIPLICATION X (Close/Error)",
+    "category": "UI/Status"
+  },
+  {
+    "unicode": "\u2753",
+    "description": "BLACK QUESTION MARK ORNAMENT",
+    "category": "UI/Info"
+  },
+  {
+    "unicode": "\u2757",
+    "description": "HEAVY EXCLAMATION MARK SYMBOL",
+    "category": "UI/Info"
+  },
+  {
+    "unicode": "\u2764\ufe0f",
+    "description": "HEAVY BLACK HEART (Like)",
+    "category": "Social"
+  },
+  {
+    "unicode": "\u26D4",
+    "description": "NO ENTRY (Prohibit)",
+    "category": "UI/Status"
+  },
+  {
+    "unicode": "\u267B\ufe0f",
+    "description": "RECYCLING SYMBOL",
+    "category": "Object/Status"
+  },
+  {
+    "unicode": "\u26A1",
+    "description": "HIGH VOLTAGE SIGN (Energy)",
+    "category": "Energy/Warning"
+  },
+  {
+    "unicode": "\u2600\ufe0f",
+    "description": "BLACK SUN WITH RAYS",
+    "category": "Weather"
+  },
+  {
+    "unicode": "\u2601\ufe0f",
+    "description": "CLOUD",
+    "category": "Weather"
+  },
+  {
+    "unicode": "\u26C5",
+    "description": "SUN BEHIND CLOUD",
+    "category": "Weather"
+  },
+  {
+    "unicode": "\u2614",
+    "description": "UMBRELLA WITH RAIN DROPS",
+    "category": "Weather"
+  },
+  {
+    "unicode": "\u266A",
+    "description": "EIGHTH NOTE",
+    "category": "Music"
+  },
+  {
+    "unicode": "\u266B",
+    "description": "BEAMED EIGHTH NOTES",
+    "category": "Music"
+  },
+  {
+    "unicode": "\u26F9\ufe0f",
+    "description": "PERSON WITH BALL (Sport)",
+    "category": "Activities"
+  },
+  {
+    "unicode": "\u26BD",
+    "description": "SOCCER BALL",
+    "category": "Activities"
+  },
+  {
+    "unicode": "\u26BE",
+    "description": "BASEBALL",
+    "category": "Activities"
+  },
+  {
+    "unicode": "\u2668",
+    "description": "HOT SPRINGS (Spa)",
+    "category": "Activities"
+  },
+  {
+    "unicode": "\u26FD",
+    "description": "FUEL PUMP",
+    "category": "Travel/Object"
+  },
+  {
+    "unicode": "\u26F7\ufe0f",
+    "description": "SKI AND BOOT",
+    "category": "Activities"
+  },
+  {
+    "unicode": "\u2648",
+    "description": "ARIES (Zodiac)",
+    "category": "Symbols"
+  },
+  {
+    "unicode": "\u2653",
+    "description": "PISCES (Zodiac)",
+    "category": "Symbols"
+  },
+  {
+    "unicode": "\u23F8\ufe0f",
+    "description": "DOUBLE VERTICAL BAR (Pause)",
+    "category": "Media Control"
+  },
+  {
+    "unicode": "\u23F9\ufe0f",
+    "description": "BLACK SQUARE FOR STOP (Stop)",
+    "category": "Media Control"
+  },
+  {
+    "unicode": "\u23FA\ufe0f",
+    "description": "BLACK CIRCLE FOR RECORD (Record)",
+    "category": "Media Control"
+  },
+  {
+    "unicode": "\u23EE\ufe0f",
+    "description": "NEXT TRACK (Skip Forward)",
+    "category": "Media Control"
+  },
+  {
+    "unicode": "\u23ED\ufe0f",
+    "description": "PREVIOUS TRACK (Skip Backward)",
+    "category": "Media Control"
+  },
+  {
+    "unicode": "\u23CF",
+    "description": "EJECT SYMBOL",
+    "category": "Media Control"
+  },
+  {
+    "unicode": "\u231B",
+    "description": "HOURGLASS",
+    "category": "Time"
+  },
+  {
+    "unicode": "\u23F3",
+    "description": "HOURGLASS WITH FLOWING SAND",
+    "category": "Time"
+  },
+  {
+    "unicode": "\u2708\ufe0f",
+    "description": "AIRPLANE (Departure/Arrival)",
+    "category": "Travel"
+  },
+  {
+    "unicode": "\u23F1\ufe0f",
+    "description": "STOPWATCH",
+    "category": "Time"
+  },
+  {
+    "unicode": "\u27B0",
+    "description": "CURLY LOOP (Music/Playlist)",
+    "category": "Music"
+  },
+  {
+    "unicode": "\u260E\ufe0f",
+    "description": "HOTEL SIGN",
+    "category": "Travel"
+  },
+  {
+    "unicode": "\u2663\ufe0f",
+    "description": "BLACK CLUB SUIT (Card/Game)",
+    "category": "Game"
+  },
+  {
+    "unicode": "\u265F\ufe0f",
+    "description": "CHESS PAWN",
+    "category": "Game"
+  },
+  {
+    "unicode": "\u26D1",
+    "description": "SCALES (Justice/Balance)",
+    "category": "Concepts"
+  },
+  {
+    "unicode": "\u27A1\ufe0f",
+    "description": "SPEECH BUBBLE",
+    "category": "Communication"
+  },
+  {
+    "unicode": "\u2763\ufe0f",
+    "description": "HEART EXCLAMATION",
+    "category": "Social/Emotion"
+  },
+  {
+    "unicode": "\u26E9\ufe0f",
+    "description": "CASTLE",
+    "category": "Building"
+  },
+  {
+    "unicode": "\u26E8\ufe0f",
+    "description": "STADIUM",
+    "category": "Building"
+  },
+  {
+    "unicode": "\u270D\ufe0f",
+    "description": "WRITING HAND (Sign/Note)",
+    "category": "UI/Edit"
+  },
+  {
+    "unicode": "\u276F\ufe0f",
+    "description": "LARGE WHITE CIRCLE (Placeholder/Dot)",
+    "category": "UI/Status"
+  },
+  {
+    "unicode": "\u2776",
+    "description": "DINGBAT NEGATIVE CIRCLED DIGIT ONE (Numbered List)",
+    "category": "UI/List"
+  },
+  {
+    "unicode": "\u2777",
+    "description": "DINGBAT NEGATIVE CIRCLED DIGIT TWO",
+    "category": "UI/List"
+  },
+  {
+    "unicode": "\u2778",
+    "description": "DINGBAT NEGATIVE CIRCLED DIGIT THREE",
+    "category": "UI/List"
+  },
+  {
+    "unicode": "\u2795",
+    "description": "HEAVY PLUS SIGN (Add)",
+    "category": "UI/Action"
+  },
+  {
+    "unicode": "\u2796",
+    "description": "HEAVY MINUS SIGN (Remove)",
+    "category": "UI/Action"
+  },
+  {
+    "unicode": "\u2797",
+    "description": "HEAVY DIVISION SIGN",
+    "category": "Math"
+  },
+  {
+    "unicode": "\u269B\ufe0f",
+    "description": "ATOMIC SYMBOL",
+    "category": "Science"
+  },
+  {
+    "unicode": "\u2728",
+    "description": "SPARKLES (New/Highlight)",
+    "category": "Status/Decoration"
+  },
+  {
+    "unicode": "\u263A\ufe0f",
+    "description": "WHITE SMILING FACE",
+    "category": "Emotion"
+  },
+  {
+    "unicode": "\u2639\ufe0f",
+    "description": "WHITE FROWNING FACE",
+    "category": "Emotion"
+  },
+  {
+    "unicode": "\u263B\ufe0f",
+    "description": "BLACK FROWNING FACE",
+    "category": "Emotion"
+  },
+  {
+    "unicode": "\u26A0\ufe0f",
+    "description": "WARNING SIGN (Triangle)",
+    "category": "UI/Warning"
+  },
+  {
+    "unicode": "\u26D3",
+    "description": "POLICE CARS REVOLVING LIGHT",
+    "category": "Object/Status"
+  },
+  {
+    "unicode": "\u26FA",
+    "description": "TENT",
+    "category": "Activities"
+  },
+  {
+    "unicode": "\u2707",
+    "description": "TAPE DRIVE",
+    "category": "Computer"
+  },
+  {
+    "unicode": "\u270A\ufe0f",
+    "description": "RAISED FIST (Action/Strength)",
+    "category": "Hand"
+  },
+  {
+    "unicode": "\u270B\ufe0f",
+    "description": "RAISED HAND (Stop/Wave)",
+    "category": "Hand"
+  },
+  {
+    "unicode": "\u270C\ufe0f",
+    "description": "VICTORY HAND (Peace/V-Sign)",
+    "category": "Hand"
+  },
+  {
+    "unicode": "\u26CF\ufe0f",
+    "description": "PICK (Mining/Tool)",
+    "category": "Tool"
+  },
+  {
+    "unicode": "\u2692\ufe0f",
+    "description": "HAMMER AND PICK (Work/Tool)",
+    "category": "Tool"
+  },
+  {
+    "unicode": "\u2694\ufe0f",
+    "description": "CROSSED SWORDS",
+    "category": "Weapon/Game"
+  },
+  {
+    "unicode": "\u272A",
+    "description": "CIRCLED WHITE STAR",
+    "category": "Status/Rating"
+  },
+  {
+    "unicode": "\u274E",
+    "description": "NEGATIVE SQUARED CROSS MARK (Deny)",
+    "category": "UI/Status"
+  },
+  {
+    "unicode": "\u2754",
+    "description": "LIGHT QUESTION MARK ORNAMENT",
+    "category": "UI/Info"
+  },
+  {
+    "unicode": "\u2755",
+    "description": "LIGHT EXCLAMATION MARK ORNAMENT",
+    "category": "UI/Info"
+  },
+  {
+    "unicode": "\u2766",
+    "description": "FLOWER ORNAMENT",
+    "category": "Decoration"
+  },
+  {
+    "unicode": "\u270E",
+    "description": "PENCIL (Edit/Draw)",
+    "category": "UI/Edit"
+  },
+  {
+    "unicode": "\u2618\ufe0f",
+    "description": "SHAMROCK (Luck)",
+    "category": "Nature"
+  },
+  {
+    "unicode": "\u2622\ufe0f",
+    "description": "RADIOACTIVE SIGN",
+    "category": "Warning"
+  },
+  {
+    "unicode": "\u2620\ufe0f",
+    "description": "SKULL AND CROSSBONES (Danger)",
+    "category": "Warning"
+  },
+  {
+    "unicode": "\u2768",
+    "description": "HEAVY LEFT PARENTHESIS",
+    "category": "Bracket"
+  },
+  {
+    "unicode": "\u2769",
+    "description": "HEAVY RIGHT PARENTHESIS",
+    "category": "Bracket"
+  },
+  {
+    "unicode": "\u276A",
+    "description": "HEAVY LEFT CURLY BRACKET",
+    "category": "Bracket"
+  },
+  {
+    "unicode": "\u276B",
+    "description": "HEAVY RIGHT CURLY BRACKET",
+    "category": "Bracket"
+  },
+  {
+    "unicode": "\u276C",
+    "description": "MEDIUM LEFT-POINTING ANGLE BRACKET ORNAMENT",
+    "category": "Bracket"
+  },
+  {
+    "unicode": "\u276D",
+    "description": "MEDIUM RIGHT-POINTING ANGLE BRACKET ORNAMENT",
+    "category": "Bracket"
+  },
+  {
+    "unicode": "\u27A3",
+    "description": "THREE-D TOP-LIGHTED RIGHTWARDS ARROWHEAD",
+    "category": "UI/Action"
+  },
+  {
+    "unicode": "\u27A2",
+    "description": "THREE-D TOP-LIGHTED LEFTWARDS ARROWHEAD",
+    "category": "UI/Action"
+  },
+  {
+    "unicode": "\u271F",
+    "description": "HEAVY LOW RIGHTWARDS ARROW",
+    "category": "UI/Action"
+  },
+  {
+    "unicode": "\u2720",
+    "description": "MALTESE CROSS",
+    "category": "Religious"
+  },
+  {
+    "unicode": "\u26C4",
+    "description": "SNOWMAN WITHOUT SNOW",
+    "category": "Weather"
+  },
+  {
+    "unicode": "\u26F0",
+    "description": "MOUNTAIN",
+    "category": "Nature"
+  },
+  {
+    "unicode": "\u26A7",
+    "description": "MALE WITH STROKE SIGN",
+    "category": "Gender/Symbol"
+  },
+  {
+    "unicode": "\u26A8",
+    "description": "TRANSGENDER SYMBOL",
+    "category": "Gender/Symbol"
+  },
+  {
+    "unicode": "\u270A",
+    "description": "RAISED FIST",
+    "category": "Hand"
+  },
+  {
+    "unicode": "\u270B",
+    "description": "RAISED HAND",
+    "category": "Hand"
+  },
+  {
+    "unicode": "\u270C",
+    "description": "VICTORY HAND",
+    "category": "Hand"
+  },
+  {
+    "unicode": "\u2710",
+    "description": "UPPER RIGHT PENCIL",
+    "category": "Tool"
+  },
+  {
+    "unicode": "\u2711",
+    "description": "LOWER LEFT PENCIL",
+    "category": "Tool"
+  },
+  {
+    "unicode": "\u272F",
+    "description": "EIGHT POINTED BLACK STAR",
+    "category": "Decoration"
+  },
+  {
+    "unicode": "\u273D",
+    "description": "LIGHT WEIGHT BLACK STAR",
+    "category": "Decoration"
+  },
+  {
+    "unicode": "\u274C",
+    "description": "CROSS MARK",
+    "category": "UI/Status"
+  },
+  {
+    "unicode": "\u275E",
+    "description": "HEAVY WHITE LEFT QUOTATION MARK",
+    "category": "Quote"
+  },
+  {
+    "unicode": "\u275F",
+    "description": "HEAVY WHITE RIGHT QUOTATION MARK",
+    "category": "Quote"
+  }
+]
+

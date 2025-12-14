@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Emoji Creator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #141414;
+            --bg-tertiary: #1e1e1e;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --text-tertiary: #606060;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --border: #2a2a2a;
+            --radius-card: 12px;
+            --radius-pill: 16px;
+            --header-height: 52px;
+            --toolbar-height: 56px;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+            padding-left: env(safe-area-inset-left);
+            padding-right: env(safe-area-inset-right);
+        }
+
+        /* Header */
+        .header {
+            flex-shrink: 0;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            padding: 0 16px;
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-icon {
+            font-size: 24px;
+        }
+
+        /* Search + Filters Section */
+        .filters-section {
+            flex-shrink: 0;
+            background: var(--bg-secondary);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .preset-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            padding-bottom: 4px;
+        }
+
+        .preset-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .preset-tab {
+            flex-shrink: 0;
+            padding: 8px 16px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-pill);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 200ms ease;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .preset-tab:hover, .preset-tab.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--text-primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Preview Card */
+        .preview-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .preview-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .canvas-container {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #emojiCanvas {
+            border-radius: 8px;
+            background: repeating-conic-gradient(#2a2a2a 0% 25%, #1a1a1a 0% 50%) 50% / 16px 16px;
+        }
+
+        .size-indicator {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+        }
+
+        /* Controls Section */
+        .controls-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .control-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-card);
+            border: 1px solid var(--border);
+            padding: 16px;
+        }
+
+        .control-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .control-title {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .control-icon {
+            font-size: 16px;
+        }
+
+        .control-value {
+            font-size: 12px;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        /* Input Styles */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .input-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            min-width: 70px;
+        }
+
+        input[type="text"], input[type="number"] {
+            flex: 1;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            color: var(--text-primary);
+            font-size: 14px;
+            min-height: 44px;
+            transition: border-color 200ms ease;
+        }
+
+        input[type="text"]:focus, input[type="number"]:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        input[type="color"] {
+            width: 44px;
+            height: 44px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: transparent;
+            padding: 0;
+        }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 2px;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border-radius: 6px;
+            border: 2px solid var(--border);
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            -webkit-appearance: none;
+            background: var(--bg-tertiary);
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 150ms ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+
+        /* Font Select */
+        select {
+            flex: 1;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 12px 14px;
+            color: var(--text-primary);
+            font-size: 14px;
+            min-height: 44px;
+            cursor: pointer;
+            transition: border-color 200ms ease;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        /* Toggle Switch */
+        .toggle-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .toggle-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 28px;
+            background: var(--bg-tertiary);
+            border-radius: 14px;
+            cursor: pointer;
+            transition: background 200ms ease;
+        }
+
+        .toggle-switch.active {
+            background: var(--accent);
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 200ms ease;
+        }
+
+        .toggle-switch.active::after {
+            transform: translateX(22px);
+        }
+
+        /* Bottom Toolbar */
+        .bottom-toolbar {
+            flex-shrink: 0;
+            height: var(--toolbar-height);
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 0 16px;
+        }
+
+        .toolbar-btn {
+            flex: 1;
+            max-width: 180px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms ease;
+            border: none;
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+        }
+
+        /* Color Presets */
+        .color-presets {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .color-preset {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 150ms ease;
+        }
+
+        .color-preset:hover {
+            transform: scale(1.1);
+        }
+
+        .color-preset.selected {
+            border-color: var(--text-primary);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: calc(var(--toolbar-height) + 20px + env(safe-area-inset-bottom));
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 12px 24px;
+            border-radius: var(--radius-pill);
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 300ms ease;
+            z-index: 100;
+            border: 1px solid var(--border);
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        /* Scrollbar */
+        .main-content::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .main-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .main-content::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        /* Divider */
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 8px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <h1>
+                <span class="header-icon">🎨</span>
+                Emoji Creator
+            </h1>
+        </header>
+
+        <!-- Search + Filters -->
+        <div class="filters-section">
+            <div class="preset-tabs">
+                <button class="preset-tab active" data-preset="custom">
+                    <span>✨</span> Custom
+                </button>
+                <button class="preset-tab" data-preset="gold">
+                    <span>🌟</span> Gold
+                </button>
+                <button class="preset-tab" data-preset="ocean">
+                    <span>🌊</span> Ocean
+                </button>
+                <button class="preset-tab" data-preset="sunset">
+                    <span>🌅</span> Sunset
+                </button>
+                <button class="preset-tab" data-preset="forest">
+                    <span>🌲</span> Forest
+                </button>
+                <button class="preset-tab" data-preset="berry">
+                    <span>🍇</span> Berry
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Preview Card -->
+            <div class="preview-card">
+                <span class="preview-label">Live Preview</span>
+                <div class="canvas-container">
+                    <canvas id="emojiCanvas" width="128" height="128"></canvas>
+                </div>
+                <span class="size-indicator" id="sizeIndicator">128 × 128 px</span>
+            </div>
+
+            <!-- Text Controls -->
+            <div class="control-card">
+                <div class="control-header">
+                    <span class="control-title">
+                        <span class="control-icon">✏️</span>
+                        Text
+                    </span>
+                </div>
+                <div class="input-group">
+                    <div class="input-row">
+                        <label class="input-label">Content</label>
+                        <input type="text" id="textInput" value="Baggi" maxlength="20" placeholder="Enter text...">
+                    </div>
+                    <div class="input-row">
+                        <label class="input-label">Color</label>
+                        <input type="color" id="textColor" value="#000000">
+                        <div class="color-presets" id="textColorPresets">
+                            <div class="color-preset" style="background: #000000" data-color="#000000"></div>
+                            <div class="color-preset" style="background: #ffffff" data-color="#ffffff"></div>
+                            <div class="color-preset" style="background: #1a1a1a" data-color="#1a1a1a"></div>
+                            <div class="color-preset" style="background: #3b82f6" data-color="#3b82f6"></div>
+                        </div>
+                    </div>
+                    <div class="input-row">
+                        <label class="input-label">Font</label>
+                        <select id="fontSelect">
+                            <option value="Arial" selected>Arial</option>
+                            <option value="Helvetica">Helvetica</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Courier New">Courier New</option>
+                            <option value="Verdana">Verdana</option>
+                            <option value="Impact">Impact</option>
+                            <option value="Comic Sans MS">Comic Sans MS</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Circle Controls -->
+            <div class="control-card">
+                <div class="control-header">
+                    <span class="control-title">
+                        <span class="control-icon">⭕</span>
+                        Circle
+                    </span>
+                </div>
+                <div class="input-group">
+                    <div class="input-row">
+                        <label class="input-label">Fill Color</label>
+                        <input type="color" id="circleColor" value="#ffd700">
+                        <div class="color-presets" id="circleColorPresets">
+                            <div class="color-preset selected" style="background: #ffd700" data-color="#ffd700"></div>
+                            <div class="color-preset" style="background: #3b82f6" data-color="#3b82f6"></div>
+                            <div class="color-preset" style="background: #ef4444" data-color="#ef4444"></div>
+                            <div class="color-preset" style="background: #22c55e" data-color="#22c55e"></div>
+                            <div class="color-preset" style="background: #a855f7" data-color="#a855f7"></div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="toggle-row">
+                        <span class="toggle-label">Enable Border</span>
+                        <div class="toggle-switch" id="borderToggle"></div>
+                    </div>
+                    <div id="borderControls" style="display: none;">
+                        <div class="input-row" style="margin-top: 12px;">
+                            <label class="input-label">Border Color</label>
+                            <input type="color" id="borderColor" value="#000000">
+                        </div>
+                        <div class="input-row" style="margin-top: 8px;">
+                            <label class="input-label">Width</label>
+                            <input type="range" id="borderWidth" min="1" max="8" value="2">
+                            <span class="control-value" id="borderWidthValue">2px</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Size Controls -->
+            <div class="control-card">
+                <div class="control-header">
+                    <span class="control-title">
+                        <span class="control-icon">📐</span>
+                        Size
+                    </span>
+                </div>
+                <div class="input-group">
+                    <div class="input-row">
+                        <label class="input-label">Image Size</label>
+                        <input type="range" id="imageSize" min="64" max="512" value="128" step="8">
+                        <span class="control-value" id="imageSizeValue">128px</span>
+                    </div>
+                    <div class="input-row">
+                        <label class="input-label">Circle Size</label>
+                        <input type="range" id="circleRadius" min="20" max="60" value="45">
+                        <span class="control-value" id="circleRadiusValue">45</span>
+                    </div>
+                    <div class="input-row">
+                        <label class="input-label">Font Size</label>
+                        <input type="range" id="fontSize" min="8" max="48" value="20">
+                        <span class="control-value" id="fontSizeValue">20px</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Position Controls -->
+            <div class="control-card">
+                <div class="control-header">
+                    <span class="control-title">
+                        <span class="control-icon">🎯</span>
+                        Text Position
+                    </span>
+                </div>
+                <div class="input-group">
+                    <div class="input-row">
+                        <label class="input-label">Offset X</label>
+                        <input type="range" id="offsetX" min="-30" max="30" value="0">
+                        <span class="control-value" id="offsetXValue">0</span>
+                    </div>
+                    <div class="input-row">
+                        <label class="input-label">Offset Y</label>
+                        <input type="range" id="offsetY" min="-30" max="30" value="-3">
+                        <span class="control-value" id="offsetYValue">-3</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Style Controls -->
+            <div class="control-card">
+                <div class="control-header">
+                    <span class="control-title">
+                        <span class="control-icon">💫</span>
+                        Text Style
+                    </span>
+                </div>
+                <div class="input-group">
+                    <div class="toggle-row">
+                        <span class="toggle-label">Bold</span>
+                        <div class="toggle-switch" id="boldToggle"></div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="toggle-row">
+                        <span class="toggle-label">Text Shadow</span>
+                        <div class="toggle-switch" id="shadowToggle"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Toolbar -->
+        <div class="bottom-toolbar">
+            <button class="toolbar-btn btn-secondary" id="resetBtn">
+                <span>🔄</span> Reset
+            </button>
+            <button class="toolbar-btn btn-primary" id="downloadBtn">
+                <span>💾</span> Download
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Canvas and context
+            const canvas = document.getElementById('emojiCanvas');
+            const ctx = canvas.getContext('2d');
+
+            // Input elements
+            const textInput = document.getElementById('textInput');
+            const textColor = document.getElementById('textColor');
+            const fontSelect = document.getElementById('fontSelect');
+            const circleColor = document.getElementById('circleColor');
+            const borderToggle = document.getElementById('borderToggle');
+            const borderControls = document.getElementById('borderControls');
+            const borderColor = document.getElementById('borderColor');
+            const borderWidth = document.getElementById('borderWidth');
+            const imageSize = document.getElementById('imageSize');
+            const circleRadius = document.getElementById('circleRadius');
+            const fontSize = document.getElementById('fontSize');
+            const offsetX = document.getElementById('offsetX');
+            const offsetY = document.getElementById('offsetY');
+            const boldToggle = document.getElementById('boldToggle');
+            const shadowToggle = document.getElementById('shadowToggle');
+
+            // Value displays
+            const imageSizeValue = document.getElementById('imageSizeValue');
+            const circleRadiusValue = document.getElementById('circleRadiusValue');
+            const fontSizeValue = document.getElementById('fontSizeValue');
+            const offsetXValue = document.getElementById('offsetXValue');
+            const offsetYValue = document.getElementById('offsetYValue');
+            const borderWidthValue = document.getElementById('borderWidthValue');
+            const sizeIndicator = document.getElementById('sizeIndicator');
+
+            // Buttons
+            const downloadBtn = document.getElementById('downloadBtn');
+            const resetBtn = document.getElementById('resetBtn');
+
+            // Preset configurations
+            const presets = {
+                custom: { circle: '#ffd700', text: '#000000' },
+                gold: { circle: '#ffd700', text: '#000000' },
+                ocean: { circle: '#0ea5e9', text: '#ffffff' },
+                sunset: { circle: '#f97316', text: '#ffffff' },
+                forest: { circle: '#22c55e', text: '#ffffff' },
+                berry: { circle: '#a855f7', text: '#ffffff' }
+            };
+
+            // State
+            let state = {
+                text: 'Baggi',
+                textColor: '#000000',
+                font: 'Arial',
+                circleColor: '#ffd700',
+                borderEnabled: false,
+                borderColor: '#000000',
+                borderWidth: 2,
+                imageSize: 128,
+                circleRadius: 45,
+                fontSize: 20,
+                offsetX: 0,
+                offsetY: -3,
+                bold: false,
+                shadow: false
+            };
+
+            // Draw function
+            function draw() {
+                const size = state.imageSize;
+                const center = size / 2;
+                const radius = (state.circleRadius / 45) * (size / 2 - 10);
+
+                canvas.width = size;
+                canvas.height = size;
+
+                // Clear with transparency
+                ctx.clearRect(0, 0, size, size);
+
+                // Draw circle
+                ctx.beginPath();
+                ctx.arc(center, center, radius, 0, Math.PI * 2);
+                ctx.fillStyle = state.circleColor;
+                ctx.fill();
+
+                // Draw border if enabled
+                if (state.borderEnabled) {
+                    ctx.strokeStyle = state.borderColor;
+                    ctx.lineWidth = state.borderWidth;
+                    ctx.stroke();
+                }
+
+                // Calculate scaled values
+                const scaledFontSize = (state.fontSize / 128) * size;
+                const scaledOffsetX = (state.offsetX / 128) * size;
+                const scaledOffsetY = (state.offsetY / 128) * size;
+
+                // Set font
+                const fontWeight = state.bold ? 'bold ' : '';
+                ctx.font = `${fontWeight}${scaledFontSize}px ${state.font}`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                // Draw shadow if enabled
+                if (state.shadow) {
+                    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+                    ctx.shadowBlur = 4;
+                    ctx.shadowOffsetX = 2;
+                    ctx.shadowOffsetY = 2;
+                }
+
+                // Draw text
+                ctx.fillStyle = state.textColor;
+                ctx.fillText(state.text, center + scaledOffsetX, center + scaledOffsetY);
+
+                // Reset shadow
+                ctx.shadowColor = 'transparent';
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+
+                // Update size indicator
+                sizeIndicator.textContent = `${size} × ${size} px`;
+            }
+
+            // Update value displays
+            function updateDisplays() {
+                imageSizeValue.textContent = state.imageSize + 'px';
+                circleRadiusValue.textContent = state.circleRadius;
+                fontSizeValue.textContent = state.fontSize + 'px';
+                offsetXValue.textContent = state.offsetX;
+                offsetYValue.textContent = state.offsetY;
+                borderWidthValue.textContent = state.borderWidth + 'px';
+            }
+
+            // Show toast
+            function showToast(message) {
+                const toast = document.getElementById('toast');
+                toast.textContent = message;
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2500);
+            }
+
+            // Event listeners for inputs
+            textInput.addEventListener('input', (e) => {
+                state.text = e.target.value;
+                draw();
+            });
+
+            textColor.addEventListener('input', (e) => {
+                state.textColor = e.target.value;
+                draw();
+            });
+
+            fontSelect.addEventListener('change', (e) => {
+                state.font = e.target.value;
+                draw();
+            });
+
+            circleColor.addEventListener('input', (e) => {
+                state.circleColor = e.target.value;
+                draw();
+                updateColorPresetSelection('circleColorPresets', e.target.value);
+            });
+
+            borderColor.addEventListener('input', (e) => {
+                state.borderColor = e.target.value;
+                draw();
+            });
+
+            borderWidth.addEventListener('input', (e) => {
+                state.borderWidth = parseInt(e.target.value);
+                updateDisplays();
+                draw();
+            });
+
+            imageSize.addEventListener('input', (e) => {
+                state.imageSize = parseInt(e.target.value);
+                updateDisplays();
+                draw();
+            });
+
+            circleRadius.addEventListener('input', (e) => {
+                state.circleRadius = parseInt(e.target.value);
+                updateDisplays();
+                draw();
+            });
+
+            fontSize.addEventListener('input', (e) => {
+                state.fontSize = parseInt(e.target.value);
+                updateDisplays();
+                draw();
+            });
+
+            offsetX.addEventListener('input', (e) => {
+                state.offsetX = parseInt(e.target.value);
+                updateDisplays();
+                draw();
+            });
+
+            offsetY.addEventListener('input', (e) => {
+                state.offsetY = parseInt(e.target.value);
+                updateDisplays();
+                draw();
+            });
+
+            // Toggle handlers
+            borderToggle.addEventListener('click', () => {
+                state.borderEnabled = !state.borderEnabled;
+                borderToggle.classList.toggle('active', state.borderEnabled);
+                borderControls.style.display = state.borderEnabled ? 'block' : 'none';
+                draw();
+            });
+
+            boldToggle.addEventListener('click', () => {
+                state.bold = !state.bold;
+                boldToggle.classList.toggle('active', state.bold);
+                draw();
+            });
+
+            shadowToggle.addEventListener('click', () => {
+                state.shadow = !state.shadow;
+                shadowToggle.classList.toggle('active', state.shadow);
+                draw();
+            });
+
+            // Color preset handlers
+            function updateColorPresetSelection(containerId, color) {
+                const container = document.getElementById(containerId);
+                container.querySelectorAll('.color-preset').forEach(preset => {
+                    preset.classList.toggle('selected', preset.dataset.color.toLowerCase() === color.toLowerCase());
+                });
+            }
+
+            document.getElementById('circleColorPresets').addEventListener('click', (e) => {
+                if (e.target.classList.contains('color-preset')) {
+                    const color = e.target.dataset.color;
+                    state.circleColor = color;
+                    circleColor.value = color;
+                    updateColorPresetSelection('circleColorPresets', color);
+                    draw();
+                }
+            });
+
+            document.getElementById('textColorPresets').addEventListener('click', (e) => {
+                if (e.target.classList.contains('color-preset')) {
+                    const color = e.target.dataset.color;
+                    state.textColor = color;
+                    textColor.value = color;
+                    updateColorPresetSelection('textColorPresets', color);
+                    draw();
+                }
+            });
+
+            // Preset tabs
+            document.querySelectorAll('.preset-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.preset-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+
+                    const preset = presets[tab.dataset.preset];
+                    if (preset) {
+                        state.circleColor = preset.circle;
+                        state.textColor = preset.text;
+                        circleColor.value = preset.circle;
+                        textColor.value = preset.text;
+                        updateColorPresetSelection('circleColorPresets', preset.circle);
+                        updateColorPresetSelection('textColorPresets', preset.text);
+                        draw();
+                    }
+                });
+            });
+
+            // Download button
+            downloadBtn.addEventListener('click', () => {
+                try {
+                    const link = document.createElement('a');
+                    link.download = `${state.text || 'emoji'}_emoji.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                    showToast('✅ Emoji downloaded successfully!');
+                } catch (error) {
+                    console.error('Download error:', error);
+                    showToast('❌ Download failed');
+                }
+            });
+
+            // Reset button
+            resetBtn.addEventListener('click', () => {
+                state = {
+                    text: 'Baggi',
+                    textColor: '#000000',
+                    font: 'Arial',
+                    circleColor: '#ffd700',
+                    borderEnabled: false,
+                    borderColor: '#000000',
+                    borderWidth: 2,
+                    imageSize: 128,
+                    circleRadius: 45,
+                    fontSize: 20,
+                    offsetX: 0,
+                    offsetY: -3,
+                    bold: false,
+                    shadow: false
+                };
+
+                // Reset inputs
+                textInput.value = state.text;
+                textColor.value = state.textColor;
+                fontSelect.value = state.font;
+                circleColor.value = state.circleColor;
+                borderColor.value = state.borderColor;
+                borderWidth.value = state.borderWidth;
+                imageSize.value = state.imageSize;
+                circleRadius.value = state.circleRadius;
+                fontSize.value = state.fontSize;
+                offsetX.value = state.offsetX;
+                offsetY.value = state.offsetY;
+
+                // Reset toggles
+                borderToggle.classList.remove('active');
+                boldToggle.classList.remove('active');
+                shadowToggle.classList.remove('active');
+                borderControls.style.display = 'none';
+
+                // Reset preset tabs
+                document.querySelectorAll('.preset-tab').forEach(t => t.classList.remove('active'));
+                document.querySelector('[data-preset="custom"]').classList.add('active');
+
+                // Reset color presets
+                updateColorPresetSelection('circleColorPresets', state.circleColor);
+                updateColorPresetSelection('textColorPresets', state.textColor);
+
+                updateDisplays();
+                draw();
+                showToast('🔄 Reset to defaults');
+            });
+
+            // Initial draw
+            updateDisplays();
+            draw();
+        });
+    </script>
+</body>
+</html>

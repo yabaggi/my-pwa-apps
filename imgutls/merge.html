@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Image Merger & Overlay</title>
+  <link rel="stylesheet" href="merge-styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Bar -->
+    <div class="top-bar" id="topBar">
+      <button class="icon-btn" id="clearBtn">
+        <svg class="icon" viewBox="0 0 24 24">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <h1>Image Merger</h1>
+      <button class="icon-btn" id="settingsBtn">
+        <svg class="icon" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M12 1v6m0 6v6m0-18l-4 4m4-4l4 4m-4 14l-4-4m4 4l4-4M1 12h6m6 0h6M1 12l4-4m-4 4l4 4m18-4l-4-4m4 4l-4 4"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel" id="settingsPanel">
+      <div class="setting-group">
+        <label class="setting-label">Composition Mode</label>
+        <div class="mode-buttons">
+          <button class="mode-btn active" data-mode="vertical">Vertical</button>
+          <button class="mode-btn" data-mode="horizontal">Horizontal</button>
+          <button class="mode-btn" data-mode="overlay">Overlay</button>
+        </div>
+      </div>
+
+      <!-- Merge Settings (Vertical/Horizontal) -->
+      <div id="mergeSettings" class="merge-settings">
+        <div class="setting-group">
+          <label class="setting-label">Spacing: <span id="spacingValue">0</span>px</label>
+          <input type="range" class="slider" id="spacingSlider" min="0" max="100" value="0">
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">Background Color</label>
+          <div class="color-input-group">
+            <input type="color" class="color-picker" id="colorPicker" value="#000000">
+            <input type="text" class="color-text" id="colorText" value="#000000">
+          </div>
+        </div>
+      </div>
+
+      <!-- Overlay Settings -->
+      <div id="overlaySettings" class="overlay-settings">
+        <div class="setting-group">
+          <label class="setting-label">Position</label>
+          <div class="position-grid">
+            <button class="position-btn" data-position="top-left">Top Left</button>
+            <button class="position-btn" data-position="top-center">Top Center</button>
+            <button class="position-btn" data-position="top-right">Top Right</button>
+            <button class="position-btn" data-position="center-left">Left</button>
+            <button class="position-btn active" data-position="center">Center</button>
+            <button class="position-btn" data-position="center-right">Right</button>
+            <button class="position-btn" data-position="bottom-left">Bottom Left</button>
+            <button class="position-btn" data-position="bottom-center">Bottom</button>
+            <button class="position-btn" data-position="bottom-right">Bottom Right</button>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">X Offset: <span id="offsetXValue">0</span>px</label>
+          <input type="range" class="slider" id="offsetXSlider" min="-500" max="500" value="0">
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">Y Offset: <span id="offsetYValue">0</span>px</label>
+          <input type="range" class="slider" id="offsetYSlider" min="-500" max="500" value="0">
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">Overlay Scale: <span id="scaleValue">100</span>%</label>
+          <input type="range" class="slider" id="scaleSlider" min="10" max="200" value="100">
+        </div>
+
+        <div class="setting-group">
+          <label class="setting-label">Opacity: <span id="opacityValue">100</span>%</label>
+          <input type="range" class="slider" id="opacitySlider" min="0" max="100" value="100">
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content" id="mainContent">
+      <div class="upload-container" id="uploadContainer">
+        <div class="upload-header">
+          <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+            <circle cx="8.5" cy="8.5" r="1.5"></circle>
+            <polyline points="21 15 16 10 5 21"></polyline>
+          </svg>
+          <p class="upload-text">Upload two images to <span id="modeText">merge vertical</span></p>
+        </div>
+
+        <label class="upload-box" id="uploadBox1">
+          <div id="preview1" class="preview-content">
+            <svg class="icon icon-lg" viewBox="0 0 24 24" stroke="currentColor" style="opacity: 0.4; margin-bottom: 8px;">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            <p class="upload-prompt">Upload Image 1</p>
+            <p class="upload-hint">Tap to select</p>
+          </div>
+          <input type="file" accept="image/*" id="fileInput1">
+        </label>
+
+        <label class="upload-box" id="uploadBox2">
+          <div id="preview2" class="preview-content">
+            <svg class="icon icon-lg" viewBox="0 0 24 24" stroke="currentColor" style="opacity: 0.4; margin-bottom: 8px;">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            <p class="upload-prompt">Upload Image 2</p>
+            <p class="upload-hint">Tap to select</p>
+          </div>
+          <input type="file" accept="image/*" id="fileInput2">
+        </label>
+      </div>
+
+      <div class="canvas-container" id="canvasContainer" style="display: none;">
+        <canvas id="mergedCanvas"></canvas>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="bottom-bar hidden" id="bottomBar">
+      <button class="toggle-btn" id="toggleModeBtn">
+        <svg class="icon" viewBox="0 0 24 24">
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <polyline points="9 21 3 21 3 15"></polyline>
+          <line x1="21" y1="3" x2="14" y2="10"></line>
+          <line x1="3" y1="21" x2="10" y2="14"></line>
+        </svg>
+        <span id="currentMode">Vertical</span>
+      </button>
+      <button class="download-btn" id="downloadBtn">
+        <svg class="icon" viewBox="0 0 24 24">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        <span>Download</span>
+      </button>
+    </div>
+  </div>
+
+  <script src="merge-script.js"></script>
+</body>
+</html>

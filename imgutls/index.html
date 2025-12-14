@@ -29,6 +29,9 @@
             <button class="tab-button" data-tab="hero-tab">Hero Image</button>
             <button class="tab-button" data-tab="gif-generator-tab">GIF Generator</button>
             <button class="tab-button" data-tab="image-resize-tab">Image resize</button>
+            <button class="tab-button" data-tab="emoji-tab">Emoji</button>
+            <button class="tab-button" data-tab="unicode-tab">Unicode</button>
+            <button class="tab-button" data-tab="merge-tab">Merge images</button>
         </div>
 
         <div id="qrcode-tab" class="tab-content active">
@@ -471,6 +474,18 @@
         <div id="image-resize-tab" class="tab-content" style="padding: 0;">
             <iframe src="imgresize.html" style="width: 100%; height: 800px; border: none;"></iframe>
         </div>
+
+        <div id="emoji-tab" class="tab-content" style="padding: 0;">
+            <iframe src="emoji.html" style="width: 100%; height: 800px; border: none;"></iframe>
+        </div>
+
+        <div id="unicode-tab" class="tab-content" style="padding: 0;">
+            <iframe src="unicode.html" style="width: 100%; height: 800px; border: none;"></iframe>
+        </div>
+
+        <div id="merge-tab" class="tab-content" style="padding: 0;">
+            <iframe src="merge.html" style="width: 100%; height: 800px; border: none;"></iframe>
+        </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -488,7 +503,7 @@
                         console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
                         console.log('✓ App: Utility Toolkit');
                         console.log('✓ Folder: imgutls');
-                        console.log('✓ Total files cached: 9'); // +3 for manifest, sw, offline
+                        console.log('✓ Total files cached: 16'); // +3 for manifest, sw, offline
                         
                         // Check for updates periodically
                         setInterval(() => {
@@ -560,7 +575,7 @@
         console.log('  - Start URL: /imgutls/');
         console.log('  - Scope: /imgutls/');
         console.log('  - Folder: imgutls');
-        console.log('  - Files included: 6');
+        console.log('  - Files included: 13');
     </script>
 </body>
 </html>
