@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logo Generator Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Bebas+Neue&family=Dancing+Script:wght@700&family=Lobster&family=Monoton&family=Orbitron:wght=700&family=Pacifico&family=Permanent+Marker&family=Press+Start+2P&family=Righteous&family=Russo+One&family=Satisfy&family=Shadows+Into+Light&family=Sigmar+One&family=Special+Elite&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg: #0f0f1a;
+            --card: #1a1a2e;
+            --card-light: #252540;
+            --text: #ffffff;
+            --text-muted: #a0a0b0;
+            --border: #333355;
+            --success: #10b981;
+            --warning: #f59e0b;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding-bottom: 40px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+
+        header {
+            text-align: center;
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 24px;
+        }
+
+        header h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), #a855f7, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            margin-top: 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), #a855f7);
+            color: white;
+            font-size: 0.65rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-left: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .preview-section {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border);
+        }
+
+        .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .preview-header h2 {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .canvas-size-display {
+            font-size: 0.75rem;
+            color: var(--primary);
+            background: var(--card-light);
+            padding: 4px 10px;
+            border-radius: 8px;
+        }
+
+        .preview-container {
+            background: repeating-conic-gradient(#808080 0% 25%, transparent 0% 50%) 50% / 20px 20px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #logoCanvas {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .form-section {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: fit-content;
+            padding: 12px 16px;
+            background: var(--card-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            border-color: var(--primary);
+        }
+
+        .tab.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text);
+        }
+
+        label .hint {
+            font-weight: 400;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 14px;
+            font-size: 0.95rem;
+            background: var(--card-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23a0a0b0'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            background-size: 18px;
+            padding-right: 40px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .row-3 {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .row .form-group {
+            margin-bottom: 0;
+        }
+
+        .color-wrapper {
+            display: flex;
+            gap: 8px;
+        }
+
+        .color-wrapper input[type="text"] {
+            flex: 1;
+        }
+
+        input[type="color"] {
+            width: 48px;
+            height: 48px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            padding: 4px;
+            background: var(--card-light);
+            border: 1px solid var(--border);
+        }
+
+        input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+
+        input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 6px;
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            background: var(--card-light);
+            border-radius: 3px;
+            appearance: none;
+            cursor: pointer;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--primary);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        .slider-value {
+            min-width: 50px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary);
+            background: var(--card-light);
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: var(--card-light);
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .checkbox-group span {
+            font-size: 0.9rem;
+        }
+
+        .shape-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .shape-option {
+            padding: 12px 6px;
+            background: var(--card-light);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        .shape-option:hover {
+            border-color: var(--primary);
+        }
+
+        .shape-option.selected {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.15);
+        }
+
+        .shape-option .icon {
+            font-size: 1.4rem;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .font-preview {
+            padding: 10px;
+            background: var(--card-light);
+            border-radius: 8px;
+            margin-top: 8px;
+            text-align: center;
+            font-size: 1.2rem;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 14px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-secondary {
+            background: var(--card-light);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .presets-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .preset-card {
+            padding: 14px;
+            background: var(--card-light);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .preset-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .preset-card .preview {
+            width: 100%;
+            height: 60px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .preset-card .name {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border);
+            margin: 20px 0;
+        }
+
+        .section-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title svg {
+            width: 18px;
+            height: 18px;
+            color: var(--primary);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--card);
+            color: var(--text);
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .toast.success {
+            border-color: var(--success);
+        }
+
+        /* Gradient picker */
+        .gradient-toggle {
+            display: flex;
+            background: var(--card-light);
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 12px;
+        }
+
+        .gradient-toggle button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .gradient-toggle button.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .gradient-options {
+            display: none;
+        }
+
+        .gradient-options.active {
+            display: block;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--card);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        @media (max-width: 400px) {
+            .shape-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            
+            .row {
+                grid-template-columns: 1fr;
+            }
+            
+            .row-3 {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+    <meta name="theme-color" content="#2196f3">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Logo Generat">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>✨ Logo Generator <span class="badge">Pro</span></h1>
+            <p>Create stunning logos with full customization</p>
+        </header>
+
+        <section class="preview-section">
+            <div class="preview-header">
+                <h2>Preview</h2>
+                <span class="canvas-size-display" id="canvasSizeDisplay">400 × 400</span>
+            </div>
+            <div class="preview-container">
+                <canvas id="logoCanvas" width="400" height="400"></canvas>
+            </div>
+        </section>
+
+        <section class="form-section">
+            <div class="tabs">
+                <button class="tab active" data-tab="text">Text</button>
+                <button class="tab" data-tab="shape">Shape</button>
+                <button class="tab" data-tab="canvas">Canvas</button>
+                <button class="tab" data-tab="presets">Presets</button>
+            </div>
+
+            <div class="tab-content active" id="tab-text">
+                <div class="form-group">
+                    <label>Logo Text</label>
+                    <input type="text" id="logoText" placeholder="Enter your text..." value="LOGO">
+                </div>
+
+                <div class="form-group">
+                    <label>Font Family</label>
+                    <select id="fontFamily">
+                        <option value="-apple-system, BlinkMacSystemFont, sans-serif">System Default</option>
+                        <option value="Arial, sans-serif">Arial</option>
+                        <option value="Georgia, serif">Georgia</option>
+                        <option value="'Times New Roman', serif">Times New Roman</option>
+                        <option value="'Courier New', monospace">Courier New</option>
+                        <option value="Impact, sans-serif">Impact</option>
+                        <option value="'Bebas Neue', sans-serif">Bebas Neue</option>
+                        <option value="'Lobster', cursive">Lobster</option>
+                        <option value="'Pacifico', cursive">Pacifico</option>
+                        <option value="'Righteous', sans-serif">Righteous</option>
+                        <option value="'Russo One', sans-serif">Russo One</option>
+                        <option value="'Orbitron', sans-serif">Orbitron</option>
+                        <option value="'Permanent Marker', cursive">Permanent Marker</option>
+                        <option value="'Press Start 2P', monospace">Press Start 2P</option>
+                        <option value="'Dancing Script', cursive">Dancing Script</option>
+                        <option value="'Abril Fatface', serif">Abril Fatface</option>
+                        <option value="'Monoton', cursive">Monoton</option>
+                        <option value="'Sigmar One', sans-serif">Sigmar One</option>
+                        <option value="'Shadows Into Light', cursive">Shadows Into Light</option>
+                        <option value="'Special Elite', cursive">Special Elite</option>
+                        <option value="'Satisfy', cursive">Satisfy</option>
+                    </select>
+                    <div class="font-preview" id="fontPreview">Preview Text</div>
+                </div>
+
+                <div class="row" style="margin-bottom: 18px;">
+                    <div class="form-group">
+                        <label>Text Color</label>
+                        <div class="color-wrapper">
+                            <input type="text" id="textColor" value="#000000">
+                            <input type="color" id="textColorPicker" value="#000000">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Font Weight</label>
+                        <select id="fontWeight">
+                            <option value="normal">Normal</option>
+                            <option value="bold" selected>Bold</option>
+                            <option value="100">Thin (100)</option>
+                            <option value="300">Light (300)</option>
+                            <option value="500">Medium (500)</option>
+                            <option value="700">Bold (700)</option>
+                            <option value="900">Black (900)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Font Size</label>
+                    <div class="slider-row">
+                        <input type="range" id="fontSize" min="12" max="120" value="48">
+                        <span class="slider-value" id="fontSizeValue">48px</span>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom: 18px;">
+                    <div class="form-group">
+                        <label>Text X Position</label>
+                        <div class="slider-row">
+                            <input type="range" id="textX" min="0" max="100" value="50">
+                            <span class="slider-value" id="textXValue">50%</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Text Y Position</label>
+                        <div class="slider-row">
+                            <input type="range" id="textY" min="0" max="100" value="75">
+                            <span class="slider-value" id="textYValue">75%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                    </svg>
+                    Text Effects
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="textShadow">
+                        <span>Enable Text Shadow</span>
+                    </label>
+                </div>
+
+                <div class="row" style="margin-bottom: 18px;">
+                    <div class="form-group">
+                        <label>Shadow Color</label>
+                        <div class="color-wrapper">
+                            <input type="text" id="shadowColor" value="#000000">
+                            <input type="color" id="shadowColorPicker" value="#000000">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Shadow Blur</label>
+                        <div class="slider-row">
+                            <input type="range" id="shadowBlur" min="0" max="30" value="10">
+                            <span class="slider-value" id="shadowBlurValue">10</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="textStroke">
+                        <span>Enable Text Outline</span>
+                    </label>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Outline Color</label>
+                        <div class="color-wrapper">
+                            <input type="text" id="strokeColor" value="#000000">
+                            <input type="color" id="strokeColorPicker" value="#000000">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Outline Width</label>
+                        <div class="slider-row">
+                            <input type="range" id="strokeWidth" min="1" max="10" value="2">
+                            <span class="slider-value" id="strokeWidthValue">2px</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-shape">
+                <div class="form-group">
+                    <label>Choose Shape</label>
+                    <div class="shape-grid" id="shapeGrid">
+                        <div class="shape-option selected" data-shape="none">
+                            <span class="icon">✖</span>
+                            None
+                        </div>
+                        <div class="shape-option" data-shape="circle">
+                            <span class="icon">⭕</span>
+                            Circle
+                        </div>
+                        <div class="shape-option" data-shape="square">
+                            <span class="icon">⬜</span>
+                            Square
+                        </div>
+                        <div class="shape-option" data-shape="roundedSquare">
+                            <span class="icon">▢</span>
+                            Rounded
+                        </div>
+                        <div class="shape-option" data-shape="triangle">
+                            <span class="icon">🔺</span>
+                            Triangle
+                        </div>
+                        <div class="shape-option" data-shape="diamond">
+                            <span class="icon">🔷</span>
+                            Diamond
+                        </div>
+                        <div class="shape-option" data-shape="pentagon">
+                            <span class="icon">⬠</span>
+                            Pentagon
+                        </div>
+                        <div class="shape-option" data-shape="hexagon">
+                            <span class="icon">⬡</span>
+                            Hexagon
+                        </div>
+                        <div class="shape-option" data-shape="star">
+                            <span class="icon">⭐</span>
+                            Star
+                        </div>
+                        <div class="shape-option" data-shape="star6">
+                            <span class="icon">✡</span>
+                            6-Star
+                        </div>
+                        <div class="shape-option" data-shape="heart">
+                            <span class="icon">❤️</span>
+                            Heart
+                        </div>
+                        <div class="shape-option" data-shape="shield">
+                            <span class="icon">🛡️</span>
+                            Shield
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="form-group">
+                    <label>Shape Fill Type</label>
+                    <div class="gradient-toggle">
+                        <button class="active" data-fill="solid">Solid</button>
+                        <button data-fill="gradient">Gradient</button>
+                    </div>
+                </div>
+
+                <div id="solidColorOptions">
+                    <div class="form-group">
+                        <label>Shape Color</label>
+                        <div class="color-wrapper">
+                            <input type="text" id="shapeColor" value="#6366f1">
+                            <input type="color" id="shapeColorPicker" value="#6366f1">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="gradientColorOptions" class="gradient-options">
+                    <div class="row" style="margin-bottom: 18px;">
+                        <div class="form-group">
+                            <label>Color 1</label>
+                            <div class="color-wrapper">
+                                <input type="text" id="gradientColor1" value="#6366f1">
+                                <input type="color" id="gradientColor1Picker" value="#6366f1">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Color 2</label>
+                            <div class="color-wrapper">
+                                <input type="text" id="gradientColor2" value="#a855f7">
+                                <input type="color" id="gradientColor2Picker" value="#a855f7">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Gradient Angle</label>
+                        <div class="slider-row">
+                            <input type="range" id="gradientAngle" min="0" max="360" value="135">
+                            <span class="slider-value" id="gradientAngleValue">135°</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Shape Size</label>
+                    <div class="slider-row">
+                        <input type="range" id="shapeSize" min="30" max="250" value="100">
+                        <span class="slider-value" id="shapeSizeValue">100</span>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-bottom: 18px;">
+                    <div class="form-group">
+                        <label>Shape X Position</label>
+                        <div class="slider-row">
+                            <input type="range" id="shapeX" min="0" max="100" value="50">
+                            <span class="slider-value" id="shapeXValue">50%</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Shape Y Position</label>
+                        <div class="slider-row">
+                            <input type="range" id="shapeY" min="0" max="100" value="40">
+                            <span class="slider-value" id="shapeYValue">40%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Shape Rotation</label>
+                    <div class="slider-row">
+                        <input type="range" id="shapeRotation" min="0" max="360" value="0">
+                        <span class="slider-value" id="shapeRotationValue">0°</span>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="form-group">
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="shapeShadow">
+                        <span>Enable Shape Shadow</span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-group">
+                        <input type="checkbox" id="shapeStroke">
+                        <span>Enable Shape Border</span>
+                    </label>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Border Color</label>
+                        <div class="color-wrapper">
+                            <input type="text" id="shapeBorderColor" value="#ffffff">
+                            <input type="color" id="shapeBorderColorPicker" value="#ffffff">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Border Width</label>
+                        <div class="slider-row">
+                            <input type="range" id="shapeBorderWidth" min="1" max="15" value="3">
+                            <span class="slider-value" id="shapeBorderWidthValue">3px</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-canvas">
+                <div class="section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6z" />
+                    </svg>
+                    Canvas Size
+                </div>
+
+                <div class="row" style="margin-bottom: 18px;">
+                    <div class="form-group">
+                        <label>Width (px)</label>
+                        <input type="number" id="canvasWidth" value="400" min="100" max="2000">
+                    </div>
+                    <div class="form-group">
+                        <label>Height (px)</label>
+                        <input type="number" id="canvasHeight" value="400" min="100" max="2000">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Quick Size Presets</label>
+                    <div class="row row-3" style="gap: 8px;">
+                        <button class="btn btn-secondary" onclick="setCanvasSize(400, 400)" style="padding: 10px; font-size: 0.75rem;">Square<br>400×400</button>
+                        <button class="btn btn-secondary" onclick="setCanvasSize(800, 400)" style="padding: 10px; font-size: 0.75rem;">Banner<br>800×400</button>
+                        <button class="btn btn-secondary" onclick="setCanvasSize(1200, 630)" style="padding: 10px; font-size: 0.75rem;">Social<br>1200×630</button>
+                        <button class="btn btn-secondary" onclick="setCanvasSize(512, 512)" style="padding: 10px; font-size: 0.75rem;">Icon<br>512×512</button>
+                        <button class="btn btn-secondary" onclick="setCanvasSize(1080, 1080)" style="padding: 10px; font-size: 0.75rem;">Instagram<br>1080×1080</button>
+                        <button class="btn btn-secondary" onclick="setCanvasSize(1920, 1080)" style="padding: 10px; font-size: 0.75rem;">HD<br>1920×1080</button>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                    </svg>
+                    Background
+                </div>
+
+                <div class="form-group">
+                    <label>Background Type</label>
+                    <div class="gradient-toggle" id="bgTypeToggle">
+                        <button class="active" data-bgtype="solid">Solid</button>
+                        <button data-bgtype="gradient">Gradient</button>
+                        <button data-bgtype="transparent">None</button>
+                    </div>
+                </div>
+
+                <div id="bgSolidOptions">
+                    <div class="form-group">
+                        <label>Background Color</label>
+                        <div class="color-wrapper">
+                            <input type="text" id="bgColor" value="#ffffff">
+                            <input type="color" id="bgColorPicker" value="#ffffff">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="bgGradientOptions" class="gradient-options">
+                    <div class="row" style="margin-bottom: 18px;">
+                        <div class="form-group">
+                            <label>Color 1</label>
+                            <div class="color-wrapper">
+                                <input type="text" id="bgGradient1" value="#667eea">
+                                <input type="color" id="bgGradient1Picker" value="#667eea">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Color 2</label>
+                            <div class="color-wrapper">
+                                <input type="text" id="bgGradient2" value="#764ba2">
+                                <input type="color" id="bgGradient2Picker" value="#764ba2">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Gradient Angle</label>
+                        <div class="slider-row">
+                            <input type="range" id="bgGradientAngle" min="0" max="360" value="135">
+                            <span class="slider-value" id="bgGradientAngleValue">135°</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-content" id="tab-presets">
+                <div class="section-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                    </svg>
+                    Quick Presets
+                </div>
+
+                <div class="presets-grid" id="presetsGrid">
+                    <div class="preset-card" data-preset="modern">
+                        <div class="preview" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white;">
+                            LOGO
+                        </div>
+                        <span class="name">Modern</span>
+                    </div>
+                    <div class="preset-card" data-preset="minimal">
+                        <div class="preview" style="background: #ffffff; color: #000000; border: 1px solid #eee;">
+                            LOGO
+                        </div>
+                        <span class="name">Minimal</span>
+                    </div>
+                    <div class="preset-card" data-preset="neon">
+                        <div class="preview" style="background: #0a0a0a; color: #0ff; text-shadow: 0 0 10px #0ff;">
+                            LOGO
+                        </div>
+                        <span class="name">Neon</span>
+                    </div>
+                    <div class="preset-card" data-preset="sunset">
+                        <div class="preview" style="background: linear-gradient(135deg, #f093fb, #f5576c); color: white;">
+                            LOGO
+                        </div>
+                        <span class="name">Sunset</span>
+                    </div>
+                    <div class="preset-card" data-preset="ocean">
+                        <div class="preview" style="background: linear-gradient(135deg, #4facfe, #00f2fe); color: white;">
+                            LOGO
+                        </div>
+                        <span class="name">Ocean</span>
+                    </div>
+                    <div class="preset-card" data-preset="forest">
+                        <div class="preview" style="background: linear-gradient(135deg, #134e5e, #71b280); color: white;">
+                            LOGO
+                        </div>
+                        <span class="name">Forest</span>
+                    </div>
+                    <div class="preset-card" data-preset="fire">
+                        <div class="preview" style="background: linear-gradient(135deg, #f12711, #f5af19); color: white;">
+                            LOGO
+                        </div>
+                        <span class="name">Fire</span>
+                    </div>
+                    <div class="preset-card" data-preset="dark">
+                        <div class="preview" style="background: #1a1a2e; color: #eee;">
+                            LOGO
+                        </div>
+                        <span class="name">Dark</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-primary" id="downloadBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download
+                </button>
+                <button class="btn btn-secondary" id="resetBtn">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    Reset
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Canvas setup
+        const canvas = document.getElementById('logoCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // State
+        let state = {
+            // Text
+            text: 'LOGO',
+            fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
+            fontWeight: 'bold',
+            fontSize: 48,
+            // MODIFIED: Changed default textColor to #000000
+            textColor: '#000000', 
+            textX: 50,
+            textY: 75,
+            textShadow: false,
+            shadowColor: '#000000',
+            shadowBlur: 10,
+            textStroke: false,
+            strokeColor: '#000000',
+            strokeWidth: 2,
+
+            // Shape
+            shape: 'none',
+            shapeColor: '#6366f1',
+            shapeSize: 100,
+            shapeX: 50,
+            shapeY: 40,
+            shapeRotation: 0,
+            shapeFillType: 'solid',
+            gradientColor1: '#6366f1',
+            gradientColor2: '#a855f7',
+            gradientAngle: 135,
+            shapeShadow: false,
+            shapeStroke: false,
+            shapeBorderColor: '#ffffff',
+            shapeBorderWidth: 3,
+
+            // Canvas
+            canvasWidth: 400,
+            canvasHeight: 400,
+            bgType: 'solid',
+            bgColor: '#ffffff',
+            bgGradient1: '#667eea',
+            bgGradient2: '#764ba2',
+            bgGradientAngle: 135
+        };
+
+        // DOM Elements
+        const elements = {
+            // Text
+            logoText: document.getElementById('logoText'),
+            fontFamily: document.getElementById('fontFamily'),
+            fontWeight: document.getElementById('fontWeight'),
+            fontSize: document.getElementById('fontSize'),
+            fontSizeValue: document.getElementById('fontSizeValue'),
+            textColor: document.getElementById('textColor'),
+            textColorPicker: document.getElementById('textColorPicker'),
+            textX: document.getElementById('textX'),
+            textXValue: document.getElementById('textXValue'),
+            textY: document.getElementById('textY'),
+            textYValue: document.getElementById('textYValue'),
+            fontPreview: document.getElementById('fontPreview'),
+            textShadow: document.getElementById('textShadow'),
+            shadowColor: document.getElementById('shadowColor'),
+            shadowColorPicker: document.getElementById('shadowColorPicker'),
+            shadowBlur: document.getElementById('shadowBlur'),
+            shadowBlurValue: document.getElementById('shadowBlurValue'),
+            textStroke: document.getElementById('textStroke'),
+            strokeColor: document.getElementById('strokeColor'),
+            strokeColorPicker: document.getElementById('strokeColorPicker'),
+            strokeWidth: document.getElementById('strokeWidth'),
+            strokeWidthValue: document.getElementById('strokeWidthValue'),
+
+            // Shape
+            shapeGrid: document.getElementById('shapeGrid'),
+            shapeColor: document.getElementById('shapeColor'),
+            shapeColorPicker: document.getElementById('shapeColorPicker'),
+            shapeSize: document.getElementById('shapeSize'),
+            shapeSizeValue: document.getElementById('shapeSizeValue'),
+            shapeX: document.getElementById('shapeX'),
+            shapeXValue: document.getElementById('shapeXValue'),
+            shapeY: document.getElementById('shapeY'),
+            shapeYValue: document.getElementById('shapeYValue'),
+            shapeRotation: document.getElementById('shapeRotation'),
+            shapeRotationValue: document.getElementById('shapeRotationValue'),
+            gradientColor1: document.getElementById('gradientColor1'),
+            gradientColor1Picker: document.getElementById('gradientColor1Picker'),
+            gradientColor2: document.getElementById('gradientColor2'),
+            gradientColor2Picker: document.getElementById('gradientColor2Picker'),
+            gradientAngle: document.getElementById('gradientAngle'),
+            gradientAngleValue: document.getElementById('gradientAngleValue'),
+            shapeShadow: document.getElementById('shapeShadow'),
+            shapeStroke: document.getElementById('shapeStroke'),
+            shapeBorderColor: document.getElementById('shapeBorderColor'),
+            shapeBorderColorPicker: document.getElementById('shapeBorderColorPicker'),
+            shapeBorderWidth: document.getElementById('shapeBorderWidth'),
+            shapeBorderWidthValue: document.getElementById('shapeBorderWidthValue'),
+
+            // Canvas
+            canvasWidth: document.getElementById('canvasWidth'),
+            canvasHeight: document.getElementById('canvasHeight'),
+            canvasSizeDisplay: document.getElementById('canvasSizeDisplay'),
+            bgColor: document.getElementById('bgColor'),
+            bgColorPicker: document.getElementById('bgColorPicker'),
+            bgGradient1: document.getElementById('bgGradient1'),
+            bgGradient1Picker: document.getElementById('bgGradient1Picker'),
+            bgGradient2: document.getElementById('bgGradient2'),
+            bgGradient2Picker: document.getElementById('bgGradient2Picker'),
+            bgGradientAngle: document.getElementById('bgGradientAngle'),
+            bgGradientAngleValue: document.getElementById('bgGradientAngleValue'),
+
+            // Buttons
+            downloadBtn: document.getElementById('downloadBtn'),
+            resetBtn: document.getElementById('resetBtn'),
+            toast: document.getElementById('toast')
+        };
+
+        // Initialize
+        function init() {
+            setupTabs();
+            setupEventListeners();
+            generateLogo();
+        }
+
+        // Tabs
+        function setupTabs() {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    tab.classList.add('active');
+                    document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+                });
+            });
+        }
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Text inputs
+            elements.logoText.addEventListener('input', (e) => {
+                state.text = e.target.value;
+                updateFontPreview();
+                generateLogo();
+            });
+
+            elements.fontFamily.addEventListener('change', (e) => {
+                state.fontFamily = e.target.value;
+                updateFontPreview();
+                generateLogo();
+            });
+
+            elements.fontWeight.addEventListener('change', (e) => {
+                state.fontWeight = e.target.value;
+                updateFontPreview();
+                generateLogo();
+            });
+
+            // Sliders
+            setupSlider('fontSize', 'fontSizeValue', 'fontSize', 'px');
+            setupSlider('textX', 'textXValue', 'textX', '%');
+            setupSlider('textY', 'textYValue', 'textY', '%');
+            setupSlider('shadowBlur', 'shadowBlurValue', 'shadowBlur', '');
+            setupSlider('strokeWidth', 'strokeWidthValue', 'strokeWidth', 'px');
+            setupSlider('shapeSize', 'shapeSizeValue', 'shapeSize', '');
+            setupSlider('shapeX', 'shapeXValue', 'shapeX', '%');
+            setupSlider('shapeY', 'shapeYValue', 'shapeY', '%');
+            setupSlider('shapeRotation', 'shapeRotationValue', 'shapeRotation', '°');
+            setupSlider('gradientAngle', 'gradientAngleValue', 'gradientAngle', '°');
+            setupSlider('shapeBorderWidth', 'shapeBorderWidthValue', 'shapeBorderWidth', 'px');
+            setupSlider('bgGradientAngle', 'bgGradientAngleValue', 'bgGradientAngle', '°');
+
+            // Color pickers
+            setupColorPicker('textColor', 'textColorPicker', 'textColor');
+            setupColorPicker('shadowColor', 'shadowColorPicker', 'shadowColor');
+            setupColorPicker('strokeColor', 'strokeColorPicker', 'strokeColor');
+            setupColorPicker('shapeColor', 'shapeColorPicker', 'shapeColor');
+            setupColorPicker('gradientColor1', 'gradientColor1Picker', 'gradientColor1');
+            setupColorPicker('gradientColor2', 'gradientColor2Picker', 'gradientColor2');
+            setupColorPicker('shapeBorderColor', 'shapeBorderColorPicker', 'shapeBorderColor');
+            setupColorPicker('bgColor', 'bgColorPicker', 'bgColor');
+            setupColorPicker('bgGradient1', 'bgGradient1Picker', 'bgGradient1');
+            setupColorPicker('bgGradient2', 'bgGradient2Picker', 'bgGradient2');
+
+            // Checkboxes
+            elements.textShadow.addEventListener('change', (e) => {
+                state.textShadow = e.target.checked;
+                generateLogo();
+            });
+
+            elements.textStroke.addEventListener('change', (e) => {
+                state.textStroke = e.target.checked;
+                generateLogo();
+            });
+
+            elements.shapeShadow.addEventListener('change', (e) => {
+                state.shapeShadow = e.target.checked;
+                generateLogo();
+            });
+
+            elements.shapeStroke.addEventListener('change', (e) => {
+                state.shapeStroke = e.target.checked;
+                generateLogo();
+            });
+
+            // Shape selection
+            elements.shapeGrid.addEventListener('click', (e) => {
+                const option = e.target.closest('.shape-option');
+                if (option) {
+                    document.querySelectorAll('.shape-option').forEach(el => el.classList.remove('selected'));
+                    option.classList.add('selected');
+                    state.shape = option.dataset.shape;
+                    generateLogo();
+                }
+            });
+
+            // Shape fill type toggle
+            document.querySelectorAll('.gradient-toggle button[data-fill]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.gradient-toggle button[data-fill]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    state.shapeFillType = btn.dataset.fill;
+                    
+                    document.getElementById('solidColorOptions').style.display = btn.dataset.fill === 'solid' ? 'block' : 'none';
+                    document.getElementById('gradientColorOptions').classList.toggle('active', btn.dataset.fill === 'gradient');
+                    
+                    generateLogo();
+                });
+            });
+
+            // Background type toggle
+            document.querySelectorAll('#bgTypeToggle button').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#bgTypeToggle button').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    state.bgType = btn.dataset.bgtype;
+                    
+                    document.getElementById('bgSolidOptions').style.display = btn.dataset.bgtype === 'solid' ? 'block' : 'none';
+                    document.getElementById('bgGradientOptions').classList.toggle('active', btn.dataset.bgtype === 'gradient');
+                    
+                    generateLogo();
+                });
+            });
+
+            // Canvas size
+            elements.canvasWidth.addEventListener('change', (e) => {
+                state.canvasWidth = parseInt(e.target.value) || 400;
+                updateCanvasSize();
+            });
+
+            elements.canvasHeight.addEventListener('change', (e) => {
+                state.canvasHeight = parseInt(e.target.value) || 400;
+                updateCanvasSize();
+            });
+
+            // Presets
+            document.getElementById('presetsGrid').addEventListener('click', (e) => {
+                const card = e.target.closest('.preset-card');
+                if (card) applyPreset(card.dataset.preset);
+            });
+
+            // Download
+            elements.downloadBtn.addEventListener('click', downloadLogo);
+
+            // Reset
+            elements.resetBtn.addEventListener('click', resetState);
+        }
+
+        function setupSlider(inputId, valueId, stateKey, suffix) {
+            const input = elements[inputId];
+            const value = elements[valueId];
+            
+            input.addEventListener('input', (e) => {
+                const val = parseFloat(e.target.value);
+                state[stateKey] = val;
+                value.textContent = val + suffix;
+                generateLogo();
+            });
+        }
+
+        function setupColorPicker(textId, pickerId, stateKey) {
+            const text = elements[textId];
+            const picker = elements[pickerId];
+
+            picker.addEventListener('input', (e) => {
+                text.value = e.target.value;
+                state[stateKey] = e.target.value;
+                generateLogo();
+            });
+
+            text.addEventListener('input', (e) => {
+                state[stateKey] = e.target.value;
+                if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) {
+                    picker.value = e.target.value;
+                }
+                generateLogo();
+            });
+        }
+
+        function updateFontPreview() {
+            elements.fontPreview.style.fontFamily = state.fontFamily;
+            elements.fontPreview.style.fontWeight = state.fontWeight;
+            elements.fontPreview.textContent = state.text || 'Preview Text';
+        }
+
+        function updateCanvasSize() {
+            canvas.width = state.canvasWidth;
+            canvas.height = state.canvasHeight;
+            elements.canvasSizeDisplay.textContent = `${state.canvasWidth} × ${state.canvasHeight}`;
+            generateLogo();
+        }
+
+        function setCanvasSize(w, h) {
+            state.canvasWidth = w;
+            state.canvasHeight = h;
+            elements.canvasWidth.value = w;
+            elements.canvasHeight.value = h;
+            updateCanvasSize();
+        }
+
+        // Shape drawing functions
+        const shapes = {
+            none: () => {},
+
+            circle: (x, y, size) => {
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.closePath();
+            },
+
+            square: (x, y, size) => {
+                ctx.beginPath();
+                ctx.rect(x - size, y - size, size * 2, size * 2);
+                ctx.closePath();
+            },
+
+            roundedSquare: (x, y, size) => {
+                const r = size * 0.2;
+                ctx.beginPath();
+                ctx.roundRect(x - size, y - size, size * 2, size * 2, r);
+                ctx.closePath();
+            },
+
+            triangle: (x, y, size) => {
+                ctx.beginPath();
+                ctx.moveTo(x, y - size);
+                ctx.lineTo(x + size, y + size * 0.8);
+                ctx.lineTo(x - size, y + size * 0.8);
+                ctx.closePath();
+            },
+
+            diamond: (x, y, size) => {
+                ctx.beginPath();
+                ctx.moveTo(x, y - size);
+                ctx.lineTo(x + size, y);
+                ctx.lineTo(x, y + size);
+                ctx.lineTo(x - size, y);
+                ctx.closePath();
+            },
+
+            pentagon: (x, y, size) => {
+                drawPolygon(x, y, size, 5);
+            },
+
+            hexagon: (x, y, size) => {
+                drawPolygon(x, y, size, 6);
+            },
+
+            star: (x, y, size) => {
+                drawStar(x, y, size, 5, 0.5);
+            },
+
+            star6: (x, y, size) => {
+                drawStar(x, y, size, 6, 0.5);
+            },
+
+            heart: (x, y, size) => {
+                ctx.beginPath();
+                const topY = y - size * 0.3;
+                ctx.moveTo(x, topY + size * 0.3);
+                ctx.bezierCurveTo(x, topY, x - size, topY, x - size, topY + size * 0.5);
+                ctx.bezierCurveTo(x - size, topY + size, x, topY + size * 1.1, x, topY + size * 1.4);
+                ctx.bezierCurveTo(x, topY + size * 1.1, x + size, topY + size, x + size, topY + size * 0.5);
+                ctx.bezierCurveTo(x + size, topY, x, topY, x, topY + size * 0.3);
+                ctx.closePath();
+            },
+
+            shield: (x, y, size) => {
+                ctx.beginPath();
+                ctx.moveTo(x, y - size);
+                ctx.lineTo(x + size, y - size * 0.5);
+                ctx.lineTo(x + size, y + size * 0.3);
+                ctx.quadraticCurveTo(x, y + size * 1.2, x, y + size);
+                ctx.quadraticCurveTo(x, y + size * 1.2, x - size, y + size * 0.3);
+                ctx.lineTo(x - size, y - size * 0.5);
+                ctx.closePath();
+            }
+        };
+
+        function drawPolygon(x, y, size, sides) {
+            ctx.beginPath();
+            for (let i = 0; i < sides; i++) {
+                const angle = (i * 2 * Math.PI) / sides - Math.PI / 2;
+                const px = x + Math.cos(angle) * size;
+                const py = y + Math.sin(angle) * size;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+        }
+
+        function drawStar(x, y, size, points, innerRatio) {
+            ctx.beginPath();
+            for (let i = 0; i < points * 2; i++) {
+                const angle = (i * Math.PI) / points - Math.PI / 2;
+                const r = i % 2 === 0 ? size : size * innerRatio;
+                const px = x + Math.cos(angle) * r;
+                const py = y + Math.sin(angle) * r;
+                if (i === 0) ctx.moveTo(px, py);
+                else ctx.lineTo(px, py);
+            }
+            ctx.closePath();
+        }
+
+        function getGradient(x, y, size, color1, color2, angle) {
+            const rad = (angle * Math.PI) / 180;
+            const x1 = x - Math.cos(rad) * size;
+            const y1 = y - Math.sin(rad) * size;
+            const x2 = x + Math.cos(rad) * size;
+            const y2 = y + Math.sin(rad) * size;
+            const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+            gradient.addColorStop(0, color1);
+            gradient.addColorStop(1, color2);
+            return gradient;
+        }
+
+        function generateLogo() {
+            const w = canvas.width;
+            const h = canvas.height;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw background
+            if (state.bgType === 'solid') {
+                ctx.fillStyle = state.bgColor;
+                ctx.fillRect(0, 0, w, h);
+            } else if (state.bgType === 'gradient') {
+                ctx.fillStyle = getGradient(w/2, h/2, Math.max(w, h), state.bgGradient1, state.bgGradient2, state.bgGradientAngle);
+                ctx.fillRect(0, 0, w, h);
+            }
+            // transparent = don't fill
+
+            // Draw shape
+            if (state.shape !== 'none' && shapes[state.shape]) {
+                const shapeX = (state.shapeX / 100) * w;
+                const shapeY = (state.shapeY / 100) * h;
+
+                ctx.save();
+                ctx.translate(shapeX, shapeY);
+                ctx.rotate((state.shapeRotation * Math.PI) / 180);
+
+                // Shape shadow
+                if (state.shapeShadow) {
+                    ctx.shadowColor = 'rgba(0,0,0,0.3)';
+                    ctx.shadowBlur = 20;
+                    ctx.shadowOffsetX = 5;
+                    ctx.shadowOffsetY = 5;
+                }
+
+                shapes[state.shape](0, 0, state.shapeSize);
+
+                // Fill
+                if (state.shapeFillType === 'gradient') {
+                    ctx.fillStyle = getGradient(0, 0, state.shapeSize, state.gradientColor1, state.gradientColor2, state.gradientAngle);
+                } else {
+                    ctx.fillStyle = state.shapeColor;
+                }
+                ctx.fill();
+
+                // Reset shadow for stroke
+                ctx.shadowColor = 'transparent';
+                ctx.shadowBlur = 0;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 0;
+
+                // Border
+                if (state.shapeStroke) {
+                    ctx.strokeStyle = state.shapeBorderColor;
+                    ctx.lineWidth = state.shapeBorderWidth;
+                    ctx.stroke();
+                }
+
+                ctx.restore();
+            }
+
+            // Draw text
+            if (state.text) {
+                const textX = (state.textX / 100) * w;
+                const textY = (state.textY / 100) * h;
+
+                ctx.save();
+                ctx.font = `${state.fontWeight} ${state.fontSize}px ${state.fontFamily}`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+
+                // Text shadow
+                if (state.textShadow) {
+                    ctx.shadowColor = state.shadowColor;
+                    ctx.shadowBlur = state.shadowBlur;
+                    ctx.shadowOffsetX = 2;
+                    ctx.shadowOffsetY = 2;
+                }
+
+                // Text stroke
+                if (state.textStroke) {
+                    ctx.strokeStyle = state.strokeColor;
+                    ctx.lineWidth = state.strokeWidth;
+                    ctx.strokeText(state.text, textX, textY);
+                }
+
+                // Text fill
+                ctx.fillStyle = state.textColor;
+                ctx.fillText(state.text, textX, textY);
+
+                ctx.restore();
+            }
+        }
+
+        function applyPreset(preset) {
+            const presets = {
+                modern: {
+                    bgType: 'gradient', bgGradient1: '#667eea', bgGradient2: '#764ba2', bgGradientAngle: 135,
+                    textColor: '#ffffff', shape: 'none', fontFamily: "'Bebas Neue', sans-serif"
+                },
+                minimal: {
+                    bgType: 'solid', bgColor: '#ffffff',
+                    textColor: '#000000', shape: 'none', fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif"
+                },
+                neon: {
+                    bgType: 'solid', bgColor: '#0a0a0a',
+                    textColor: '#00ffff', textShadow: true, shadowColor: '#00ffff', shadowBlur: 20,
+                    shape: 'none', fontFamily: "'Orbitron', sans-serif"
+                },
+                sunset: {
+                    bgType: 'gradient', bgGradient1: '#f093fb', bgGradient2: '#f5576c', bgGradientAngle: 135,
+                    textColor: '#ffffff', shape: 'circle', shapeColor: '#ffffff',
+                    shapeFillType: 'solid', fontFamily: "'Pacifico', cursive"
+                },
+                ocean: {
+                    bgType: 'gradient', bgGradient1: '#4facfe', bgGradient2: '#00f2fe', bgGradientAngle: 135,
+                    textColor: '#ffffff', shape: 'none', fontFamily: "'Righteous', sans-serif"
+                },
+                forest: {
+                    bgType: 'gradient', bgGradient1: '#134e5e', bgGradient2: '#71b280', bgGradientAngle: 135,
+                    textColor: '#ffffff', shape: 'hexagon', shapeColor: '#ffffff22',
+                    fontFamily: "'Russo One', sans-serif"
+                },
+                fire: {
+                    bgType: 'gradient', bgGradient1: '#f12711', bgGradient2: '#f5af19', bgGradientAngle: 135,
+                    textColor: '#ffffff', shape: 'star', shapeColor: '#ffffff33',
+                    fontFamily: "'Sigmar One', sans-serif"
+                },
+                dark: {
+                    bgType: 'solid', bgColor: '#1a1a2e',
+                    textColor: '#eeeeee', shape: 'roundedSquare', shapeColor: '#333355',
+                    fontFamily: "'Special Elite', cursive"
+                }
+            };
+
+            if (presets[preset]) {
+                Object.assign(state, presets[preset]);
+                updateUIFromState();
+                generateLogo();
+                showToast(`Applied "${preset}" preset!`);
+            }
+        }
+
+        function updateUIFromState() {
+            elements.logoText.value = state.text;
+            elements.fontFamily.value = state.fontFamily;
+            elements.fontWeight.value = state.fontWeight;
+            elements.fontSize.value = state.fontSize;
+            elements.fontSizeValue.textContent = state.fontSize + 'px';
+            elements.textColor.value = state.textColor;
+            elements.textColorPicker.value = state.textColor;
+            elements.textX.value = state.textX;
+            elements.textXValue.textContent = state.textX + '%';
+            elements.textY.value = state.textY;
+            elements.textYValue.textContent = state.textY + '%';
+            elements.textShadow.checked = state.textShadow;
+            elements.shadowColor.value = state.shadowColor;
+            elements.shadowColorPicker.value = state.shadowColor;
+            elements.shadowBlur.value = state.shadowBlur;
+            elements.shadowBlurValue.textContent = state.shadowBlur;
+            elements.bgColor.value = state.bgColor;
+            elements.bgColorPicker.value = state.bgColor;
+            elements.bgGradient1.value = state.bgGradient1;
+            elements.bgGradient1Picker.value = state.bgGradient1;
+            elements.bgGradient2.value = state.bgGradient2;
+            elements.bgGradient2Picker.value = state.bgGradient2;
+            elements.bgGradientAngle.value = state.bgGradientAngle;
+            elements.bgGradientAngleValue.textContent = state.bgGradientAngle + '°';
+            elements.shapeColor.value = state.shapeColor;
+            elements.shapeColorPicker.value = state.shapeColor;
+            
+            // Update shape selection
+            document.querySelectorAll('.shape-option').forEach(el => {
+                el.classList.toggle('selected', el.dataset.shape === state.shape);
+            });
+
+            // Update background type toggle
+            document.querySelectorAll('#bgTypeToggle button').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.bgtype === state.bgType);
+            });
+            document.getElementById('bgSolidOptions').style.display = state.bgType === 'solid' ? 'block' : 'none';
+            document.getElementById('bgGradientOptions').classList.toggle('active', state.bgType === 'gradient');
+
+            updateFontPreview();
+        }
+
+        function resetState() {
+            state = {
+                text: 'LOGO',
+                fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
+                fontWeight: 'bold',
+                fontSize: 48,
+                // MODIFIED: Changed default textColor to #000000
+                textColor: '#000000', 
+                textX: 50,
+                textY: 75,
+                textShadow: false,
+                shadowColor: '#000000',
+                shadowBlur: 10,
+                textStroke: false,
+                strokeColor: '#000000',
+                strokeWidth: 2,
+                shape: 'none',
+                shapeColor: '#6366f1',
+                shapeSize: 100,
+                shapeX: 50,
+                shapeY: 40,
+                shapeRotation: 0,
+                shapeFillType: 'solid',
+                gradientColor1: '#6366f1',
+                gradientColor2: '#a855f7',
+                gradientAngle: 135,
+                shapeShadow: false,
+                shapeStroke: false,
+                shapeBorderColor: '#ffffff',
+                shapeBorderWidth: 3,
+                canvasWidth: 400,
+                canvasHeight: 400,
+                bgType: 'solid',
+                bgColor: '#ffffff',
+                bgGradient1: '#667eea',
+                bgGradient2: '#764ba2',
+                bgGradientAngle: 135
+            };
+            updateCanvasSize();
+            updateUIFromState();
+            generateLogo();
+            showToast('Reset to defaults!');
+        }
+
+        function downloadLogo() {
+            const link = document.createElement('a');
+            link.download = `logo_${state.text || 'generated'}_${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            showToast('Logo downloaded!');
+        }
+
+        function showToast(message) {
+            elements.toast.textContent = message;
+            elements.toast.classList.add('show', 'success');
+            setTimeout(() => elements.toast.classList.remove('show', 'success'), 3000);
+        }
+
+        // Start
+        init();
+    </script>
+
+    <script>
+        // PWA Service Worker Registration
+        // Generated by PWA Converter v2.0.1
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Use RELATIVE path for service worker (works with multi-app setup)
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('✓ Service Worker registered:', registration.scope);
+                        console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
+                        console.log('✓ App: Logo Generator Pro');
+                        console.log('✓ Folder: logo');
+                        console.log('✓ Total files cached: 4'); // +3 for manifest, sw, offline
+                        
+                        // Check for updates periodically
+                        setInterval(() => {
+                            registration.update();
+                        }, 60000); // Check every minute
+                    })
+                    .catch(error => {
+                        console.error('✗ Service Worker registration failed:', error);
+                    });
+            });
+        } else {
+            console.warn('⚠ Service Workers not supported in this browser');
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('💡 PWA install prompt available');
+            // Show custom install UI
+            showInstallPromotion();
+        });
+
+        function showInstallPromotion() {
+            // You can implement custom install UI here
+            console.log('📱 App can be installed - Click browser menu or use custom UI');
+        }
+
+        // Install PWA function (call from your custom install button)
+        async function installPWA() {
+            if (!deferredPrompt) {
+                console.log('❌ Install prompt not available');
+                return;
+            }
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to install prompt: ${outcome}`);
+            deferredPrompt = null;
+        }
+
+        // Track installation
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA installed successfully!');
+            console.log('✅ App: Logo Generator Pro');
+            console.log('✅ App ID: logo-id');
+            console.log('✅ Folder: logo');
+            deferredPrompt = null;
+        });
+
+        // Display mode detection
+        function getPWADisplayMode() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            if (document.referrer.startsWith('android-app://')) {
+                return 'twa';
+            } else if (navigator.standalone || isStandalone) {
+                return 'standalone';
+            }
+            return 'browser';
+        }
+
+        const displayMode = getPWADisplayMode();
+        console.log('🖥️ Display mode:', displayMode);
+        
+        // Log PWA configuration
+        console.log('⚙️ PWA Configuration:');
+        console.log('  - App Name: Logo Generator Pro');
+        console.log('  - App ID: logo-id');
+        console.log('  - Start URL: /logo/');
+        console.log('  - Scope: /logo/');
+        console.log('  - Folder: logo');
+        console.log('  - Files included: 1');
+    </script>
+</body>
+</html>
+
