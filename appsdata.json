@@ -22,6 +22,17 @@
     ]
   },
   {
+    "href": "logo/",
+    "category": "utilities",
+    "keywords": "Generate your own creative logo",
+    "icon": "   \u26F2 ",
+    "name": "Logo generator",
+    "description": "This PWA, 'Prompt Explorer,' helps users efficiently browse and copy ready-to-use AI prompts. Prompts are organized by subcategories like 'initial prompts' and 'followup prompts,' and further filtered by category. It provides a convenient interface to discover and utilize various AI prompts for different needs, ensuring quick access and easy copying.",
+    "badges": [
+      "new"
+    ]
+  },
+  {
     "href": "games/",
     "category": "productivity",
     "keywords": "tasks organize list notes",
@@ -87,3 +98,4 @@
     "badges": []
   }
 ]
+
