@@ -1,4 +1,14 @@
-[
+[ {
+    "href": "hadith/",
+    "category": "Religion",
+    "keywords": "Search and read books",
+    "icon": "\u26C5  ",
+    "name": "Hadith books",
+    "description": "Hadith Explorer is a client-side web application for searching and exploring a vast collection of authentic Islamic narrations (Hadiths). Its mission is to make the profound wisdom of the Prophet's traditions easily accessible to everyone in both Arabic and English.",
+    "badges": [
+      "new"
+    ]
+  },
   {
     "href": "books-store-new/",
     "category": "utilities",
@@ -52,7 +62,7 @@
   },
   {
     "href": "quransearch/",
-    "category": "Quran",
+    "category": "Religion",
     "keywords": "search a word in quran",
     "icon": "  \u26C5   ",
     "name": "Quran Search",
@@ -81,7 +91,7 @@
   },
   {
     "href": "discoverquran/",
-    "category": "Quran",
+    "category": "Religion",
     "keywords": "Disciver Quran, search, read listen, cooy",
     "icon": "\ud83c\udf24\ufe0f",
     "name": "Disciver Quran",
@@ -98,4 +108,5 @@
     "badges": []
   }
 ]
+
 

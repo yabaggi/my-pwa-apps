@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Hadith Explorer</title>
+    <link rel="stylesheet" href="style.css">
+    <meta name="theme-color" content="#2196f3">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Hadith Explo">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-top">
+                <div class="header-content">
+                    <div class="app-icon">📖</div>
+                    <div class="header-text">
+                        <h1 data-en="Hadith Explorer" data-ar="مستكشف الحديث">Hadith Explorer</h1>
+                        <p data-en="Search authentic Islamic narrations" data-ar="ابحث في الأحاديث النبوية الشريفة">Search authentic Islamic narrations</p>
+                    </div>
+                </div>
+                <div class="lang-toggle">
+                    <button class="lang-btn active" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="ar">عربي</button>
+                </div>
+                <a href="about.html" class="about-btn" data-en="About" data-ar="عن المجموعة">About</a>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Status Banner -->
+            <div id="statusBanner" class="notice-banner" style="display: none;">
+                <span class="notice-icon" id="noticeIcon">ℹ️</span>
+                <div class="notice-text" id="noticeText"></div>
+            </div>
+
+            <!-- Book Selection -->
+            <div class="selection-section">
+                <label class="section-label">
+                    <span class="icon">📚</span>
+                    <span data-en="Select Book" data-ar="اختر الكتاب">Select Book</span>
+                </label>
+                <div class="select-wrapper">
+                    <select id="bookSelect" class="custom-select">
+                        <option value="" data-en="Loading books..." data-ar="جاري تحميل الكتب...">Loading books...</option>
+                    </select>
+                    <span class="select-arrow">▼</span>
+                </div>
+            </div>
+
+            <!-- Book Info -->
+            <div id="bookInfo" class="book-info-card">
+                <div class="book-info-name" id="bookInfoName"></div>
+                <div class="book-info-details">
+                    <span id="bookInfoWriter"></span>
+                    <span id="bookInfoChapters"></span>
+                    <span id="bookInfoHadiths"></span>
+                </div>
+            </div>
+
+            <!-- Chapter Selection -->
+            <div class="selection-section">
+                <label class="section-label">
+                    <span class="icon">📑</span>
+                    <span data-en="Select Chapter" data-ar="اختر الباب">Select Chapter</span>
+                </label>
+                <div class="select-wrapper">
+                    <select id="chapterSelect" class="custom-select" disabled>
+                        <option value="" data-en="Select a book first" data-ar="اختر كتاباً أولاً">Select a book first</option>
+                    </select>
+                    <span class="select-arrow">▼</span>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-card">
+                <div class="filters-header" id="filtersToggle">
+                    <span class="filters-title">
+                        <span>🔍</span>
+                        <span data-en="Advanced Filters" data-ar="خيارات البحث المتقدمة">Advanced Filters</span>
+                    </span>
+                    <span class="filters-toggle" id="toggleIcon">▼</span>
+                </div>
+                <div class="filters-body" id="filtersBody">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label" data-en="Hadith Number" data-ar="رقم الحديث">Hadith Number</label>
+                            <select id="hadithNumberSelect" class="filter-input"></select>
+                            <input type="number" id="hadithNumberInput" class="filter-input" placeholder="e.g., 1" data-placeholder-en="e.g., 1" data-placeholder-ar="مثال: 1">
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label" data-en="Status" data-ar="الحكم">Status</label>
+                            <select id="statusSelect" class="filter-input">
+                                <option value="" data-en="All" data-ar="الكل">All</option>
+                                <option value="Sahih" data-en="Sahih" data-ar="صحيح">Sahih</option>
+                                <option value="Hasan" data-en="Hasan" data-ar="حسن">Hasan</option>
+                                <option value="Da`eef" data-en="Da'eef" data-ar="ضعيف">Da'eef</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-group full-width">
+                            <label class="filter-label" data-en="Search in English" data-ar="البحث بالإنجليزية">Search in English</label>
+                            <input type="text" id="searchEnglish" class="filter-input" placeholder="Enter English keywords..." data-placeholder-en="Enter English keywords..." data-placeholder-ar="أدخل كلمات إنجليزية...">
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-group full-width">
+                            <label class="filter-label" data-en="Search in Arabic" data-ar="البحث بالعربية">Search in Arabic</label>
+                            <input type="text" id="searchArabic" class="filter-input" placeholder="أدخل كلمات عربية..." dir="rtl" data-placeholder-en="Enter Arabic keywords..." data-placeholder-ar="أدخل كلمات عربية...">
+                        </div>
+                    </div>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <label class="filter-label" data-en="Results per page" data-ar="النتائج لكل صفحة">Results per page</label>
+                            <select id="paginateSelect" class="filter-input">
+                                <option value="10">10</option>
+                                <option value="25" selected>25</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Button -->
+            <button id="searchBtn" class="search-btn" disabled>
+                <span>🔍</span>
+                <span data-en="Search Hadiths" data-ar="بحث في الأحاديث">Search Hadiths</span>
+            </button>
+
+            <!-- Results Section -->
+            <div class="results-section" id="resultsSection" style="display: none;">
+                <div class="results-header">
+                    <span class="results-count">
+                        <span data-en="Found" data-ar="تم العثور على">Found</span> 
+                        <span id="totalResults">0</span> 
+                        <span data-en="hadiths" data-ar="حديث">hadiths</span>
+                    </span>
+                </div>
+                <div id="resultsContainer"></div>
+                
+                <!-- Pagination -->
+                <div class="pagination" id="pagination" style="display: none;">
+                    <button class="page-btn" id="prevBtn" disabled>
+                        <span data-en="← Previous" data-ar="السابق →">← Previous</span>
+                    </button>
+                    <span class="page-info" id="pageInfo">Page 1</span>
+                    <button class="page-btn" id="nextBtn">
+                        <span data-en="Next →" data-ar="← التالي">Next →</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let allBooks = [];
+        let allChapters = [];
+        let allChapterRanges = [];
+        let allHadiths = {}; // To cache hadiths for each book
+        let currentPage = 1;
+        let totalPages = 1;
+        let currentLang = localStorage.getItem('currentLang') || 'ar';
+
+        // DOM Elements
+        const bookSelect = document.getElementById('bookSelect');
+        const chapterSelect = document.getElementById('chapterSelect');
+        const bookInfo = document.getElementById('bookInfo');
+        const bookInfoName = document.getElementById('bookInfoName');
+        const bookInfoWriter = document.getElementById('bookInfoWriter');
+        const searchBtn = document.getElementById('searchBtn');
+        const resultsSection = document.getElementById('resultsSection');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const totalResults = document.getElementById('totalResults');
+        const pagination = document.getElementById('pagination');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const pageInfo = document.getElementById('pageInfo');
+        const filtersToggle = document.getElementById('filtersToggle');
+        const filtersBody = document.getElementById('filtersBody');
+        const toggleIcon = document.getElementById('toggleIcon');
+        const statusBanner = document.getElementById('statusBanner');
+        const noticeIcon = document.getElementById('noticeIcon');
+        const noticeText = document.getElementById('noticeText');
+        const langBtns = document.querySelectorAll('.lang-btn');
+
+        // Filter inputs
+        const hadithNumberSelect = document.getElementById('hadithNumberSelect');
+        const hadithNumberInput = document.getElementById('hadithNumberInput');
+        const statusSelect = document.getElementById('statusSelect');
+        const searchEnglish = document.getElementById('searchEnglish');
+        const searchArabic = document.getElementById('searchArabic');
+        const paginateSelect = document.getElementById('paginateSelect');
+
+        // Language switching
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('currentLang', lang); // Save language preference
+            
+            // Update body direction
+            if (lang === 'ar') {
+                document.body.classList.add('rtl');
+                document.documentElement.setAttribute('dir', 'rtl');
+                document.documentElement.setAttribute('lang', 'ar');
+            } else {
+                document.body.classList.remove('rtl');
+                document.documentElement.setAttribute('dir', 'ltr');
+                document.documentElement.setAttribute('lang', 'en');
+            }
+
+            // Update all translatable elements
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const text = el.getAttribute(`data-${lang}`);
+                if (text) {
+                    el.textContent = text;
+                }
+            });
+
+            // Update placeholders
+            document.querySelectorAll('[data-placeholder-en]').forEach(el => {
+                const placeholder = el.getAttribute(`data-placeholder-${lang}`);
+                if (placeholder) {
+                    el.placeholder = placeholder;
+                }
+            });
+
+            // Update active button
+            langBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+
+            // Update page info
+            updatePageInfo();
+            populateBooksDropdown(); // Repopulate books for the new language
+
+            // Dispatch custom event for other pages/components to react
+            window.dispatchEvent(new CustomEvent('languageChanged', { detail: { lang: lang } }));
+        }
+
+        function updatePageInfo() {
+            if (currentLang === 'ar') {
+                pageInfo.textContent = `صفحة ${currentPage} من ${totalPages}`;
+            } else {
+                pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+            }
+        }
+
+        // Language button handlers
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                setLanguage(btn.dataset.lang);
+            });
+        });
+
+        // Show status banner
+        function showBanner(messageEn, messageAr, type = 'info') {
+            statusBanner.style.display = 'flex';
+            statusBanner.className = 'notice-banner' + (type === 'error' ? ' error' : type === 'success' ? ' success' : '');
+            noticeIcon.textContent = type === 'error' ? '⚠️' : type === 'success' ? '✅' : 'ℹ️';
+            noticeText.innerHTML = currentLang === 'ar' ? messageAr : messageEn;
+        }
+
+        function hideBanner() {
+            statusBanner.style.display = 'none';
+        }
+
+        async function fetchJSON(filePath) {
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error(`Error fetching ${filePath}:`, error);
+                throw error;
+            }
+        }
+
+        // Toggle filters
+        filtersToggle.addEventListener('click', () => {
+            filtersBody.classList.toggle('open');
+            toggleIcon.classList.toggle('open');
+        });
+
+        // Load initial data
+        async function loadInitialData() {
+            try {
+                [allBooks, allChapters, allChapterRanges] = await Promise.all([
+                    fetchJSON('books.json'),
+                    fetchJSON('books-chapters.json'),
+                    fetchJSON('chapter-range.json')
+                ]);
+                populateBooksDropdown();
+            } catch (error) {
+                console.error('Error loading initial data:', error);
+                showBanner('Error loading initial data.', 'خطأ في تحميل البيانات الأولية.', 'error');
+            }
+        }
+
+        // Populate books dropdown
+        function populateBooksDropdown() {
+            bookSelect.innerHTML = currentLang === 'ar' 
+                ? '<option value="">اختر كتاباً...</option>'
+                : '<option value="">Choose a book...</option>';
+            
+            if (allBooks.length > 0) {
+                allBooks.forEach(book => {
+                    const option = document.createElement('option');
+                    option.value = book.slug;
+                    option.textContent = currentLang === 'ar' ? book.arabic.title : book.english.title;
+                    option.dataset.writer = currentLang === 'ar' ? book.arabic.author : book.english.author;
+                    option.dataset.chapters = book.chapters;
+                    option.dataset.hadiths = book.hadiths;
+                    bookSelect.appendChild(option);
+                });
+            } else {
+                bookSelect.innerHTML = currentLang === 'ar'
+                    ? '<option value="">لم يتم العثور على كتب</option>'
+                    : '<option value="">No books found</option>';
+            }
+        }
+
+        // Load chapters for selected book
+        function loadChapters(bookSlug) {
+            chapterSelect.innerHTML = currentLang === 'ar'
+                ? '<option value="">جميع الأبواب</option>'
+                : '<option value="">All chapters</option>';
+            
+            const chaptersForBook = allChapters.filter(c => c.bookSlug === bookSlug);
+
+            if (chaptersForBook.length > 0) {
+                chaptersForBook.forEach(chapter => {
+                    const option = document.createElement('option');
+                    option.value = chapter.chapter_id;
+                    const chapterName = currentLang === 'ar' 
+                        ? (chapter.arabic || chapter.english || `باب ${chapter.chapter_id}`)
+                        : (chapter.english || chapter.arabic || `Chapter ${chapter.chapter_id}`);
+                    option.textContent = `${chapter.chapter_id}. ${chapterName}`;
+                    chapterSelect.appendChild(option);
+                });
+                chapterSelect.disabled = false;
+            } else {
+                chapterSelect.innerHTML = currentLang === 'ar'
+                    ? '<option value="">لم يتم العثور على أبواب</option>'
+                    : '<option value="">No chapters found</option>';
+                chapterSelect.disabled = true;
+            }
+        }
+
+        // Populate hadith number dropdown
+        function populateHadithNumberDropdown(bookSlug, chapterId) {
+            const hadithNumberSelect = document.getElementById('hadithNumberSelect');
+            hadithNumberSelect.innerHTML = '<option value="">All</option>';
+
+            if (bookSlug && chapterId) {
+                const chapterRange = allChapterRanges.find(cr => cr.bookSlug === bookSlug && cr.chapterId == chapterId);
+                if (chapterRange) {
+                    for (let i = chapterRange['first-hadith-no']; i <= chapterRange['last-hadith-no']; i++) {
+                        const option = document.createElement('option');
+                        option.value = i;
+                        option.textContent = i;
+                        hadithNumberSelect.appendChild(option);
+                    }
+                }
+            }
+        }
+        
+        // Search hadiths
+        async function searchHadiths(page = 1) {
+            const bookSlug = bookSelect.value;
+            
+            if (!bookSlug) {
+                showBanner('Please select a book first', 'الرجاء اختيار كتاب أولاً', 'error');
+                return;
+            }
+
+            currentPage = page;
+            showLoading();
+            hideBanner();
+
+            const chapterId = chapterSelect.value;
+            const numberSelect = hadithNumberSelect.value;
+            const numberInput = hadithNumberInput.value;
+            const number = numberInput || numberSelect;
+            const status = statusSelect.value;
+            const english = searchEnglish.value.toLowerCase();
+            const arabic = searchArabic.value;
+            const paginate = parseInt(paginateSelect.value, 10);
+            
+            let filteredHadiths = [];
+
+            try {
+                if (chapterId) {
+                    const chapterData = await fetchJSON(`hadiths/${bookSlug}/chapter-${chapterId}.json`);
+                    filteredHadiths = chapterData.hadiths || [];
+                } else {
+                    // Logic to load all hadiths for a book if needed
+                    // This part can be optimized based on requirements
+                    // For now, we'll just show a message to select a chapter
+                    showError("Please select a chapter for a full book search.");
+                    return;
+                }
+            } catch(e) {
+                showError("Could not load hadith data for the selected chapter.");
+                return;
+            }
+            
+            // Apply filters (client-side for now)
+            if (number) {
+                filteredHadiths = filteredHadiths.filter(h => h.idInBook == number);
+            }
+            // Other filters can be added here if hadith data contains status, etc.
+
+            const total = filteredHadiths.length;
+            totalPages = Math.ceil(total / paginate);
+            const start = (currentPage - 1) * paginate;
+            const end = start + paginate;
+            const paginatedHadiths = filteredHadiths.slice(start, end);
+            
+            const resultsData = {
+                hadiths: {
+                    data: paginatedHadiths,
+                    total: total,
+                    last_page: totalPages
+                }
+            };
+            
+            displayResults(resultsData);
+        }
+
+        // Show loading state
+        function showLoading() {
+            resultsSection.style.display = 'block';
+            resultsContainer.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p class="loading-text">${currentLang === 'ar' ? 'جاري البحث في الأحاديث...' : 'Searching hadiths...'}</p>
+                </div>
+            `;
+            pagination.style.display = 'none';
+        }
+
+        // Show error
+        function showError(message) {
+            resultsContainer.innerHTML = `
+                <div class="error-state">
+                    <div class="error-icon">⚠️</div>
+                    <p class="error-text">${message}</p>
+                    <button class="retry-btn" onclick="searchHadiths(${currentPage})">${currentLang === 'ar' ? 'إعادة المحاولة' : 'Retry'}</button>
+                </div>
+            `;
+        }
+
+        // Display results
+        function displayResults(data) {
+            resultsSection.style.display = 'block';
+            
+            if (!data.hadiths || !data.hadiths.data || data.hadiths.data.length === 0) {
+                resultsContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📭</div>
+                        <h3 class="empty-title">${currentLang === 'ar' ? 'لم يتم العثور على أحاديث' : 'No Hadiths Found'}</h3>
+                        <p class="empty-text">${currentLang === 'ar' ? 'حاول تعديل معايير البحث' : 'Try adjusting your search filters'}</p>
+                    </div>
+                `;
+                pagination.style.display = 'none';
+                totalResults.textContent = '0';
+                return;
+            }
+
+            const hadiths = data.hadiths.data;
+            const total = data.hadiths.total || hadiths.length;
+            totalPages = data.hadiths.last_page || 1;
+            
+            totalResults.textContent = total;
+            
+            let html = '';
+            hadiths.forEach((hadith, index) => {
+                const bookSlug = bookSelect.value;
+                const book = allBooks.find(b => b.slug === bookSlug);
+                const bookName = currentLang === 'ar' ? book.arabic.title : book.english.title;
+                
+                const chapter = allChapters.find(c => c.bookSlug === bookSlug && c.chapter_id == hadith.chapterId);
+                const chapterName = chapter ? (currentLang === 'ar' ? chapter.arabic : chapter.english) : '';
+
+                const hasArabic = hadith.arabic && hadith.arabic.trim();
+                const hasEnglish = hadith.english.text && hadith.english.text.trim();
+                
+                let defaultTab = 'arabic';
+                if (currentLang === 'en' && hasEnglish) defaultTab = 'english';
+                else if (hasArabic) defaultTab = 'arabic';
+                else if (hasEnglish) defaultTab = 'english';
+
+                html += `
+                    <div class="hadith-card">
+                        <div class="hadith-meta">
+                            <span class="meta-badge">${bookName}</span>
+                            ${chapterName ? `<span class="meta-badge">${chapterName}</span>` : ''}
+                        </div>
+                        <div class="hadith-number">${currentLang === 'ar' ? 'حديث رقم' : 'Hadith # '}${hadith.idInBook || 'N/A'}</div>
+                        
+                        <div class="hadith-tabs">
+                             <button class="hadith-tab ${defaultTab === 'arabic' ? 'active' : ''}" 
+                                    data-tab="arabic-${index}" 
+                                    ${!hasArabic ? 'disabled' : ''}>
+                                ${currentLang === 'ar' ? 'العربية' : 'Arabic'}
+                            </button>
+                            <button class="hadith-tab ${defaultTab === 'english' ? 'active' : ''}" 
+                                    data-tab="english-${index}"
+                                    ${!hasEnglish ? 'disabled' : ''}>
+                                ${currentLang === 'ar' ? 'الإنجليزية' : 'English'}
+                            </button>
+                        </div>
+                        
+                        <div class="hadith-content">
+                            <div class="tab-content ${defaultTab === 'arabic' ? 'active' : ''}" id="arabic-${index}">
+                                ${hasArabic 
+                                    ? `<div class="hadith-arabic">${hadith.arabic}</div>`
+                                    : `<div class="no-content">${currentLang === 'ar' ? 'النص العربي غير متوفر' : 'Arabic text not available'}</div>`
+                                }
+                            </div>
+                            <div class="tab-content ${defaultTab === 'english' ? 'active' : ''}" id="english-${index}">
+                                ${hasEnglish 
+                                    ? `<div class="hadith-english">${hadith.english.text}</div>`
+                                    : `<div class="no-content">${currentLang === 'ar' ? 'النص الإنجليزي غير متوفر' : 'English text not available'}</div>`
+                                }
+                            </div>
+                        </div>
+                        
+                        ${hadith.english.narrator ? `<div class="hadith-narrator">${currentLang === 'ar' ? 'الراوي:' : 'Narrated by:'} ${hadith.english.narrator}</div>` : ''}
+                    </div>
+                `;
+            });
+            
+            resultsContainer.innerHTML = html;
+
+            // Add tab click handlers
+            document.querySelectorAll('.hadith-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    if (this.disabled) return;
+                    
+                    const tabId = this.dataset.tab;
+                    const card = this.closest('.hadith-card');
+                    
+                    card.querySelectorAll('.hadith-tab').forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    card.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    card.querySelector(`#${tabId}`).classList.add('active');
+                });
+            });
+
+            // Update pagination
+            if (totalPages > 1) {
+                pagination.style.display = 'flex';
+                updatePageInfo();
+                prevBtn.disabled = currentPage === 1;
+                nextBtn.disabled = currentPage === totalPages;
+            } else {
+                pagination.style.display = 'none';
+            }
+
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        // Event Listeners
+        bookSelect.addEventListener('change', (e) => {
+            const bookSlug = e.target.value;
+            
+            if (bookSlug) {
+                const selectedOption = e.target.selectedOptions[0];
+                const book = allBooks.find(b => b.slug === bookSlug);
+                        bookInfoName.textContent = selectedOption.textContent;
+                        bookInfoWriter.textContent = `${currentLang === 'ar' ? 'المؤلف:' : 'Author:'} ${selectedOption.dataset.writer || (currentLang === 'ar' ? 'غير معروف' : 'Unknown')}`;
+                        const bookInfoChapters = document.getElementById('bookInfoChapters');
+                        const bookInfoHadiths = document.getElementById('bookInfoHadiths');
+                        bookInfoChapters.textContent = `${currentLang === 'ar' ? 'الأبواب:' : 'Chapters:'} ${selectedOption.dataset.chapters}`;
+                        bookInfoHadiths.textContent = `${currentLang === 'ar' ? 'الأحاديث:' : 'Hadiths:'} ${selectedOption.dataset.hadiths}`;                bookInfo.classList.add('visible');
+                
+                loadChapters(bookSlug);
+                searchBtn.disabled = false;
+            } else {
+                bookInfo.classList.remove('visible');
+                chapterSelect.innerHTML = currentLang === 'ar'
+                    ? '<option value="">اختر كتاباً أولاً</option>'
+                    : '<option value="">Select a book first</option>';
+                chapterSelect.disabled = true;
+                searchBtn.disabled = true;
+            }
+            
+            resultsSection.style.display = 'none';
+        });
+
+        chapterSelect.addEventListener('change', (e) => {
+            const bookSlug = bookSelect.value;
+            const chapterId = e.target.value;
+            populateHadithNumberDropdown(bookSlug, chapterId);
+        });
+
+        searchBtn.addEventListener('click', () => searchHadiths(1));
+
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 1) {
+                searchHadiths(currentPage - 1);
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < totalPages) {
+                searchHadiths(currentPage + 1);
+            }
+        });
+
+        [hadithNumberInput, searchEnglish, searchArabic].forEach(input => {
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && bookSelect.value) {
+                    searchHadiths(1);
+                }
+            });
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', async () => {
+            await loadInitialData();
+            setLanguage(currentLang);
+        });
+    </script>
+
+    <script>
+        // PWA Service Worker Registration
+        // Generated by PWA Converter v2.0.1
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Use RELATIVE path for service worker (works with multi-app setup)
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('✓ Service Worker registered:', registration.scope);
+                        console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
+                        console.log('✓ App: Hadith Explorer');
+                        console.log('✓ Folder: hadith');
+                        console.log('✓ Total files cached: 914'); // +3 for manifest, sw, offline
+                        
+                        // Check for updates periodically
+                        setInterval(() => {
+                            registration.update();
+                        }, 60000); // Check every minute
+                    })
+                    .catch(error => {
+                        console.error('✗ Service Worker registration failed:', error);
+                    });
+            });
+        } else {
+            console.warn('⚠ Service Workers not supported in this browser');
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('💡 PWA install prompt available');
+            // Show custom install UI
+            showInstallPromotion();
+        });
+
+        function showInstallPromotion() {
+            // You can implement custom install UI here
+            console.log('📱 App can be installed - Click browser menu or use custom UI');
+        }
+
+        // Install PWA function (call from your custom install button)
+        async function installPWA() {
+            if (!deferredPrompt) {
+                console.log('❌ Install prompt not available');
+                return;
+            }
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to install prompt: ${outcome}`);
+            deferredPrompt = null;
+        }
+
+        // Track installation
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA installed successfully!');
+            console.log('✅ App: Hadith Explorer');
+            console.log('✅ App ID: hadith-id');
+            console.log('✅ Folder: hadith');
+            deferredPrompt = null;
+        });
+
+        // Display mode detection
+        function getPWADisplayMode() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            if (document.referrer.startsWith('android-app://')) {
+                return 'twa';
+            } else if (navigator.standalone || isStandalone) {
+                return 'standalone';
+            }
+            return 'browser';
+        }
+
+        const displayMode = getPWADisplayMode();
+        console.log('🖥️ Display mode:', displayMode);
+        
+        // Log PWA configuration
+        console.log('⚙️ PWA Configuration:');
+        console.log('  - App Name: Hadith Explorer');
+        console.log('  - App ID: hadith-id');
+        console.log('  - Start URL: /hadith/');
+        console.log('  - Scope: /hadith/');
+        console.log('  - Folder: hadith');
+        console.log('  - Files included: 911');
+    </script>
+</body>
+</html>
+
+

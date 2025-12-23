@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>About the Collection - Hadith Explorer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-top">
+                <div class="header-content">
+                    <div class="app-icon">📖</div>
+                    <div class="header-text">
+                        <h1 data-en="About the Collection" data-ar="عن المجموعة">About the Collection</h1>
+                        <p data-en="Hadith Explorer" data-ar="مستكشف الحديث">Hadith Explorer</p>
+                    </div>
+                </div>
+                <div class="lang-toggle">
+                    <button class="lang-btn active" data-lang="en">EN</button>
+                    <button class="lang-btn" data-lang="ar">عربي</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="about-section">
+                <h2 data-en="About the App" data-ar="عن التطبيق">About the App</h2>
+                <p data-en="Hadith Explorer is a powerful tool to search and explore a vast collection of authentic Islamic narrations. Our mission is to make the profound wisdom of the Prophet's traditions easily accessible to everyone, in multiple languages." data-ar="مستكشف الحديث هو أداة قوية للبحث واستكشاف مجموعة واسعة من الأحاديث النبوية الشريفة. مهمتنا هي جعل الحكمة العميقة لتقاليد النبي سهلة الوصول للجميع، بلغات متعددة.">
+                    Hadith Explorer is a powerful tool to search and explore a vast collection of authentic Islamic narrations. Our mission is to make the profound wisdom of the Prophet's traditions easily accessible to everyone, in multiple languages.
+                </p>
+            </div>
+
+            <div class="book-stats-section">
+                <h2 data-en="Book Statistics" data-ar="إحصائيات الكتب">Book Statistics</h2>
+                <div id="bookStatsContainer" class="book-stats-container">
+                    <!-- Book stats will be loaded here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let currentLang = localStorage.getItem('currentLang') || 'ar';
+
+        // DOM Elements
+        const bookStatsContainer = document.getElementById('bookStatsContainer');
+        const langBtns = document.querySelectorAll('.lang-btn');
+
+        // Language switching
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('currentLang', lang); // Save language preference
+            
+            // Update body direction
+            if (lang === 'ar') {
+                document.body.classList.add('rtl');
+                document.documentElement.setAttribute('dir', 'rtl');
+                document.documentElement.setAttribute('lang', 'ar');
+            } else {
+                document.body.classList.remove('rtl');
+                document.documentElement.setAttribute('dir', 'ltr');
+                document.documentElement.setAttribute('lang', 'en');
+            }
+
+            // Update all translatable elements
+            document.querySelectorAll('[data-en]').forEach(el => {
+                const text = el.getAttribute(`data-${lang}`);
+                if (text) {
+                    el.textContent = text;
+                }
+            });
+
+            // Update active button
+            langBtns.forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.lang === lang);
+            });
+            
+            // Reload book stats for the new language
+            loadBookStats();
+        }
+
+        // Language button handlers
+        langBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                setLanguage(btn.dataset.lang);
+            });
+        });
+
+        // Listen for language changes from other pages (e.g., index.html)
+        window.addEventListener('languageChanged', (event) => {
+            setLanguage(event.detail.lang);
+        });
+
+
+        async function fetchJSON(filePath) {
+            try {
+                const response = await fetch(filePath);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return await response.json();
+            } catch (error) {
+                console.error(`Error fetching ${filePath}:`, error);
+                throw error;
+            }
+        }
+
+        async function loadBookStats() {
+            try {
+                const books = await fetchJSON('books.json');
+                displayBookStats(books);
+            } catch (error) {
+                console.error('Error loading book stats:', error);
+                bookStatsContainer.innerHTML = '<p>Error loading book statistics.</p>';
+            }
+        }
+
+        function displayBookStats(books) {
+            let html = '';
+            books.forEach(book => {
+                const title = currentLang === 'ar' ? book.arabic.title : book.english.title;
+                const author = currentLang === 'ar' ? book.arabic.author : book.english.author;
+                const chaptersLabel = currentLang === 'ar' ? 'الأبواب' : 'Chapters';
+                const hadithsLabel = currentLang === 'ar' ? 'الأحاديث' : 'Hadiths';
+
+                html += `
+                    <div class="book-stat-card">
+                        <h3 class="book-stat-title">${title}</h3>
+                        <p class="book-stat-author">${author}</p>
+                        <div class="book-stat-numbers">
+                            <div class="book-stat-item">
+                                <span class="book-stat-value">${book.chapters}</span>
+                                <span class="book-stat-label">${chaptersLabel}</span>
+                            </div>
+                            <div class="book-stat-item">
+                                <span class="book-stat-value">${book.hadiths}</span>
+                                <span class="book-stat-label">${hadithsLabel}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            bookStatsContainer.innerHTML = html;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            setLanguage(currentLang);
+            loadBookStats();
+        });
+    </script>
+    <style>
+        .about-section, .book-stats-section {
+            margin-bottom: 24px;
+        }
+        .about-section h2, .book-stats-section h2 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--primary-dark);
+        }
+        .about-section p {
+            font-size: 15px;
+            line-height: 1.8;
+        }
+        .book-stats-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+        .book-stat-card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: 0 2px 12px var(--shadow);
+            border-left: 4px solid var(--secondary);
+        }
+        body.rtl .book-stat-card {
+            border-left: none;
+            border-right: 4px solid var(--secondary);
+        }
+        .book-stat-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .book-stat-author {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+        .book-stat-numbers {
+            display: flex;
+            gap: 24px;
+        }
+        .book-stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .book-stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .book-stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,2576 @@
+[
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 1,
+    "first-hadith-no": 1,
+    "last-hadith-no": 390
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 2,
+    "first-hadith-no": 391,
+    "last-hadith-no": 1161
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 3,
+    "first-hadith-no": 1162,
+    "last-hadith-no": 1198
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 4,
+    "first-hadith-no": 1199,
+    "last-hadith-no": 1250
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 5,
+    "first-hadith-no": 1251,
+    "last-hadith-no": 1371
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 6,
+    "first-hadith-no": 1372,
+    "last-hadith-no": 1401
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 7,
+    "first-hadith-no": 1402,
+    "last-hadith-no": 1416
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 8,
+    "first-hadith-no": 1417,
+    "last-hadith-no": 1556
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 9,
+    "first-hadith-no": 1557,
+    "last-hadith-no": 1701
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 10,
+    "first-hadith-no": 1702,
+    "last-hadith-no": 1721
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 11,
+    "first-hadith-no": 1722,
+    "last-hadith-no": 2046
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 12,
+    "first-hadith-no": 2047,
+    "last-hadith-no": 2175
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 13,
+    "first-hadith-no": 2176,
+    "last-hadith-no": 2313
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 14,
+    "first-hadith-no": 2314,
+    "last-hadith-no": 2477
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 15,
+    "first-hadith-no": 2478,
+    "last-hadith-no": 2788
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 16,
+    "first-hadith-no": 2789,
+    "last-hadith-no": 2844
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 17,
+    "first-hadith-no": 2845,
+    "last-hadith-no": 2862
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 18,
+    "first-hadith-no": 2863,
+    "last-hadith-no": 2885
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 19,
+    "first-hadith-no": 2886,
+    "last-hadith-no": 2928
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 20,
+    "first-hadith-no": 2929,
+    "last-hadith-no": 3089
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 21,
+    "first-hadith-no": 3090,
+    "last-hadith-no": 3242
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 22,
+    "first-hadith-no": 3243,
+    "last-hadith-no": 3326
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 23,
+    "first-hadith-no": 3327,
+    "last-hadith-no": 3416
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 24,
+    "first-hadith-no": 3417,
+    "last-hadith-no": 3571
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 25,
+    "first-hadith-no": 3572,
+    "last-hadith-no": 3641
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 26,
+    "first-hadith-no": 3642,
+    "last-hadith-no": 3669
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 27,
+    "first-hadith-no": 3670,
+    "last-hadith-no": 3736
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 28,
+    "first-hadith-no": 3737,
+    "last-hadith-no": 3855
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 29,
+    "first-hadith-no": 3856,
+    "last-hadith-no": 3904
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 30,
+    "first-hadith-no": 3905,
+    "last-hadith-no": 3926
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 31,
+    "first-hadith-no": 3927,
+    "last-hadith-no": 3969
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 32,
+    "first-hadith-no": 3970,
+    "last-hadith-no": 4009
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 33,
+    "first-hadith-no": 4010,
+    "last-hadith-no": 4020
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 34,
+    "first-hadith-no": 4021,
+    "last-hadith-no": 4159
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 35,
+    "first-hadith-no": 4160,
+    "last-hadith-no": 4214
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 36,
+    "first-hadith-no": 4215,
+    "last-hadith-no": 4240
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 37,
+    "first-hadith-no": 4241,
+    "last-hadith-no": 4279
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 38,
+    "first-hadith-no": 4280,
+    "last-hadith-no": 4292
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 39,
+    "first-hadith-no": 4293,
+    "last-hadith-no": 4352
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 40,
+    "first-hadith-no": 4353,
+    "last-hadith-no": 4495
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 41,
+    "first-hadith-no": 4496,
+    "last-hadith-no": 4597
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 42,
+    "first-hadith-no": 4598,
+    "last-hadith-no": 4774
+  },
+  {
+    "bookSlug": "abudawud",
+    "chapterId": 43,
+    "first-hadith-no": 4775,
+    "last-hadith-no": 5276
+  },
+  {
+    "bookSlug": "ahmed",
+    "chapterId": 1,
+    "first-hadith-no": 1,
+    "last-hadith-no": 77
+  },
+  {
+    "bookSlug": "ahmed",
+    "chapterId": 2,
+    "first-hadith-no": 78,
+    "last-hadith-no": 368
+  },
+  {
+    "bookSlug": "ahmed",
+    "chapterId": 3,
+    "first-hadith-no": 369,
+    "last-hadith-no": 376
+  },
+  {
+    "bookSlug": "ahmed",
+    "chapterId": 4,
+    "first-hadith-no": 377,
+    "last-hadith-no": 528
+  },
+  {
+    "bookSlug": "ahmed",
+    "chapterId": 5,
+    "first-hadith-no": 529,
+    "last-hadith-no": 1306
+  },
+  {
+    "bookSlug": "ahmed",
+    "chapterId": 6,
+    "first-hadith-no": 1307,
+    "last-hadith-no": 1328
+  },
+  {
+    "bookSlug": "ahmed",
+    "chapterId": 7,
+    "first-hadith-no": 1329,
+    "last-hadith-no": 1359
+  },
+  {
+    "bookSlug": "ahmed",
+    "chapterId": 31,
+    "first-hadith-no": 1360,
+    "last-hadith-no": 1374
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 1,
+    "first-hadith-no": 1,
+    "last-hadith-no": 7
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 2,
+    "first-hadith-no": 8,
+    "last-hadith-no": 58
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 3,
+    "first-hadith-no": 59,
+    "last-hadith-no": 134
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 4,
+    "first-hadith-no": 135,
+    "last-hadith-no": 247
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 5,
+    "first-hadith-no": 248,
+    "last-hadith-no": 292
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 6,
+    "first-hadith-no": 293,
+    "last-hadith-no": 329
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 7,
+    "first-hadith-no": 330,
+    "last-hadith-no": 344
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 8,
+    "first-hadith-no": 345,
+    "last-hadith-no": 511
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 9,
+    "first-hadith-no": 512,
+    "last-hadith-no": 588
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 10,
+    "first-hadith-no": 589,
+    "last-hadith-no": 854
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 11,
+    "first-hadith-no": 855,
+    "last-hadith-no": 919
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 12,
+    "first-hadith-no": 920,
+    "last-hadith-no": 925
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 13,
+    "first-hadith-no": 926,
+    "last-hadith-no": 962
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 14,
+    "first-hadith-no": 963,
+    "last-hadith-no": 977
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 15,
+    "first-hadith-no": 978,
+    "last-hadith-no": 1011
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 16,
+    "first-hadith-no": 1012,
+    "last-hadith-no": 1035
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 17,
+    "first-hadith-no": 1036,
+    "last-hadith-no": 1048
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 18,
+    "first-hadith-no": 1049,
+    "last-hadith-no": 1087
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 19,
+    "first-hadith-no": 1088,
+    "last-hadith-no": 1150
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 20,
+    "first-hadith-no": 1151,
+    "last-hadith-no": 1159
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 21,
+    "first-hadith-no": 1160,
+    "last-hadith-no": 1186
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 22,
+    "first-hadith-no": 1187,
+    "last-hadith-no": 1200
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 23,
+    "first-hadith-no": 1201,
+    "last-hadith-no": 1348
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 24,
+    "first-hadith-no": 1349,
+    "last-hadith-no": 1460
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 25,
+    "first-hadith-no": 1461,
+    "last-hadith-no": 1707
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 26,
+    "first-hadith-no": 1708,
+    "last-hadith-no": 1737
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 27,
+    "first-hadith-no": 1738,
+    "last-hadith-no": 1752
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 28,
+    "first-hadith-no": 1753,
+    "last-hadith-no": 1798
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 29,
+    "first-hadith-no": 1799,
+    "last-hadith-no": 1822
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 30,
+    "first-hadith-no": 1823,
+    "last-hadith-no": 1934
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 31,
+    "first-hadith-no": 1935,
+    "last-hadith-no": 1940
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 32,
+    "first-hadith-no": 1941,
+    "last-hadith-no": 1951
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 33,
+    "first-hadith-no": 1952,
+    "last-hadith-no": 1972
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 34,
+    "first-hadith-no": 1973,
+    "last-hadith-no": 2156
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 35,
+    "first-hadith-no": 2157,
+    "last-hadith-no": 2172
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 36,
+    "first-hadith-no": 2173,
+    "last-hadith-no": 2175
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 37,
+    "first-hadith-no": 2176,
+    "last-hadith-no": 2200
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 38,
+    "first-hadith-no": 2201,
+    "last-hadith-no": 2203
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 39,
+    "first-hadith-no": 2204,
+    "last-hadith-no": 2212
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 40,
+    "first-hadith-no": 2213,
+    "last-hadith-no": 2230
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 41,
+    "first-hadith-no": 2231,
+    "last-hadith-no": 2258
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 42,
+    "first-hadith-no": 2259,
+    "last-hadith-no": 2289
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 43,
+    "first-hadith-no": 2290,
+    "last-hadith-no": 2313
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 44,
+    "first-hadith-no": 2314,
+    "last-hadith-no": 2328
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 45,
+    "first-hadith-no": 2329,
+    "last-hadith-no": 2343
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 46,
+    "first-hadith-no": 2344,
+    "last-hadith-no": 2386
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 47,
+    "first-hadith-no": 2387,
+    "last-hadith-no": 2408
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 48,
+    "first-hadith-no": 2409,
+    "last-hadith-no": 2416
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 49,
+    "first-hadith-no": 2417,
+    "last-hadith-no": 2457
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 50,
+    "first-hadith-no": 2458,
+    "last-hadith-no": 2463
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 51,
+    "first-hadith-no": 2464,
+    "last-hadith-no": 2531
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 52,
+    "first-hadith-no": 2532,
+    "last-hadith-no": 2581
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 53,
+    "first-hadith-no": 2582,
+    "last-hadith-no": 2601
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 54,
+    "first-hadith-no": 2602,
+    "last-hadith-no": 2625
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 55,
+    "first-hadith-no": 2626,
+    "last-hadith-no": 2669
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 56,
+    "first-hadith-no": 2670,
+    "last-hadith-no": 2963
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 57,
+    "first-hadith-no": 2964,
+    "last-hadith-no": 3026
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 58,
+    "first-hadith-no": 3027,
+    "last-hadith-no": 3056
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 59,
+    "first-hadith-no": 3057,
+    "last-hadith-no": 3187
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 60,
+    "first-hadith-no": 3188,
+    "last-hadith-no": 3341
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 61,
+    "first-hadith-no": 3342,
+    "last-hadith-no": 3492
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 62,
+    "first-hadith-no": 3493,
+    "last-hadith-no": 3612
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 63,
+    "first-hadith-no": 3613,
+    "last-hadith-no": 3784
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 64,
+    "first-hadith-no": 3785,
+    "last-hadith-no": 4272
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 65,
+    "first-hadith-no": 4273,
+    "last-hadith-no": 4771
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 66,
+    "first-hadith-no": 4772,
+    "last-hadith-no": 4858
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 67,
+    "first-hadith-no": 4859,
+    "last-hadith-no": 5041
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 68,
+    "first-hadith-no": 5042,
+    "last-hadith-no": 5136
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 69,
+    "first-hadith-no": 5137,
+    "last-hadith-no": 5158
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 70,
+    "first-hadith-no": 5159,
+    "last-hadith-no": 5253
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 71,
+    "first-hadith-no": 5254,
+    "last-hadith-no": 5262
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 72,
+    "first-hadith-no": 5263,
+    "last-hadith-no": 5331
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 73,
+    "first-hadith-no": 5332,
+    "last-hadith-no": 5361
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 74,
+    "first-hadith-no": 5362,
+    "last-hadith-no": 5426
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 75,
+    "first-hadith-no": 5427,
+    "last-hadith-no": 5463
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 76,
+    "first-hadith-no": 5464,
+    "last-hadith-no": 5556
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 77,
+    "first-hadith-no": 5557,
+    "last-hadith-no": 5741
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 78,
+    "first-hadith-no": 5742,
+    "last-hadith-no": 5991
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 79,
+    "first-hadith-no": 5992,
+    "last-hadith-no": 6066
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 80,
+    "first-hadith-no": 6067,
+    "last-hadith-no": 6172
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 81,
+    "first-hadith-no": 6173,
+    "last-hadith-no": 6353
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 82,
+    "first-hadith-no": 6354,
+    "last-hadith-no": 6379
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 83,
+    "first-hadith-no": 6380,
+    "last-hadith-no": 6463
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 84,
+    "first-hadith-no": 6464,
+    "last-hadith-no": 6478
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 85,
+    "first-hadith-no": 6479,
+    "last-hadith-no": 6525
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 86,
+    "first-hadith-no": 6526,
+    "last-hadith-no": 6606
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 87,
+    "first-hadith-no": 6607,
+    "last-hadith-no": 6661
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 88,
+    "first-hadith-no": 6662,
+    "last-hadith-no": 6682
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 89,
+    "first-hadith-no": 6683,
+    "last-hadith-no": 6695
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 90,
+    "first-hadith-no": 6696,
+    "last-hadith-no": 6723
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 91,
+    "first-hadith-no": 6724,
+    "last-hadith-no": 6784
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 92,
+    "first-hadith-no": 6785,
+    "last-hadith-no": 6867
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 93,
+    "first-hadith-no": 6868,
+    "last-hadith-no": 6951
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 94,
+    "first-hadith-no": 6952,
+    "last-hadith-no": 6971
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 95,
+    "first-hadith-no": 6972,
+    "last-hadith-no": 6992
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 96,
+    "first-hadith-no": 6993,
+    "last-hadith-no": 7089
+  },
+  {
+    "bookSlug": "bukhari",
+    "chapterId": 97,
+    "first-hadith-no": 7090,
+    "last-hadith-no": 7277
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 1,
+    "first-hadith-no": 1,
+    "last-hadith-no": 510
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 2,
+    "first-hadith-no": 511,
+    "last-hadith-no": 929
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 3,
+    "first-hadith-no": 930,
+    "last-hadith-no": 988
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 4,
+    "first-hadith-no": 989,
+    "last-hadith-no": 1086
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 5,
+    "first-hadith-no": 1087,
+    "last-hadith-no": 1239
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 6,
+    "first-hadith-no": 1240,
+    "last-hadith-no": 1294
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 7,
+    "first-hadith-no": 1295,
+    "last-hadith-no": 1310
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 8,
+    "first-hadith-no": 1311,
+    "last-hadith-no": 1373
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 9,
+    "first-hadith-no": 1374,
+    "last-hadith-no": 1422
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 10,
+    "first-hadith-no": 1423,
+    "last-hadith-no": 1449
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 11,
+    "first-hadith-no": 1450,
+    "last-hadith-no": 1541
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 12,
+    "first-hadith-no": 1542,
+    "last-hadith-no": 1573
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 13,
+    "first-hadith-no": 1574,
+    "last-hadith-no": 1606
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 14,
+    "first-hadith-no": 1607,
+    "last-hadith-no": 1624
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 15,
+    "first-hadith-no": 1625,
+    "last-hadith-no": 1662
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 16,
+    "first-hadith-no": 1663,
+    "last-hadith-no": 1710
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 17,
+    "first-hadith-no": 1711,
+    "last-hadith-no": 1801
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 18,
+    "first-hadith-no": 1802,
+    "last-hadith-no": 1898
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 19,
+    "first-hadith-no": 1899,
+    "last-hadith-no": 1973
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 20,
+    "first-hadith-no": 1974,
+    "last-hadith-no": 2110
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 21,
+    "first-hadith-no": 2111,
+    "last-hadith-no": 2435
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 22,
+    "first-hadith-no": 2436,
+    "last-hadith-no": 2561
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 23,
+    "first-hadith-no": 2562,
+    "last-hadith-no": 2757
+  },
+  {
+    "bookSlug": "darimi",
+    "chapterId": 0,
+    "first-hadith-no": 2758,
+    "last-hadith-no": 3406
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 1,
+    "first-hadith-no": 1,
+    "last-hadith-no": 400
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 2,
+    "first-hadith-no": 401,
+    "last-hadith-no": 439
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 3,
+    "first-hadith-no": 440,
+    "last-hadith-no": 468
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 4,
+    "first-hadith-no": 469,
+    "last-hadith-no": 536
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 5,
+    "first-hadith-no": 537,
+    "last-hadith-no": 1166
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 6,
+    "first-hadith-no": 1167,
+    "last-hadith-no": 1371
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 7,
+    "first-hadith-no": 1372,
+    "last-hadith-no": 1516
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 8,
+    "first-hadith-no": 1517,
+    "last-hadith-no": 1578
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 9,
+    "first-hadith-no": 1579,
+    "last-hadith-no": 1749
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 10,
+    "first-hadith-no": 1750,
+    "last-hadith-no": 1823
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 11,
+    "first-hadith-no": 1824,
+    "last-hadith-no": 1870
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 12,
+    "first-hadith-no": 1871,
+    "last-hadith-no": 2041
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 13,
+    "first-hadith-no": 2042,
+    "last-hadith-no": 2108
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 14,
+    "first-hadith-no": 2109,
+    "last-hadith-no": 2123
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 15,
+    "first-hadith-no": 2124,
+    "last-hadith-no": 2169
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 16,
+    "first-hadith-no": 2170,
+    "last-hadith-no": 2226
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 17,
+    "first-hadith-no": 2227,
+    "last-hadith-no": 2237
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 18,
+    "first-hadith-no": 2238,
+    "last-hadith-no": 2247
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 19,
+    "first-hadith-no": 2248,
+    "last-hadith-no": 2268
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 20,
+    "first-hadith-no": 2269,
+    "last-hadith-no": 2350
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 21,
+    "first-hadith-no": 2351,
+    "last-hadith-no": 2430
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 22,
+    "first-hadith-no": 2431,
+    "last-hadith-no": 2454
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 23,
+    "first-hadith-no": 2455,
+    "last-hadith-no": 2488
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 24,
+    "first-hadith-no": 2489,
+    "last-hadith-no": 2617
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 25,
+    "first-hadith-no": 2618,
+    "last-hadith-no": 2855
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 26,
+    "first-hadith-no": 2856,
+    "last-hadith-no": 2897
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 27,
+    "first-hadith-no": 2898,
+    "last-hadith-no": 2935
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 28,
+    "first-hadith-no": 2936,
+    "last-hadith-no": 2986
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 29,
+    "first-hadith-no": 2987,
+    "last-hadith-no": 3106
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 30,
+    "first-hadith-no": 3107,
+    "last-hadith-no": 3171
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 31,
+    "first-hadith-no": 3172,
+    "last-hadith-no": 3285
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 32,
+    "first-hadith-no": 3286,
+    "last-hadith-no": 3392
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 33,
+    "first-hadith-no": 3393,
+    "last-hadith-no": 3562
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 34,
+    "first-hadith-no": 3563,
+    "last-hadith-no": 3628
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 35,
+    "first-hadith-no": 3629,
+    "last-hadith-no": 3662
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 36,
+    "first-hadith-no": 3663,
+    "last-hadith-no": 3837
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 37,
+    "first-hadith-no": 3838,
+    "last-hadith-no": 4079
+  },
+  {
+    "bookSlug": "ibnmajah",
+    "chapterId": 0,
+    "first-hadith-no": 4080,
+    "last-hadith-no": 4345
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 1,
+    "first-hadith-no": 1,
+    "last-hadith-no": 31
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 2,
+    "first-hadith-no": 32,
+    "last-hadith-no": 146
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 3,
+    "first-hadith-no": 147,
+    "last-hadith-no": 221
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 4,
+    "first-hadith-no": 222,
+    "last-hadith-no": 224
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 5,
+    "first-hadith-no": 225,
+    "last-hadith-no": 247
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 6,
+    "first-hadith-no": 248,
+    "last-hadith-no": 255
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 7,
+    "first-hadith-no": 256,
+    "last-hadith-no": 288
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 8,
+    "first-hadith-no": 289,
+    "last-hadith-no": 327
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 9,
+    "first-hadith-no": 328,
+    "last-hadith-no": 431
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 10,
+    "first-hadith-no": 432,
+    "last-hadith-no": 445
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 11,
+    "first-hadith-no": 446,
+    "last-hadith-no": 450
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 12,
+    "first-hadith-no": 451,
+    "last-hadith-no": 454
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 13,
+    "first-hadith-no": 455,
+    "last-hadith-no": 460
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 14,
+    "first-hadith-no": 461,
+    "last-hadith-no": 476
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 15,
+    "first-hadith-no": 477,
+    "last-hadith-no": 528
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 16,
+    "first-hadith-no": 529,
+    "last-hadith-no": 587
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 17,
+    "first-hadith-no": 588,
+    "last-hadith-no": 650
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 18,
+    "first-hadith-no": 651,
+    "last-hadith-no": 716
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 19,
+    "first-hadith-no": 717,
+    "last-hadith-no": 734
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 20,
+    "first-hadith-no": 735,
+    "last-hadith-no": 1001
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 21,
+    "first-hadith-no": 1002,
+    "last-hadith-no": 1055
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 22,
+    "first-hadith-no": 1056,
+    "last-hadith-no": 1074
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 23,
+    "first-hadith-no": 1075,
+    "last-hadith-no": 1087
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 24,
+    "first-hadith-no": 1088,
+    "last-hadith-no": 1097
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 25,
+    "first-hadith-no": 1098,
+    "last-hadith-no": 1116
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 26,
+    "first-hadith-no": 1117,
+    "last-hadith-no": 1123
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 27,
+    "first-hadith-no": 1124,
+    "last-hadith-no": 1147
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 28,
+    "first-hadith-no": 1148,
+    "last-hadith-no": 1208
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 29,
+    "first-hadith-no": 1209,
+    "last-hadith-no": 1328
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 30,
+    "first-hadith-no": 1329,
+    "last-hadith-no": 1346
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 31,
+    "first-hadith-no": 1347,
+    "last-hadith-no": 1449
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 32,
+    "first-hadith-no": 1450,
+    "last-hadith-no": 1465
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 33,
+    "first-hadith-no": 1466,
+    "last-hadith-no": 1468
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 34,
+    "first-hadith-no": 1469,
+    "last-hadith-no": 1473
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 35,
+    "first-hadith-no": 1474,
+    "last-hadith-no": 1478
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 36,
+    "first-hadith-no": 1479,
+    "last-hadith-no": 1550
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 37,
+    "first-hadith-no": 1551,
+    "last-hadith-no": 1563
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 38,
+    "first-hadith-no": 1564,
+    "last-hadith-no": 1591
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 39,
+    "first-hadith-no": 1592,
+    "last-hadith-no": 1606
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 40,
+    "first-hadith-no": 1607,
+    "last-hadith-no": 1614
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 41,
+    "first-hadith-no": 1615,
+    "last-hadith-no": 1651
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 42,
+    "first-hadith-no": 1652,
+    "last-hadith-no": 1671
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 43,
+    "first-hadith-no": 1672,
+    "last-hadith-no": 1716
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 44,
+    "first-hadith-no": 1717,
+    "last-hadith-no": 1722
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 45,
+    "first-hadith-no": 1723,
+    "last-hadith-no": 1747
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 46,
+    "first-hadith-no": 1748,
+    "last-hadith-no": 1757
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 47,
+    "first-hadith-no": 1758,
+    "last-hadith-no": 1775
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 48,
+    "first-hadith-no": 1776,
+    "last-hadith-no": 1795
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 49,
+    "first-hadith-no": 1796,
+    "last-hadith-no": 1837
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 50,
+    "first-hadith-no": 1838,
+    "last-hadith-no": 1856
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 51,
+    "first-hadith-no": 1857,
+    "last-hadith-no": 1873
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 52,
+    "first-hadith-no": 1874,
+    "last-hadith-no": 1881
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 53,
+    "first-hadith-no": 1882,
+    "last-hadith-no": 1889
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 54,
+    "first-hadith-no": 1890,
+    "last-hadith-no": 1934
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 55,
+    "first-hadith-no": 1935,
+    "last-hadith-no": 1937
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 56,
+    "first-hadith-no": 1938,
+    "last-hadith-no": 1965
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 57,
+    "first-hadith-no": 1966,
+    "last-hadith-no": 1967
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 58,
+    "first-hadith-no": 1968,
+    "last-hadith-no": 1982
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 59,
+    "first-hadith-no": 1983,
+    "last-hadith-no": 1983
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 60,
+    "first-hadith-no": 1984,
+    "last-hadith-no": 1984
+  },
+  {
+    "bookSlug": "malik",
+    "chapterId": 61,
+    "first-hadith-no": 1985,
+    "last-hadith-no": 1985
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 1,
+    "first-hadith-no": 1,
+    "last-hadith-no": 439
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 2,
+    "first-hadith-no": 440,
+    "last-hadith-no": 583
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 3,
+    "first-hadith-no": 584,
+    "last-hadith-no": 740
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 4,
+    "first-hadith-no": 741,
+    "last-hadith-no": 1062
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 5,
+    "first-hadith-no": 1063,
+    "last-hadith-no": 1464
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 6,
+    "first-hadith-no": 1465,
+    "last-hadith-no": 1842
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 7,
+    "first-hadith-no": 1843,
+    "last-hadith-no": 1935
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 8,
+    "first-hadith-no": 1936,
+    "last-hadith-no": 1959
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 9,
+    "first-hadith-no": 1960,
+    "last-hadith-no": 1978
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 10,
+    "first-hadith-no": 1979,
+    "last-hadith-no": 2009
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 11,
+    "first-hadith-no": 2010,
+    "last-hadith-no": 2147
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 12,
+    "first-hadith-no": 2148,
+    "last-hadith-no": 2378
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 13,
+    "first-hadith-no": 2379,
+    "last-hadith-no": 2663
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 14,
+    "first-hadith-no": 2664,
+    "last-hadith-no": 2674
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 15,
+    "first-hadith-no": 2675,
+    "last-hadith-no": 3275
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 16,
+    "first-hadith-no": 3276,
+    "last-hadith-no": 3444
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 17,
+    "first-hadith-no": 3445,
+    "last-hadith-no": 3528
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 18,
+    "first-hadith-no": 3529,
+    "last-hadith-no": 3615
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 19,
+    "first-hadith-no": 3616,
+    "last-hadith-no": 3642
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 20,
+    "first-hadith-no": 3643,
+    "last-hadith-no": 3672
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 21,
+    "first-hadith-no": 3673,
+    "last-hadith-no": 3832
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 22,
+    "first-hadith-no": 3833,
+    "last-hadith-no": 4010
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 23,
+    "first-hadith-no": 4011,
+    "last-hadith-no": 4033
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 24,
+    "first-hadith-no": 4034,
+    "last-hadith-no": 4074
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 25,
+    "first-hadith-no": 4075,
+    "last-hadith-no": 4105
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 26,
+    "first-hadith-no": 4106,
+    "last-hadith-no": 4123
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 27,
+    "first-hadith-no": 4124,
+    "last-hadith-no": 4211
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 28,
+    "first-hadith-no": 4212,
+    "last-hadith-no": 4267
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 29,
+    "first-hadith-no": 4268,
+    "last-hadith-no": 4339
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 30,
+    "first-hadith-no": 4340,
+    "last-hadith-no": 4367
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 31,
+    "first-hadith-no": 4368,
+    "last-hadith-no": 4387
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 32,
+    "first-hadith-no": 4388,
+    "last-hadith-no": 4569
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 33,
+    "first-hadith-no": 4570,
+    "last-hadith-no": 4835
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 34,
+    "first-hadith-no": 4836,
+    "last-hadith-no": 4927
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 35,
+    "first-hadith-no": 4928,
+    "last-hadith-no": 4989
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 36,
+    "first-hadith-no": 4990,
+    "last-hadith-no": 5246
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 37,
+    "first-hadith-no": 5247,
+    "last-hadith-no": 5439
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 38,
+    "first-hadith-no": 5440,
+    "last-hadith-no": 5499
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 39,
+    "first-hadith-no": 5500,
+    "last-hadith-no": 5711
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 40,
+    "first-hadith-no": 5712,
+    "last-hadith-no": 5734
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 41,
+    "first-hadith-no": 5735,
+    "last-hadith-no": 5745
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 42,
+    "first-hadith-no": 5746,
+    "last-hadith-no": 5786
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 43,
+    "first-hadith-no": 5787,
+    "last-hadith-no": 6012
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 44,
+    "first-hadith-no": 6013,
+    "last-hadith-no": 6340
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 45,
+    "first-hadith-no": 6341,
+    "last-hadith-no": 6557
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 46,
+    "first-hadith-no": 6558,
+    "last-hadith-no": 6609
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 47,
+    "first-hadith-no": 6610,
+    "last-hadith-no": 6639
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 48,
+    "first-hadith-no": 6640,
+    "last-hadith-no": 6766
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 49,
+    "first-hadith-no": 6767,
+    "last-hadith-no": 6781
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 50,
+    "first-hadith-no": 6782,
+    "last-hadith-no": 6849
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 51,
+    "first-hadith-no": 6850,
+    "last-hadith-no": 6870
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 52,
+    "first-hadith-no": 6871,
+    "last-hadith-no": 6952
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 53,
+    "first-hadith-no": 6953,
+    "last-hadith-no": 7055
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 54,
+    "first-hadith-no": 7056,
+    "last-hadith-no": 7232
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 55,
+    "first-hadith-no": 7233,
+    "last-hadith-no": 7328
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 56,
+    "first-hadith-no": 7329,
+    "last-hadith-no": 7368
+  },
+  {
+    "bookSlug": "muslim",
+    "chapterId": 0,
+    "first-hadith-no": 7369,
+    "last-hadith-no": 7459
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 1,
+    "first-hadith-no": 1,
+    "last-hadith-no": 325
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 2,
+    "first-hadith-no": 326,
+    "last-hadith-no": 348
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 3,
+    "first-hadith-no": 349,
+    "last-hadith-no": 396
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 4,
+    "first-hadith-no": 397,
+    "last-hadith-no": 449
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 5,
+    "first-hadith-no": 450,
+    "last-hadith-no": 495
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 6,
+    "first-hadith-no": 496,
+    "last-hadith-no": 627
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 7,
+    "first-hadith-no": 628,
+    "last-hadith-no": 689
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 8,
+    "first-hadith-no": 690,
+    "last-hadith-no": 743
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 9,
+    "first-hadith-no": 744,
+    "last-hadith-no": 778
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 10,
+    "first-hadith-no": 779,
+    "last-hadith-no": 877
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 11,
+    "first-hadith-no": 878,
+    "last-hadith-no": 1030
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 12,
+    "first-hadith-no": 1031,
+    "last-hadith-no": 1180
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 13,
+    "first-hadith-no": 1181,
+    "last-hadith-no": 1368
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 14,
+    "first-hadith-no": 1369,
+    "last-hadith-no": 1437
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 15,
+    "first-hadith-no": 1438,
+    "last-hadith-no": 1463
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 16,
+    "first-hadith-no": 1464,
+    "last-hadith-no": 1508
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 17,
+    "first-hadith-no": 1509,
+    "last-hadith-no": 1533
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 18,
+    "first-hadith-no": 1534,
+    "last-hadith-no": 1560
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 19,
+    "first-hadith-no": 1561,
+    "last-hadith-no": 1602
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 20,
+    "first-hadith-no": 1603,
+    "last-hadith-no": 1822
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 21,
+    "first-hadith-no": 1823,
+    "last-hadith-no": 2094
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 22,
+    "first-hadith-no": 2095,
+    "last-hadith-no": 2439
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 23,
+    "first-hadith-no": 2440,
+    "last-hadith-no": 2623
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 24,
+    "first-hadith-no": 2624,
+    "last-hadith-no": 3090
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 25,
+    "first-hadith-no": 3091,
+    "last-hadith-no": 3201
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 26,
+    "first-hadith-no": 3202,
+    "last-hadith-no": 3394
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 27,
+    "first-hadith-no": 3395,
+    "last-hadith-no": 3568
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 28,
+    "first-hadith-no": 3569,
+    "last-hadith-no": 3601
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 29,
+    "first-hadith-no": 3602,
+    "last-hadith-no": 3618
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 30,
+    "first-hadith-no": 3619,
+    "last-hadith-no": 3679
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 31,
+    "first-hadith-no": 3680,
+    "last-hadith-no": 3695
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 32,
+    "first-hadith-no": 3696,
+    "last-hadith-no": 3713
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 33,
+    "first-hadith-no": 3714,
+    "last-hadith-no": 3727
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 34,
+    "first-hadith-no": 3728,
+    "last-hadith-no": 3769
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 35,
+    "first-hadith-no": 3770,
+    "last-hadith-no": 3865
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": null,
+    "first-hadith-no": 3866,
+    "last-hadith-no": 3948
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 36,
+    "first-hadith-no": 3949,
+    "last-hadith-no": 3975
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 37,
+    "first-hadith-no": 3976,
+    "last-hadith-no": 4142
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 38,
+    "first-hadith-no": 4143,
+    "last-hadith-no": 4158
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 39,
+    "first-hadith-no": 4159,
+    "last-hadith-no": 4221
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 40,
+    "first-hadith-no": 4222,
+    "last-hadith-no": 4231
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 41,
+    "first-hadith-no": 4232,
+    "last-hadith-no": 4272
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 42,
+    "first-hadith-no": 4273,
+    "last-hadith-no": 4370
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 43,
+    "first-hadith-no": 4371,
+    "last-hadith-no": 4458
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 44,
+    "first-hadith-no": 4459,
+    "last-hadith-no": 4715
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 45,
+    "first-hadith-no": 4716,
+    "last-hadith-no": 4879
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 46,
+    "first-hadith-no": 4880,
+    "last-hadith-no": 4993
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 47,
+    "first-hadith-no": 4994,
+    "last-hadith-no": 5048
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 48,
+    "first-hadith-no": 5049,
+    "last-hadith-no": 5387
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 49,
+    "first-hadith-no": 5388,
+    "last-hadith-no": 5436
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 50,
+    "first-hadith-no": 5437,
+    "last-hadith-no": 5548
+  },
+  {
+    "bookSlug": "nasai",
+    "chapterId": 51,
+    "first-hadith-no": 5549,
+    "last-hadith-no": 5768
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 1,
+    "first-hadith-no": 1,
+    "last-hadith-no": 148
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 2,
+    "first-hadith-no": 149,
+    "last-hadith-no": 452
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 3,
+    "first-hadith-no": 453,
+    "last-hadith-no": 487
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 4,
+    "first-hadith-no": 488,
+    "last-hadith-no": 529
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 5,
+    "first-hadith-no": 530,
+    "last-hadith-no": 543
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 6,
+    "first-hadith-no": 544,
+    "last-hadith-no": 616
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 7,
+    "first-hadith-no": 617,
+    "last-hadith-no": 681
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 8,
+    "first-hadith-no": 682,
+    "last-hadith-no": 808
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 9,
+    "first-hadith-no": 809,
+    "last-hadith-no": 966
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 10,
+    "first-hadith-no": 967,
+    "last-hadith-no": 1081
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 11,
+    "first-hadith-no": 1082,
+    "last-hadith-no": 1148
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 12,
+    "first-hadith-no": 1149,
+    "last-hadith-no": 1177
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 13,
+    "first-hadith-no": 1178,
+    "last-hadith-no": 1208
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 14,
+    "first-hadith-no": 1209,
+    "last-hadith-no": 1333
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 15,
+    "first-hadith-no": 1334,
+    "last-hadith-no": 1399
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 16,
+    "first-hadith-no": 1400,
+    "last-hadith-no": 1438
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 17,
+    "first-hadith-no": 1439,
+    "last-hadith-no": 1485
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 18,
+    "first-hadith-no": 1486,
+    "last-hadith-no": 1521
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 19,
+    "first-hadith-no": 1522,
+    "last-hadith-no": 1557
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 20,
+    "first-hadith-no": 1558,
+    "last-hadith-no": 1583
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 21,
+    "first-hadith-no": 1584,
+    "last-hadith-no": 1666
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 22,
+    "first-hadith-no": 1667,
+    "last-hadith-no": 1718
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 23,
+    "first-hadith-no": 1719,
+    "last-hadith-no": 1771
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 24,
+    "first-hadith-no": 1772,
+    "last-hadith-no": 1847
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 25,
+    "first-hadith-no": 1848,
+    "last-hadith-no": 1925
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 26,
+    "first-hadith-no": 1926,
+    "last-hadith-no": 1962
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 27,
+    "first-hadith-no": 1963,
+    "last-hadith-no": 2103
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 28,
+    "first-hadith-no": 2104,
+    "last-hadith-no": 2156
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 29,
+    "first-hadith-no": 2157,
+    "last-hadith-no": 2182
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 30,
+    "first-hadith-no": 2183,
+    "last-hadith-no": 2191
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 31,
+    "first-hadith-no": 2192,
+    "last-hadith-no": 2200
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 32,
+    "first-hadith-no": 2201,
+    "last-hadith-no": 2225
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 33,
+    "first-hadith-no": 2226,
+    "last-hadith-no": 2337
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 34,
+    "first-hadith-no": 2338,
+    "last-hadith-no": 2362
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 35,
+    "first-hadith-no": 2363,
+    "last-hadith-no": 2372
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 36,
+    "first-hadith-no": 2373,
+    "last-hadith-no": 2484
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 37,
+    "first-hadith-no": 2485,
+    "last-hadith-no": 2592
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 38,
+    "first-hadith-no": 2593,
+    "last-hadith-no": 2642
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 39,
+    "first-hadith-no": 2643,
+    "last-hadith-no": 2675
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 40,
+    "first-hadith-no": 2676,
+    "last-hadith-no": 2714
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 41,
+    "first-hadith-no": 2715,
+    "last-hadith-no": 2757
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 42,
+    "first-hadith-no": 2758,
+    "last-hadith-no": 2805
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 43,
+    "first-hadith-no": 2806,
+    "last-hadith-no": 2940
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 44,
+    "first-hadith-no": 2941,
+    "last-hadith-no": 2957
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 45,
+    "first-hadith-no": 2958,
+    "last-hadith-no": 3009
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 46,
+    "first-hadith-no": 3010,
+    "last-hadith-no": 3032
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 47,
+    "first-hadith-no": 3033,
+    "last-hadith-no": 3453
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 48,
+    "first-hadith-no": 3454,
+    "last-hadith-no": 3697
+  },
+  {
+    "bookSlug": "tirmidhi",
+    "chapterId": 49,
+    "first-hadith-no": 3698,
+    "last-hadith-no": 4053
+  }
+]
