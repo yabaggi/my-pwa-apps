@@ -57,6 +57,20 @@
             color: #667eea;
         }
 
+        .lang-toggle-btn {
+            display: none;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            line-height: 1;
+        }
+
         .header h1 {
             color: white;
             font-size: 3rem;
@@ -431,6 +445,14 @@
             .search-box {
                 font-size: 0.95rem;
             }
+
+            .lang-btn {
+                display: none;
+            }
+
+            .lang-toggle-btn {
+                display: block;
+            }
         }
 
         @media (max-width: 480px) {
@@ -514,6 +536,7 @@
             <div class="lang-switcher">
                 <button id="lang-en" class="lang-btn active">English</button>
                 <button id="lang-ar" class="lang-btn">العربية</button>
+                <button id="lang-toggle" class="lang-toggle-btn">🌐</button>
             </div>
             <h1>
                 <img src="baggi_emoji2.png" class="custom-emoji right-spacer" alt="Baggi Symbol">
@@ -851,6 +874,10 @@
             // Language switcher
             document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
             document.getElementById('lang-ar').addEventListener('click', () => setLanguage('ar'));
+            document.getElementById('lang-toggle').addEventListener('click', () => {
+                const newLang = currentLang === 'en' ? 'ar' : 'en';
+                setLanguage(newLang);
+            });
 
             // Search functionality with debouncing
             const searchInput = document.getElementById('search');
