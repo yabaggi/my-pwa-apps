@@ -14,7 +14,7 @@ const urlsToCache = [
   "/prom/index.html",
   "/prom/manifest.json",
   "/prom/index.html",
-  "/prom/prompts.json",
+  "/prom/prompts-copy.json",
   "/prom/offline.html"
 ];
 

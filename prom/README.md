@@ -8,7 +8,7 @@ This package contains **6** files total:
 
 ### Your Original Files (2 files preserved)
 - index.html
-- prompts.json
+- prompts-copy.json
 
 ### PWA Generated Files
 - `manifest.json` - PWA manifest configuration
@@ -180,7 +180,7 @@ All 2 files will be deployed together!
 
 - **Original Files:** 2
 - **Generated Files:** 4 (manifest, SW, icons, offline)
-- **Total Package Size:** ~76.91 KB (estimated)
+- **Total Package Size:** ~126.32 KB (estimated)
 - **Files Cached Offline:** ALL 2 files
 - **Unique Folders:** 0
 - **Icons Generated:** 8 sizes
@@ -196,7 +196,7 @@ All 2 files will be deployed together!
 
 ---
 
-**Generated on:** 07/12/2025, 13:57:03  
+**Generated on:** 24/12/2025, 12:06:53  
 **PWA Converter Version:** 2.0.1 (Folder Upload Edition)  
 **Original Folder:** prom  
 **Sanitized Name:** prom  

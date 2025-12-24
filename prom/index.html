@@ -1,10 +1,680 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Prompt Explorer</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Explorer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5568d3;
+            --secondary: #764ba2;
+            --background: #f8f9fa;
+            --surface: #ffffff;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border: #dee2e6;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --favorite: #ff6b6b;
+            --info: #17a2b8;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            max-width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 16px;
+            box-shadow: 0 2px 8px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .app-title {
+            font-size: 20px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .title-icon {
+            font-size: 24px;
+        }
+
+        .storage-badge {
+            font-size: 10px;
+            padding: 2px 6px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            margin-left: 4px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .header-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .header-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .search-container {
+            padding: 16px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 60px;
+            z-index: 90;
+        }
+
+        .search-wrapper {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 48px 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 24px;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            font-size: 20px;
+        }
+
+        .clear-search {
+            position: absolute;
+            right: 48px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px;
+            display: none;
+        }
+
+        .clear-search.visible {
+            display: block;
+        }
+
+        .filter-tabs {
+            padding: 12px 16px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+            white-space: nowrap;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .filter-tabs::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .filter-tabs::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 2px;
+        }
+
+        .tabs-container {
+            display: inline-flex;
+            gap: 8px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            background: var(--background);
+            border: none;
+            border-radius: 20px;
+            font-size: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .filter-tab:hover {
+            background: var(--border);
+        }
+
+        .filter-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 16px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .stats-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: var(--surface);
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .stat-icon {
+            font-size: 24px;
+        }
+
+        .stat-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .prompts-grid {
+            display: grid;
+            gap: 16px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .prompt-card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 2px 8px var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .prompt-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px var(--shadow);
+        }
+
+        .prompt-card.expanded {
+            grid-column: 1 / -1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .card-number {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px;
+            transition: all 0.3s ease;
+            color: var(--text-secondary);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .action-btn.favorite {
+            color: var(--favorite);
+        }
+
+        .action-btn.copied {
+            color: var(--success);
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: var(--background);
+            border-radius: 12px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .subcat-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 12px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+
+        .prompt-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-primary);
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .prompt-card.expanded .prompt-text {
+            display: block;
+            -webkit-line-clamp: unset;
+        }
+
+        .placeholders-info {
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--border);
+            display: none;
+        }
+
+        .prompt-card.expanded .placeholders-info {
+            display: block;
+        }
+
+        .placeholder-tag {
+            display: inline-block;
+            background: var(--warning);
+            color: var(--text-primary);
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 11px;
+            margin: 4px 4px 0 0;
+            font-family: monospace;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 64px 16px;
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        .empty-text {
+            color: var(--text-secondary);
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        .empty-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .bottom-nav {
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            position: sticky;
+            bottom: 0;
+            box-shadow: 0 -2px 8px var(--shadow);
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text-primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 24px;
+            box-shadow: 0 4px 12px var(--shadow);
+            z-index: 1000;
+            opacity: 0;
+            transition: all 0.3s ease;
+            max-width: 90%;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .toast.error {
+            background: var(--danger);
+        }
+
+        .toast.success {
+            background: var(--success);
+        }
+
+        .toast.info {
+            background: var(--info);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 4px;
+        }
+
+        .modal-body {
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-primary);
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: var(--background);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #218838;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .prompts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .app-title {
+                font-size: 16px;
+            }
+
+            .title-icon {
+                font-size: 20px;
+            }
+
+            .stat-item {
+                min-width: 100px;
+            }
+
+            .header-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+
+            .header-actions {
+                gap: 4px;
+            }
+
+            .storage-badge {
+                display: none;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .prompt-card {
+            animation: fadeIn 0.4s ease forwards;
+        }
+    </style>
     <meta name="theme-color" content="#2196f3">
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -12,184 +682,959 @@
     <meta name="apple-mobile-web-app-title" content="Prompt Explo">
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 </head>
-<body class="bg-gray-100 text-gray-900">
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-content">
+                <div class="app-title">
+                    <span class="title-icon">💡</span>
+                    <span>Prompt Explorer</span>
+                    <span class="storage-badge">IndexedDB</span>
+                </div>
+                <div class="header-actions">
+                    <button class="header-btn" id="addPromptBtn">➕ Add</button>
+                    <button class="header-btn" id="importBtn" title="Import from JSON">
+                        📂 Import
+                    </button>
+                    <button class="header-btn" id="exportBtn" title="Export to JSON">
+                        💾 Export
+                    </button>
+                    <button class="header-btn" id="clearAllBtn">🗑️ Clear All</button>
+                </div>
+            </div>
+        </header>
 
-  <!-- Hero Section -->
-  <header class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-10 text-center shadow-lg">
-    <h1 class="text-3xl font-bold mb-2">Prompt Explorer</h1>
-    <p class="text-lg opacity-90">Browse and copy ready-to-use AI prompts</p>
-  </header>
+        <div class="search-container">
+            <div class="search-wrapper">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="searchInput" 
+                    placeholder="Search prompts..."
+                    autocomplete="off"
+                >
+                <button class="clear-search" id="clearSearch">✕</button>
+                <span class="search-icon">🔍</span>
+            </div>
+        </div>
 
-  <!-- Dynamic Buttons -->
-  <section id="subcategory-buttons" class="flex flex-wrap justify-center gap-3 mt-6"></section>
+        <div class="filter-tabs">
+            <div class="tabs-container" id="filterTabs">
+                <button class="filter-tab active" data-filter="all">All</button>
+                <button class="filter-tab" data-filter="favorites">Favorites</button>
+            </div>
+        </div>
 
-  <!-- Category Filter (for followup prompts) -->
-  <section id="category-section" class="flex justify-center mt-4 hidden">
-    <select id="category-dropdown" class="px-4 py-2 border rounded shadow">
-      <option value="">All Categories</option>
-    </select>
-  </section>
+        <main class="main-content">
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span class="stat-icon">📝</span>
+                    <div class="stat-content">
+                        <div class="stat-value" id="totalCount">0</div>
+                        <div class="stat-label">Total Prompts</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">❤️</span>
+                    <div class="stat-content">
+                        <div class="stat-value" id="favCount">0</div>
+                        <div class="stat-label">Favorites</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-icon">📂</span>
+                    <div class="stat-content">
+                        <div class="stat-value" id="categoryCount">0</div>
+                        <div class="stat-label">Categories</div>
+                    </div>
+                </div>
+            </div>
 
-  <!-- Prompt List -->
-  <main class="max-w-xl mx-auto mt-8 p-4" id="prompt-list">
-    <p class="text-center text-gray-600">Loading prompts...</p>
-  </main>
+            <div id="promptsContainer" class="prompts-grid"></div>
+        </main>
 
-  <!-- Data Logic -->
-  <script type="module">
-    // --- DOM Elements ---
-    const subcatButtonsContainer = document.getElementById("subcategory-buttons");
-    const categorySection = document.getElementById("category-section");
-    const categoryDropdown = document.getElementById("category-dropdown");
-    const promptList = document.getElementById("prompt-list");
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-view="explore">
+                <span class="nav-icon">🏠</span>
+                <span>Explore</span>
+            </button>
+            <button class="nav-item" data-view="favorites">
+                <span class="nav-icon">❤️</span>
+                <span>Favorites</span>
+            </button>
+            <button class="nav-item" data-view="categories">
+                <span class="nav-icon">📂</span>
+                <span>Categories</span>
+            </button>
+        </nav>
 
-    let activeSubcat = null;
-    let allPrompts = [];
+        <div class="toast" id="toast"></div>
 
-    // --- Load data from JSON file ---
-    async function loadData() {
-      try {
-        const response = await fetch('prompts.json');
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        <!-- Hidden file input for import -->
+        <input type="file" id="importFileInput" accept=".json">
+
+        <!-- Add/Edit Prompt Modal -->
+        <div class="modal" id="promptModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="modalTitle">Add New Prompt</h2>
+                    <button class="modal-close" id="modalClose">✕</button>
+                </div>
+                <div class="modal-body">
+                    <form id="promptForm">
+                        <div class="form-group">
+                            <label class="form-label" for="promptCategory">Category</label>
+                            <input type="text" class="form-input" id="promptCategory" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="promptSubcat">Subcategory</label>
+                            <input type="text" class="form-input" id="promptSubcat" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="promptText">Prompt Text</label>
+                            <textarea class="form-textarea" id="promptText" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="promptPlaceholders">Placeholders (comma-separated)</label>
+                            <input type="text" class="form-input" id="promptPlaceholders" placeholder="[placeholder1], [placeholder2]">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" id="modalCancel">Cancel</button>
+                    <button class="btn btn-primary" id="modalSave">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // IndexedDB Configuration
+        const DB_NAME = 'PromptExplorerDB';
+        const DB_VERSION = 1;
+        const STORE_NAME = 'prompts';
+        const FAVORITES_STORE = 'favorites';
+        
+        let db;
+        let currentFilter = 'all';
+        let searchQuery = '';
+        let expandedCard = null;
+        let favorites = new Set();
+        let editingPromptId = null;
+
+        // IndexedDB Functions
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(DB_NAME, DB_VERSION);
+
+                request.onerror = () => reject(request.error);
+                request.onsuccess = () => {
+                    db = request.result;
+                    resolve(db);
+                };
+
+                request.onupgradeneeded = (event) => {
+                    db = event.target.result;
+                    
+                    // Prompts store
+                    if (!db.objectStoreNames.contains(STORE_NAME)) {
+                        const objectStore = db.createObjectStore(STORE_NAME, { keyPath: 'id', autoIncrement: true });
+                        objectStore.createIndex('category', 'category', { unique: false });
+                        objectStore.createIndex('subcat', 'subcat', { unique: false });
+                        objectStore.createIndex('number', 'number', { unique: false });
+                    }
+                    
+                    // Favorites store
+                    if (!db.objectStoreNames.contains(FAVORITES_STORE)) {
+                        db.createObjectStore(FAVORITES_STORE, { keyPath: 'id' });
+                    }
+                };
+            });
         }
-        allPrompts = await response.json();
-        loadSubcategories();
-      } catch (e) {
-        console.error("Failed to load prompts.json", e);
-        promptList.innerHTML = `<p class="text-red-500 text-center">Error loading prompts data.</p>`;
-      }
-    }
 
-    // --- Load distinct subcategories dynamically ---
-    function loadSubcategories() {
-      let subcats = [...new Set(allPrompts.map(d => d.subcat))];
-      
-      // Custom sort order: "initial prompts" first, then "followup prompts", then the rest alphabetically
-      subcats.sort((a, b) => {
-        if (a === "initial prompts") return -1;
-        if (b === "initial prompts") return 1;
-        if (a === "followup prompts" && b !== "initial prompts") return -1;
-        if (b === "followup prompts" && a !== "initial prompts") return 1;
-        return a.localeCompare(b);
-      });
+        // CRUD Operations for IndexedDB
+        function addPromptToDB(prompt) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const objectStore = transaction.objectStore(STORE_NAME);
+                const request = objectStore.add(prompt);
 
-      renderSubcategoryButtons(subcats);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
 
-      // Load the first subcategory by default
-      if (subcats.length > 0) {
-        loadPrompts(subcats[0]);
-        const firstBtn = document.querySelector(".subcat-btn");
-        if(firstBtn) setActiveButton(firstBtn);
-      }
-    }
+        function updatePromptInDB(prompt) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const objectStore = transaction.objectStore(STORE_NAME);
+                const request = objectStore.put(prompt);
 
-    // --- Render buttons for subcategories ---
-    function renderSubcategoryButtons(subcats) {
-      subcatButtonsContainer.innerHTML = subcats
-        .map(
-          (sub) => `
-          <button 
-            class="subcat-btn bg-gray-400 text-white px-4 py-2 rounded shadow transition-colors duration-200"
-            data-subcat="${sub}">
-            ${sub.charAt(0).toUpperCase() + sub.slice(1)}
-          </button>`
-        )
-        .join("");
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
 
-      // Add click events
-      document.querySelectorAll(".subcat-btn").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const subcat = btn.getAttribute("data-subcat");
-          // Reset category dropdown when changing subcategory
-          categoryDropdown.value = "";
-          loadPrompts(subcat);
-          setActiveButton(btn);
-        });
-      });
-    }
+        function deletePromptFromDB(id) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const objectStore = transaction.objectStore(STORE_NAME);
+                const request = objectStore.delete(id);
 
-    // --- Highlight active subcategory button ---
-    function setActiveButton(activeBtn) {
-      document.querySelectorAll(".subcat-btn").forEach((btn) => {
-        btn.classList.remove("bg-blue-600");
-        btn.classList.add("bg-gray-400");
-      });
-      activeBtn.classList.add("bg-blue-600");
-      activeBtn.classList.remove("bg-gray-400");
-    }
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
 
-    // --- Load prompts based on subcategory and category (if followup) ---
-    function loadPrompts(subcat, selectedCategory = "") {
-      activeSubcat = subcat;
-      promptList.innerHTML = `<p class="text-center text-gray-600">Loading ${subcat}...</p>`;
+        function getAllPromptsFromDB() {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_NAME], 'readonly');
+                const objectStore = transaction.objectStore(STORE_NAME);
+                const request = objectStore.getAll();
 
-      const subcatPrompts = allPrompts.filter(p => p.subcat === subcat);
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = () => reject(request.error);
+            });
+        }
 
-      if (subcatPrompts.length === 0) {
-        promptList.innerHTML = `<p class="text-gray-600 text-center">No prompts found for "${subcat}".</p>`;
-        categorySection.classList.add("hidden");
-        return;
-      }
+        function clearAllPromptsInDB() {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([STORE_NAME], 'readwrite');
+                const objectStore = transaction.objectStore(STORE_NAME);
+                const request = objectStore.clear();
 
-      // If this is a followup prompt, show category dropdown
-      if (subcat.toLowerCase().includes("followup")) {
-        const categories = [...new Set(subcatPrompts.map(d => d.category))].sort();
-        renderCategoryDropdown(categories, selectedCategory);
-        categorySection.classList.remove("hidden");
-      } else {
-        categorySection.classList.add("hidden");
-      }
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
 
-      let dataToRender = subcatPrompts;
-      if (selectedCategory) {
-        dataToRender = subcatPrompts.filter(p => p.category === selectedCategory);
-      }
+        // Favorites Management
+        function loadFavoritesFromDB() {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([FAVORITES_STORE], 'readonly');
+                const objectStore = transaction.objectStore(FAVORITES_STORE);
+                const request = objectStore.getAll();
 
-      if (dataToRender.length > 0) {
-        renderPromptCards(dataToRender);
-      } else {
-        promptList.innerHTML = `<p class="text-gray-600 text-center">No prompts found for "${subcat}" with the selected filter.</p>`;
-      }
-    }
+                request.onsuccess = () => {
+                    const favs = request.result;
+                    favorites = new Set(favs.map(f => f.id));
+                    resolve(favorites);
+                };
+                request.onerror = () => reject(request.error);
+            });
+        }
 
-    // --- Render category dropdown ---
-    function renderCategoryDropdown(categories, selectedCat = "") {
-      categoryDropdown.innerHTML = `<option value="">All Categories</option>`;
-      categories.forEach((cat) => {
-        const option = document.createElement("option");
-        option.value = cat;
-        option.textContent = cat;
-        categoryDropdown.appendChild(option);
-      });
-      
-      categoryDropdown.value = selectedCat;
+        function saveFavoriteToDB(id) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([FAVORITES_STORE], 'readwrite');
+                const objectStore = transaction.objectStore(FAVORITES_STORE);
+                const request = objectStore.put({ id });
 
-      if (!categoryDropdown.onchange) {
-          categoryDropdown.onchange = () => {
-            loadPrompts(activeSubcat, categoryDropdown.value);
-          };
-      }
-    }
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
 
-    // --- Render prompt cards ---
-    function renderPromptCards(data) {
-      promptList.innerHTML = data
-        .map(
-          (p) => `
-          <div class="p-4 border rounded-lg shadow-sm mb-3 bg-white hover:shadow-md transition-shadow">
-            <h3 class="font-semibold mb-1">${p.category}</h3>
-            <p class="text-gray-700 mb-2">${p.prompt}</p>
-            <button onclick="navigator.clipboard.writeText('${p.prompt.replace(/'/g, "\\'")}')" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">Copy</button>
-          </div>`
-        )
-        .join("");
-    }
+        function removeFavoriteFromDB(id) {
+            return new Promise((resolve, reject) => {
+                const transaction = db.transaction([FAVORITES_STORE], 'readwrite');
+                const objectStore = transaction.objectStore(FAVORITES_STORE);
+                const request = objectStore.delete(id);
 
-    // --- Load everything on start ---
-    loadData();
-  </script>
+                request.onsuccess = () => resolve();
+                request.onerror = () => reject(request.error);
+            });
+        }
 
+        // Export/Import Functions
+        async function exportToJSON() {
+            try {
+                const prompts = await getAllPromptsFromDB();
+                
+                if (prompts.length === 0) {
+                    showToast('No prompts to export', 'info');
+                    return;
+                }
+                
+                const dataStr = JSON.stringify(prompts, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `prompts-backup-${Date.now()}.json`;
+                link.click();
+                URL.revokeObjectURL(url);
+                showToast(`✓ Exported ${prompts.length} prompts`, 'success');
+            } catch (error) {
+                console.error('Export failed:', error);
+                showToast('Error exporting data: ' + error.message, 'error');
+            }
+        }
+
+        async function importFromJSON(file) {
+            try {
+                const text = await file.text();
+                const prompts = JSON.parse(text);
+                
+                if (!Array.isArray(prompts)) {
+                    throw new Error('Invalid JSON format - expected an array');
+                }
+                
+                if (prompts.length === 0) {
+                    showToast('No prompts found in file', 'info');
+                    return;
+                }
+                
+                // Confirm before clearing existing data
+                if (confirm(`⚠️ This will replace all current prompts with ${prompts.length} prompts from the file.\n\nContinue?`)) {
+                    // Clear existing data
+                    await clearAllPromptsInDB();
+                    
+                    // Import all prompts
+                    for (const prompt of prompts) {
+                        const { id, ...promptData } = prompt; // Remove id to let IndexedDB auto-generate
+                        await addPromptToDB(promptData);
+                    }
+                    
+                    showToast(`✓ Imported ${prompts.length} prompts`, 'success');
+                    await renderPrompts();
+                    await updateStats();
+                }
+            } catch (error) {
+                console.error('Import failed:', error);
+                showToast('Error importing data: ' + error.message, 'error');
+            }
+        }
+
+        // UI Functions
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show ' + type;
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 3000);
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showToast('✓ Copied to clipboard', 'success');
+                }).catch(() => {
+                    fallbackCopy(text);
+                });
+            } else {
+                fallbackCopy(text);
+            }
+        }
+
+        function fallbackCopy(text) {
+            const textArea = document.createElement('textarea');
+            textArea.value = text;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showToast('✓ Copied to clipboard', 'success');
+            } catch (err) {
+                showToast('Failed to copy', 'error');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        async function toggleFavorite(id) {
+            if (favorites.has(id)) {
+                favorites.delete(id);
+                await removeFavoriteFromDB(id);
+                showToast('Removed from favorites', 'info');
+            } else {
+                favorites.add(id);
+                await saveFavoriteToDB(id);
+                showToast('Added to favorites ❤️', 'success');
+            }
+            renderPrompts();
+            updateStatsDisplay();
+        }
+
+        function createPromptCard(prompt) {
+            const isFavorite = favorites.has(prompt.id);
+            const isExpanded = expandedCard === prompt.id;
+            
+            const placeholdersArray = Array.isArray(prompt.placeholders) 
+                ? prompt.placeholders 
+                : [];
+
+            const card = document.createElement('div');
+            card.className = `prompt-card${isExpanded ? ' expanded' : ''}`;
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="card-number">#${prompt.number || prompt.id}</span>
+                    <div class="card-actions">
+                        <button class="action-btn favorite-btn ${isFavorite ? 'favorite' : ''}" data-id="${prompt.id}" title="Favorite">
+                            ${isFavorite ? '❤️' : '🤍'}
+                        </button>
+                        <button class="action-btn copy-btn" data-id="${prompt.id}" title="Copy">
+                            📋
+                        </button>
+                        <button class="action-btn edit-btn" data-id="${prompt.id}" title="Edit">
+                            ✏️
+                        </button>
+                        <button class="action-btn delete-btn" data-id="${prompt.id}" title="Delete">
+                            🗑️
+                        </button>
+                    </div>
+                </div>
+                <div class="category-badge">${prompt.category}</div>
+                <span class="subcat-badge">${prompt.subcat}</span>
+                <p class="prompt-text">${prompt.prompt}</p>
+                ${placeholdersArray.length > 0 ? `
+                    <div class="placeholders-info">
+                        <strong>Placeholders:</strong><br>
+                        ${placeholdersArray.map(p => `<span class="placeholder-tag">${p}</span>`).join('')}
+                    </div>
+                ` : ''}
+            `;
+
+            // Card click to expand/collapse
+            card.addEventListener('click', (e) => {
+                if (!e.target.classList.contains('action-btn') && 
+                    !e.target.closest('.card-actions')) {
+                    if (expandedCard === prompt.id) {
+                        expandedCard = null;
+                    } else {
+                        expandedCard = prompt.id;
+                    }
+                    renderPrompts();
+                }
+            });
+
+            // Favorite button
+            const favoriteBtn = card.querySelector('.favorite-btn');
+            favoriteBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleFavorite(prompt.id);
+            });
+
+            // Copy button
+            const copyBtn = card.querySelector('.copy-btn');
+            copyBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                copyToClipboard(prompt.prompt);
+                copyBtn.classList.add('copied');
+                copyBtn.textContent = '✓';
+                setTimeout(() => {
+                    copyBtn.classList.remove('copied');
+                    copyBtn.textContent = '📋';
+                }, 2000);
+            });
+
+            // Edit button
+            const editBtn = card.querySelector('.edit-btn');
+            editBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                openEditModal(prompt);
+            });
+
+            // Delete button
+            const deleteBtn = card.querySelector('.delete-btn');
+            deleteBtn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                if (confirm('Are you sure you want to delete this prompt?')) {
+                    try {
+                        await deletePromptFromDB(prompt.id);
+                        favorites.delete(prompt.id);
+                        await removeFavoriteFromDB(prompt.id);
+                        showToast('✓ Prompt deleted', 'success');
+                        await renderPrompts();
+                        await updateStats();
+                    } catch (error) {
+                        console.error('Error deleting prompt:', error);
+                        showToast('Error deleting prompt: ' + error.message, 'error');
+                    }
+                }
+            });
+
+            return card;
+        }
+
+        function filterPrompts(prompts) {
+            let filtered = prompts;
+
+            // Filter by favorites
+            if (currentFilter === 'favorites') {
+                filtered = filtered.filter(p => favorites.has(p.id));
+            } else if (currentFilter !== 'all') {
+                // Filter by category
+                filtered = filtered.filter(p => p.category === currentFilter);
+            }
+
+            // Search
+            if (searchQuery) {
+                const query = searchQuery.toLowerCase();
+                filtered = filtered.filter(p => 
+                    p.prompt.toLowerCase().includes(query) ||
+                    p.category.toLowerCase().includes(query) ||
+                    p.subcat.toLowerCase().includes(query)
+                );
+            }
+
+            return filtered;
+        }
+
+        async function renderPrompts() {
+            const container = document.getElementById('promptsContainer');
+            
+            try {
+                const allPrompts = await getAllPromptsFromDB();
+                const filtered = filterPrompts(allPrompts);
+
+                container.innerHTML = '';
+
+                if (filtered.length === 0) {
+                    container.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">🔍</div>
+                            <div class="empty-text">
+                                ${allPrompts.length === 0 
+                                    ? 'No prompts found. Click "Add" to create your first prompt!' 
+                                    : 'No prompts match your search or filter.'}
+                            </div>
+                            ${allPrompts.length === 0 ? `
+                                <div class="empty-actions">
+                                    <button class="btn btn-primary" onclick="openAddModal()">➕ Add Prompt</button>
+                                    <button class="btn btn-success" onclick="loadSampleData()">📦 Load Sample Data</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    return;
+                }
+
+                filtered.forEach(prompt => {
+                    container.appendChild(createPromptCard(prompt));
+                });
+            } catch (error) {
+                console.error('Error rendering prompts:', error);
+                showToast('Error loading prompts: ' + error.message, 'error');
+            }
+        }
+
+        async function updateStats() {
+            try {
+                const allPrompts = await getAllPromptsFromDB();
+                const categories = new Set(allPrompts.map(p => p.category));
+                
+                updateStatsDisplay();
+                updateFilterTabs(categories);
+            } catch (error) {
+                console.error('Error updating stats:', error);
+            }
+        }
+
+        async function updateStatsDisplay() {
+            const allPrompts = await getAllPromptsFromDB();
+            const categories = new Set(allPrompts.map(p => p.category));
+            
+            document.getElementById('totalCount').textContent = allPrompts.length;
+            document.getElementById('favCount').textContent = favorites.size;
+            document.getElementById('categoryCount').textContent = categories.size;
+        }
+
+        function updateFilterTabs(categories) {
+            const tabsContainer = document.getElementById('filterTabs');
+            
+            // Keep basic tabs
+            tabsContainer.innerHTML = `
+                <button class="filter-tab ${currentFilter === 'all' ? 'active' : ''}" data-filter="all">All</button>
+                <button class="filter-tab ${currentFilter === 'favorites' ? 'active' : ''}" data-filter="favorites">Favorites</button>
+            `;
+
+            // Add category tabs
+            categories.forEach(category => {
+                const tab = document.createElement('button');
+                tab.className = 'filter-tab';
+                if (currentFilter === category) {
+                    tab.classList.add('active');
+                }
+                tab.dataset.filter = category;
+                tab.textContent = category;
+                tab.addEventListener('click', () => {
+                    currentFilter = category;
+                    updateActiveTab();
+                    renderPrompts();
+                });
+                tabsContainer.appendChild(tab);
+            });
+
+            // Re-attach event listeners to basic tabs
+            tabsContainer.querySelectorAll('.filter-tab[data-filter="all"], .filter-tab[data-filter="favorites"]').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    currentFilter = tab.dataset.filter;
+                    updateActiveTab();
+                    renderPrompts();
+                });
+            });
+        }
+
+        function updateActiveTab() {
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.filter === currentFilter) {
+                    tab.classList.add('active');
+                }
+            });
+        }
+
+        // Modal Functions
+        function openAddModal() {
+            editingPromptId = null;
+            document.getElementById('modalTitle').textContent = 'Add New Prompt';
+            document.getElementById('promptForm').reset();
+            document.getElementById('promptModal').classList.add('show');
+        }
+
+        function openEditModal(prompt) {
+            editingPromptId = prompt.id;
+            document.getElementById('modalTitle').textContent = 'Edit Prompt';
+            document.getElementById('promptCategory').value = prompt.category;
+            document.getElementById('promptSubcat').value = prompt.subcat;
+            document.getElementById('promptText').value = prompt.prompt;
+            
+            const placeholders = Array.isArray(prompt.placeholders) 
+                ? prompt.placeholders.join(', ') 
+                : '';
+            document.getElementById('promptPlaceholders').value = placeholders;
+            
+            document.getElementById('promptModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('promptModal').classList.remove('show');
+            editingPromptId = null;
+        }
+
+        async function savePrompt() {
+            const category = document.getElementById('promptCategory').value.trim();
+            const subcat = document.getElementById('promptSubcat').value.trim();
+            const promptText = document.getElementById('promptText').value.trim();
+            const placeholdersInput = document.getElementById('promptPlaceholders').value.trim();
+
+            if (!category || !subcat || !promptText) {
+                showToast('Please fill in all required fields', 'error');
+                return;
+            }
+
+            const placeholders = placeholdersInput 
+                ? placeholdersInput.split(',').map(p => p.trim()).filter(p => p) 
+                : [];
+
+            try {
+                const saveBtn = document.getElementById('modalSave');
+                saveBtn.disabled = true;
+                saveBtn.textContent = 'Saving...';
+
+                if (editingPromptId) {
+                    // Update existing prompt
+                    const allPrompts = await getAllPromptsFromDB();
+                    const existingPrompt = allPrompts.find(p => p.id === editingPromptId);
+                    
+                    await updatePromptInDB({
+                        id: editingPromptId,
+                        number: existingPrompt.number,
+                        category,
+                        subcat,
+                        prompt: promptText,
+                        placeholders
+                    });
+                    showToast('✓ Prompt updated', 'success');
+                } else {
+                    // Add new prompt
+                    const allPrompts = await getAllPromptsFromDB();
+                    const maxNumber = allPrompts.length > 0 
+                        ? Math.max(...allPrompts.map(p => p.number || p.id)) 
+                        : 0;
+
+                    await addPromptToDB({
+                        number: maxNumber + 1,
+                        category,
+                        subcat,
+                        prompt: promptText,
+                        placeholders
+                    });
+                    showToast('✓ Prompt created', 'success');
+                }
+
+                closeModal();
+                await renderPrompts();
+                await updateStats();
+            } catch (error) {
+                console.error('Error saving prompt:', error);
+                showToast('Error saving prompt: ' + error.message, 'error');
+            } finally {
+                const saveBtn = document.getElementById('modalSave');
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Save';
+            }
+        }
+
+        async function clearAll() {
+            const allPrompts = await getAllPromptsFromDB();
+            
+            if (allPrompts.length === 0) {
+                showToast('No prompts to clear', 'info');
+                return;
+            }
+
+            if (confirm(`⚠️ Are you sure you want to delete ALL ${allPrompts.length} prompts from IndexedDB?\n\nThis action cannot be undone!\n\nTip: Export to JSON first to create a backup.`)) {
+                try {
+                    await clearAllPromptsInDB();
+                    favorites.clear();
+                    
+                    // Clear favorites store
+                    const transaction = db.transaction([FAVORITES_STORE], 'readwrite');
+                    const objectStore = transaction.objectStore(FAVORITES_STORE);
+                    await new Promise((resolve, reject) => {
+                        const request = objectStore.clear();
+                        request.onsuccess = () => resolve();
+                        request.onerror = () => reject(request.error);
+                    });
+                    
+                    showToast('✓ All prompts deleted', 'success');
+                    await renderPrompts();
+                    await updateStats();
+                } catch (error) {
+                    console.error('Error clearing prompts:', error);
+                    showToast('Error clearing prompts: ' + error.message, 'error');
+                }
+            }
+        }
+
+        async function loadSampleData() {
+            const sampleData = [
+                {
+                    "number": 1,
+                    "category": "Challenge my thinking",
+                    "prompt": "Here's what I'm planning: [insert your idea, plan, or strategy]. Act as a critical thinker. Question my assumptions, logic, or blind spots — but don't rewrite anything. I want to stress-test my own thinking, not get new ideas.",
+                    "placeholders": ["[insert your idea, plan, or strategy]"],
+                    "subcat": "initial prompts"
+                },
+                {
+                    "number": 2,
+                    "category": "Challenge my thinking",
+                    "prompt": "Here's the core idea I'm working with: [insert your idea]. Help me reframe it through a different lens — like a new audience POV, emotional trigger, or brand positioning angle.",
+                    "placeholders": ["[insert your idea]"],
+                    "subcat": "initial prompts"
+                },
+                {
+                    "number": 3,
+                    "category": "Writing & Content",
+                    "prompt": "Write a compelling blog post about [topic] that includes practical tips and real-world examples. Target audience: [describe audience].",
+                    "placeholders": ["[topic]", "[describe audience]"],
+                    "subcat": "content creation"
+                },
+                {
+                    "number": 4,
+                    "category": "Writing & Content",
+                    "prompt": "Create an engaging social media post for [platform] about [topic]. Include relevant hashtags and a call-to-action.",
+                    "placeholders": ["[platform]", "[topic]"],
+                    "subcat": "social media"
+                },
+                {
+                    "number": 5,
+                    "category": "Code & Development",
+                    "prompt": "Write a [language] function that [describe functionality]. Include error handling and comments explaining the logic.",
+                    "placeholders": ["[language]", "[describe functionality]"],
+                    "subcat": "programming"
+                },
+                {
+                    "number": 6,
+                    "category": "Code & Development",
+                    "prompt": "Review this code and suggest improvements for readability, performance, and best practices: [paste code]",
+                    "placeholders": ["[paste code]"],
+                    "subcat": "code review"
+                },
+                {
+                    "number": 7,
+                    "category": "Business & Strategy",
+                    "prompt": "Create a SWOT analysis for [business/product/idea]. Consider market trends, competition, and growth opportunities.",
+                    "placeholders": ["[business/product/idea]"],
+                    "subcat": "analysis"
+                },
+                {
+                    "number": 8,
+                    "category": "Business & Strategy",
+                    "prompt": "Develop a go-to-market strategy for [product/service] targeting [market segment]. Include key milestones and metrics.",
+                    "placeholders": ["[product/service]", "[market segment]"],
+                    "subcat": "marketing"
+                },
+                {
+                    "number": 9,
+                    "category": "Learning & Education",
+                    "prompt": "Explain [complex concept] in simple terms that a beginner can understand. Use analogies and examples.",
+                    "placeholders": ["[complex concept]"],
+                    "subcat": "explanations"
+                },
+                {
+                    "number": 10,
+                    "category": "Learning & Education",
+                    "prompt": "Create a study plan for learning [skill/subject] in [timeframe]. Include resources, milestones, and practice exercises.",
+                    "placeholders": ["[skill/subject]", "[timeframe]"],
+                    "subcat": "study plans"
+                },
+                {
+                    "number": 11,
+                    "category": "User Interface Modifications",
+                    "prompt": "Add a responsive navigation bar to the top of the app, including links for Home, About, and Contact pages, using the existing header component as a base.",
+                    "placeholders": [],
+                    "subcat": "followup prompts"
+                },
+                {
+                    "number": 12,
+                    "category": "User Interface Modifications",
+                    "prompt": "Remove the sidebar menu from the dashboard view and replace it with a collapsible accordion layout for better mobile compatibility.",
+                    "placeholders": [],
+                    "subcat": "followup prompts"
+                },
+                {
+                    "number": 13,
+                    "category": "User Interface Modifications",
+                    "prompt": "Modify the login form by adding a password visibility toggle icon next to the password field, ensuring it switches between text and password input types.",
+                    "placeholders": [],
+                    "subcat": "followup prompts"
+                },
+                {
+                    "number": 14,
+                    "category": "Creative Writing",
+                    "prompt": "Write a short story about [theme/topic] with a surprising twist ending. Set in [location/time period].",
+                    "placeholders": ["[theme/topic]", "[location/time period]"],
+                    "subcat": "fiction"
+                },
+                {
+                    "number": 15,
+                    "category": "Data Analysis",
+                    "prompt": "Analyze this dataset and provide insights on [specific aspect]. Suggest visualizations and key metrics to track: [data description]",
+                    "placeholders": ["[specific aspect]", "[data description]"],
+                    "subcat": "analytics"
+                }
+            ];
+
+            try {
+                for (const prompt of sampleData) {
+                    await addPromptToDB(prompt);
+                }
+                
+                showToast(`✓ Loaded ${sampleData.length} sample prompts`, 'success');
+                await renderPrompts();
+                await updateStats();
+            } catch (error) {
+                console.error('Error loading sample data:', error);
+                showToast('Error loading sample data: ' + error.message, 'error');
+            }
+        }
+
+        // Initialize App
+        async function initApp() {
+            try {
+                await initDB();
+                await loadFavoritesFromDB();
+                await renderPrompts();
+                await updateStats();
+                setupEventListeners();
+            } catch (error) {
+                console.error('Error initializing app:', error);
+                showToast('Error initializing app: ' + error.message, 'error');
+            }
+        }
+
+        // Setup Event Listeners
+        function setupEventListeners() {
+            // Search input
+            const searchInput = document.getElementById('searchInput');
+            const clearSearch = document.getElementById('clearSearch');
+
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value;
+                clearSearch.classList.toggle('visible', searchQuery.length > 0);
+                renderPrompts();
+            });
+
+            clearSearch.addEventListener('click', () => {
+                searchInput.value = '';
+                searchQuery = '';
+                clearSearch.classList.remove('visible');
+                renderPrompts();
+            });
+
+            // Bottom navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const view = item.dataset.view;
+                    
+                    document.querySelectorAll('.nav-item').forEach(nav => {
+                        nav.classList.remove('active');
+                    });
+                    item.classList.add('active');
+
+                    if (view === 'explore') {
+                        currentFilter = 'all';
+                        updateActiveTab();
+                        renderPrompts();
+                    } else if (view === 'favorites') {
+                        currentFilter = 'favorites';
+                        updateActiveTab();
+                        renderPrompts();
+                    } else if (view === 'categories') {
+                        currentFilter = 'all';
+                        updateActiveTab();
+                        renderPrompts();
+                    }
+                });
+            });
+
+            // Header buttons
+            document.getElementById('addPromptBtn').addEventListener('click', openAddModal);
+            
+            document.getElementById('exportBtn').addEventListener('click', exportToJSON);
+            
+            document.getElementById('importBtn').addEventListener('click', () => {
+                document.getElementById('importFileInput').click();
+            });
+            
+            document.getElementById('importFileInput').addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    await importFromJSON(file);
+                }
+                e.target.value = ''; // Reset file input
+            });
+            
+            document.getElementById('clearAllBtn').addEventListener('click', clearAll);
+
+            // Prompt Modal controls
+            document.getElementById('modalClose').addEventListener('click', closeModal);
+            document.getElementById('modalCancel').addEventListener('click', closeModal);
+            document.getElementById('modalSave').addEventListener('click', savePrompt);
+
+            // Close modal on outside click
+            document.getElementById('promptModal').addEventListener('click', (e) => {
+                if (e.target.id === 'promptModal') {
+                    closeModal();
+                }
+            });
+
+            // Handle Enter key in form
+            document.getElementById('promptForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                savePrompt();
+            });
+        }
+
+        // Start app when DOM is ready
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
 
     <script>
         // PWA Service Worker Registration
