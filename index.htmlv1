@@ -30,31 +30,6 @@
         .header {
             text-align: center;
             margin-bottom: 3rem;
-            position: relative;
-        }
-
-        .lang-switcher {
-            position: absolute;
-            top: 0;
-            right: 0;
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .lang-btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            border-radius: 15px;
-            background: rgba(255,255,255,0.2);
-            color: white;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .lang-btn.active {
-            background: white;
-            color: #667eea;
         }
 
         .header h1 {
@@ -511,10 +486,6 @@
 
     <div class="container">
         <div class="header">
-            <div class="lang-switcher">
-                <button id="lang-en" class="lang-btn active">English</button>
-                <button id="lang-ar" class="lang-btn">العربية</button>
-            </div>
             <h1>
                 <img src="baggi_emoji2.png" class="custom-emoji right-spacer" alt="Baggi Symbol">
                 My PWA Apps Collection
@@ -629,87 +600,9 @@
         };
 
         // State
-        let allAppsData = [];
         let allApps = [];
+        let filteredApps = [];
         let searchTimeout = null;
-        let currentLang = 'en';
-
-        const translations = {
-            en: {
-                title: "My PWA Apps Collection",
-                subtitle: "Progressive Web Apps • Install • Use Offline • Fast & Reliable",
-                searchPlaceholder: "🔍 Search apps by name or description...",
-                allApps: "All Apps",
-                productivity: "📊 Productivity",
-                games: "🎮 Games",
-                utilities: "🔧 Utilities",
-                creative: "🎨 Creative",
-                totalApps: "Total Apps",
-                installed: "Installed",
-                showing: "Showing",
-                loading: "Loading apps...",
-                noAppsFound: "No apps found",
-                noAppsFoundDesc: "Try adjusting your search or category filter",
-                pwaBenefit: "🚀 All apps are Progressive Web Apps (PWAs)",
-                pwaFeatures: "✨ Install to home screen • 📱 Work offline • ⚡ Fast & reliable • 🔒 Secure",
-                viewSource: "📂 View Source on GitHub",
-                aboutPwas: "ℹ️ About PWAs",
-                shareCollection: "📤 Share Collection",
-                madeBy: "Made by Baggi with ❤️",
-                installAvailable: "📲 Install Available",
-                installedBadge: "✅ Installed",
-                newBadge: "✨ New",
-                aboutPwasTitle: "📱 Progressive Web Apps (PWAs)",
-                aboutPwasBenefits: "✨ Benefits:",
-                aboutPwasBenefit1: "• Install to home screen like native apps",
-                aboutPwasBenefit2: "• Work offline with cached content",
-                aboutPwasBenefit3: "• Fast and reliable performance",
-                aboutPwasBenefit4: "• Automatic updates",
-                aboutPwasBenefit5: "• Secure (HTTPS required)",
-                aboutPwasBenefit6: "• Cross-platform compatibility",
-                aboutPwasHowToInstall: "🚀 How to Install:",
-                aboutPwasHowToInstall1: "1. Click on any app",
-                aboutPwasHowToInstall2: '2. Look for "Install" button in your browser',
-                aboutPwasHowToInstall3: "3. Enjoy offline access!"
-            },
-            ar: {
-                title: "مجموعتي من تطبيقات الويب التقدمية",
-                subtitle: "تطبيقات ويب تقدمية • تثبيت • استخدام دون اتصال • سريعة وموثوقة",
-                searchPlaceholder: "🔍 ابحث عن التطبيقات بالاسم أو الوصف...",
-                allApps: "كل التطبيقات",
-                productivity: "📊 إنتاجية",
-                games: "🎮 ألعاب",
-                utilities: "🔧 أدوات",
-                creative: "🎨 إبداعي",
-                totalApps: "إجمالي التطبيقات",
-                installed: "مثبت",
-                showing: "معروض",
-                loading: "جاري تحميل التطبيقات...",
-                noAppsFound: "لم يتم العثور على تطبيقات",
-                noAppsFoundDesc: "حاول تعديل البحث أو مرشح الفئة",
-                pwaBenefit: "🚀 جميع التطبيقات هي تطبيقات ويب تقدمية (PWAs)",
-                pwaFeatures: "✨ تثبيت على الشاشة الرئيسية • 📱 تعمل دون اتصال • ⚡ سريعة وموثوقة • 🔒 آمنة",
-                viewSource: "📂 عرض المصدر على GitHub",
-                aboutPwas: "ℹ️ حول تطبيقات PWA",
-                shareCollection: "📤 مشاركة المجموعة",
-                madeBy: "صنع بواسطة باجي ❤️",
-                installAvailable: "📲 التثبيت متاح",
-                installedBadge: "✅ مثبت",
-                newBadge: "✨ جديد",
-                aboutPwasTitle: "📱 تطبيقات الويب التقدمية (PWAs)",
-                aboutPwasBenefits: "✨ الفوائد:",
-                aboutPwasBenefit1: "• التثبيت على الشاشة الرئيسية مثل التطبيقات الأصلية",
-                aboutPwasBenefit2: "• العمل دون اتصال بالإنترنت مع المحتوى المخزن مؤقتًا",
-                aboutPwasBenefit3: "• أداء سريع وموثوق",
-                aboutPwasBenefit4: "• تحديثات تلقائية",
-                aboutPwasBenefit5: "• آمن (يتطلب HTTPS)",
-                aboutPwasBenefit6: "• التوافق عبر الأنظمة الأساسية",
-                aboutPwasHowToInstall: "🚀 كيفية التثبيت:",
-                aboutPwasHowToInstall1: "1. انقر فوق أي تطبيق",
-                aboutPwasHowToInstall2: '2. ابحث عن زر "تثبيت" في متصفحك',
-                aboutPwasHowToInstall3: "3. استمتع بالوصول في وضع عدم الاتصال!"
-            }
-        };
 
         // ============================================================================
         // Initialization
@@ -730,10 +623,16 @@
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                allAppsData = await response.json();
+                const appsData = await response.json();
                 
+                renderApps(appsData);
+
+                // Now that apps are in the DOM, initialize everything
+                initializeApps();
                 setupEventListeners();
-                setLanguage(currentLang, true);
+                updateStats();
+                checkInstalledApps();
+                animateOnScroll();
 
             } catch (error) {
                 console.error('❌ Error loading or rendering apps:', error);
@@ -746,82 +645,29 @@
             }
         }
         
-        function setLanguage(lang, isInitial = false) {
-            currentLang = lang;
-            
-            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`lang-${lang}`).classList.add('active');
-
-            document.documentElement.lang = lang;
-            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-
-            updateStaticText(lang);
-            renderApps(allAppsData, lang);
-            
-            initializeApps();
-            updateStats();
-            checkInstalledApps();
-            animateOnScroll();
-        }
-
-        function updateStaticText(lang) {
-            const t = translations[lang];
-            document.querySelector('.header h1').innerHTML = `<img src="baggi_emoji2.png" class="custom-emoji right-spacer" alt="Baggi Symbol"> ${t.title}`;
-            document.querySelector('.header p').textContent = t.subtitle;
-            document.getElementById('search').placeholder = t.searchPlaceholder;
-            
-            document.querySelector('[data-category="all"]').textContent = t.allApps;
-            document.querySelector('[data-category="productivity"]').innerHTML = t.productivity;
-            document.querySelector('[data-category="games"]').innerHTML = t.games;
-            document.querySelector('[data-category="utilities"]').innerHTML = t.utilities;
-            document.querySelector('[data-category="creative"]').innerHTML = t.creative;
-
-            document.querySelector('#total-apps + .stat-label').textContent = t.totalApps;
-            document.querySelector('#installed-apps + .stat-label').textContent = t.installed;
-            document.querySelector('#visible-apps + .stat-label').textContent = t.showing;
-            
-            document.querySelector('#loading p').textContent = t.loading;
-            document.querySelector('#empty-state h2').textContent = t.noAppsFound;
-            document.querySelector('#empty-state p').textContent = t.noAppsFoundDesc;
-
-            const footer = document.querySelector('.footer');
-            footer.querySelector('p:first-child').textContent = t.pwaBenefit;
-            footer.querySelector('p:nth-child(2)').innerHTML = t.pwaFeatures;
-            footer.querySelector('.footer-link[href*="github"]').innerHTML = t.viewSource;
-            footer.querySelector('.footer-link[onclick*="showAbout"]').innerHTML = t.aboutPwas;
-            footer.querySelector('.footer-link[onclick*="shareCollection"]').innerHTML = t.shareCollection;
-            footer.querySelector('p:last-of-type').innerHTML = t.madeBy;
-        }
-
-        function renderApps(appsData, lang) {
+        function renderApps(appsData) {
             const grid = document.getElementById('apps-grid');
             grid.innerHTML = ''; // Clear existing content
-            const t = translations[lang];
 
             appsData.forEach(app => {
-                const name = app[`name-${lang}`] || app.name;
-                const description = app[`description-${lang}`] || app.description;
-                const categoryName = app[`category-${lang}`] || app.category;
-                const keywords = app[`keywords-${lang}`] || app.keywords;
-
                 const newBadgeHtml = app.badges && app.badges.includes('new') 
-                    ? `<span class="app-badge new">${t.newBadge}</span>`
+                    ? `<span class="app-badge new">✨ New</span>`
                     : '';
                 
-                const categoryNameDisplay = categoryName.charAt(0).toUpperCase() + categoryName.slice(1);
+                const categoryName = app.category.charAt(0).toUpperCase() + app.category.slice(1);
 
                 const cardHtml = `
-                    <a href="${app.href}" class="app-card" data-category="${app.category}" data-keywords="${keywords}">
+                    <a href="${app.href}" class="app-card" data-category="${app.category}" data-keywords="${app.keywords}">
                         <div class="app-icon">${app.icon}</div>
-                        <div class="app-name">${name}</div>
-                        <div class="app-description">${description}</div>
+                        <div class="app-name">${app.name}</div>
+                        <div class="app-description">${app.description}</div>
                         <div class="app-badges">
                             <span class="app-badge" data-install-status>
-                                ${t.installAvailable}
+                                📲 Install Available
                             </span>
                             ${newBadgeHtml}
                         </div>
-                        <span class="app-category-badge">${categoryNameDisplay}</span>
+                        <span class="app-category-badge">${categoryName}</span>
                     </a>
                 `;
                 grid.innerHTML += cardHtml;
@@ -835,6 +681,7 @@
         function initializeApps() {
             // Get all app cards
             allApps = Array.from(document.querySelectorAll('.app-card'));
+            filteredApps = [...allApps];
             
             // Update total apps count
             document.getElementById('total-apps').textContent = allApps.length;
@@ -848,10 +695,6 @@
         // ============================================================================
 
         function setupEventListeners() {
-            // Language switcher
-            document.getElementById('lang-en').addEventListener('click', () => setLanguage('en'));
-            document.getElementById('lang-ar').addEventListener('click', () => setLanguage('ar'));
-
             // Search functionality with debouncing
             const searchInput = document.getElementById('search');
             searchInput.addEventListener('input', (e) => {
@@ -869,15 +712,13 @@
             });
 
             // App card click tracking
-            document.getElementById('apps-grid').addEventListener('click', (e) => {
-                const card = e.target.closest('.app-card');
-                if (card) {
+            allApps.forEach(card => {
+                card.addEventListener('click', (e) => {
                     const appName = card.querySelector('.app-name').textContent;
                     console.log(`📱 Opening app: ${appName}`);
                     trackEvent('app_click', { app_name: appName });
-                }
+                });
             });
-
 
             // Keyboard shortcuts
             document.addEventListener('keydown', (e) => {
@@ -901,10 +742,43 @@
         function handleSearch(query) {
             const searchTerm = query.toLowerCase().trim();
             
-            const activeCategory = document.querySelector('.category-btn.active').dataset.category;
-            filterByCategory(activeCategory, searchTerm);
+            if (searchTerm === '') {
+                // Show all apps in current category
+                const activeCategory = document.querySelector('.category-btn.active').dataset.category;
+                filterByCategory(activeCategory);
+                return;
+            }
 
-            console.log(`🔍 Search: "${query}"`);
+            let visibleCount = 0;
+
+            allApps.forEach(card => {
+                const name = card.querySelector('.app-name').textContent.toLowerCase();
+                const description = card.querySelector('.app-description').textContent.toLowerCase();
+                const keywords = card.dataset.keywords || '';
+                const category = card.dataset.category || '';
+                
+                // Check if search matches name, description, keywords, or category
+                const matches = 
+                    name.includes(searchTerm) || 
+                    description.includes(searchTerm) ||
+                    keywords.includes(searchTerm) ||
+                    category.includes(searchTerm);
+
+                if (matches) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Update stats
+            document.getElementById('visible-apps').textContent = visibleCount;
+
+            // Show/hide empty state
+            toggleEmptyState(visibleCount === 0);
+
+            console.log(`🔍 Search: "${query}" - Found ${visibleCount} apps`);
         }
 
         // ============================================================================
@@ -928,28 +802,13 @@
             console.log(`📂 Category selected: ${category}`);
         }
 
-        function filterByCategory(category, searchTerm = '') {
+        function filterByCategory(category) {
             let visibleCount = 0;
 
-            allApps.forEach((card, index) => {
-                const appData = allAppsData[index];
-                const cardCategory = appData.category;
+            allApps.forEach(card => {
+                const cardCategory = card.dataset.category;
                 
-                const categoryMatch = category === 'all' || cardCategory === category;
-
-                let searchMatch = true;
-                if (searchTerm) {
-                    const name = (appData[`name-${currentLang}`] || appData.name).toLowerCase();
-                    const description = (appData[`description-${currentLang}`] || appData.description).toLowerCase();
-                    const keywords = (appData[`keywords-${currentLang}`] || appData.keywords).toLowerCase();
-                    
-                    searchMatch = 
-                        name.includes(searchTerm) || 
-                        description.includes(searchTerm) ||
-                        keywords.includes(searchTerm);
-                }
-
-                if (categoryMatch && searchMatch) {
+                if (category === 'all' || cardCategory === category) {
                     card.style.display = 'block';
                     visibleCount++;
                 } else {
@@ -987,22 +846,22 @@
             }
 
             try {
-                const relatedApps = await navigator.getInstalledRelatedApps();
+                const installedApps = await navigator.getInstalledRelatedApps();
                 let installedCount = 0;
 
                 allApps.forEach(card => {
                     const appUrl = card.getAttribute('href');
                     const badge = card.querySelector('[data-install-status]');
                     
-                    const isInstalled = relatedApps.some(app => app.url && app.url.includes(appUrl));
+                    // Check if this app is installed
+                    const isInstalled = installedApps.some(app => 
+                        app.url && app.url.includes(appUrl)
+                    );
 
                     if (isInstalled && badge) {
-                        badge.textContent = translations[currentLang].installedBadge;
+                        badge.textContent = '✅ Installed';
                         badge.classList.add('installed');
                         installedCount++;
-                    } else if (badge) {
-                        badge.textContent = translations[currentLang].installAvailable;
-                        badge.classList.remove('installed');
                     }
                 });
 
@@ -1041,7 +900,6 @@
                     if (entry.isIntersecting) {
                         entry.target.style.opacity = '1';
                         entry.target.style.transform = 'translateY(0)';
-                        observer.unobserve(entry.target);
                     }
                 });
             }, {
@@ -1049,8 +907,6 @@
             });
 
             allApps.forEach(card => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(30px)';
                 observer.observe(card);
             });
         }
@@ -1060,28 +916,26 @@
         // ============================================================================
 
         function showAbout() {
-            const t = translations[currentLang];
             alert(
-                `${t.aboutPwasTitle}\n\n` +
-                `${t.aboutPwasBenefits}\n` +
-                `${t.aboutPwasBenefit1}\n` +
-                `${t.aboutPwasBenefit2}\n` +
-                `${t.aboutPwasBenefit3}\n` +
-                `${t.aboutPwasBenefit4}\n` +
-                `${t.aboutPwasBenefit5}\n` +
-                `${t.aboutPwasBenefit6}\n\n` +
-                `${t.aboutPwasHowToInstall}\n` +
-                `${t.aboutPwasHowToInstall1}\n` +
-                `${t.aboutPwasHowToInstall2}\n` +
-                `${t.aboutPwasHowToInstall3}`
+                '📱 Progressive Web Apps (PWAs)\n\n' +
+                '✨ Benefits:\n' +
+                '• Install to home screen like native apps\n' +
+                '• Work offline with cached content\n' +
+                '• Fast and reliable performance\n' +
+                '• Automatic updates\n' +
+                '• Secure (HTTPS required)\n' +
+                '• Cross-platform compatibility\n\n' +
+                '🚀 How to Install:\n' +
+                '1. Click on any app\n' +
+                '2. Look for "Install" button in your browser\n' +
+                '3. Enjoy offline access!'
             );
         }
 
         async function shareCollection() {
-            const t = translations[currentLang];
             const shareData = {
-                title: t.title,
-                text: t.subtitle,
+                title: 'My PWA Apps Collection',
+                text: 'Check out this collection of Progressive Web Apps! Install and use offline.',
                 url: window.location.href
             };
 
