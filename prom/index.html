@@ -57,7 +57,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -121,7 +121,7 @@
         }
 
         .search-wrapper {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             position: relative;
         }
@@ -168,6 +168,64 @@
             display: block;
         }
 
+        .main-tabs {
+            background: var(--surface);
+            border-bottom: 2px solid var(--border);
+            position: sticky;
+            top: 128px;
+            z-index: 85;
+            box-shadow: 0 2px 4px var(--shadow);
+        }
+
+        .tabs-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            gap: 0;
+        }
+
+        .main-tab {
+            flex: 1;
+            max-width: 300px;
+            padding: 16px 24px;
+            background: transparent;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            position: relative;
+        }
+
+        .main-tab:hover {
+            background: var(--background);
+            color: var(--text-primary);
+        }
+
+        .main-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: var(--background);
+        }
+
+        .main-tab .tab-count {
+            display: inline-block;
+            margin-left: 8px;
+            padding: 2px 8px;
+            background: var(--border);
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .main-tab.active .tab-count {
+            background: var(--primary);
+            color: white;
+        }
+
         .filter-tabs {
             padding: 12px 16px;
             background: var(--surface);
@@ -189,7 +247,7 @@
         .tabs-container {
             display: inline-flex;
             gap: 8px;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -217,7 +275,7 @@
         .main-content {
             flex: 1;
             padding: 16px;
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             width: 100%;
         }
@@ -261,10 +319,18 @@
             color: var(--text-secondary);
         }
 
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
         .prompts-grid {
             display: grid;
             gap: 16px;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
         }
 
         .prompt-card {
@@ -273,18 +339,15 @@
             padding: 16px;
             box-shadow: 0 2px 8px var(--shadow);
             transition: all 0.3s ease;
-            cursor: pointer;
             position: relative;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
 
         .prompt-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 4px 16px var(--shadow);
-        }
-
-        .prompt-card.expanded {
-            grid-column: 1 / -1;
         }
 
         .card-header {
@@ -350,30 +413,50 @@
             margin-left: 8px;
         }
 
+        .prompt-text-container {
+            flex: 1;
+            margin-bottom: 12px;
+        }
+
         .prompt-text {
             font-size: 14px;
             line-height: 1.6;
             color: var(--text-primary);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .prompt-text.collapsed {
             display: -webkit-box;
-            -webkit-line-clamp: 3;
+            -webkit-line-clamp: 4;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
 
-        .prompt-card.expanded .prompt-text {
-            display: block;
-            -webkit-line-clamp: unset;
+        .show-more-btn {
+            background: none;
+            border: none;
+            color: var(--primary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            padding: 8px 0;
+            margin-top: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .show-more-btn:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
         }
 
         .placeholders-info {
             margin-top: 12px;
             padding-top: 12px;
             border-top: 1px solid var(--border);
-            display: none;
-        }
-
-        .prompt-card.expanded .placeholders-info {
-            display: block;
         }
 
         .placeholder-tag {
@@ -411,47 +494,9 @@
             flex-wrap: wrap;
         }
 
-        .bottom-nav {
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-around;
-            padding: 12px 0;
-            position: sticky;
-            bottom: 0;
-            box-shadow: 0 -2px 8px var(--shadow);
-        }
-
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-size: 12px;
-            padding: 8px 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: none;
-            background: none;
-        }
-
-        .nav-item:hover {
-            color: var(--primary);
-        }
-
-        .nav-item.active {
-            color: var(--primary);
-        }
-
-        .nav-icon {
-            font-size: 24px;
-        }
-
         .toast {
             position: fixed;
-            bottom: 80px;
+            bottom: 24px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
             background: var(--text-primary);
@@ -504,7 +549,7 @@
             background: var(--surface);
             border-radius: 16px;
             padding: 24px;
-            max-width: 500px;
+            max-width: 600px;
             width: 100%;
             max-height: 80vh;
             overflow-y: auto;
@@ -547,7 +592,7 @@
             color: var(--text-primary);
         }
 
-        .form-input, .form-textarea {
+        .form-input, .form-textarea, .form-select {
             width: 100%;
             padding: 10px 12px;
             border: 2px solid var(--border);
@@ -559,11 +604,11 @@
         }
 
         .form-textarea {
-            min-height: 100px;
+            min-height: 120px;
             resize: vertical;
         }
 
-        .form-input:focus, .form-textarea:focus {
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
         }
@@ -658,6 +703,19 @@
             .storage-badge {
                 display: none;
             }
+
+            .main-tab {
+                font-size: 14px;
+                padding: 12px 16px;
+            }
+
+            .search-container {
+                top: 60px;
+            }
+
+            .main-tabs {
+                top: 120px;
+            }
         }
 
         @keyframes fadeIn {
@@ -718,6 +776,19 @@
             </div>
         </div>
 
+        <div class="main-tabs">
+            <div class="tabs-wrapper">
+                <button class="main-tab active" data-tab="initial">
+                    📝 Initial Prompts
+                    <span class="tab-count" id="initialCount">0</span>
+                </button>
+                <button class="main-tab" data-tab="followup">
+                    🔄 Followup Prompts
+                    <span class="tab-count" id="followupCount">0</span>
+                </button>
+            </div>
+        </div>
+
         <div class="filter-tabs">
             <div class="tabs-container" id="filterTabs">
                 <button class="filter-tab active" data-filter="all">All</button>
@@ -750,23 +821,14 @@
                 </div>
             </div>
 
-            <div id="promptsContainer" class="prompts-grid"></div>
-        </main>
+            <div class="tab-content active" id="initialPromptsTab">
+                <div class="prompts-grid" id="initialPromptsContainer"></div>
+            </div>
 
-        <nav class="bottom-nav">
-            <button class="nav-item active" data-view="explore">
-                <span class="nav-icon">🏠</span>
-                <span>Explore</span>
-            </button>
-            <button class="nav-item" data-view="favorites">
-                <span class="nav-icon">❤️</span>
-                <span>Favorites</span>
-            </button>
-            <button class="nav-item" data-view="categories">
-                <span class="nav-icon">📂</span>
-                <span>Categories</span>
-            </button>
-        </nav>
+            <div class="tab-content" id="followupPromptsTab">
+                <div class="prompts-grid" id="followupPromptsContainer"></div>
+            </div>
+        </main>
 
         <div class="toast" id="toast"></div>
 
@@ -787,8 +849,12 @@
                             <input type="text" class="form-input" id="promptCategory" required>
                         </div>
                         <div class="form-group">
-                            <label class="form-label" for="promptSubcat">Subcategory</label>
-                            <input type="text" class="form-input" id="promptSubcat" required>
+                            <label class="form-label" for="promptSubcat">Subcategory (Type)</label>
+                            <select class="form-select" id="promptSubcat" required>
+                                <option value="">Select type...</option>
+                                <option value="initial prompts">Initial Prompts</option>
+                                <option value="followup prompts">Followup Prompts</option>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="promptText">Prompt Text</label>
@@ -816,11 +882,12 @@
         const FAVORITES_STORE = 'favorites';
         
         let db;
+        let currentMainTab = 'initial';
         let currentFilter = 'all';
         let searchQuery = '';
-        let expandedCard = null;
         let favorites = new Set();
         let editingPromptId = null;
+        let expandedPrompts = new Set();
 
         // IndexedDB Functions
         function initDB() {
@@ -1059,16 +1126,27 @@
             updateStatsDisplay();
         }
 
+        function toggleExpanded(id) {
+            if (expandedPrompts.has(id)) {
+                expandedPrompts.delete(id);
+            } else {
+                expandedPrompts.add(id);
+            }
+        }
+
         function createPromptCard(prompt) {
             const isFavorite = favorites.has(prompt.id);
-            const isExpanded = expandedCard === prompt.id;
+            const isExpanded = expandedPrompts.has(prompt.id);
             
             const placeholdersArray = Array.isArray(prompt.placeholders) 
                 ? prompt.placeholders 
                 : [];
 
+            const promptText = prompt.prompt || '';
+            const needsShowMore = promptText.length > 200 || promptText.split('\n').length > 4;
+
             const card = document.createElement('div');
-            card.className = `prompt-card${isExpanded ? ' expanded' : ''}`;
+            card.className = 'prompt-card';
             card.innerHTML = `
                 <div class="card-header">
                     <span class="card-number">#${prompt.number || prompt.id}</span>
@@ -1089,7 +1167,14 @@
                 </div>
                 <div class="category-badge">${prompt.category}</div>
                 <span class="subcat-badge">${prompt.subcat}</span>
-                <p class="prompt-text">${prompt.prompt}</p>
+                <div class="prompt-text-container">
+                    <div class="prompt-text ${!isExpanded && needsShowMore ? 'collapsed' : ''}">${promptText}</div>
+                    ${needsShowMore ? `
+                        <button class="show-more-btn" data-id="${prompt.id}">
+                            ${isExpanded ? '▲ Show Less' : '▼ Show More'}
+                        </button>
+                    ` : ''}
+                </div>
                 ${placeholdersArray.length > 0 ? `
                     <div class="placeholders-info">
                         <strong>Placeholders:</strong><br>
@@ -1098,18 +1183,15 @@
                 ` : ''}
             `;
 
-            // Card click to expand/collapse
-            card.addEventListener('click', (e) => {
-                if (!e.target.classList.contains('action-btn') && 
-                    !e.target.closest('.card-actions')) {
-                    if (expandedCard === prompt.id) {
-                        expandedCard = null;
-                    } else {
-                        expandedCard = prompt.id;
-                    }
+            // Show More/Less button
+            const showMoreBtn = card.querySelector('.show-more-btn');
+            if (showMoreBtn) {
+                showMoreBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    toggleExpanded(prompt.id);
                     renderPrompts();
-                }
-            });
+                });
+            }
 
             // Favorite button
             const favoriteBtn = card.querySelector('.favorite-btn');
@@ -1147,6 +1229,7 @@
                         await deletePromptFromDB(prompt.id);
                         favorites.delete(prompt.id);
                         await removeFavoriteFromDB(prompt.id);
+                        expandedPrompts.delete(prompt.id);
                         showToast('✓ Prompt deleted', 'success');
                         await renderPrompts();
                         await updateStats();
@@ -1160,8 +1243,19 @@
             return card;
         }
 
-        function filterPrompts(prompts) {
+        function filterPrompts(prompts, tabType) {
             let filtered = prompts;
+
+            // Filter by tab type (initial or followup)
+            filtered = filtered.filter(p => {
+                const subcat = (p.subcat || '').toLowerCase();
+                if (tabType === 'initial') {
+                    return subcat.includes('initial');
+                } else if (tabType === 'followup') {
+                    return subcat.includes('followup');
+                }
+                return true;
+            });
 
             // Filter by favorites
             if (currentFilter === 'favorites') {
@@ -1175,9 +1269,9 @@
             if (searchQuery) {
                 const query = searchQuery.toLowerCase();
                 filtered = filtered.filter(p => 
-                    p.prompt.toLowerCase().includes(query) ||
-                    p.category.toLowerCase().includes(query) ||
-                    p.subcat.toLowerCase().includes(query)
+                    (p.prompt || '').toLowerCase().includes(query) ||
+                    (p.category || '').toLowerCase().includes(query) ||
+                    (p.subcat || '').toLowerCase().includes(query)
                 );
             }
 
@@ -1185,22 +1279,25 @@
         }
 
         async function renderPrompts() {
-            const container = document.getElementById('promptsContainer');
+            const initialContainer = document.getElementById('initialPromptsContainer');
+            const followupContainer = document.getElementById('followupPromptsContainer');
             
             try {
                 const allPrompts = await getAllPromptsFromDB();
-                const filtered = filterPrompts(allPrompts);
+                
+                const initialFiltered = filterPrompts(allPrompts, 'initial');
+                const followupFiltered = filterPrompts(allPrompts, 'followup');
 
-                container.innerHTML = '';
-
-                if (filtered.length === 0) {
-                    container.innerHTML = `
+                // Render Initial Prompts
+                initialContainer.innerHTML = '';
+                if (initialFiltered.length === 0) {
+                    initialContainer.innerHTML = `
                         <div class="empty-state">
-                            <div class="empty-icon">🔍</div>
+                            <div class="empty-icon">📝</div>
                             <div class="empty-text">
                                 ${allPrompts.length === 0 
-                                    ? 'No prompts found. Click "Add" to create your first prompt!' 
-                                    : 'No prompts match your search or filter.'}
+                                    ? 'No initial prompts found. Click "Add" to create your first prompt!' 
+                                    : 'No initial prompts match your search or filter.'}
                             </div>
                             ${allPrompts.length === 0 ? `
                                 <div class="empty-actions">
@@ -1210,12 +1307,41 @@
                             ` : ''}
                         </div>
                     `;
-                    return;
+                } else {
+                    initialFiltered.forEach(prompt => {
+                        initialContainer.appendChild(createPromptCard(prompt));
+                    });
                 }
 
-                filtered.forEach(prompt => {
-                    container.appendChild(createPromptCard(prompt));
-                });
+                // Render Followup Prompts
+                followupContainer.innerHTML = '';
+                if (followupFiltered.length === 0) {
+                    followupContainer.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-icon">🔄</div>
+                            <div class="empty-text">
+                                ${allPrompts.length === 0 
+                                    ? 'No followup prompts found. Click "Add" to create your first prompt!' 
+                                    : 'No followup prompts match your search or filter.'}
+                            </div>
+                            ${allPrompts.length === 0 ? `
+                                <div class="empty-actions">
+                                    <button class="btn btn-primary" onclick="openAddModal()">➕ Add Prompt</button>
+                                    <button class="btn btn-success" onclick="loadSampleData()">📦 Load Sample Data</button>
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                } else {
+                    followupFiltered.forEach(prompt => {
+                        followupContainer.appendChild(createPromptCard(prompt));
+                    });
+                }
+
+                // Update tab counts
+                document.getElementById('initialCount').textContent = filterPrompts(allPrompts, 'initial').length;
+                document.getElementById('followupCount').textContent = filterPrompts(allPrompts, 'followup').length;
+
             } catch (error) {
                 console.error('Error rendering prompts:', error);
                 showToast('Error loading prompts: ' + error.message, 'error');
@@ -1227,7 +1353,7 @@
                 const allPrompts = await getAllPromptsFromDB();
                 const categories = new Set(allPrompts.map(p => p.category));
                 
-                updateStatsDisplay();
+                await updateStatsDisplay();
                 updateFilterTabs(categories);
             } catch (error) {
                 console.error('Error updating stats:', error);
@@ -1286,6 +1412,29 @@
                     tab.classList.add('active');
                 }
             });
+        }
+
+        function switchMainTab(tabName) {
+            currentMainTab = tabName;
+            
+            // Update tab buttons
+            document.querySelectorAll('.main-tab').forEach(tab => {
+                tab.classList.remove('active');
+                if (tab.dataset.tab === tabName) {
+                    tab.classList.add('active');
+                }
+            });
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            if (tabName === 'initial') {
+                document.getElementById('initialPromptsTab').classList.add('active');
+            } else if (tabName === 'followup') {
+                document.getElementById('followupPromptsTab').classList.add('active');
+            }
         }
 
         // Modal Functions
@@ -1392,6 +1541,7 @@
                 try {
                     await clearAllPromptsInDB();
                     favorites.clear();
+                    expandedPrompts.clear();
                     
                     // Clear favorites store
                     const transaction = db.transaction([FAVORITES_STORE], 'readwrite');
@@ -1433,56 +1583,56 @@
                     "category": "Writing & Content",
                     "prompt": "Write a compelling blog post about [topic] that includes practical tips and real-world examples. Target audience: [describe audience].",
                     "placeholders": ["[topic]", "[describe audience]"],
-                    "subcat": "content creation"
+                    "subcat": "initial prompts"
                 },
                 {
                     "number": 4,
                     "category": "Writing & Content",
                     "prompt": "Create an engaging social media post for [platform] about [topic]. Include relevant hashtags and a call-to-action.",
                     "placeholders": ["[platform]", "[topic]"],
-                    "subcat": "social media"
+                    "subcat": "initial prompts"
                 },
                 {
                     "number": 5,
                     "category": "Code & Development",
                     "prompt": "Write a [language] function that [describe functionality]. Include error handling and comments explaining the logic.",
                     "placeholders": ["[language]", "[describe functionality]"],
-                    "subcat": "programming"
+                    "subcat": "initial prompts"
                 },
                 {
                     "number": 6,
                     "category": "Code & Development",
                     "prompt": "Review this code and suggest improvements for readability, performance, and best practices: [paste code]",
                     "placeholders": ["[paste code]"],
-                    "subcat": "code review"
+                    "subcat": "initial prompts"
                 },
                 {
                     "number": 7,
                     "category": "Business & Strategy",
                     "prompt": "Create a SWOT analysis for [business/product/idea]. Consider market trends, competition, and growth opportunities.",
                     "placeholders": ["[business/product/idea]"],
-                    "subcat": "analysis"
+                    "subcat": "initial prompts"
                 },
                 {
                     "number": 8,
                     "category": "Business & Strategy",
                     "prompt": "Develop a go-to-market strategy for [product/service] targeting [market segment]. Include key milestones and metrics.",
                     "placeholders": ["[product/service]", "[market segment]"],
-                    "subcat": "marketing"
+                    "subcat": "initial prompts"
                 },
                 {
                     "number": 9,
                     "category": "Learning & Education",
                     "prompt": "Explain [complex concept] in simple terms that a beginner can understand. Use analogies and examples.",
                     "placeholders": ["[complex concept]"],
-                    "subcat": "explanations"
+                    "subcat": "initial prompts"
                 },
                 {
                     "number": 10,
                     "category": "Learning & Education",
                     "prompt": "Create a study plan for learning [skill/subject] in [timeframe]. Include resources, milestones, and practice exercises.",
                     "placeholders": ["[skill/subject]", "[timeframe]"],
-                    "subcat": "study plans"
+                    "subcat": "initial prompts"
                 },
                 {
                     "number": 11,
@@ -1510,14 +1660,35 @@
                     "category": "Creative Writing",
                     "prompt": "Write a short story about [theme/topic] with a surprising twist ending. Set in [location/time period].",
                     "placeholders": ["[theme/topic]", "[location/time period]"],
-                    "subcat": "fiction"
+                    "subcat": "initial prompts"
                 },
                 {
                     "number": 15,
                     "category": "Data Analysis",
                     "prompt": "Analyze this dataset and provide insights on [specific aspect]. Suggest visualizations and key metrics to track: [data description]",
                     "placeholders": ["[specific aspect]", "[data description]"],
-                    "subcat": "analytics"
+                    "subcat": "initial prompts"
+                },
+                {
+                    "number": 16,
+                    "category": "Code & Development",
+                    "prompt": "Now optimize the function for better performance and add unit tests to verify it works correctly with edge cases.",
+                    "placeholders": [],
+                    "subcat": "followup prompts"
+                },
+                {
+                    "number": 17,
+                    "category": "Writing & Content",
+                    "prompt": "Make the tone more conversational and add a compelling call-to-action at the end that encourages readers to take the next step.",
+                    "placeholders": [],
+                    "subcat": "followup prompts"
+                },
+                {
+                    "number": 18,
+                    "category": "Business & Strategy",
+                    "prompt": "Based on the SWOT analysis, create 3 actionable strategic initiatives with timelines and success metrics for the next quarter.",
+                    "placeholders": [],
+                    "subcat": "followup prompts"
                 }
             ];
 
@@ -1568,29 +1739,10 @@
                 renderPrompts();
             });
 
-            // Bottom navigation
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.addEventListener('click', () => {
-                    const view = item.dataset.view;
-                    
-                    document.querySelectorAll('.nav-item').forEach(nav => {
-                        nav.classList.remove('active');
-                    });
-                    item.classList.add('active');
-
-                    if (view === 'explore') {
-                        currentFilter = 'all';
-                        updateActiveTab();
-                        renderPrompts();
-                    } else if (view === 'favorites') {
-                        currentFilter = 'favorites';
-                        updateActiveTab();
-                        renderPrompts();
-                    } else if (view === 'categories') {
-                        currentFilter = 'all';
-                        updateActiveTab();
-                        renderPrompts();
-                    }
+            // Main tabs
+            document.querySelectorAll('.main-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    switchMainTab(tab.dataset.tab);
                 });
             });
 
