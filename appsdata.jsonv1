@@ -1,10 +1,15 @@
-[ {
+[
+  {
     "href": "hadith/",
     "category": "Religion",
+    "category-ar": "الدين",
     "keywords": "Search and read books",
-    "icon": "\u26C5  ",
+    "keywords-ar": "بحث وقراءة الكتب",
+    "icon": "✅ ",
     "name": "Hadith books",
+    "name-ar": "كتب الحديث",
     "description": "Hadith Explorer is a client-side web application for searching and exploring a vast collection of authentic Islamic narrations (Hadiths). Its mission is to make the profound wisdom of the Prophet's traditions easily accessible to everyone in both Arabic and English.",
+    "description-ar": "مستكشف الحديث هو تطبيق ويب من جانب العميل للبحث واستكشاف مجموعة واسعة من الأحاديث الإسلامية الصحيحة. مهمته هي جعل الحكمة العميقة لتقاليد النبي سهلة الوصول للجميع باللغتين العربية والإنجليزية.",
     "badges": [
       "new"
     ]
@@ -12,10 +17,14 @@
   {
     "href": "books-store-new/",
     "category": "utilities",
+    "category-ar": "أدوات",
     "keywords": "Search and read books",
-    "icon": "\u2600\uFE0F ",
+    "keywords-ar": "بحث وقراءة الكتب",
+    "icon": "📚 ",
     "name": "Books Store",
+    "name-ar": "متجر الكتب",
     "description": "This PWA, 'Book Finder,' allows users to search for books using the Gutendex API. It dynamically displays book covers, titles, and authors, with options to read books online. The app features pagination for browsing results and includes service worker registration for offline capabilities and a seamless install experience, enhancing user engagement and accessibility.",
+    "description-ar": "هذا التطبيق التدريجي للويب 'Book Finder' يسمح للمستخدمين بالبحث عن الكتب باستخدام واجهة برمجة تطبيقات Gutendex. يعرض ديناميكيًا أغلفة الكتب والعناوين والمؤلفين، مع خيارات لقراءة الكتب عبر الإنترنت. يتميز التطبيق بترقيم الصفحات لتصفح النتائج ويتضمن تسجيل عامل الخدمة للقدرات دون اتصال بالإنترنت وتجربة تثبيت سلسة، مما يعزز تفاعل المستخدم وإمكانية الوصول.",
     "badges": [
       "new"
     ]
@@ -23,10 +32,14 @@
   {
     "href": "prom/",
     "category": "utilities",
+    "category-ar": "أدوات",
     "keywords": "Search copy creative ai prompts",
-    "icon": "  \u26A1   ",
+    "keywords-ar": "بحث ونسخ محفزات الذكاء الاصطناعي الإبداعية",
+    "icon": "⚡ ",
     "name": "Ai Prompts",
+    "name-ar": "محفزات الذكاء الاصطناعي",
     "description": "This PWA, 'Prompt Explorer,' helps users efficiently browse and copy ready-to-use AI prompts. Prompts are organized by subcategories like 'initial prompts' and 'followup prompts,' and further filtered by category. It provides a convenient interface to discover and utilize various AI prompts for different needs, ensuring quick access and easy copying.",
+    "description-ar": "هذا التطبيق التدريجي للويب 'Prompt Explorer' يساعد المستخدمين على تصفح ونسخ محفزات الذكاء الاصطناعي الجاهزة للاستخدام بكفاءة. يتم تنظيم المحفزات حسب الفئات الفرعية مثل 'المحفزات الأولية' و 'المحفزات اللاحقة'، ويتم تصفيتها أيضًا حسب الفئة. يوفر واجهة مريحة لاكتشاف واستخدام محفزات الذكاء الاصطناعي المختلفة لتلبية الاحتياجات المختلفة، مما يضمن الوصول السريع والنسخ السهل.",
     "badges": [
       "new"
     ]
@@ -34,10 +47,14 @@
   {
     "href": "logo/",
     "category": "utilities",
+    "category-ar": "أدوات",
     "keywords": "Generate your own creative logo",
-    "icon": "   \u26F2 ",
+    "keywords-ar": "أنشئ شعارك الإبداعي الخاص",
+    "icon": "✨ ",
     "name": "Logo generator",
+    "name-ar": "مولد الشعارات",
     "description": "This 'Logo Generator Pro' web application empowers users to create custom logos with ease. It offers extensive customization options for text, including font styles, colors, and effects. Users can also add and style various shapes with solid or gradient fills, adjust canvas dimensions, and choose from quick presets to design unique andstunning logos.",
+    "description-ar": "يمكّن تطبيق الويب 'Logo Generator Pro' المستخدمين من إنشاء شعارات مخصصة بسهولة. ويوفر خيارات تخصيص واسعة للنص، بما في ذلك أنماط الخطوط والألوان والتأثيرات. يمكن للمستخدمين أيضًا إضافة وتصميم أشكال مختلفة بتعبئة صلبة أو متدرجة، وضبط أبعاد اللوحة، والاختيار من بين الإعدادات المسبقة السريعة لتصميم شعارات فريدة ومذهلة.",
     "badges": [
       "new"
     ]
@@ -45,28 +62,40 @@
   {
     "href": "games/",
     "category": "productivity",
+    "category-ar": "إنتاجية",
     "keywords": "tasks organize list notes",
-    "icon": "  \ud83c\udfae   ",
+    "keywords-ar": "مهام تنظيم قائمة ملاحظات",
+    "icon": "🎮 ",
     "name": "Games hub",
+    "name-ar": "مركز الألعاب",
     "description": "'GameHub' is a PWA designed for discovering free-to-play games across diverse genres and platforms. Users can search, filter by category, and sort games to find new titles. Each game features a detailed card with descriptions, platform information, and a direct link to play. The app provides an intuitive interface for exploring thousands of free games.",
+    "description-ar": "'GameHub' هو تطبيق ويب تقدمي مصمم لاكتشاف الألعاب المجانية عبر مختلف الأنواع والمنصات. يمكن للمستخدمين البحث وتصفية الألعاب حسب الفئة وفرزها للعثور على عناوين جديدة. تتميز كل لعبة ببطاقة مفصلة تحتوي على أوصاف ومعلومات عن المنصة ورابط مباشر للعب. يوفر التطبيق واجهة سهلة الاستخدام لاستكشاف آلاف الألعاب المجانية.",
     "badges": []
   },
   {
     "href": "openverse/",
     "category": "productivity",
+    "category-ar": "إنتاجية",
     "keywords": "Media collection",
-    "icon": "  \u23F8\uFE0F   ",
+    "keywords-ar": "مجموعة وسائط",
+    "icon": "🖼️ ",
     "name": "Media collection",
+    "name-ar": "مجموعة وسائط",
     "description": "This PWA, 'Simple Media Browser,' enables users to efficiently search for openly-licensed images and audio. It offers robust filtering options by license type, source, and specific image or audio categories, simplifying the discovery of creative commons media. The app also features an 'Advice of the Day' widget and pagination for an enhanced browsing experience.",
+    "description-ar": "هذا التطبيق التدريجي للويب 'Simple Media Browser' يمكّن المستخدمين من البحث بكفاءة عن الصور والصوتيات المرخصة بشكل مفتوح. ويوفر خيارات تصفية قوية حسب نوع الترخيص والمصدر وفئات الصور أو الصوتيات المحددة، مما يبسط اكتشاف وسائط المشاع الإبداعي. يتميز التطبيق أيضًا بعنصر واجهة 'نصيحة اليوم' وترقيم الصفحات لتجربة تصفح محسنة.",
     "badges": []
   },
   {
     "href": "quransearch/",
     "category": "Religion",
+    "category-ar": "الدين",
     "keywords": "search a word in quran",
-    "icon": "  \u26C5   ",
+    "keywords-ar": "ابحث عن كلمة في القرآن",
+    "icon": "☪️ ",
     "name": "Quran Search",
+    "name-ar": "البحث في القرآن",
     "description": "'Quran Search' is a PWA designed for searching the Holy Quran. Users can quickly find verses by typing keywords, with an option for auto-search. Search results display detailed Surah and Ayah information, and users can listen to audio recitations of individual verses. The app also allows copying all search results and offers a light/dark theme toggle for enhanced readability.",
+    "description-ar": "'Quran Search' هو تطبيق ويب تقدمي مصمم للبحث في القرآن الكريم. يمكن للمستخدمين العثور بسرعة على الآيات عن طريق كتابة الكلمات الرئيسية، مع خيار البحث التلقائي. تعرض نتائج البحث معلومات مفصلة عن السورة والآية، ويمكن للمستخدمين الاستماع إلى تلاوات صوتية لآيات فردية. يسمح التطبيق أيضًا بنسخ جميع نتائج البحث ويوفر مفتاح تبديل للسمة الفاتحة/الداكنة لتحسين قابلية القراءة.",
     "badges": [
       "new"
     ]
@@ -74,39 +103,53 @@
   {
     "href": "promaker/",
     "category": "creative",
+    "category-ar": "إبداعي",
     "keywords": "App builders prompt",
-    "icon": "  \u2728   ",
+    "keywords-ar": "محفز بناة التطبيقات",
+    "icon": "💡 ",
     "name": "Prompt Generator",
+    "name-ar": "مولد المحفزات",
     "description": "'Website Prompt Builder' is a PWA designed to help users generate professional web development prompts. It offers quick-start templates, allows selection of various website components, and provides a visual preview of the chosen elements. The app then generates a comprehensive prompt, which users can copy and utilize with AI development tools to streamline their web project creation process.",
+    "description-ar": "'Website Prompt Builder' هو تطبيق ويب تقدمي مصمم لمساعدة المستخدمين على إنشاء محفزات تطوير ويب احترافية. ويقدم قوالب بدء سريع، ويسمح باختيار مكونات موقع الويب المختلفة، ويوفر معاينة مرئية للعناصر المختارة. يقوم التطبيق بعد ذلك بإنشاء محفز شامل، يمكن للمستخدمين نسخه واستخدامه مع أدوات تطوير الذكاء الاصطناعي لتبسيط عملية إنشاء مشروع الويب الخاص بهم.",
     "badges": []
   },
   {
     "href": "imgutls/",
     "category": "productivity",
+    "category-ar": "إنتاجية",
     "keywords": "Image edit/create",
-    "icon": " \u2692\uFE0F  ",
+    "keywords-ar": "تعديل/إنشاء الصور",
+    "icon": "🖼️ ",
     "name": "Images",
+    "name-ar": "صور",
     "description": "The 'Utility Toolkit' is a versatile PWA offering a suite of image manipulation tools. Users can generate QR codes, create custom icons and favicons from scratch or existing images, and edit hero images with cropping and optimization features. It also includes dedicated tools for generating animated GIFs and resizing images, making it a comprehensive solution for various visual asset needs.",
+    "description-ar": "'مجموعة الأدوات المساعدة' هي تطبيق ويب تقدمي متعدد الاستخدامات يقدم مجموعة من أدوات معالجة الصور. يمكن للمستخدمين إنشاء رموز QR، وإنشاء أيقونات مخصصة وأيقونات مفضلة من البداية أو من الصور الموجودة، وتحرير صور البطل مع ميزات الاقتصاص والتحسين. ويتضمن أيضًا أدوات مخصصة لإنشاء صور GIF متحركة وتغيير حجم الصور، مما يجعله حلاً شاملاً لمختلف احتياجات الأصول المرئية.",
     "badges": []
   },
   {
     "href": "discoverquran/",
     "category": "Religion",
+    "category-ar": "الدين",
     "keywords": "Disciver Quran, search, read listen, cooy",
-    "icon": "\ud83c\udf24\ufe0f",
+    "keywords-ar": "اكتشف القرآن، بحث، قراءة، استماع، نسخ",
+    "icon": "📖 ",
     "name": "Disciver Quran",
-    "description": "'\u0645\u0639 \u0627\u0644\u0642\u0631\u0622\u0646 \u0627\u0644\u0643\u0631\u064a\u0645' (With the Holy Quran) is a comprehensive PWA for exploring the Quran. It enables users to read Arabic verses, access English and Urdu translations, and delve into various Tafsir (exegesis) interpretations. The app also features audio recitations by multiple Qaris, with options for sequential playback, a search function, adjustable font sizes, and a dark mode for comfortable reading.",
+    "name-ar": "اكتشف القرآن",
+    "description": "'مع القرآن الكريم' (With the Holy Quran) is a comprehensive PWA for exploring the Quran. It enables users to read Arabic verses, access English and Urdu translations, and delve into various Tafsir (exegesis) interpretations. The app also features audio recitations by multiple Qaris, with options for sequential playback, a search function, adjustable font sizes, and a dark mode for comfortable reading.",
+    "description-ar": "مع القرآن الكريم هو تطبيق ويب تقدمي شامل لاستكشاف القرآن. يمكّن المستخدمين من قراءة الآيات العربية، والوصول إلى الترجمات الإنجليزية والأردية، والتعمق في تفسيرات مختلفة. يتميز التطبيق أيضًا بتلاوات صوتية من قبل قراء متعددين، مع خيارات للتشغيل المتسلسل، ووظيفة بحث، وأحجام خطوط قابلة للتعديل، ووضع داكن للقراءة المريحة.",
     "badges": []
   },
   {
     "href": "nextapp/",
     "category": "Next",
+    "category-ar": "التالي",
     "keywords": "Next application",
-    "icon": "\u23f1\ufe0f",
+    "keywords-ar": "التطبيق التالي",
+    "icon": "➡️ ",
     "name": "Comming Soon",
+    "name-ar": "قريبا",
     "description": "In progress!",
+    "description-ar": "قيد التنفيذ!",
     "badges": []
   }
 ]
-
-

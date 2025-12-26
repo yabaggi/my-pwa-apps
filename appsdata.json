@@ -1,4 +1,19 @@
 [
+
+ {
+    "href": "quotes/",
+    "category": "Next",
+    "category-ar": "التالي",
+    "keywords": "Quotes",
+    "keywords-ar": "حكم وامثال وإقتباسات",
+    "icon": "➡️ ",
+    "name": "Quotes",
+    "name-ar": "إقتباسات",
+    "description": "usefull quotes!",
+    "description-ar": ".",
+    "badges": []
+  },
+
   {
     "href": "hadith/",
     "category": "Religion",

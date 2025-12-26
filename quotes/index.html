@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Quote Finder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        
+        /* Translation Styles */
+.translation-container {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--border);
+}
+
+.translation-divider {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.translation-divider span {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    background: var(--surface);
+    padding-right: 8px;
+}
+
+[dir="rtl"] .translation-divider span {
+    padding-right: 0;
+    padding-left: 8px;
+    font-family: 'Inter', sans-serif;
+}
+
+.translated-text {
+    border-left-color: #10b981 !important;
+    border-right-color: #10b981 !important;
+}
+
+[dir="rtl"] .translated-text {
+    direction: ltr;
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    border-right: none !important;
+    border-left: 3px solid #10b981 !important;
+    padding-right: 0 !important;
+    padding-left: 16px !important;
+}
+
+.translation-loading {
+    color: var(--text-tertiary);
+    font-style: italic;
+}
+
+.translation-error {
+    color: #ef4444;
+    font-size: 0.875rem;
+}
+
+/* Translate button styles */
+.translate-btn {
+    position: relative;
+}
+
+.translate-btn.active {
+    background: #10b981;
+    border-color: #10b981;
+    color: white;
+}
+
+.translate-btn.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.translate-btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 2px solid transparent;
+    border-top-color: currentColor;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.translate-btn.loading svg {
+    opacity: 0;
+}
+        
+        
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #818cf8;
+            --background: #f1f5f9;
+            --surface: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-tertiary: #94a3b8;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+            --radius: 12px;
+            --radius-sm: 8px;
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background: #0f172a;
+                --surface: #1e293b;
+                --text-primary: #f1f5f9;
+                --text-secondary: #94a3b8;
+                --text-tertiary: #64748b;
+                --border: #334155;
+            }
+        }
+
+        html, body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.5;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .arabic-text, [dir="rtl"] {
+            font-family: 'Noto Kufi Arabic', 'Inter', sans-serif;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            padding: 16px;
+            padding-top: max(16px, env(safe-area-inset-top));
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .logo {
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+
+        .logo svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .header h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .tabs-container {
+            display: flex;
+            gap: 8px;
+            background: var(--background);
+            padding: 4px;
+            border-radius: var(--radius);
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            font-family: inherit;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            background: var(--surface);
+            color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .tab-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 0;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border: 1px solid var(--border);
+            border-radius: 50px;
+            background: var(--background);
+            color: var(--text-primary);
+            font-size: 0.9375rem;
+            font-family: inherit;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        .search-box input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .search-box svg {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 18px;
+            height: 18px;
+            color: var(--text-tertiary);
+            pointer-events: none;
+        }
+
+        [dir="rtl"] .search-box input {
+            padding: 12px 44px 12px 16px;
+            font-family: 'Noto Kufi Arabic', 'Inter', sans-serif;
+        }
+
+        [dir="rtl"] .search-box svg {
+            left: auto;
+            right: 16px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            min-height: calc(100vh - 180px);
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+            }
+        }
+
+        .sidebar {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .sidebar {
+                width: 280px;
+                min-width: 280px;
+                border-bottom: none;
+                border-right: 1px solid var(--border);
+                max-height: calc(100vh - 180px);
+                overflow-y: auto;
+                position: sticky;
+                top: 180px;
+            }
+
+            [dir="rtl"] .sidebar {
+                border-right: none;
+                border-left: 1px solid var(--border);
+            }
+        }
+
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-tertiary);
+            margin-bottom: 10px;
+            padding: 0 4px;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            width: 100%;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: var(--radius);
+            color: white;
+            font-size: 0.9375rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: transform 0.15s, box-shadow 0.15s;
+            margin-bottom: 16px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+
+        .action-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .authors-list, .tags-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        @media (min-width: 768px) {
+            .authors-list, .tags-list {
+                max-height: none;
+            }
+        }
+
+        .authors-list li, .tags-list li {
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 0.9375rem;
+            color: var(--text-secondary);
+            transition: background 0.15s, color 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .authors-list li:hover, .tags-list li:hover {
+            background: var(--background);
+            color: var(--text-primary);
+        }
+
+        .authors-list li:active, .tags-list li:active {
+            background: var(--border);
+        }
+
+        .authors-list li.active, .tags-list li.active {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .author-avatar, .tag-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .tag-icon {
+            border-radius: var(--radius-sm);
+        }
+
+        .tag-icon svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .authors-list li.active .author-avatar,
+        .tags-list li.active .tag-icon {
+            background: var(--primary);
+            color: white;
+        }
+
+        .tag-count {
+            margin-left: auto;
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+            background: var(--background);
+            padding: 2px 8px;
+            border-radius: 50px;
+        }
+
+        [dir="rtl"] .tag-count {
+            margin-left: 0;
+            margin-right: auto;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 16px;
+            padding-bottom: calc(16px + var(--safe-bottom));
+        }
+
+        @media (min-width: 768px) {
+            .main-content {
+                padding: 24px;
+                max-width: 800px;
+            }
+        }
+
+        .quotes-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .quote-card {
+            background: var(--surface);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+            animation: slideIn 0.3s ease;
+            border: 1px solid var(--border);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .quote-card .quote-text {
+            font-size: 1.0625rem;
+            line-height: 1.8;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            position: relative;
+            padding-left: 16px;
+            border-left: 3px solid var(--primary);
+        }
+
+        [dir="rtl"] .quote-card .quote-text {
+            padding-left: 0;
+            padding-right: 16px;
+            border-left: none;
+            border-right: 3px solid var(--primary);
+            font-family: 'Noto Kufi Arabic', sans-serif;
+            line-height: 2;
+        }
+
+        .quote-card .quote-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .quote-card .quote-author {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .quote-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .quote-tag {
+            font-size: 0.75rem;
+            color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+            padding: 4px 10px;
+            border-radius: 50px;
+            font-weight: 500;
+        }
+
+        [dir="rtl"] .quote-tag {
+            font-family: 'Noto Kufi Arabic', sans-serif;
+        }
+
+        .quote-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .quote-action-btn {
+            width: 36px;
+            height: 36px;
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            background: var(--background);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+        }
+
+        .quote-action-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        .quote-action-btn:active {
+            transform: scale(0.9);
+        }
+
+        .quote-action-btn.copied {
+            background: #10b981;
+            border-color: #10b981;
+            color: white;
+        }
+
+        .quote-action-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 48px 24px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state svg {
+            width: 64px;
+            height: 64px;
+            color: var(--text-tertiary);
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 1.125rem;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        [dir="rtl"] .empty-state h3,
+        [dir="rtl"] .empty-state p {
+            font-family: 'Noto Kufi Arabic', sans-serif;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 48px 24px;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Custom Toast - Only one toast element */
+        #custom-toast {
+            position: fixed;
+            bottom: calc(24px + var(--safe-bottom));
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #1e293b;
+            color: #ffffff;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            box-shadow: var(--shadow-md);
+            opacity: 0;
+            visibility: hidden;
+            transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 9999;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+
+        #custom-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            #custom-toast {
+                background: #f1f5f9;
+                color: #1e293b;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 16px;
+            color: var(--text-tertiary);
+            font-size: 0.8125rem;
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+
+        *:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        button:focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        .results-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding: 0 4px;
+        }
+
+        .results-count {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .results-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        [dir="rtl"] .results-header {
+            font-family: 'Noto Kufi Arabic', sans-serif;
+        }
+
+        .view-all-btn {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            margin-top: 12px;
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            color: var(--primary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.15s;
+        }
+
+        .view-all-btn:hover {
+            background: var(--border);
+        }
+
+        [dir="rtl"] .view-all-btn {
+            font-family: 'Noto Kufi Arabic', sans-serif;
+        }
+    </style>
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div class="logo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21c0 1 0 1 1 1z"/>
+                    <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>
+                </svg>
+            </div>
+            <h1>Quote Finder</h1>
+        </div>
+
+        <div class="tabs-container">
+            <button class="tab-btn active" data-tab="english" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+                English Quotes
+            </button>
+            <button class="tab-btn" data-tab="arabic" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z"/>
+                </svg>
+                <span class="arabic-text">اقتباسات عربية</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- English Quotes Tab -->
+    <div class="tab-content active" id="english-tab">
+        <div class="container">
+            <nav class="sidebar">
+                <div class="search-box" style="margin-bottom: 16px;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" id="search-bar-en" placeholder="Search displayed quotes...">
+                </div>
+
+                <div class="sidebar-section">
+                    <button class="action-btn" id="random-btn-en" type="button">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        Random Quote
+                    </button>
+                </div>
+
+                <div class="sidebar-section" id="authors-container">
+                    <h2 class="sidebar-title">Top Authors</h2>
+                    <ul class="authors-list" id="authors-list">
+                        <li>Loading authors...</li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="main-content">
+                <div class="quotes-container" id="quotes-container-en">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21c0 1 0 1 1 1z"/>
+                            <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>
+                        </svg>
+                        <h3>Select an Author</h3>
+                        <p>Choose an author from the list or get a random quote to start exploring.</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Arabic Quotes Tab -->
+    <div class="tab-content" id="arabic-tab" dir="rtl">
+        <div class="container">
+            <nav class="sidebar">
+                <div class="search-box" style="margin-bottom: 16px;" dir="rtl">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    <input type="text" id="search-bar-ar" placeholder="ابحث في الاقتباسات..." class="arabic-text">
+                </div>
+
+                <div class="sidebar-section">
+                    <button class="action-btn arabic-text" id="random-btn-ar" type="button">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                        اقتباس عشوائي
+                    </button>
+                </div>
+
+                <div class="sidebar-section">
+                    <button class="action-btn arabic-text" id="all-quotes-btn-ar" type="button" style="background: linear-gradient(135deg, #10b981, #059669);">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/>
+                        </svg>
+                        كل الاقتباسات
+                    </button>
+                </div>
+
+                <div class="sidebar-section" id="tags-container">
+                    <h2 class="sidebar-title arabic-text">التصنيفات</h2>
+                    <ul class="tags-list" id="tags-list">
+                        <li class="arabic-text">جاري التحميل...</li>
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="main-content">
+                <div class="quotes-container" id="quotes-container-ar">
+                    <div class="empty-state">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V21c0 1 0 1 1 1z"/>
+                            <path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/>
+                        </svg>
+                        <h3>اختر تصنيفاً</h3>
+                        <p>اختر تصنيفاً من القائمة أو احصل على اقتباس عشوائي.</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>Powered by Gemini</p>
+    </footer>
+
+    <!-- Single Toast Element -->
+    <div id="custom-toast"></div>
+
+    <script src="app.js"></script>
+
+    <script>
+        // PWA Service Worker Registration
+        // Generated by PWA Converter v2.0.1
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Use RELATIVE path for service worker (works with multi-app setup)
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('✓ Service Worker registered:', registration.scope);
+                        console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
+                        console.log('✓ App: Quote Finder');
+                        console.log('✓ Folder: quotes');
+                        console.log('✓ Total files cached: 13'); // +3 for manifest, sw, offline
+                        
+                        // Check for updates periodically
+                        setInterval(() => {
+                            registration.update();
+                        }, 60000); // Check every minute
+                    })
+                    .catch(error => {
+                        console.error('✗ Service Worker registration failed:', error);
+                    });
+            });
+        } else {
+            console.warn('⚠ Service Workers not supported in this browser');
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('💡 PWA install prompt available');
+            // Show custom install UI
+            showInstallPromotion();
+        });
+
+        function showInstallPromotion() {
+            // You can implement custom install UI here
+            console.log('📱 App can be installed - Click browser menu or use custom UI');
+        }
+
+        // Install PWA function (call from your custom install button)
+        async function installPWA() {
+            if (!deferredPrompt) {
+                console.log('❌ Install prompt not available');
+                return;
+            }
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to install prompt: ${outcome}`);
+            deferredPrompt = null;
+        }
+
+        // Track installation
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA installed successfully!');
+            console.log('✅ App: Quote Finder');
+            console.log('✅ App ID: quotes-id');
+            console.log('✅ Folder: quotes');
+            deferredPrompt = null;
+        });
+
+        // Display mode detection
+        function getPWADisplayMode() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            if (document.referrer.startsWith('android-app://')) {
+                return 'twa';
+            } else if (navigator.standalone || isStandalone) {
+                return 'standalone';
+            }
+            return 'browser';
+        }
+
+        const displayMode = getPWADisplayMode();
+        console.log('🖥️ Display mode:', displayMode);
+        
+        // Log PWA configuration
+        console.log('⚙️ PWA Configuration:');
+        console.log('  - App Name: Quote Finder');
+        console.log('  - App ID: quotes-id');
+        console.log('  - Start URL: /quotes/');
+        console.log('  - Scope: /quotes/');
+        console.log('  - Folder: quotes');
+        console.log('  - Files included: 10');
+    </script>
+</body>
+</html>
+

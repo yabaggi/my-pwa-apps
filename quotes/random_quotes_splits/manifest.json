@@ -1,0 +1,6 @@
+{
+  "total_splits": 92,
+  "quotes_per_split": 5000,
+  "source_file": "random-quotes.json",
+  "total_quotes": 459741
+}
