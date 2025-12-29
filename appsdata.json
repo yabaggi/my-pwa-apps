@@ -1,5 +1,17 @@
 [
-
+ {
+    "href": "vplayer/",
+    "category": "Explore",
+    "category-ar": "مشاهدة",
+    "keywords": "view explore",
+    "keywords-ar": "مشاهدة",
+    "icon": "➡️ ",
+    "name": "video Player",
+    "name-ar": "مشاهدة مقاطع",
+    "description": " This is a single-page web application for browsing and watching a collection of videos. Features:- **Dynamic Video Loading**: Videos are loaded from a `videos.json` file, making it easy to manage the video library.- **Categorization**: Videos are automatically grouped by category. Users can browse videos by selecting a category from a chip-style menu or a hamburger menu. ",
+    "description-ar": "هذا تطبيق ويب من صفحة واحدة لتصفح ومشاهدة مجموعة من مقاطع الفيديو. سمات - **تحميل الفيديو الديناميكي**: يتم تحميل مقاطع الفيديو من ملف videos.json، مما يجعل من السهل إدارة مكتبة الفيديو. - ** التصنيف **: يتم تجميع مقاطع الفيديو تلقائيا حسب الفئة. يمكن للمستخدمين تصفح مقاطع الفيديو عن طريق تحديد فئة من قائمة.",
+    "badges": []
+  },
  {
     "href": "quotes/",
     "category": "Next",
@@ -168,4 +180,5 @@
     "badges": []
   }
 ]
+
 
