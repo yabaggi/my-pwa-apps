@@ -136,7 +136,7 @@
     "keywords-ar": "تعديل/إنشاء الصور",
     "icon": "🖼️ ",
     "name": "Images",
-    "name-ar": "صور",
+    "name-ar": "معالجة الصور",
     "description": "The 'Utility Toolkit' is a versatile PWA offering a suite of image manipulation tools. Users can generate QR codes, create custom icons and favicons from scratch or existing images, and edit hero images with cropping and optimization features. It also includes dedicated tools for generating animated GIFs and resizing images, making it a comprehensive solution for various visual asset needs.",
     "description-ar": "'مجموعة الأدوات المساعدة' هي تطبيق ويب تقدمي متعدد الاستخدامات يقدم مجموعة من أدوات معالجة الصور. يمكن للمستخدمين إنشاء رموز QR، وإنشاء أيقونات مخصصة وأيقونات مفضلة من البداية أو من الصور الموجودة، وتحرير صور البطل مع ميزات الاقتصاص والتحسين. ويتضمن أيضًا أدوات مخصصة لإنشاء صور GIF متحركة وتغيير حجم الصور، مما يجعله حلاً شاملاً لمختلف احتياجات الأصول المرئية.",
     "badges": []
