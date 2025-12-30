@@ -533,11 +533,16 @@
 
     <div class="container">
         <div class="header">
+            <!-- commented -->
+            
             <div class="lang-switcher">
                 <button id="lang-en" class="lang-btn active">English</button>
                 <button id="lang-ar" class="lang-btn">العربية</button>
+                
                 <button id="lang-toggle" class="lang-toggle-btn">🌐</button>
+                
             </div>
+            
             <h1>
                 <img src="baggi_emoji2.png" class="custom-emoji right-spacer" alt="Baggi Symbol">
                 My PWA Apps Collection
@@ -655,7 +660,7 @@
         let allAppsData = [];
         let allApps = [];
         let searchTimeout = null;
-        let currentLang = 'ar';
+        let currentLang = 'en';
 
         const translations = {
             en: {
@@ -1176,3 +1181,4 @@
     </script>
 </body>
 </html>
+
