@@ -1247,6 +1247,10 @@
             const fullscreenContainer = document.getElementById('fullscreenContainer');
             const fullscreenIframe = document.getElementById('fullscreenIframe');
             const fullscreenTitle = document.getElementById('fullscreenTitle');
+            const videoIframe = document.getElementById('videoIframe'); // Get the small player iframe
+
+            // Stop the small player video
+            videoIframe.src = '';
             
             fullscreenTitle.textContent = selectedVideo.title;
             fullscreenIframe.src = `https://www.youtube.com/embed/${selectedVideo.video_id}?autoplay=1`;
@@ -1266,9 +1270,15 @@
         function exitFullscreen() {
             const fullscreenContainer = document.getElementById('fullscreenContainer');
             const fullscreenIframe = document.getElementById('fullscreenIframe');
+            const videoIframe = document.getElementById('videoIframe');
             
             fullscreenIframe.src = '';
             fullscreenContainer.classList.remove('active');
+
+            // Resume video in the small player
+            if (selectedVideo) {
+                videoIframe.src = `https://www.youtube.com/embed/${selectedVideo.video_id}?autoplay=1`;
+            }
             
             if (document.exitFullscreen) {
                 document.exitFullscreen().catch(() => {});
