@@ -410,6 +410,7 @@
             transition: all var(--transition-fast);
         }
         .result-action-btn:hover { background: var(--bg-elevated); }
+        .result-action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
         .result-action-btn.playing {
             background: var(--accent);
@@ -979,10 +980,14 @@
                     return;
                 }
 
+                copyAllButton.disabled = false;
                 resultsCount.innerHTML = `<strong>${results.length}</strong> نتيجة`;
                 
                 resultsList.innerHTML = results.map((result, index) => {
                     const highlightedText = highlightMatch(result.ayahText, query);
+                    const surah = quranData.data.surahs.find(s => s.number === result.surahNumber);
+                    const isFirstAyah = result.ayahNumberInSurah === 1;
+                    const isLastAyah = surah ? result.ayahNumberInSurah === surah.ayahs.length : false;
 
                     return `
                         <div class="result-card">
@@ -1001,6 +1006,14 @@
                             <p class="result-card-text">${highlightedText}</p>
                             <div class="result-card-actions">
                                 <button 
+                                    class="result-action-btn prev-btn" 
+                                    data-surah="${result.surahNumber}" 
+                                    data-ayah="${result.ayahNumberInSurah}"
+                                    ${isFirstAyah ? 'disabled' : ''}
+                                >
+                                    السابق
+                                </button>
+                                <button 
                                     class="result-action-btn recite-btn" 
                                     data-surah="${result.surahNumber}" 
                                     data-ayah="${result.ayahNumberInSurah}"
@@ -1009,12 +1022,79 @@
                                     <svg class="icon-sm"><use href="#icon-volume-2"/></svg>
                                     تلاوة
                                 </button>
+                                <button 
+                                    class="result-action-btn next-btn" 
+                                    data-surah="${result.surahNumber}" 
+                                    data-ayah="${result.ayahNumberInSurah}"
+                                    ${isLastAyah ? 'disabled' : ''}
+                                >
+                                    التالي
+                                </button>
                             </div>
                         </div>
                     `;
                 }).join('');
 
                 showStatus('results');
+            }
+
+            function updateAyah(cardElement, surahNumber, ayahNumberInSurah, direction) {
+                if (!quranData) return;
+
+                const surah = quranData.data.surahs.find(s => s.number === surahNumber);
+                if (!surah) return;
+
+                const currentAyahIndex = surah.ayahs.findIndex(a => a.numberInSurah === ayahNumberInSurah);
+                if (currentAyahIndex === -1) return;
+                
+                let newAyahIndex;
+                if (direction === 'next') {
+                    newAyahIndex = currentAyahIndex + 1;
+                } else { // prev
+                    newAyahIndex = currentAyahIndex - 1;
+                }
+
+                if (newAyahIndex < 0 || newAyahIndex >= surah.ayahs.length) {
+                    showToast('لا يوجد المزيد من الآيات في هذه السورة', 'warning');
+                    return;
+                }
+                
+                const newAyah = surah.ayahs[newAyahIndex];
+
+                copyAllButton.disabled = true;
+
+                const cardSubtitle = cardElement.querySelector('.result-card-subtitle');
+                cardSubtitle.textContent = `سورة ${surah.number} • آية ${newAyah.numberInSurah}`;
+                
+                const cardBadge = cardElement.querySelector('.result-card-badge');
+                cardBadge.textContent = `آية ${newAyah.number}`;
+
+                const cardText = cardElement.querySelector('.result-card-text');
+                cardText.innerHTML = newAyah.text;
+
+                const prevBtn = cardElement.querySelector('.prev-btn');
+                const nextBtn = cardElement.querySelector('.next-btn');
+                const reciteBtn = cardElement.querySelector('.recite-btn');
+
+                prevBtn.dataset.ayah = newAyah.numberInSurah;
+                nextBtn.dataset.ayah = newAyah.numberInSurah;
+                reciteBtn.dataset.ayah = newAyah.numberInSurah;
+
+                prevBtn.disabled = (newAyahIndex === 0);
+                nextBtn.disabled = (newAyahIndex === surah.ayahs.length - 1);
+
+                if (reciteBtn.classList.contains('playing') || reciteBtn.classList.contains('loading')) {
+                    if (currentAudio) {
+                        currentAudio.pause();
+                        currentAudio = null;
+                    }
+                    if (currentPlayingButton) {
+                        currentPlayingButton.classList.remove('playing', 'loading');
+                        currentPlayingButton.innerHTML = '<svg class="icon-sm"><use href="#icon-volume-2"/></svg> تلاوة';
+                        currentPlayingButton = null;
+                    }
+                    stickyPlayer.classList.remove('visible');
+                }
             }
 
             // Play recitation
@@ -1173,6 +1253,22 @@
                 if (reciteBtn) {
                     const { surah, ayah, surahName } = reciteBtn.dataset;
                     playRecitation(surah, ayah, surahName, reciteBtn);
+                    return;
+                }
+
+                const prevBtn = e.target.closest('.prev-btn');
+                if (prevBtn) {
+                    const { surah, ayah } = prevBtn.dataset;
+                    const card = prevBtn.closest('.result-card');
+                    updateAyah(card, parseInt(surah), parseInt(ayah), 'prev');
+                    return;
+                }
+
+                const nextBtn = e.target.closest('.next-btn');
+                if (nextBtn) {
+                    const { surah, ayah } = nextBtn.dataset;
+                    const card = nextBtn.closest('.result-card');
+                    updateAyah(card, parseInt(surah), parseInt(ayah), 'next');
                 }
             });
 
@@ -1251,7 +1347,7 @@
                         console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
                         console.log('✓ App: Quran Search');
                         console.log('✓ Folder: quransearch');
-                        console.log('✓ Total files cached: 6'); // +3 for manifest, sw, offline
+                        console.log('✓ Total files cached: 5'); // +3 for manifest, sw, offline
                         
                         // Check for updates periodically
                         setInterval(() => {
@@ -1323,7 +1419,7 @@
         console.log('  - Start URL: /quransearch/');
         console.log('  - Scope: /quransearch/');
         console.log('  - Folder: quransearch');
-        console.log('  - Files included: 3');
+        console.log('  - Files included: 2');
     </script>
 </body>
 </html>
