@@ -2,563 +2,1336 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بحث</title>
-    <meta name="theme-color" content="#4338ca">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <meta name="theme-color" content="#0a0a0a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Quran Search</title>
     <style>
         :root {
-            --background-color: #f0f4f8;
-            --text-color: #333;
-            --card-background: white;
-            --primary-color: #4338ca;
-            --primary-hover: #3730a3;
-            --highlight-bg: yellow;
-            --highlight-text: black;
+            --bg-primary: #0a0a0a;
+            --bg-secondary: #141414;
+            --bg-tertiary: #1e1e1e;
+            --bg-elevated: #282828;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --text-tertiary: #606060;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --border: #2a2a2a;
+            --overlay: rgba(0, 0, 0, 0.9);
+            --overlay-light: rgba(0, 0, 0, 0.6);
+            --highlight-bg: #f59e0b;
+            --highlight-text: #000000;
+            --safe-top: env(safe-area-inset-top, 0px);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-left: env(safe-area-inset-left, 0px);
+            --safe-right: env(safe-area-inset-right, 0px);
+            --header-height: 56px;
+            --player-height: 72px;
+            --transition-fast: 150ms ease;
+            --transition-normal: 250ms ease;
+            --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .dark-mode {
-            --background-color: #121212;
-            --text-color: #e0e0e0;
-            --card-background: #1e1e1e;
-            --primary-color: #7e7eff;
-            --primary-hover: #6b6bf8;
-            --highlight-bg: #ffd700;
-            --highlight-text: black;
+        .light-mode {
+            --bg-primary: #f5f5f5;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #e5e5e5;
+            --bg-elevated: #d4d4d4;
+            --text-primary: #171717;
+            --text-secondary: #525252;
+            --text-tertiary: #a3a3a3;
+            --border: #e5e5e5;
+            --overlay: rgba(255, 255, 255, 0.9);
+            --overlay-light: rgba(255, 255, 255, 0.6);
         }
 
-        body {
-            font-family: sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
+        *, *::before, *::after {
             margin: 0;
-            padding: 2rem;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
         }
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+            font-size: 15px;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
+
+        button {
+            font: inherit;
+            color: inherit;
+            background: none;
+            border: none;
+            cursor: pointer;
+            touch-action: manipulation;
+        }
+
+        input {
+            font: inherit;
+            color: inherit;
+        }
+
+        [hidden] { display: none !important; }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            flex-shrink: 0;
+        }
+        .icon-sm { width: 20px; height: 20px; }
+        .icon-lg { width: 28px; height: 28px; }
+
+        #app {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            padding-top: var(--safe-top);
+            padding-left: var(--safe-left);
+            padding-right: var(--safe-right);
+        }
+
         .header {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-        .search-card, .result-card {
-            background-color: var(--card-background);
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            margin-bottom: 1.5rem;
-            padding: 1.5rem;
-        }
-        .search-wrapper {
-            position: relative;
+            height: var(--header-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
+            padding: 0 12px;
+            gap: 8px;
+            flex-shrink: 0;
+            z-index: 50;
         }
-        .search-input {
-            width: 100%;
-            padding: 0.75rem 2.5rem 0.75rem 1rem; /* Add padding to the right for the button */
-            font-size: 1.1rem;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            box-sizing: border-box;
-            text-align: right;
-            direction: rtl;
-            background-color: var(--background-color);
-            color: var(--text-color);
+
+        .header-title {
+            flex: 1;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
         }
-        .search-controls {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 10px;
+
+        .header-subtitle {
+            font-size: 11px;
+            color: var(--text-secondary);
+            font-weight: 400;
         }
-        .clear-button {
-            position: absolute;
-            right: 0.5rem;
-            top: 50%;
-            transform: translateY(-50%);
-            border: none;
-            background: var(--card-background);
-            color: var(--text-color);
-            border-radius: 50%;
-            width: 2rem;
-            height: 2rem;
-            font-size: 1.5rem;
-            line-height: 2rem;
-            cursor: pointer;
+
+        .header-btn {
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 50%;
+            transition: background var(--transition-fast);
+            color: var(--text-secondary);
         }
-        .clear-button:hover {
-            background: var(--background-color);
+        .header-btn:hover { background: var(--bg-tertiary); }
+        .header-btn:active { background: var(--bg-elevated); }
+
+        .search-section {
+            background: var(--bg-secondary);
+            padding: 12px 16px 16px;
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
         }
-        .loader, .no-results {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-color);
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: var(--bg-tertiary);
+            border-radius: 12px;
+            padding: 0 12px;
+            height: 48px;
+            gap: 10px;
+            transition: all var(--transition-fast);
         }
+
+        .search-bar:focus-within {
+            outline: 2px solid var(--accent);
+            outline-offset: -2px;
+        }
+
+        .search-bar svg { color: var(--text-tertiary); flex-shrink: 0; }
+
+        .search-input {
+            flex: 1;
+            background: none;
+            border: none;
+            outline: none;
+            height: 100%;
+            min-width: 0;
+            text-align: right;
+            direction: rtl;
+            font-size: 16px;
+        }
+        .search-input::placeholder { color: var(--text-tertiary); }
+        .search-input:disabled { opacity: 0.5; }
+
+        .search-clear {
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+        }
+        .search-clear:hover { background: var(--border); color: var(--text-primary); }
+
+        .search-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .search-btn {
+            flex: 1;
+            height: 44px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all var(--transition-fast);
+        }
+
+        .search-btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+        .search-btn-primary:hover { background: var(--accent-hover); }
+        .search-btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .search-btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+        .search-btn-secondary:hover { background: var(--bg-elevated); color: var(--text-primary); }
+        .search-btn-secondary.active {
+            background: var(--success);
+            color: white;
+        }
+
         .results-header {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            flex-shrink: 0;
         }
+
+        .results-count {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .results-count strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .copy-all-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--success);
+            color: white;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all var(--transition-fast);
+        }
+        .copy-all-btn:hover { opacity: 0.9; }
+
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            overscroll-behavior: contain;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .status-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 32px;
+            text-align: center;
+            min-height: 200px;
+        }
+
+        .status-icon {
+            width: 56px;
+            height: 56px;
+            color: var(--text-tertiary);
+            margin-bottom: 16px;
+        }
+
+        .status-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .status-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            max-width: 280px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 16px;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .results-list {
+            padding: 8px;
+        }
+
+        .result-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
         .result-card-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 1rem;
+            padding: 14px 16px 10px;
+            gap: 12px;
         }
+
+        .result-card-info {
+            flex: 1;
+            min-width: 0;
+        }
+
         .result-card-title {
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        .result-card-subtitle {
-            color: var(--text-color);
-            font-size: 0.9rem;
-        }
-        .result-card-ayah-number {
-            background-color: var(--primary-color);
-            color: var(--card-background);
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.9rem;
             font-weight: 600;
+            font-size: 15px;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
+
+        .result-card-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .result-card-subtitle {
+            color: var(--text-secondary);
+            font-size: 13px;
+        }
+
+        .result-card-badge {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
         .result-card-text {
             text-align: right;
             direction: rtl;
-            font-size: 1.25rem;
-            line-height: 1.8;
+            font-size: 22px;
+            line-height: 2;
+            padding: 0 16px 14px;
         }
-        .recite-button {
-            background-color: var(--primary-color);
-            color: var(--card-background);
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 1rem;
-            font-size: 1rem;
+
+        .result-card-actions {
+            display: flex;
+            gap: 8px;
+            padding: 0 16px 14px;
+            border-top: 1px solid var(--border);
+            padding-top: 12px;
+            margin-top: 4px;
         }
-        .recite-button:hover {
-            background-color: var(--primary-hover);
-        }
-        .copy-button {
-            background-color: #10b981; /* A green color */
-            color: white;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
+
+        .result-action-btn {
+            flex: 1;
+            height: 40px;
+            border-radius: 10px;
             font-weight: 600;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
         }
-        .copy-button:hover {
-            background-color: #059669;
+        .result-action-btn:hover { background: var(--bg-elevated); }
+        .result-action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .result-action-btn.playing {
+            background: var(--accent);
+            color: white;
         }
+
+        .result-action-btn.loading {
+            background: var(--bg-elevated);
+            color: var(--text-secondary);
+        }
+
         .highlight {
-            background-color: var(--highlight-bg);
+            background: var(--highlight-bg);
             color: var(--highlight-text);
+            padding: 0 3px;
+            border-radius: 4px;
         }
 
         .sticky-player {
             position: fixed;
-            bottom: -100px; /* Start hidden */
+            bottom: 0;
             left: 0;
-            width: 100%;
-            background-color: var(--card-background);
-            box-shadow: 0 -4px 6px rgba(0,0,0,0.1);
-            padding: 1rem;
-            transition: bottom 0.3s ease-in-out;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            right: 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--border);
+            padding: 12px 16px;
+            padding-bottom: calc(12px + var(--safe-bottom));
+            transform: translateY(100%);
+            transition: transform var(--transition-slow);
+            z-index: 100;
         }
 
         .sticky-player.visible {
-            bottom: 0;
+            transform: translateY(0);
+        }
+
+        .player-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .player-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .player-title {
+            font-weight: 600;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .player-subtitle {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .player-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .player-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
+        }
+
+        .player-btn-main {
+            background: var(--accent);
+            color: white;
+        }
+        .player-btn-main:hover { background: var(--accent-hover); }
+
+        .player-btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+        .player-btn-secondary:hover { background: var(--bg-elevated); }
+
+        .player-progress-container {
+            margin-top: 10px;
+        }
+
+        .player-progress {
+            width: 100%;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: var(--bg-tertiary);
+            border-radius: 2px;
+            outline: none;
+        }
+
+        .player-progress::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+        }
+
+        .player-progress::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            cursor: pointer;
+            border: none;
+        }
+
+        .player-time {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-tertiary);
+            margin-top: 4px;
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: calc(20px + var(--safe-bottom));
+            left: 16px;
+            right: 16px;
+            z-index: 300;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: var(--bg-elevated);
+            padding: 14px 18px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            pointer-events: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            animation: toastIn 0.3s ease;
+        }
+
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(20px) scale(0.95); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .toast-success { border-left: 4px solid var(--success); }
+        .toast-error { border-left: 4px solid var(--danger); }
+        .toast-warning { border-left: 4px solid var(--warning); }
+        .toast-info { border-left: 4px solid var(--accent); }
+
+        .toast-message { flex: 1; font-size: 14px; }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 32px;
+            text-align: center;
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            color: var(--text-tertiary);
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .empty-state-text {
+            color: var(--text-secondary);
+            font-size: 14px;
+            max-width: 280px;
+            line-height: 1.5;
+        }
+
+        @media (min-width: 640px) {
+            .results-list {
+                padding: 16px;
+                max-width: 700px;
+                margin: 0 auto;
+            }
+
+            .result-card {
+                margin-bottom: 16px;
+            }
+
+            .result-card-text {
+                font-size: 24px;
+            }
+
+            .search-section {
+                max-width: 700px;
+                margin: 0 auto;
+                border-radius: 0 0 16px 16px;
+            }
+        }
+
+        @supports (-webkit-touch-callout: none) {
+            .search-input {
+                font-size: 16px;
+            }
         }
     </style>
 </head>
 <body>
+    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+        <symbol id="icon-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol>
+        <symbol id="icon-x" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol>
+        <symbol id="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></symbol>
+        <symbol id="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol>
+        <symbol id="icon-play" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></symbol>
+        <symbol id="icon-pause" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></symbol>
+        <symbol id="icon-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></symbol>
+        <symbol id="icon-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></symbol>
+        <symbol id="icon-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></symbol>
+        <symbol id="icon-volume-2" viewBox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></symbol>
+        <symbol id="icon-loader" viewBox="0 0 24 24"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></symbol>
+        <symbol id="icon-alert-circle" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></symbol>
+        <symbol id="icon-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+    </svg>
 
-    <div class="container">
-        <div class="header">
-           
-            <p>أبحث عن كلمة أين وردت في القرآن الكريم</p>
-            
-          
-            <button id="theme-toggle">Toggle Theme</button>
-            
-            
-        </div>
+    <div id="app">
+        <header class="header">
+            <div style="width: 40px;"></div>
+            <div class="header-title">
+                Quran Search
+                <div class="header-subtitle">البحث في القرآن الكريم</div>
+            </div>
+            <button class="header-btn" id="themeToggle" aria-label="Toggle theme">
+                <svg class="icon" id="themeIcon"><use href="#icon-moon"/></svg>
+            </button>
+        </header>
 
-        <div class="search-card">
-            <div class="search-wrapper">
-                <input type="text" id="searchInput" class="search-input" placeholder="اكتب الكلمة التي تبحث عنها" disabled>
-                <button id="clearButton" class="clear-button" style="display: none;">&times;</button>
+        <div class="search-section">
+            <div class="search-bar">
+                <svg class="icon"><use href="#icon-search"/></svg>
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="اكتب الكلمة التي تبحث عنها..."
+                    autocomplete="off"
+                    disabled
+                >
+                <button class="search-clear" id="clearButton" hidden aria-label="Clear search">
+                    <svg class="icon-sm"><use href="#icon-x"/></svg>
+                </button>
             </div>
             <div class="search-controls">
-                <button id="autoButton">تلقائي: OFF</button>
-                <button id="searchButton">ابدأ البحث</button>
+                <button class="search-btn search-btn-secondary" id="autoButton">
+                    <svg class="icon-sm"><use href="#icon-zap"/></svg>
+                    تلقائي
+                </button>
+                <button class="search-btn search-btn-primary" id="searchButton" disabled>
+                    <svg class="icon-sm"><use href="#icon-search"/></svg>
+                    بحث
+                </button>
             </div>
         </div>
 
-        <div id="copy-container" style="text-align: center; margin-bottom: 1rem; display: none;">
-            <button id="copyAllButton" class="copy-button">نسخ</button>
+        <div class="results-header" id="resultsHeader" hidden>
+            <div class="results-count" id="resultsCount"></div>
+            <button class="copy-all-btn" id="copyAllButton">
+                <svg class="icon-sm"><use href="#icon-copy"/></svg>
+                نسخ الكل
+            </button>
         </div>
 
-        <div id="status">
-            <div class="loader">Loading Quran data...</div>
+        <main class="main-content" id="mainContent">
+            <div class="status-message" id="loadingStatus">
+                <div class="spinner"></div>
+                <div class="status-title">جاري التحميل...</div>
+                <div class="status-text">يتم تحميل بيانات القرآن الكريم</div>
+            </div>
+
+            <div class="empty-state" id="readyStatus" hidden>
+                <svg class="empty-state-icon"><use href="#icon-book"/></svg>
+                <div class="empty-state-title">ابدأ البحث</div>
+                <div class="empty-state-text">اكتب كلمة أو عبارة للبحث عنها في القرآن الكريم</div>
+            </div>
+
+            <div class="status-message" id="noResultsStatus" hidden>
+                <svg class="status-icon"><use href="#icon-alert-circle"/></svg>
+                <div class="status-title">لا توجد نتائج</div>
+                <div class="status-text" id="noResultsText"></div>
+            </div>
+
+            <div class="status-message" id="errorStatus" hidden>
+                <svg class="status-icon"><use href="#icon-alert-circle"/></svg>
+                <div class="status-title">حدث خطأ</div>
+                <div class="status-text">فشل تحميل البيانات. يرجى المحاولة مرة أخرى.</div>
+            </div>
+
+            <div class="results-list" id="resultsList" hidden></div>
+        </main>
+    </div>
+
+    <div class="sticky-player" id="stickyPlayer">
+        <div class="player-content">
+            <div class="player-info">
+                <div class="player-title" id="playerTitle">--</div>
+                <div class="player-subtitle" id="playerSubtitle">--</div>
+            </div>
+            <div class="player-controls">
+                <button class="player-btn player-btn-main" id="playerPlayPause" aria-label="Play/Pause">
+                    <svg class="icon" id="playerPlayIcon"><use href="#icon-play"/></svg>
+                </button>
+                <button class="player-btn player-btn-secondary" id="playerClose" aria-label="Close player">
+                    <svg class="icon-sm"><use href="#icon-x"/></svg>
+                </button>
+            </div>
         </div>
-
-        <div id="results"></div>
-
-        <div id="sticky-player" class="sticky-player">
-            <div id="player-info"></div>
-            <div id="player-controls">
-                <button id="player-play-pause">قراءة</button>
-                <input type="range" id="player-progress" value="0" max="100">
+        <div class="player-progress-container">
+            <input type="range" class="player-progress" id="playerProgress" value="0" min="0" max="100">
+            <div class="player-time">
+                <span id="playerCurrentTime">0:00</span>
+                <span id="playerDuration">0:00</span>
             </div>
         </div>
     </div>
 
+    <div class="toast-container" id="toastContainer"></div>
+
     <script>
-        const searchInput = document.getElementById('searchInput');
-        const resultsContainer = document.getElementById('results');
-        const statusContainer = document.getElementById('status');
-        const clearButton = document.getElementById('clearButton');
-        const autoButton = document.getElementById('autoButton');
-        const searchButton = document.getElementById('searchButton');
-        const copyContainer = document.getElementById('copy-container');
-        const copyAllButton = document.getElementById('copyAllButton');
-        const themeToggle = document.getElementById('theme-toggle');
-        const body = document.body;
-        const stickyPlayer = document.getElementById('sticky-player');
-        const playerInfo = document.getElementById('player-info');
-        const playerPlayPause = document.getElementById('player-play-pause');
-        const playerProgress = document.getElementById('player-progress');
+        (function() {
+            'use strict';
 
-        let quranData = null;
-        let searchTimeout = null;
-        let isAutoSearchOn = false;
-        let currentAudio = null;
+            // DOM Elements
+            const searchInput = document.getElementById('searchInput');
+            const clearButton = document.getElementById('clearButton');
+            const autoButton = document.getElementById('autoButton');
+            const searchButton = document.getElementById('searchButton');
+            const resultsHeader = document.getElementById('resultsHeader');
+            const resultsCount = document.getElementById('resultsCount');
+            const copyAllButton = document.getElementById('copyAllButton');
+            const resultsList = document.getElementById('resultsList');
+            const loadingStatus = document.getElementById('loadingStatus');
+            const readyStatus = document.getElementById('readyStatus');
+            const noResultsStatus = document.getElementById('noResultsStatus');
+            const noResultsText = document.getElementById('noResultsText');
+            const errorStatus = document.getElementById('errorStatus');
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = document.getElementById('themeIcon');
+            const stickyPlayer = document.getElementById('stickyPlayer');
+            const playerTitle = document.getElementById('playerTitle');
+            const playerSubtitle = document.getElementById('playerSubtitle');
+            const playerPlayPause = document.getElementById('playerPlayPause');
+            const playerPlayIcon = document.getElementById('playerPlayIcon');
+            const playerProgress = document.getElementById('playerProgress');
+            const playerCurrentTime = document.getElementById('playerCurrentTime');
+            const playerDuration = document.getElementById('playerDuration');
+            const playerClose = document.getElementById('playerClose');
+            const toastContainer = document.getElementById('toastContainer');
 
-        // Function to normalize Arabic text for searching
-        function normalizeArabic(text) {
-            // 1. Normalize all Alef-like forms to a plain Alef.
-            let normalizedText = text.replace(/[أإآٱٰ]/g, 'ا'); // Includes Dagger Alef
+            // State
+            let quranData = null;
+            let searchTimeout = null;
+            let isAutoSearchOn = false;
+            let currentAudio = null;
+            let currentPlayingButton = null;
+            let isLightMode = false;
 
-            // 2. Normalize Ta Marbuta to Ha
-            normalizedText = normalizedText.replace(/ة/g, 'ه');
-
-            // 3. Normalize Alef Maqsura to Ya
-            normalizedText = normalizedText.replace(/ى/g, 'ي');
-
-            // 4. Now, remove all other diacritics and annotations.
-            // Hamza (U+0621) is treated as a diacritic.
-            const otherDiacritics = /[ؐ-ًؚ-ٟۖ-ۜ۟-۪ۨ-ۭـء]/g;
-            normalizedText = normalizedText.replace(otherDiacritics, '');
-
-            return normalizedText;
-        }
-
-        function clearSearch() {
-            searchInput.value = '';
-            resultsContainer.innerHTML = '';
-            clearButton.style.display = 'none';
-            if (copyContainer) copyContainer.style.display = 'none';
-        }
-
-        function updateButtons() {
-            if (isAutoSearchOn) {
-                autoButton.textContent = 'تلقائي: ON';
-                searchButton.disabled = true;
-            } else {
-                autoButton.textContent = 'تلقائي: OFF';
-                searchButton.disabled = false;
+            // Utility: Format time
+            function formatTime(seconds) {
+                if (isNaN(seconds)) return '0:00';
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
             }
-        }
 
-        themeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode');
-            if (body.classList.contains('dark-mode')) {
-                localStorage.setItem('darkMode', 'enabled');
-            } else {
-                localStorage.setItem('darkMode', 'disabled');
+            // Toast notification
+            function showToast(message, type = 'info', duration = 3000) {
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.innerHTML = `<span class="toast-message">${message}</span>`;
+                toastContainer.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transform = 'translateY(20px)';
+                    setTimeout(() => toast.remove(), 300);
+                }, duration);
             }
-        });
 
-        window.addEventListener('storage', (event) => {
-            if (event.key === 'darkMode') {
-                if (event.newValue === 'enabled') {
-                    document.body.classList.add('dark-mode');
+            // Normalize Arabic text for searching
+            function normalizeArabic(text) {
+                // Normalize Alef variations
+                let normalized = text.replace(/[أإآٱٰ]/g, 'ا');
+                // Normalize Ta Marbuta to Ha
+                normalized = normalized.replace(/ة/g, 'ه');
+                // Normalize Alef Maqsura to Ya
+                normalized = normalized.replace(/ى/g, 'ي');
+                // Remove diacritics (tashkeel) and other marks
+                const diacritics = /[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED\u0640\u0621]/g;
+                normalized = normalized.replace(diacritics, '');
+                return normalized;
+            }
+
+            // Highlight matching text in original ayah
+            // This function finds the match in normalized text and highlights the corresponding part in original
+            function highlightMatch(originalText, query) {
+                const normalizedText = normalizeArabic(originalText);
+                const normalizedQuery = normalizeArabic(query);
+                
+                // Find position in normalized text
+                const matchIndex = normalizedText.indexOf(normalizedQuery);
+                if (matchIndex === -1) return originalText;
+                
+                // Map positions from normalized to original text
+                let originalIndex = 0;
+                let normalizedIndex = 0;
+                let startInOriginal = -1;
+                let endInOriginal = -1;
+                
+                while (originalIndex < originalText.length && normalizedIndex <= matchIndex + normalizedQuery.length) {
+                    const originalChar = originalText[originalIndex];
+                    const normalizedChar = normalizeArabic(originalChar);
+                    
+                    if (normalizedIndex === matchIndex && startInOriginal === -1) {
+                        startInOriginal = originalIndex;
+                    }
+                    
+                    if (normalizedChar.length > 0) {
+                        normalizedIndex += normalizedChar.length;
+                    }
+                    
+                    if (normalizedIndex >= matchIndex + normalizedQuery.length && endInOriginal === -1) {
+                        endInOriginal = originalIndex + 1;
+                        break;
+                    }
+                    
+                    originalIndex++;
+                }
+                
+                // Extend end to include any trailing diacritics
+                while (endInOriginal < originalText.length) {
+                    const char = originalText[endInOriginal];
+                    const normalizedChar = normalizeArabic(char);
+                    if (normalizedChar.length === 0) {
+                        endInOriginal++;
+                    } else {
+                        break;
+                    }
+                }
+                
+                if (startInOriginal === -1 || endInOriginal === -1) return originalText;
+                
+                const before = originalText.substring(0, startInOriginal);
+                const match = originalText.substring(startInOriginal, endInOriginal);
+                const after = originalText.substring(endInOriginal);
+                
+                return `${before}<span class="highlight">${match}</span>${after}`;
+            }
+
+            // Show/hide status views
+            function showStatus(status) {
+                loadingStatus.hidden = status !== 'loading';
+                readyStatus.hidden = status !== 'ready';
+                noResultsStatus.hidden = status !== 'no-results';
+                errorStatus.hidden = status !== 'error';
+                resultsList.hidden = status !== 'results';
+                resultsHeader.hidden = status !== 'results';
+            }
+
+            // Theme toggle
+            function updateTheme() {
+                if (isLightMode) {
+                    document.body.classList.add('light-mode');
+                    themeIcon.innerHTML = '<use href="#icon-sun"/>';
                 } else {
-                    document.body.classList.remove('dark-mode');
+                    document.body.classList.remove('light-mode');
+                    themeIcon.innerHTML = '<use href="#icon-moon"/>';
                 }
             }
-        });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedTheme = localStorage.getItem('darkMode');
-            if (savedTheme === 'enabled') {
-                body.classList.add('dark-mode');
+            themeToggle.addEventListener('click', () => {
+                isLightMode = !isLightMode;
+                localStorage.setItem('theme', isLightMode ? 'light' : 'dark');
+                updateTheme();
+            });
+
+            // Load saved theme
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'light') {
+                isLightMode = true;
+                updateTheme();
             }
 
-            updateButtons();
+            // Clear search
+            function clearSearch() {
+                searchInput.value = '';
+                clearButton.hidden = true;
+                showStatus('ready');
+            }
+
+            // Update auto button state
+            function updateAutoButton() {
+                if (isAutoSearchOn) {
+                    autoButton.classList.add('active');
+                    autoButton.innerHTML = '<svg class="icon-sm"><use href="#icon-zap"/></svg> تلقائي ✓';
+                    searchButton.disabled = true;
+                } else {
+                    autoButton.classList.remove('active');
+                    autoButton.innerHTML = '<svg class="icon-sm"><use href="#icon-zap"/></svg> تلقائي';
+                    searchButton.disabled = false;
+                }
+            }
+
+            // Perform search
+            function performSearch(query) {
+                if (!quranData || !query.trim()) return;
+
+                const normalizedQuery = normalizeArabic(query.trim());
+                
+                // Don't search if query is too short after normalization
+                if (normalizedQuery.length < 2) {
+                    showToast('الرجاء إدخال حرفين على الأقل', 'warning');
+                    return;
+                }
+
+                const searchResults = [];
+
+                quranData.data.surahs.forEach(surah => {
+                    surah.ayahs.forEach(ayah => {
+                        const normalizedText = normalizeArabic(ayah.text);
+                        if (normalizedText.includes(normalizedQuery)) {
+                            searchResults.push({
+                                surahNumber: surah.number,
+                                surahName: surah.name,
+                                surahEnglishName: surah.englishName,
+                                ayahNumber: ayah.number,
+                                ayahNumberInSurah: ayah.numberInSurah,
+                                ayahText: ayah.text
+                            });
+                        }
+                    });
+                });
+
+                renderResults(searchResults, query.trim());
+            }
+
+            // Render results
+            function renderResults(results, query) {
+                if (results.length === 0) {
+                    noResultsText.textContent = `لم يتم العثور على نتائج لـ "${query}"`;
+                    showStatus('no-results');
+                    return;
+                }
+
+                copyAllButton.disabled = false;
+                resultsCount.innerHTML = `<strong>${results.length}</strong> نتيجة`;
+                
+                resultsList.innerHTML = results.map((result, index) => {
+                    const highlightedText = highlightMatch(result.ayahText, query);
+                    const surah = quranData.data.surahs.find(s => s.number === result.surahNumber);
+                    const isFirstAyah = result.ayahNumberInSurah === 1;
+                    const isLastAyah = surah ? result.ayahNumberInSurah === surah.ayahs.length : false;
+
+                    return `
+                        <div class="result-card">
+                            <div class="result-card-header">
+                                <div class="result-card-info">
+                                    <div class="result-card-title">
+                                        <span class="result-card-number">${index + 1}</span>
+                                        ${result.surahEnglishName} - ${result.surahName}
+                                    </div>
+                                    <div class="result-card-subtitle">
+                                        سورة ${result.surahNumber} • آية ${result.ayahNumberInSurah}
+                                    </div>
+                                </div>
+                                <div class="result-card-badge">آية ${result.ayahNumber}</div>
+                            </div>
+                            <p class="result-card-text">${highlightedText}</p>
+                            <div class="result-card-actions">
+                                <button 
+                                    class="result-action-btn prev-btn" 
+                                    data-surah="${result.surahNumber}" 
+                                    data-ayah="${result.ayahNumberInSurah}"
+                                    ${isFirstAyah ? 'disabled' : ''}
+                                >
+                                    السابق
+                                </button>
+                                <button 
+                                    class="result-action-btn recite-btn" 
+                                    data-surah="${result.surahNumber}" 
+                                    data-ayah="${result.ayahNumberInSurah}"
+                                    data-surah-name="${result.surahName}"
+                                >
+                                    <svg class="icon-sm"><use href="#icon-volume-2"/></svg>
+                                    تلاوة
+                                </button>
+                                <button 
+                                    class="result-action-btn next-btn" 
+                                    data-surah="${result.surahNumber}" 
+                                    data-ayah="${result.ayahNumberInSurah}"
+                                    ${isLastAyah ? 'disabled' : ''}
+                                >
+                                    التالي
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                showStatus('results');
+            }
+
+            function updateAyah(cardElement, surahNumber, ayahNumberInSurah, direction) {
+                if (!quranData) return;
+
+                const surah = quranData.data.surahs.find(s => s.number === surahNumber);
+                if (!surah) return;
+
+                const currentAyahIndex = surah.ayahs.findIndex(a => a.numberInSurah === ayahNumberInSurah);
+                if (currentAyahIndex === -1) return;
+                
+                let newAyahIndex;
+                if (direction === 'next') {
+                    newAyahIndex = currentAyahIndex + 1;
+                } else { // prev
+                    newAyahIndex = currentAyahIndex - 1;
+                }
+
+                if (newAyahIndex < 0 || newAyahIndex >= surah.ayahs.length) {
+                    showToast('لا يوجد المزيد من الآيات في هذه السورة', 'warning');
+                    return;
+                }
+                
+                const newAyah = surah.ayahs[newAyahIndex];
+
+                copyAllButton.disabled = true;
+
+                const cardSubtitle = cardElement.querySelector('.result-card-subtitle');
+                cardSubtitle.textContent = `سورة ${surah.number} • آية ${newAyah.numberInSurah}`;
+                
+                const cardBadge = cardElement.querySelector('.result-card-badge');
+                cardBadge.textContent = `آية ${newAyah.number}`;
+
+                const cardText = cardElement.querySelector('.result-card-text');
+                cardText.innerHTML = newAyah.text;
+
+                const prevBtn = cardElement.querySelector('.prev-btn');
+                const nextBtn = cardElement.querySelector('.next-btn');
+                const reciteBtn = cardElement.querySelector('.recite-btn');
+
+                prevBtn.dataset.ayah = newAyah.numberInSurah;
+                nextBtn.dataset.ayah = newAyah.numberInSurah;
+                reciteBtn.dataset.ayah = newAyah.numberInSurah;
+
+                prevBtn.disabled = (newAyahIndex === 0);
+                nextBtn.disabled = (newAyahIndex === surah.ayahs.length - 1);
+
+                if (reciteBtn.classList.contains('playing') || reciteBtn.classList.contains('loading')) {
+                    if (currentAudio) {
+                        currentAudio.pause();
+                        currentAudio = null;
+                    }
+                    if (currentPlayingButton) {
+                        currentPlayingButton.classList.remove('playing', 'loading');
+                        currentPlayingButton.innerHTML = '<svg class="icon-sm"><use href="#icon-volume-2"/></svg> تلاوة';
+                        currentPlayingButton = null;
+                    }
+                    stickyPlayer.classList.remove('visible');
+                }
+            }
+
+            // Play recitation
+            function playRecitation(surah, ayah, surahName, button) {
+                if (button.classList.contains('playing')) {
+                    if (currentAudio) {
+                        currentAudio.pause();
+                    }
+                    return;
+                }
+
+                if (currentAudio) {
+                    currentAudio.pause();
+                    if (currentPlayingButton) {
+                        currentPlayingButton.classList.remove('playing', 'loading');
+                        currentPlayingButton.innerHTML = '<svg class="icon-sm"><use href="#icon-volume-2"/></svg> تلاوة';
+                    }
+                }
+
+                button.classList.add('loading');
+                button.innerHTML = '<svg class="icon-sm"><use href="#icon-loader"/></svg> جاري التحميل...';
+                currentPlayingButton = button;
+
+                const apiUrl = `https://quranapi.pages.dev/api/${surah}/${ayah}.json`;
+
+                fetch(apiUrl)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network error');
+                        return response.json();
+                    })
+                    .then(data => {
+                        const misharyAudio = Object.values(data.audio).find(
+                            reciter => reciter.reciter === "Mishary Rashid Al Afasy"
+                        );
+
+                        if (!misharyAudio?.url) {
+                            throw new Error('Audio not found');
+                        }
+
+                        currentAudio = new Audio(misharyAudio.url);
+                        
+                        currentAudio.addEventListener('loadedmetadata', () => {
+                            playerDuration.textContent = formatTime(currentAudio.duration);
+                        });
+
+                        currentAudio.addEventListener('timeupdate', () => {
+                            const progress = (currentAudio.currentTime / currentAudio.duration) * 100;
+                            playerProgress.value = progress;
+                            playerCurrentTime.textContent = formatTime(currentAudio.currentTime);
+                        });
+
+                        currentAudio.addEventListener('ended', () => {
+                            button.classList.remove('playing');
+                            button.innerHTML = '<svg class="icon-sm"><use href="#icon-volume-2"/></svg> تلاوة';
+                            playerPlayIcon.innerHTML = '<use href="#icon-play"/>';
+                            currentAudio = null;
+                            currentPlayingButton = null;
+                            stickyPlayer.classList.remove('visible');
+                        });
+
+                        currentAudio.play();
+
+                        button.classList.remove('loading');
+                        button.classList.add('playing');
+                        button.innerHTML = '<svg class="icon-sm"><use href="#icon-pause"/></svg> إيقاف';
+
+                        playerTitle.textContent = surahName;
+                        playerSubtitle.textContent = `آية ${ayah}`;
+                        playerPlayIcon.innerHTML = '<use href="#icon-pause"/>';
+                        stickyPlayer.classList.add('visible');
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        button.classList.remove('loading');
+                        button.innerHTML = '<svg class="icon-sm"><use href="#icon-alert-circle"/></svg> خطأ';
+                        showToast('فشل تحميل التلاوة', 'error');
+                        
+                        setTimeout(() => {
+                            button.innerHTML = '<svg class="icon-sm"><use href="#icon-volume-2"/></svg> تلاوة';
+                        }, 2000);
+                    });
+            }
+
+            // Copy all results
+            function copyAllResults() {
+                const cards = document.querySelectorAll('.result-card');
+                if (cards.length === 0) return;
+
+                const searchText = searchInput.value;
+                let textToCopy = `وردت عبارة [${searchText}] في القرآن الكريم في [${cards.length}] موقع:\n\n`;
+
+                cards.forEach((card, index) => {
+                    const title = card.querySelector('.result-card-title').textContent.trim();
+                    const subtitle = card.querySelector('.result-card-subtitle').textContent;
+                    const ayahText = card.querySelector('.result-card-text').textContent;
+
+                    textToCopy += `${index + 1}. ${title}\n${subtitle}\n${ayahText}\n\n`;
+                });
+
+                navigator.clipboard.writeText(textToCopy)
+                    .then(() => {
+                        showToast('تم نسخ النتائج', 'success');
+                        copyAllButton.innerHTML = '<svg class="icon-sm"><use href="#icon-check"/></svg> تم النسخ';
+                        setTimeout(() => {
+                            copyAllButton.innerHTML = '<svg class="icon-sm"><use href="#icon-copy"/></svg> نسخ الكل';
+                        }, 2000);
+                    })
+                    .catch(() => {
+                        showToast('فشل النسخ', 'error');
+                    });
+            }
+
+            // Event Listeners
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value;
+                clearButton.hidden = !query;
+
+                if (isAutoSearchOn) {
+                    clearTimeout(searchTimeout);
+                    searchTimeout = setTimeout(() => {
+                        if (query.trim()) {
+                            performSearch(query.trim());
+                        } else {
+                            showStatus('ready');
+                        }
+                    }, 400);
+                }
+            });
+
+            searchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && searchInput.value.trim()) {
+                    performSearch(searchInput.value.trim());
+                }
+            });
+
+            clearButton.addEventListener('click', clearSearch);
+
+            autoButton.addEventListener('click', () => {
+                isAutoSearchOn = !isAutoSearchOn;
+                updateAutoButton();
+                if (isAutoSearchOn && searchInput.value.trim()) {
+                    performSearch(searchInput.value.trim());
+                }
+            });
+
+            searchButton.addEventListener('click', () => {
+                if (searchInput.value.trim()) {
+                    performSearch(searchInput.value.trim());
+                }
+            });
+
+            copyAllButton.addEventListener('click', copyAllResults);
+
+            resultsList.addEventListener('click', (e) => {
+                const reciteBtn = e.target.closest('.recite-btn');
+                if (reciteBtn) {
+                    const { surah, ayah, surahName } = reciteBtn.dataset;
+                    playRecitation(surah, ayah, surahName, reciteBtn);
+                    return;
+                }
+
+                const prevBtn = e.target.closest('.prev-btn');
+                if (prevBtn) {
+                    const { surah, ayah } = prevBtn.dataset;
+                    const card = prevBtn.closest('.result-card');
+                    updateAyah(card, parseInt(surah), parseInt(ayah), 'prev');
+                    return;
+                }
+
+                const nextBtn = e.target.closest('.next-btn');
+                if (nextBtn) {
+                    const { surah, ayah } = nextBtn.dataset;
+                    const card = nextBtn.closest('.result-card');
+                    updateAyah(card, parseInt(surah), parseInt(ayah), 'next');
+                }
+            });
+
+            // Player controls
+            playerPlayPause.addEventListener('click', () => {
+                if (!currentAudio) return;
+                
+                if (currentAudio.paused) {
+                    currentAudio.play();
+                    playerPlayIcon.innerHTML = '<use href="#icon-pause"/>';
+                    if (currentPlayingButton) {
+                        currentPlayingButton.innerHTML = '<svg class="icon-sm"><use href="#icon-pause"/></svg> إيقاف';
+                        currentPlayingButton.classList.add('playing');
+                    }
+                } else {
+                    currentAudio.pause();
+                    playerPlayIcon.innerHTML = '<use href="#icon-play"/>';
+                    if (currentPlayingButton) {
+                        currentPlayingButton.innerHTML = '<svg class="icon-sm"><use href="#icon-volume-2"/></svg> تلاوة';
+                        currentPlayingButton.classList.remove('playing');
+                    }
+                }
+            });
+
+            playerProgress.addEventListener('input', () => {
+                if (currentAudio) {
+                    const seekTime = (playerProgress.value / 100) * currentAudio.duration;
+                    currentAudio.currentTime = seekTime;
+                }
+            });
+
+            playerClose.addEventListener('click', () => {
+                if (currentAudio) {
+                    currentAudio.pause();
+                    currentAudio = null;
+                }
+                if (currentPlayingButton) {
+                    currentPlayingButton.classList.remove('playing', 'loading');
+                    currentPlayingButton.innerHTML = '<svg class="icon-sm"><use href="#icon-volume-2"/></svg> تلاوة';
+                    currentPlayingButton = null;
+                }
+                stickyPlayer.classList.remove('visible');
+            });
+
+            // Load Quran data
             fetch('quran.json')
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
+                    if (!response.ok) throw new Error('Network error');
                     return response.json();
                 })
                 .then(data => {
                     quranData = data;
                     searchInput.disabled = false;
-                    statusContainer.innerHTML = '';
+                    searchButton.disabled = false;
+                    showStatus('ready');
                 })
                 .catch(error => {
                     console.error('Error loading Quran data:', error);
-                    statusContainer.innerHTML = '<div class="no-results">Failed to load Quran data. Please try again later.</div>';
+                    showStatus('error');
                 });
-        });
 
-        // 2. Handle search input
-        searchInput.addEventListener('input', (e) => {
-            const query = e.target.value;
-            clearButton.style.display = query ? 'block' : 'none';
-
-            if (isAutoSearchOn) {
-                // Debounce search to avoid searching on every keystroke
-                clearTimeout(searchTimeout);
-                searchTimeout = setTimeout(() => {
-                    if (query.trim()) {
-                        performSearch(query.trim());
-                    } else {
-                        resultsContainer.innerHTML = '';
-                    }
-                }, 300); // 300ms delay
-            }
-        });
-
-        // 3. Handle clear button click
-        clearButton.addEventListener('click', clearSearch);
-
-        autoButton.addEventListener('click', () => {
-            isAutoSearchOn = !isAutoSearchOn;
-            updateButtons();
-            if (isAutoSearchOn && searchInput.value.trim()) {
-                performSearch(searchInput.value.trim());
-            }
-        });
-
-        searchButton.addEventListener('click', () => {
-            if (searchInput.value.trim()) {
-                performSearch(searchInput.value.trim());
-            }
-        });
-
-        if (copyAllButton) {
-            copyAllButton.addEventListener('click', copyAllAyahs);
-        }
-
-        resultsContainer.addEventListener('click', (e) => {
-            if (e.target.classList.contains('recite-button')) {
-                const button = e.target;
-                const surah = button.dataset.surah;
-                const ayah = button.dataset.ayah;
-                playRecitation(surah, ayah, button);
-            }
-        });
-
-        function playRecitation(surah, ayah, button) {
-            if (button.getAttribute('data-playing') === 'true') {
-                if (currentAudio) {
-                    currentAudio.pause();
-                }
-                return;
-            }
-
-            if (currentAudio) {
-                currentAudio.pause();
-                const playingButton = document.querySelector('.recite-button[data-playing="true"]');
-                if(playingButton) {
-                    playingButton.textContent = 'تلاوة';
-                    playingButton.removeAttribute('data-playing');
-                }
-            }
-
-            const apiUrl = `https://quranapi.pages.dev/api/${surah}/${ayah}.json`;
-            button.textContent = 'Loading...';
-
-            fetch(apiUrl)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const misharyAudio = Object.values(data.audio).find(reciter => reciter.reciter === "Mishary Rashid Al Afasy");
-                    if (misharyAudio && misharyAudio.url) {
-                        currentAudio = new Audio(misharyAudio.url);
-                        currentAudio.play();
-                        button.textContent = 'Playing...';
-                        button.setAttribute('data-playing', 'true');
-
-                        stickyPlayer.classList.add('visible');
-                        playerInfo.textContent = `Surah ${surah}, Ayah ${ayah}`;
-                        playerPlayPause.textContent = 'Pause';
-
-                        currentAudio.addEventListener('timeupdate', () => {
-                            const progress = (currentAudio.currentTime / currentAudio.duration) * 100;
-                            playerProgress.value = progress;
-                        });
-
-                        currentAudio.onended = () => {
-                            button.textContent = 'تلاوة';
-                            button.removeAttribute('data-playing');
-                            currentAudio = null;
-                            stickyPlayer.classList.remove('visible');
-                        };
-                    } else {
-                        throw new Error('Mishary Rashid Al Afasy audio not found.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error fetching or playing audio:', error);
-                    button.textContent = 'خطأ';
-                    setTimeout(() => {
-                        button.textContent = 'تلاوة';
-                    }, 2000);
-                });
-        }
-
-        playerPlayPause.addEventListener('click', () => {
-            if (currentAudio) {
-                if (currentAudio.paused) {
-                    currentAudio.play();
-                    playerPlayPause.textContent = 'Pause';
-                } else {
-                    currentAudio.pause();
-                    playerPlayPause.textContent = 'Play';
-                }
-            }
-        });
-
-        playerProgress.addEventListener('input', () => {
-            if (currentAudio) {
-                const seekTime = (playerProgress.value / 100) * currentAudio.duration;
-                currentAudio.currentTime = seekTime;
-            }
-        });
-
-        function copyAllAyahs() {
-            const results = document.querySelectorAll('.result-card');
-            if (results.length === 0) return;
-
-            const searchText = searchInput.value;
-            let textToCopy = `وردت عبارة [${searchText}] في القران الكريم في [${results.length}] موقع كما يلي:\n\n`;
-
-            const ayahsText = [];
-            results.forEach((result, index) => {
-                const titleText = result.querySelector('.result-card-title').innerText;
-                const surahArabicName = titleText.substring(titleText.indexOf('(') + 1, titleText.indexOf(')'));
-
-                const subtitleText = result.querySelector('.result-card-subtitle').innerText;
-                const ayahNumber = subtitleText.split('Ayah ')[1];
-
-                const ayahText = result.querySelector('.result-card-text').innerText;
-
-                ayahsText.push(`${index + 1}. ${surahArabicName.replace('سورة ', '')} - الآية رقم: ${ayahNumber} \n${ayahText}`);
-            });
-
-            textToCopy += ayahsText.join('\n\n');
-
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                copyAllButton.textContent = 'Copied!';
-                setTimeout(() => {
-                    copyAllButton.textContent = 'Copy All';
-                }, 2000);
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
-                copyAllButton.textContent = 'Failed to copy';
-                setTimeout(() => {
-                    copyAllButton.textContent = 'Copy All';
-                }, 2000);
-            });
-        }
-
-        // 4. Perform search (Normalized)
-        function performSearch(query) {
-            if (!quranData) return;
-
-            const normalizedQuery = normalizeArabic(query);
-            const searchResults = [];
-            quranData.data.surahs.forEach(surah => {
-                surah.ayahs.forEach(ayah => {
-                    const normalizedAyahText = normalizeArabic(ayah.text);
-                    if (normalizedAyahText.includes(normalizedQuery)) {
-                        searchResults.push({
-                            surahNumber: surah.number,
-                            surahName: surah.name,
-                            surahEnglishName: surah.englishName,
-                            ayahNumber: ayah.number,
-                            ayahNumberInSurah: ayah.numberInSurah,
-                            ayahText: ayah.text, // Keep original text for display
-                        });
-                    }
-                });
-            });
-
-            renderResults(searchResults, query);
-        }
-
-        // 5. Render results
-        function renderResults(results, query) {
-            resultsContainer.innerHTML = ''; // Clear previous results
-            if (copyContainer) copyContainer.style.display = 'none';
-
-            if (results.length === 0) {
-                resultsContainer.innerHTML = `<div class="no-results">No results found for "${query}"</div>`;
-                return;
-            }
-
-            const resultsHeader = document.createElement('div');
-            resultsHeader.className = 'results-header';
-            resultsHeader.textContent = `Results: ${results.length} match${results.length !== 1 ? 'es' : ''}`;
-            resultsContainer.appendChild(resultsHeader);
-
-            if (copyContainer) copyContainer.style.display = 'block';
-
-            results.forEach((result, index) => {
-                const card = document.createElement('div');
-                card.className = 'result-card';
-
-                const originalAyahText = result.ayahText;
-                const highlightedAyahText = originalAyahText.replaceAll(query, `<span class="highlight">${query}</span>`);
-
-                card.innerHTML = `
-                    <div class="result-card-header">
-                        <div>
-                            <div class="result-card-title">${index + 1}. ${result.surahEnglishName} (${result.surahName.replace('سورة ', '')})</div>
-                            <div class="result-card-subtitle">Surah ${result.surahNumber}, Ayah ${result.ayahNumberInSurah}</div>
-                        </div>
-                        <div class="result-card-ayah-number">Ayah ${result.ayahNumber}</div>
-                    </div>
-                    <p class="result-card-text">${highlightedAyahText}</p>
-                    <button class="recite-button" data-surah="${result.surahNumber}" data-ayah="${result.ayahNumberInSurah}">تلاوة</button>
-                `;
-                resultsContainer.appendChild(card);
-            });
-        }
+            // Initialize
+            updateAutoButton();
+        })();
     </script>
-
 </body>
 </html>
-
