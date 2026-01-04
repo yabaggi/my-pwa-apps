@@ -1,0 +1,32 @@
+[
+  {
+    "name": "altaqia",
+    "folder": "altaqia",
+    "content_path": "EPUB/Content/cover.xhtml",
+    "structure": "valid_epub"
+  },
+  {
+    "name": "الحكاية_الخرافية",
+    "folder": "الحكاية_الخرافية",
+    "content_path": "EPUB/Content/cover.xhtml",
+    "structure": "valid_epub"
+  },
+  {
+    "name": "الفيزياء_والفلسفة",
+    "folder": "الفيزياء_والفلسفة",
+    "content_path": "EPUB/Content/cover.xhtml",
+    "structure": "valid_epub"
+  },
+  {
+    "name": "الكنز",
+    "folder": "الكنز",
+    "content_path": "EPUB/Content/cover.xhtml",
+    "structure": "valid_epub"
+  },
+  {
+    "name": "شينجو",
+    "folder": "شينجو",
+    "content_path": "EPUB/Content/cover.xhtml",
+    "structure": "valid_epub"
+  }
+]

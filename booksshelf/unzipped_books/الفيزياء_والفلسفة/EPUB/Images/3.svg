@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg style="vertical-align:-1pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="8.23pt" height="6.53pt" viewBox="0 0 8.23 6.53" version="1.1">
+<defs>
+<g>
+<symbol overflow="visible" id="M">
+<path style="stroke:none;" d="M 7.984375 -0.125 L 7.921875 0 L 0.34375 0 L 0.265625 -0.125 L 4.078125 -6.546875 L 4.1875 -6.546875 Z M 7.109375 -0.5 L 4.125 -5.53125 L 1.15625 -0.5 Z M 7.109375 -0.5 "/>
+</symbol>
+</g>
+</defs>
+<g id="surface1">
+<g style="fill:rgb(0%,0%,0%);fill-opacity:1;">
+  <use xlink:href="#M" x="0" y="6.53"/>
+</g>
+</g>
+</svg>

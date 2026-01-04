@@ -1,5 +1,21 @@
 [
- {
+
+
+  
+  {
+    "href": "booksshelf/",
+    "category": "books",
+    "category-ar": "كتب",
+    "keywords": "Next application",
+    "keywords-ar": "",
+    "icon": "➡️ ",
+    "name": "Books Shelf",
+    "name-ar": "المكتبة",
+    "description": "# 📚  (Book Reader) This is a simple, modern, and offline-first single-page web application for reading e-books. It's designed to work with unzipped EPUB content and provides a clean, customizable, and user-friendly reading experience. The application is entirely client-side, running in your browser without needing a backend server.",
+    "description-ar": "# 📚 (قارئ كتاب) هذا تطبيق ويب بسيط وحديث وغير متصل بصفحة واحدة لقراءة الكتب الإلكترونية. إنه مصمم للعمل مع محتوى EPUB غير المضغوط ويوفر تجربة قراءة نظيفة وقابلة للتخصيص وسهلة الاستخدام. التطبيق يعمل في متصفحك دون الحاجة إلى خادم الواجهة الخلفية  ",
+    "badges": []
+  },
+{
     "href": "vplayer/",
     "category": "Explore",
     "category-ar": "مشاهدة",
@@ -180,5 +196,3 @@
     "badges": []
   }
 ]
-
-

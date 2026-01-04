@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1" xml:lang="ar">
+<head>
+<meta name="dtb:uid" content="5191f61a-9cf0-4cf1-bad7-fbc37dd3e423"/>
+<meta name="dtb:depth" content="2"/>
+<meta name="dtb:totalPageCount" content="0"/>
+<meta name="dtb:maxPageNumber" content="0"/>
+</head>
+<docTitle>
+<text>الكنز</text>
+</docTitle>
+<navMap>
+<navPoint id="NavPoint-1" playOrder="1" class="5">
+<navLabel>
+<text>الكنز‏</text>
+</navLabel>
+<content src="../Content/chapter-1-1.xhtml"/>
+</navPoint>
+</navMap>
+</ncx>

@@ -1,5 +1,17 @@
 [
-
+ {
+    "href": "vplayer/",
+    "category": "Explore",
+    "category-ar": "مشاهدة",
+    "keywords": "view explore",
+    "keywords-ar": "مشاهدة",
+    "icon": "➡️ ",
+    "name": "video Player",
+    "name-ar": "مشاهدة مقاطع",
+    "description": " This is a single-page web application for browsing and watching a collection of videos. Features:- **Dynamic Video Loading**: Videos are loaded from a `videos.json` file, making it easy to manage the video library.- **Categorization**: Videos are automatically grouped by category. Users can browse videos by selecting a category from a chip-style menu or a hamburger menu. ",
+    "description-ar": "هذا تطبيق ويب من صفحة واحدة لتصفح ومشاهدة مجموعة من مقاطع الفيديو. سمات - **تحميل الفيديو الديناميكي**: يتم تحميل مقاطع الفيديو من ملف videos.json، مما يجعل من السهل إدارة مكتبة الفيديو. - ** التصنيف **: يتم تجميع مقاطع الفيديو تلقائيا حسب الفئة. يمكن للمستخدمين تصفح مقاطع الفيديو عن طريق تحديد فئة من قائمة.",
+    "badges": []
+  },
  {
     "href": "quotes/",
     "category": "Next",
@@ -10,8 +22,7 @@
     "name": "Quotes",
     "name-ar": "إقتباسات",
     "description": "Quote Finder is a simple and elegant single-page web application for browsing and discovering a vast collection of quotes in both English and Arabic.",
-    "description-ar": "Quote Finder هو تطبيق ويب بسيط وأنيق من صفحة واحدة لتصفح واكتشاف مجموعة واسعة من الاقتباسات باللغتين الإنجليزية والعربية
-    ",
+    "description-ar": "Quote Finder هو تطبيق ويب بسيط وأنيق من صفحة واحدة لتصفح واكتشاف مجموعة واسعة من الاقتباسات باللغتين الإنجليزية والعربية",
     "badges": []
   },
 
@@ -137,7 +148,7 @@
     "keywords-ar": "تعديل/إنشاء الصور",
     "icon": "🖼️ ",
     "name": "Images",
-    "name-ar": "صور",
+    "name-ar": "معالجة الصور",
     "description": "The 'Utility Toolkit' is a versatile PWA offering a suite of image manipulation tools. Users can generate QR codes, create custom icons and favicons from scratch or existing images, and edit hero images with cropping and optimization features. It also includes dedicated tools for generating animated GIFs and resizing images, making it a comprehensive solution for various visual asset needs.",
     "description-ar": "'مجموعة الأدوات المساعدة' هي تطبيق ويب تقدمي متعدد الاستخدامات يقدم مجموعة من أدوات معالجة الصور. يمكن للمستخدمين إنشاء رموز QR، وإنشاء أيقونات مخصصة وأيقونات مفضلة من البداية أو من الصور الموجودة، وتحرير صور البطل مع ميزات الاقتصاص والتحسين. ويتضمن أيضًا أدوات مخصصة لإنشاء صور GIF متحركة وتغيير حجم الصور، مما يجعله حلاً شاملاً لمختلف احتياجات الأصول المرئية.",
     "badges": []
@@ -169,4 +180,5 @@
     "badges": []
   }
 ]
+
 
