@@ -583,15 +583,9 @@
             <button class="category-btn" data-category="utilities">
                 🔧 Utilities
             </button>
-            
             <button class="category-btn" data-category="creative">
                 🎨 Creative
             </button>
-            
-            <button class="category-btn" data-category="others">
-               📤 Others
-            </button>
-            
         </div>
 
         <!-- Stats Bar -->
@@ -678,7 +672,6 @@
                 games: "🎮 Games",
                 utilities: "🔧 Utilities",
                 creative: "🎨 Creative",
-                others: "📤 Others",
                 totalApps: "Total Apps",
                 installed: "Installed",
                 showing: "Showing",
@@ -716,7 +709,6 @@
                 games: "🎮 ألعاب",
                 utilities: "🔧 أدوات",
                 creative: "🎨 إبداعي",
-                others: "  📤 اخري",
                 totalApps: "إجمالي التطبيقات",
                 installed: "مثبت",
                 showing: "معروض",
@@ -811,8 +803,6 @@
             document.querySelector('[data-category="games"]').innerHTML = t.games;
             document.querySelector('[data-category="utilities"]').innerHTML = t.utilities;
             document.querySelector('[data-category="creative"]').innerHTML = t.creative;
-
-document.querySelector('[data-category="others"]').innerHTML = t.others;
 
             document.querySelector('#total-apps + .stat-label').textContent = t.totalApps;
             document.querySelector('#installed-apps + .stat-label').textContent = t.installed;
@@ -1191,5 +1181,4 @@ document.querySelector('[data-category="others"]').innerHTML = t.others;
     </script>
 </body>
 </html>
-
 
