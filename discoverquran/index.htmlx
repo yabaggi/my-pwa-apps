@@ -320,33 +320,6 @@ tabButtons.forEach(button => {
   });
 });
 </script>
-
-<script>
-    
-    document.addEventListener('DOMContentLoaded', () => {
-  // 1. Get the hero element from the page
-  const heroElement = document.querySelector('.hero');
-  // 2. Read the 'img' parameter from the URL
-  const urlParams = new URLSearchParams(window.location.search);
-  const imgBasename = urlParams.get('kKr');
-  // 3. If the 'img' parameter is present, try to load the image
-  if (imgBasename) {
-    const selectedImage = imgBasename + '.jpg';
-    
-    // Create a new URL with a cache-busting parameter
-    const cacheBustedUrl = selectedImage + '?v=' + new Date().getTime();
-    
-    // 4. Update the background-image style with the new URL
-    // This will force the browser to fetch a fresh copy of the image.
-    heroElement.style.backgroundImage = `url('${cacheBustedUrl}'), url('https://images.unsplash.com/photo-1519817650390-64a93db51149?auto=format&fit=crop&q=80&w=1200')`;
-  }
-  // If no 'img' parameter is found, the page will simply
-  // use the default image already defined in your CSS.
-});
-
-    
-</script>
-<!--
 <script>
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Get the hero element from the page
@@ -370,7 +343,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // use the default image already defined in your CSS.
 });
 </script>
--->
 
     <script>
         // PWA Service Worker Registration
@@ -460,4 +432,3 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
 </body>
 </html>
-
