@@ -13,10 +13,7 @@ const urlsToCache = [
   "/vplayer/",
   "/vplayer/index.html",
   "/vplayer/manifest.json",
-  "/vplayer/index.html",
-  "/vplayer/videos.json",
-  "/vplayer/index.htmlv1",
-  "/vplayer/README.md",
+  "/vplayer/loadvideos.html",
   "/vplayer/offline.html"
 ];
 

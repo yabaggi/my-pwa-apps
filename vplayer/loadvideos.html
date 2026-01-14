@@ -1,0 +1,1724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#FF0000">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>YouTube Search</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #FF0000;
+            --primary-dark: #CC0000;
+            --secondary-color: #282828;
+            --background: #0F0F0F;
+            --surface: #212121;
+            --surface-light: #3F3F3F;
+            --text-primary: #FFFFFF;
+            --text-secondary: #AAAAAA;
+            --border-color: #3F3F3F;
+            --success: #065FD4;
+            --warning: #F9AB00;
+            --danger: #FF0000;
+            --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* App Shell Header */
+        .app-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            box-shadow: var(--shadow);
+            z-index: 1000;
+        }
+
+        .app-header .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .app-header .logo svg {
+            width: 28px;
+            height: 28px;
+            fill: var(--primary-color);
+        }
+
+        /* Tab Navigation */
+        .tab-navigation {
+            position: fixed;
+            top: 56px;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            z-index: 999;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+        }
+
+        .tab-button.active {
+            color: var(--text-primary);
+        }
+
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--primary-color);
+        }
+
+        .tab-button:active {
+            background: var(--surface-light);
+        }
+
+        /* Main Content */
+        .app-content {
+            margin-top: 112px; /* Header + Tabs */
+            padding-bottom: 160px;
+            min-height: calc(100vh - 112px);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        /* Search Section */
+        .search-section {
+            background: var(--surface);
+            padding: 20px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .search-header h1 {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .filter-toggle {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .filter-toggle:active {
+            transform: scale(0.95);
+        }
+
+        .filter-toggle svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* Search Form */
+        #search-form {
+            max-width: 100%;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--surface-light);
+            color: var(--text-primary);
+            font-size: 16px;
+            transition: all 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        input[type="date"]:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            background: var(--surface);
+        }
+
+        .advanced-filters {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .advanced-filters.show {
+            max-height: 500px;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: var(--shadow);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+            background: var(--primary-dark);
+        }
+
+        /* Results Section */
+        #results-container {
+            padding: 16px;
+        }
+
+        .results-info {
+            padding: 12px 16px;
+            background: var(--surface);
+            border-radius: 8px;
+            margin-bottom: 16px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .results-info strong {
+            color: var(--text-primary);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 48px 16px;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto 16px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .video {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: var(--surface);
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+
+        .video:active {
+            background: var(--surface-light);
+            transform: scale(0.98);
+        }
+
+        .video-thumb {
+            flex-shrink: 0;
+            width: 120px;
+            height: 90px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .video-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .video-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .video-title {
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 6px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .video-title a {
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+
+        .video-channel {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .error {
+            padding: 16px;
+            margin: 16px;
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 8px;
+            color: #FF6B6B;
+            text-align: center;
+        }
+
+        .success {
+            padding: 16px;
+            margin: 16px;
+            background: rgba(6, 95, 212, 0.1);
+            border: 1px solid rgba(6, 95, 212, 0.3);
+            border-radius: 8px;
+            color: var(--success);
+            text-align: center;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 48px 16px;
+            color: var(--text-secondary);
+        }
+
+        /* Merge Section */
+        .merge-section {
+            padding: 16px;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .merge-section.show {
+            display: block;
+        }
+
+        .merge-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .merge-header h3 {
+            font-size: 16px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .merge-header svg {
+            width: 20px;
+            height: 20px;
+            fill: var(--warning);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: var(--surface-light);
+            border: 2px dashed var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 14px;
+        }
+
+        .file-input-label:hover {
+            border-color: var(--primary-color);
+            background: var(--surface);
+        }
+
+        .file-input-label svg {
+            width: 20px;
+            height: 20px;
+            fill: currentColor;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-info {
+            padding: 8px 12px;
+            background: var(--surface-light);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .file-info.loaded {
+            color: var(--success);
+        }
+
+        .merge-options {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .merge-option {
+            flex: 1;
+        }
+
+        .merge-option input[type="radio"] {
+            display: none;
+        }
+
+        .merge-option label {
+            display: block;
+            padding: 10px;
+            background: var(--surface-light);
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .merge-option input[type="radio"]:checked + label {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .merge-info {
+            padding: 10px;
+            background: rgba(249, 171, 0, 0.1);
+            border: 1px solid rgba(249, 171, 0, 0.3);
+            border-radius: 6px;
+            font-size: 12px;
+            color: var(--warning);
+            line-height: 1.5;
+        }
+
+        /* Edit Tab Styles */
+        .edit-section {
+            padding: 20px 16px;
+        }
+
+        .edit-header {
+            background: var(--surface);
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .edit-header h2 {
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .edit-stats {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            align-items: center;
+        }
+
+        .stat-item {
+            padding: 8px 12px;
+            background: var(--surface-light);
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .stat-item strong {
+            color: var(--primary-color);
+        }
+
+        .btn-clear {
+            padding: 8px 16px;
+            background: var(--surface-light);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-clear:active {
+            transform: scale(0.95);
+            background: var(--surface);
+        }
+
+        .btn-clear svg {
+            width: 16px;
+            height: 16px;
+            fill: currentColor;
+        }
+
+        .table-container {
+            background: var(--surface);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        .table-controls {
+            padding: 12px 16px;
+            background: var(--surface-light);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .select-all-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .select-all-wrapper input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .select-all-wrapper label {
+            font-size: 14px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .btn-delete {
+            padding: 8px 16px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-delete:active {
+            transform: scale(0.95);
+            opacity: 0.9;
+        }
+
+        .btn-delete:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .data-table-wrapper {
+            max-height: 60vh;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table thead {
+            position: sticky;
+            top: 0;
+            background: var(--surface-light);
+            z-index: 10;
+        }
+
+        .data-table th {
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th:first-child {
+            width: 50px;
+            text-align: center;
+        }
+
+        .data-table td {
+            padding: 12px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border-color);
+            vertical-align: top;
+        }
+
+        .data-table td:first-child {
+            text-align: center;
+        }
+
+        .data-table tbody tr {
+            transition: background 0.2s;
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--surface-light);
+        }
+
+        .data-table input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .data-table .title-cell {
+            font-weight: 500;
+            color: var(--text-primary);
+            max-width: 300px;
+        }
+
+        .data-table .description-cell {
+            color: var(--text-secondary);
+            font-size: 13px;
+            line-height: 1.5;
+            max-width: 500px;
+            word-wrap: break-word;
+        }
+
+        .btn-update-origin {
+            width: 100%;
+            padding: 14px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-update-origin:active {
+            transform: scale(0.98);
+        }
+
+        .btn-update-origin:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Download Buttons */
+        #download-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 16px;
+            background: var(--secondary-color);
+            border-top: 1px solid var(--border-color);
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.3);
+            z-index: 999;
+        }
+
+        #download-container.show {
+            display: flex;
+        }
+
+        .download-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-download {
+            flex: 1;
+            padding: 12px;
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .btn-download:active {
+            transform: scale(0.95);
+            opacity: 0.9;
+        }
+
+        .btn-download.merge {
+            background: var(--warning);
+        }
+
+        .btn-download svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        .toggle-merge {
+            width: 100%;
+            padding: 10px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 8px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-merge:active {
+            transform: scale(0.98);
+        }
+
+        /* Responsive Design */
+        @media (min-width: 768px) {
+            .search-section {
+                padding: 24px;
+            }
+
+            .edit-section {
+                padding: 24px;
+            }
+
+            .search-header h1 {
+                font-size: 24px;
+            }
+
+            #results-container {
+                padding: 24px;
+            }
+
+            .video-thumb {
+                width: 168px;
+                height: 94px;
+            }
+
+            .video-title {
+                font-size: 15px;
+            }
+
+            .video-channel {
+                font-size: 13px;
+            }
+
+            #download-container {
+                padding: 16px 24px;
+            }
+
+            .merge-section {
+                padding: 24px;
+            }
+
+            .data-table .title-cell {
+                max-width: 400px;
+            }
+
+            .data-table .description-cell {
+                max-width: 600px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .video {
+                padding: 16px;
+            }
+
+            .video:hover {
+                background: var(--surface-light);
+            }
+
+            .btn-primary:hover {
+                background: var(--primary-dark);
+                transform: translateY(-1px);
+            }
+
+            .btn-download:hover {
+                opacity: 0.9;
+                transform: translateY(-1px);
+            }
+
+            .file-input-label:active {
+                transform: scale(0.98);
+            }
+
+            .btn-delete:hover {
+                opacity: 0.9;
+            }
+
+            .btn-update-origin:hover {
+                opacity: 0.9;
+            }
+
+            .btn-clear:hover {
+                background: var(--surface);
+            }
+        }
+
+        /* Safe area for notched devices */
+        @supports (padding: max(0px)) {
+            .app-header {
+                padding-left: max(16px, env(safe-area-inset-left));
+                padding-right: max(16px, env(safe-area-inset-right));
+            }
+
+            #download-container {
+                padding-bottom: max(12px, env(safe-area-inset-bottom));
+            }
+        }
+
+        /* Custom Scrollbar */
+        .data-table-wrapper::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        .data-table-wrapper::-webkit-scrollbar-track {
+            background: var(--surface);
+        }
+
+        .data-table-wrapper::-webkit-scrollbar-thumb {
+            background: var(--surface-light);
+            border-radius: 4px;
+        }
+
+        .data-table-wrapper::-webkit-scrollbar-thumb:hover {
+            background: var(--border-color);
+        }
+
+        /* --- Password Protection & App Locking --- */
+        #password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-backdrop-filter: blur(8px);
+            backdrop-filter: blur(8px);
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        #password-modal {
+            background: var(--surface);
+            padding: 32px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            width: 90%;
+            max-width: 400px;
+        }
+
+        #password-modal.shake {
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-8px); }
+          75% { transform: translateX(8px); }
+        }
+
+        #password-modal h2 { margin-bottom: 8px; font-size: 20px; }
+        #password-modal p { margin-bottom: 24px; color: var(--text-secondary); font-size: 14px; }
+
+        #password-form input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background: var(--surface-light);
+            color: var(--text-primary);
+            font-size: 16px;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        #password-form input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        #password-form button {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        #password-form button:active { transform: scale(0.98); background: var(--primary-dark); }
+        
+        body.locked .app-header,
+        body.locked .tab-navigation,
+        body.locked .app-content,
+        body.locked #download-container {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="locked">
+
+    <!-- Password Protection Overlay -->
+    <div id="password-overlay">
+        <div id="password-modal">
+            <h2><svg viewBox="0 0 24 24" width="28" height="28" style="vertical-align: -5px; fill: var(--primary-color); margin-right: 8px;"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"></path></svg> App Locked</h2>
+            <p>Enter the password to unlock the application.</p>
+            <form id="password-form">
+                <input type="password" id="password-input" placeholder="Password" required autocomplete="current-password">
+                <button type="submit">Unlock</button>
+            </form>
+            <p id="password-error" class="error" style="display: none; margin-top: 16px;"></p>
+        </div>
+    </div>
+
+    <!-- App Header -->
+    <header class="app-header">
+        <div class="logo">
+            <svg viewBox="0 0 24 24">
+                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+            </svg>
+            <span>YouTube Search</span>
+        </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="tab-navigation">
+        <button class="tab-button active" data-tab="search-tab">
+            🔍 Search
+        </button>
+        <button class="tab-button" data-tab="edit-tab">
+            ✏️ Edit
+        </button>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="app-content">
+        <!-- Search Tab Content -->
+        <div id="search-tab" class="tab-content active">
+            <div class="container">
+                <!-- Search Section -->
+                <section class="search-section">
+                    <div class="search-header">
+                        <h1>Search Videos</h1>
+                        <div class="stat-item">
+                            Videos in Bin: <strong id="bin-record-count-display">0</strong>
+                        </div>
+                        <button class="filter-toggle" id="filter-toggle" type="button">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"/>
+                            </svg>
+                            Filters
+                        </button>
+                    </div>
+
+                    <form id="search-form">
+                        <div class="form-group">
+                            <label for="query">Search Query</label>
+                            <div class="input-wrapper">
+                                <input type="text" id="query" name="query" placeholder="Enter search term..." required>
+                            </div>
+                        </div>
+
+                        <div class="advanced-filters show" id="advanced-filters">
+                            <div class="form-group">
+                                <label for="max_results">Max Results</label>
+                                <input type="number" id="max_results" name="max_results" value="10" min="1" max="50">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="order">Sort Order</label>
+                                <select id="order" name="order">
+                                    <option value="relevance">Relevance</option>
+                                    <option value="date">Date</option>
+                                    <option value="rating">Rating</option>
+                                    <option value="title">Title</option>
+                                    <option value="viewCount">View Count</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="published_after">Published After</label>
+                                <input type="date" id="published_after" name="published_after">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="video_duration">Video Duration</label>
+                                <select id="video_duration" name="video_duration">
+                                    <option value="any">Any</option>
+                                    <option value="short">Short (under 4 mins)</option>
+                                    <option value="medium">Medium (4-20 mins)</option>
+                                    <option value="long">Long (over 20 mins)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="category">Category</label>
+                                <select id="category" name="category">
+                                    <option value="">Select a category</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-primary">Search</button>
+                    </form>
+                </section>
+
+
+
+                <!-- Results Section -->
+                <div id="results-container"></div>
+            </div>
+        </div>
+
+        <!-- Edit Tab Content -->
+        <div id="edit-tab" class="tab-content">
+            <div class="container">
+                <section class="edit-section">
+                    <div class="edit-header">
+                        <h2>Edit JSON File</h2>
+                        <div id="edit-file-info" class="file-info" style="display: none;"></div>
+                        <div class="edit-stats" id="edit-stats" style="display: none;">
+                            <div class="stat-item">
+                                Total Records: <strong id="total-records">0</strong>
+                            </div>
+                            <div class="stat-item">
+                                Selected: <strong id="selected-records">0</strong>
+                            </div>
+                            <button class="btn-clear" id="clear-edit">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                                </svg>
+                                Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="table-section" style="display: none;">
+                        <div class="table-container">
+                            <div class="table-controls">
+                                <div class="select-all-wrapper">
+                                    <input type="checkbox" id="select-all">
+                                    <label for="select-all">Select All</label>
+                                </div>
+                                <button class="btn-delete" id="delete-selected" disabled>
+                                    <svg viewBox="0 0 24 24" width="16" height="16">
+                                        <path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                                    </svg>
+                                    Delete Selected
+                                </button>
+                            </div>
+                            <div class="data-table-wrapper">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>☑️</th>
+                                            <th>Title</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="data-table-body">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <button class="btn-update-origin" id="update-origin" disabled>
+                            <svg viewBox="0 0 24 24" width="20" height="20">
+                                <path fill="currentColor" d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/>
+                            </svg>
+                            Update Origin File
+                        </button>
+                    </div>
+
+                    <div id="edit-message-container"></div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <!-- Download Buttons (Fixed Bottom) - Only for Search Tab -->
+    <div id="download-container">
+        <button class="toggle-merge" id="toggle-merge">
+            📎 Merge & override existing file
+        </button>
+        <div class="download-row">
+            <button id="download-json" class="btn-download">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/>
+                </svg>
+                New JSON
+            </button>
+            <button id="download-csv" class="btn-download">
+                <svg viewBox="0 0 24 24">
+                    <path d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/>
+                </svg>
+                CSV
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // --- PASSWORD PROTECTION & KEY RECONSTRUCTION ---
+
+        // Truncated keys, with the last 2 characters removed.
+        const TRUNC_DEV_KEY = 'AIzaSyCNZ-KXs7iX45AlhpqLKhFsmC_Ym6iD0';
+        const TRUNC_BIN_ID = '6954ed8343b1c97be9101e';
+        const TRUNC_MASTER_KEY = '$2a$10$8c.vLWaiWSjGjO.7VVjhb.339iJIfHzDC72HBTVz.cjQSMyotEL';
+
+        let DEVELOPER_KEY, BIN_ID, MASTER_KEY, BIN_URL;
+        let isInitialAuthAttempt = false; // Flag for special error handling on first load
+
+        const passwordOverlay = document.getElementById('password-overlay');
+        const passwordModal = document.getElementById('password-modal');
+        const passwordForm = document.getElementById('password-form');
+        const passwordInput = document.getElementById('password-input');
+        const passwordError = document.getElementById('password-error');
+
+        function initializeApp(password) {
+            passwordError.style.display = 'none'; // Hide previous errors
+
+            if (!password || password.length !== 6) {
+                passwordError.textContent = 'Password must be 6 characters long.';
+                passwordError.style.display = 'block';
+                passwordModal.classList.add('shake');
+                setTimeout(() => passwordModal.classList.remove('shake'), 500);
+                return;
+            }
+
+            try {
+                // Reconstruct keys from truncated versions and password parts
+                DEVELOPER_KEY = TRUNC_DEV_KEY + password.substring(0, 2);
+                BIN_ID = TRUNC_BIN_ID + password.substring(2, 4);
+                MASTER_KEY = TRUNC_MASTER_KEY + password.substring(4, 6);
+                BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+                isInitialAuthAttempt = true; 
+                sessionStorage.setItem('savedPassword', password);
+
+                // Unlock UI
+                document.body.classList.remove('locked');
+                passwordOverlay.style.opacity = '0';
+                setTimeout(() => passwordOverlay.style.display = 'none', 300);
+
+                // Start the main application logic
+                populateCategories();
+
+            } catch (e) {
+                passwordError.textContent = 'An unexpected error occurred during initialization.';
+                passwordError.style.display = 'block';
+                console.error(e);
+            }
+        }
+
+        passwordForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            initializeApp(passwordInput.value);
+        });
+
+        function handleInitialAuth() {
+            const savedPassword = sessionStorage.getItem('savedPassword');
+            if (savedPassword) {
+                initializeApp(savedPassword);
+            }
+        }
+
+        // --- ORIGINAL APPLICATION SCRIPT (with modified error handling) ---
+
+        async function fetchVideosFromBin() {
+            const response = await fetch(BIN_URL, {
+                headers: {
+                    'X-Master-Key': MASTER_KEY
+                }
+            });
+            if (!response.ok) {
+                // This is where a wrong password will likely cause an error
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const data = await response.json();
+            return data.record;
+        }
+
+        async function updateVideosInBin(videos) {
+            const response = await fetch(BIN_URL, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Master-Key': MASTER_KEY
+                },
+                body: JSON.stringify(videos)
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return await response.json();
+        }
+
+        const searchForm = document.getElementById('search-form');
+        const resultsContainer = document.getElementById('results-container');
+        const downloadContainer = document.getElementById('download-container');
+        const filterToggle = document.getElementById('filter-toggle');
+        const advancedFilters = document.getElementById('advanced-filters');
+        const toggleMergeBtn = document.getElementById('toggle-merge');
+        const binRecordCountDisplay = document.getElementById('bin-record-count-display');
+        const editFileInfo = document.getElementById('edit-file-info');
+        const editStats = document.getElementById('edit-stats');
+        const tableSection = document.getElementById('table-section');
+        const dataTableBody = document.getElementById('data-table-body');
+        const selectAllCheckbox = document.getElementById('select-all');
+        const deleteSelectedBtn = document.getElementById('delete-selected');
+        const updateOriginBtn = document.getElementById('update-origin');
+        const totalRecordsSpan = document.getElementById('total-records');
+        const selectedRecordsSpan = document.getElementById('selected-records');
+        const editMessageContainer = document.getElementById('edit-message-container');
+        const clearEditBtn = document.getElementById('clear-edit');
+
+        let currentVideos = [];
+        let existingData = null;
+        let mergedData = null;
+        let selectedFileName = '';
+        let editData = [];
+        let editFileName = '';
+
+        async function populateCategories() {
+            try {
+                const videos = await fetchVideosFromBin();
+                existingData = videos;
+                isInitialAuthAttempt = false; // Success, so we disable the special error handling
+
+                if (binRecordCountDisplay) {
+                    binRecordCountDisplay.textContent = (existingData || []).length;
+                }
+
+                const categories = [...new Set((videos || []).map(video => video.category))].filter(Boolean);
+                const categoryDropdown = document.getElementById('category');
+                categoryDropdown.innerHTML = '<option value="">Select a category</option>';
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category;
+                    option.textContent = category;
+                    categoryDropdown.appendChild(option);
+                });
+            } catch (error) {
+                console.error('Error fetching or parsing videos from bin:', error);
+                
+                if (isInitialAuthAttempt) {
+                    sessionStorage.removeItem('savedPassword');
+                    document.body.classList.add('locked');
+                    passwordOverlay.style.display = 'flex';
+                    passwordOverlay.style.opacity = '1';
+                    passwordInput.value = '';
+                    passwordError.textContent = 'Authentication failed. The password may be incorrect.';
+                    passwordError.style.display = 'block';
+                    passwordModal.classList.add('shake');
+                    setTimeout(() => passwordModal.classList.remove('shake'), 500);
+                } else {
+                    resultsContainer.innerHTML = `<p class="error">Error loading video data from the cloud. Please check your connection or API keys.</p>`;
+                }
+                
+                if (editFileInfo) {
+                    editFileInfo.style.display = 'block';
+                    editFileInfo.className = 'file-info error';
+                    editFileInfo.textContent = `Error loading videos from bin.`;
+                }
+                isInitialAuthAttempt = false; // Reset the flag
+            }
+        }
+
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetTab = this.getAttribute('data-tab');
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                document.getElementById(targetTab).classList.add('active');
+                if (targetTab === 'search-tab' && currentVideos.length > 0) {
+                    downloadContainer.classList.add('show');
+                } else {
+                    downloadContainer.classList.remove('show');
+                }
+            });
+        });
+
+        filterToggle.addEventListener('click', function() {
+            advancedFilters.classList.toggle('show');
+            this.style.background = advancedFilters.classList.contains('show') ? 'var(--surface-light)' : 'transparent';
+        });
+        if (advancedFilters.classList.contains('show')) {
+            filterToggle.style.background = 'var(--surface-light)';
+        }
+
+        toggleMergeBtn.addEventListener('click', async function() {
+            if (currentVideos.length === 0) {
+                alert('Please perform a search before attempting to merge.');
+                return;
+            }
+            const query = document.getElementById('query').value;
+            const category = document.getElementById('category').value;
+            const newVideos = currentVideos.map(video => ({
+                title: video.snippet.title,
+                video_id: video.id.videoId,
+                url: `https://www.youtube.com/watch?v=${video.id.videoId}`,
+                publishedAt: video.snippet.publishedAt,
+                channelId: video.snippet.channelId,
+                description: video.snippet.description,
+                channelTitle: video.snippet.channelTitle,
+                liveBroadcastContent: video.snippet.liveBroadcastContent,
+                thumbnail_default_url: video.snippet.thumbnails.default.url,
+                category: category || query
+            }));
+            const localExistingData = Array.isArray(existingData) ? existingData : [];
+            const videoMap = new Map();
+            localExistingData.forEach(video => videoMap.set(video.video_id, video));
+            newVideos.forEach(video => videoMap.set(video.video_id, video));
+            const finalMergedData = Array.from(videoMap.values());
+            const confirmUpdate = confirm(`This will merge ${newVideos.length} new record(s) with the cloud data using the 'keep new' strategy and update the bin. The new total will be ${finalMergedData.length} records.\n\nAre you sure?`);
+            if (!confirmUpdate) return;
+            const mergeButton = this;
+            mergeButton.disabled = true;
+            mergeButton.textContent = 'MERGING...';
+            try {
+                await updateVideosInBin(finalMergedData);
+                existingData = finalMergedData;
+                await populateCategories();
+                alert('Successfully merged and updated the cloud bin!');
+            } catch (error) {
+                alert(`Error updating bin: ${error.message}`);
+            } finally {
+                mergeButton.disabled = false;
+                mergeButton.textContent = '📎 Merge & override existing file';
+            }
+        });
+
+        searchForm.addEventListener('submit', async function(event) {
+            event.preventDefault();
+            if (!DEVELOPER_KEY) {
+                resultsContainer.innerHTML = `<p class="error">Error: API Keys are not loaded. Please re-authenticate.</p>`;
+                return;
+            }
+            const query = document.getElementById('query').value;
+            const requestedMaxResults = parseInt(document.getElementById('max_results').value, 10);
+            const order = document.getElementById('order').value;
+            const publishedAfter = document.getElementById('published_after').value;
+            const videoDuration = document.getElementById('video_duration').value;
+            resultsContainer.innerHTML = '<div class="loading"><div class="loading-spinner"></div><p>Searching for new videos...</p></div>';
+            downloadContainer.classList.remove('show');
+            const existingVideoIds = new Set((existingData || []).map(v => v.video_id));
+            let newlyFoundVideos = [];
+            let nextPageToken = null;
+            let pagesFetched = 0;
+            const MAX_PAGES_TO_FETCH = 5;
+            try {
+                while (newlyFoundVideos.length < requestedMaxResults && pagesFetched < MAX_PAGES_TO_FETCH) {
+                    const api_url = `https://www.googleapis.com/youtube/v3/search`;
+                    const params = new URLSearchParams({
+                        part: 'snippet',
+                        q: query,
+                        type: 'video',
+                        maxResults: 50,
+                        order: order,
+                        key: DEVELOPER_KEY
+                    });
+                    if (publishedAfter) {
+                        params.append('publishedAfter', new Date(publishedAfter).toISOString());
+                    }
+                    if (videoDuration && videoDuration !== 'any') {
+                        params.append('videoDuration', videoDuration);
+                    }
+                    if (nextPageToken) {
+                        params.append('pageToken', nextPageToken);
+                    }
+                    const response = await fetch(`${api_url}?${params}`);
+                    const data = await response.json();
+                    if (response.status !== 200) {
+                        throw new Error(data.error.message || 'An unknown error occurred.');
+                    }
+                    if (data.items) {
+                        const freshVideos = data.items.filter(video => !existingVideoIds.has(video.id.videoId));
+                        freshVideos.forEach(video => {
+                            if (!newlyFoundVideos.some(found => found.id.videoId === video.id.videoId)) {
+                                newlyFoundVideos.push(video);
+                            }
+                        });
+                    }
+                    pagesFetched++;
+                    nextPageToken = data.nextPageToken;
+                    if (!nextPageToken) {
+                        break;
+                    }
+                }
+                const finalVideos = newlyFoundVideos.slice(0, requestedMaxResults);
+                displayResults(finalVideos);
+            } catch (error) {
+                resultsContainer.innerHTML = `<p class="error">Error: ${error.message}</p>`;
+                console.error('API Error:', error);
+            }
+        });
+
+        function displayResults(videos) {
+            if (!videos || videos.length === 0) {
+                resultsContainer.innerHTML = '<div class="no-results"><p>No new results found. Try different search terms or adjust filters.</p></div>';
+                downloadContainer.classList.remove('show');
+                return;
+            }
+            currentVideos = videos;
+            resultsContainer.innerHTML = '';
+            const infoDiv = document.createElement('div');
+            infoDiv.className = 'results-info';
+            infoDiv.innerHTML = `Found <strong>${videos.length}</strong> new videos.`;
+            resultsContainer.appendChild(infoDiv);
+            videos.forEach(video => {
+                const videoId = video.id.videoId;
+                const snippet = video.snippet;
+                const videoElement = document.createElement('div');
+                videoElement.className = 'video';
+                videoElement.innerHTML = `
+                    <div class="video-thumb">
+                        <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" rel="noopener">
+                            <img src="${snippet.thumbnails.medium?.url || snippet.thumbnails.default.url}" 
+                                 alt="${snippet.title}" 
+                                 loading="lazy">
+                        </a>
+                    </div>
+                    <div class="video-details">
+                        <div class="video-title">
+                            <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" rel="noopener">
+                                ${snippet.title}
+                            </a>
+                        </div>
+                        <div class="video-channel">${snippet.channelTitle}</div>
+                    </div>
+                `;
+                resultsContainer.appendChild(videoElement);
+            });
+            downloadContainer.classList.add('show');
+        }
+
+        document.getElementById('download-json').addEventListener('click', downloadJSON);
+        document.getElementById('download-csv').addEventListener('click', downloadCSV);
+
+        function triggerDownload(filename, blob) {
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function downloadJSON() {
+            const query = document.getElementById('query').value;
+            const category = document.getElementById('category').value;
+            const formattedVideos = currentVideos.map(video => ({
+                title: video.snippet.title,
+                video_id: video.id.videoId,
+                url: `https://www.youtube.com/watch?v=${video.id.videoId}`,
+                publishedAt: video.snippet.publishedAt,
+                channelId: video.snippet.channelId,
+                description: video.snippet.description,
+                channelTitle: video.snippet.channelTitle,
+                liveBroadcastContent: video.snippet.liveBroadcastContent,
+                thumbnail_default_url: video.snippet.thumbnails.default.url,
+                category: category || query
+            }));
+            const filename = query.replace(/\s+/g, '_') || 'videos';
+            const blob = new Blob([JSON.stringify(formattedVideos, null, 4)], { type: 'application/json' });
+            triggerDownload(`${filename}.json`, blob);
+        }
+
+        function downloadCSV() {
+            const query = document.getElementById('query').value.replace(/\s+/g, '_') || 'videos';
+            const headers = ['title', 'video_id', 'url', 'publishedAt', 'channelId', 'description', 'channelTitle', 'liveBroadcastContent', 'thumbnail_default_url'];
+            const csvRows = [headers.join(',')];
+            const escapeCsvField = (field) => {
+                if (field === null || field === undefined) return '';
+                const str = String(field);
+                if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                    return `"${str.replace(/"/g, '""')}"`;
+                }
+                return str;
+            };
+            currentVideos.forEach(video => {
+                const videoId = video.id.videoId;
+                const snippet = video.snippet;
+                const url = `https://www.youtube.com/watch?v=${videoId}`;
+                const row = [
+                    escapeCsvField(snippet.title),
+                    videoId,
+                    url,
+                    snippet.publishedAt,
+                    snippet.channelId,
+                    escapeCsvField(snippet.description),
+                    escapeCsvField(snippet.channelTitle),
+                    snippet.liveBroadcastContent,
+                    snippet.thumbnails.default.url
+                ];
+                csvRows.push(row.join(','));
+            });
+            const blob = new Blob([csvRows.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            triggerDownload(`${query}.csv`, blob);
+        }
+
+        document.querySelector('.tab-button[data-tab="edit-tab"]').addEventListener('click', function() {
+            if (existingData) {
+                editData = JSON.parse(JSON.stringify(existingData));
+                editFileName = 'videos.json';
+                editFileInfo.style.display = 'block';
+                editFileInfo.className = 'file-info loaded';
+                editFileInfo.textContent = `✓ Loaded ${editData.length} records from the cloud bin.`;
+                renderEditTable();
+                editStats.style.display = 'flex';
+                tableSection.style.display = 'block';
+                updateOriginBtn.disabled = false;
+            } else {
+                showEditMessage('Could not load data from the cloud. Please check the connection and refresh.', 'error');
+                resetEditTab();
+            }
+        });
+
+        function renderEditTable() {
+            dataTableBody.innerHTML = '';
+            editData.forEach((record, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>
+                        <input type="checkbox" class="row-checkbox" data-index="${index}">
+                    </td>
+                    <td class="title-cell">${escapeHtml(record.title || 'N/A')}</td>
+                    <td class="description-cell">${escapeHtml(record.description || 'N/A')}</td>
+                `;
+                dataTableBody.appendChild(row);
+            });
+            updateStats();
+            attachCheckboxListeners();
+        }
+
+        function attachCheckboxListeners() {
+            document.querySelectorAll('.row-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', updateStats);
+            });
+        }
+
+        selectAllCheckbox.addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.row-checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = this.checked;
+            });
+            updateStats();
+        });
+
+        function updateStats() {
+            const totalRecords = editData.length;
+            const selectedCount = document.querySelectorAll('.row-checkbox:checked').length;
+            totalRecordsSpan.textContent = totalRecords;
+            selectedRecordsSpan.textContent = selectedCount;
+            deleteSelectedBtn.disabled = selectedCount === 0;
+            const allCheckboxes = document.querySelectorAll('.row-checkbox');
+            const checkedCheckboxes = document.querySelectorAll('.row-checkbox:checked');
+            selectAllCheckbox.checked = allCheckboxes.length > 0 && allCheckboxes.length === checkedCheckboxes.length;
+            selectAllCheckbox.indeterminate = checkedCheckboxes.length > 0 && checkedCheckboxes.length < allCheckboxes.length;
+        }
+
+        deleteSelectedBtn.addEventListener('click', function() {
+            const selectedIndices = Array.from(document.querySelectorAll('.row-checkbox:checked'))
+                .map(cb => parseInt(cb.getAttribute('data-index')));
+            if (selectedIndices.length === 0) return;
+            const confirmDelete = confirm(`Are you sure you want to delete ${selectedIndices.length} record(s)?`);
+            if (!confirmDelete) return;
+            selectedIndices.sort((a, b) => b - a).forEach(index => {
+                editData.splice(index, 1);
+            });
+            renderEditTable();
+            selectAllCheckbox.checked = false;
+            showEditMessage(`Successfully deleted ${selectedIndices.length} record(s)`, 'success');
+        });
+
+        updateOriginBtn.addEventListener('click', async function() {
+            if (editData.length === 0) {
+                showEditMessage('No data to save. The bin would be empty.', 'error');
+                return;
+            }
+            const confirmUpdate = confirm(`This will override the cloud bin with ${editData.length} record(s).\n\nAre you sure you want to continue?`);
+            if (!confirmUpdate) return;
+            this.disabled = true;
+            this.textContent = 'UPDATING BIN...';
+            try {
+                await updateVideosInBin(editData);
+                existingData = JSON.parse(JSON.stringify(editData));
+                await populateCategories();
+                showEditMessage(`Cloud bin updated successfully!`, 'success');
+            } catch (error) {
+                showEditMessage(`Error updating bin: ${error.message}`, 'error');
+            } finally {
+                this.disabled = false;
+                this.innerHTML = `
+                    <svg viewBox="0 0 24 24" width="20" height="20">
+                        <path fill="currentColor" d="M19 12v7H5v-7H3v7c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-7h-2zm-6 .67l2.59-2.58L17 11.5l-5 5-5-5 1.41-1.41L11 12.67V3h2z"/>
+                    </svg>
+                    Update Cloud Bin
+                `;
+            }
+        });
+
+        clearEditBtn.addEventListener('click', function() {
+            const confirmClear = confirm('Are you sure you want to clear all data and reset the Edit tab?');
+            if (!confirmClear) return;
+            // editFileInput.value = ''; // This element was removed
+            editFileInfo.style.display = 'none';
+            resetEditTab();
+            showEditMessage('Edit tab has been cleared successfully!', 'success');
+        });
+
+        function resetEditTab() {
+            editData = [];
+            editFileName = '';
+            dataTableBody.innerHTML = '';
+            editStats.style.display = 'none';
+            tableSection.style.display = 'none';
+            updateOriginBtn.disabled = true;
+            selectAllCheckbox.checked = false;
+        }
+
+        function showEditMessage(message, type) {
+            editMessageContainer.innerHTML = `<p class="${type}">${message}</p>`;
+            setTimeout(() => {
+                editMessageContainer.innerHTML = '';
+            }, 5000);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Run authentication check on page load
+        handleInitialAuth();
+    </script>
+</body>
+</html>

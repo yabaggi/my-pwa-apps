@@ -729,15 +729,18 @@
                 <div class="selection-section">
                     <div class="category-section">
                         <div class="category-header">
-                            <label class="category-label">Select a Category</label>
-                            <button class="hamburger-btn" onclick="toggleMenu()">
-                                <div class="hamburger-icon">
-                                    <span></span>
-                                    <span></span>
-                                    <span></span>
-                                </div>
-                                Categories
-                            </button>
+                            <label class="category-label"></label>
+                            <div style="display: flex; gap: 10px;">
+                                <button class="btn btn-secondary" onclick="window.location.href='loadvideos.html'">Videos upload</button>
+                                <button class="hamburger-btn" onclick="toggleMenu()">
+                                    <div class="hamburger-icon">
+                                        <span></span>
+                                        <span></span>
+                                        <span></span>
+                                    </div>
+                                    Categories
+                                </button>
+                            </div>
                         </div>
                         <div class="chips-wrapper">
                             <div id="chipsContainer" class="chips-container"></div>
