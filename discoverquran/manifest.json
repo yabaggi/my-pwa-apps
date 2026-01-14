@@ -1,9 +1,9 @@
 {
-  "id": "DiscoverQ-id",
+  "id": "discoverquran-id",
   "name": "مع القرآن الكريم",
-  "short_name": "مع القرآن",
+  "short_name": "مع القرآن ال",
   "description": "",
-  "start_url": "/my-pwa-apps//discoverquran/",
+  "start_url": "/my-pwa-apps/discoverquran/",
   "scope": "/my-pwa-apps/discoverquran/",
   "display": "standalone",
   "orientation": "portrait-primary",
