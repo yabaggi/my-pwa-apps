@@ -28,5 +28,18 @@
     "folder": "شينجو",
     "content_path": "EPUB/Content/cover.xhtml",
     "structure": "valid_epub"
+  },
+  {
+    "name": "نظرة_جديدة_للقرآن",
+    "folder": "نظرة_جديدة_للقرآن",
+    "content_path": "EPUB/Content/cover.xhtml",
+    "structure": "valid_epub"
+  },
+  {
+    "name": "مغالطات منطقية",
+    "folder": "86048474",
+    "content_path": "EPUB/Content/cover.xhtml",
+    "structure": "valid_epub"
   }
 ]
+

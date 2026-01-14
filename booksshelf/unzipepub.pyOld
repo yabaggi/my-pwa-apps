@@ -296,117 +296,113 @@ def print_summary(books_info, total_files):
 
 def main():
     print_header()
-
-    # Create output folder if it doesn't exist
+    
+    # Clean existing output
+    if os.path.exists(UNZIPPED_FOLDER):
+        print(f"🧹 Cleaning existing output folder...")
+        shutil.rmtree(UNZIPPED_FOLDER)
+    
     os.makedirs(UNZIPPED_FOLDER, exist_ok=True)
-
-    # --- MODIFIED: Load existing book index ---
-    books_info = []
-    processed_book_names = set()
-    index_file = 'unzipped_books.json'
-
-    if os.path.exists(index_file):
-        print(f"📖 Reading existing index file: {index_file}")
-        try:
-            with open(index_file, 'r', encoding='utf-8') as f:
-                books_info = json.load(f)
-            
-            # Create a set of names for quick lookup
-            for book in books_info:
-                if 'name' in book:
-                    processed_book_names.add(book['name'])
-            print(f"   ✓ Found {len(processed_book_names)} existing books.")
-        except (json.JSONDecodeError, IOError) as e:
-            print(f"   ⚠️  Could not read or parse index file: {e}. Starting fresh.")
-            books_info = []
     
-    # --- MODIFIED: Find only new EPUB files ---
+    # Find EPUB files
     print(f"🔍 Searching for EPUB files in '{MYBOOKS_FOLDER}'...")
-    all_epub_files = find_epub_files(MYBOOKS_FOLDER)
+    epub_files = find_epub_files(MYBOOKS_FOLDER)
     
-    new_epub_files = []
-    for epub_path in all_epub_files:
-        epub_name_without_ext = os.path.splitext(os.path.basename(epub_path))[0]
-        if epub_name_without_ext not in processed_book_names:
-            new_epub_files.append(epub_path)
-
-    if not all_epub_files:
-        print("\n" + "="*70 + "\n⚠️  NO EPUB FILES FOUND!\n" + "="*70)
-        print(f"Please add EPUB files to: {os.path.abspath(MYBOOKS_FOLDER)}\n")
-        if not os.path.exists(index_file):
-            with open(index_file, 'w', encoding='utf-8') as f:
-                json.dump([], f)
-            print(f"Created empty {index_file}")
-        return
-
-    if not new_epub_files:
-        print("\n" + "="*70 + "\n✅ NO NEW BOOKS TO PROCESS!\n" + "="*70)
-        print("All EPUB files in the mybooks folder are already indexed.")
-        print(f"Total books in catalog: {len(books_info)}")
-        print("="*70 + "\n")
+    if not epub_files:
+        print()
+        print("=" * 70)
+        print("⚠️  NO EPUB FILES FOUND!")
+        print("=" * 70)
+        print(f"Please add EPUB files to: {os.path.abspath(MYBOOKS_FOLDER)}")
+        print()
+        
+        # Create empty JSON file
+        with open('unzipped_books.json', 'w', encoding='utf-8') as f:
+            json.dump([], f, indent=2, ensure_ascii=False)
+        
+        print("Created empty unzipped_books.json")
         return
     
-    print(f"✓ Found {len(all_epub_files)} total EPUBs, {len(new_epub_files)} are new.")
+    print(f"✓ Found {len(epub_files)} EPUB file(s)")
     print()
-
-    newly_added_books = []
-
-    # --- MODIFIED: Process only new EPUBs ---
-    for i, epub_path in enumerate(new_epub_files, 1):
+    
+    books_info = []
+    
+    # Process each EPUB
+    for i, epub_path in enumerate(epub_files, 1):
         epub_name = os.path.basename(epub_path)
         safe_name = create_safe_name(epub_name)
         book_folder = os.path.join(UNZIPPED_FOLDER, safe_name)
         
-        print(f"[{i}/{len(new_epub_files)}] Processing NEW book: {epub_name}")
+        print(f"[{i}/{len(epub_files)}] Processing: {epub_name}")
         print(f"   → Folder: {safe_name}")
         
+        # Remove existing folder if it exists
         if os.path.exists(book_folder):
-            print("   ⚠️  Warning: Folder exists but book not in index. Re-creating folder.")
             shutil.rmtree(book_folder)
         
+        # Extract EPUB
         print(f"   📦 Extracting...", end=" ", flush=True)
         
         if unzip_epub(epub_path, book_folder):
             print("✓ Done")
+            
+            # Analyze structure
             structure = scan_folder_structure(book_folder)
             
-            book_info = {
-                "name": os.path.splitext(epub_name)[0],
-                "folder": safe_name,
-                "content_path": structure.get('first_content', ""),
-                "structure": structure.get('structure', 'error')
-            }
-            
-            if book_info["content_path"]:
+            if structure['first_content']:
+                book_info = {
+                    "name": os.path.splitext(epub_name)[0],
+                    "folder": safe_name,
+                    "content_path": structure['first_content'],
+                    "structure": structure['structure']
+                }
+                
+                books_info.append(book_info)
                 print(f"   ✅ Successfully processed!")
             else:
                 print(f"   ❌ ERROR: Could not find content files!")
-            
-            newly_added_books.append(book_info)
+                
+                # Show folder contents for debugging
+                print(f"   📂 Folder contents:")
+                for root, dirs, files in os.walk(book_folder):
+                    level = root.replace(book_folder, '').count(os.sep)
+                    indent = '   ' + '  ' * level
+                    print(f"{indent}📁 {os.path.basename(root)}/")
+                    subindent = '   ' + '  ' * (level + 1)
+                    for file in files[:3]:  # Show first 3 files per directory
+                        print(f"{subindent}📄 {file}")
+                    if len(files) > 3:
+                        print(f"{subindent}   ... and {len(files) - 3} more files")
+                
+                # Still add it with empty path
+                books_info.append({
+                    "name": os.path.splitext(epub_name)[0],
+                    "folder": safe_name,
+                    "content_path": "",
+                    "structure": "error"
+                })
         else:
             print("✗ Failed to extract")
-            newly_added_books.append({
+            
+            # Add error entry
+            books_info.append({
                 "name": os.path.splitext(epub_name)[0],
                 "folder": safe_name,
                 "content_path": "",
                 "structure": "extraction_error"
             })
-        print()
-
-    # --- MODIFIED: Append new books and save ---
-    if newly_added_books:
-        books_info.extend(newly_added_books)
         
-        print("💾 Saving updated index file...")
-        try:
-            with open(index_file, 'w', encoding='utf-8') as f:
-                json.dump(books_info, f, indent=2, ensure_ascii=False)
-            print("✓ Index saved")
-        except IOError as e:
-            print(f"   ❌ ERROR: Could not write to index file: {e}")
-
+        print()
+    
+    # Save JSON index
+    print("💾 Saving index file...")
+    with open('unzipped_books.json', 'w', encoding='utf-8') as f:
+        json.dump(books_info, f, indent=2, ensure_ascii=False)
+    print("✓ Index saved")
+    
     # Print summary
-    print_summary(books_info, len(all_epub_files))
+    print_summary(books_info, len(epub_files))
 
 if __name__ == "__main__":
     try:

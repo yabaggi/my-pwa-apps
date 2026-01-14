@@ -1,0 +1,139 @@
+<?xml version="1.0"?>
+<package xmlns="http://www.idpf.org/2007/opf"  xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" prefix="cc: http://creativecommons.org/ns# rendition: http://www.idpf.org/vocab/rendition/#" version="3.0" unique-identifier="bookid" xml:lang="ar" id="package" dir="rtl">
+<metadata>
+<dc:title>المغالطات المنطقية</dc:title>
+<dc:creator>عادل مصطفى</dc:creator>
+<dc:date>٢٠١٩</dc:date>
+<meta property="dcterms:modified">2019-12-25T09:00:50Z</meta>
+<dc:rights>Copyright 2011 Hindawi Publishing Corporation. All rights reserved.</dc:rights>
+<dc:publisher>الناشر مؤسسة هنداوي سي آي سي</dc:publisher>
+<dc:language>ar</dc:language>
+<dc:identifier id="bookid">urn:uuid:be12ea28-eeae-4746-84f2-129751e57029</dc:identifier>
+<meta name="cover" content="cover-image"/>
+<meta property="rendition:orientation">portrait</meta>
+</metadata>
+<manifest>
+<item id="cover-image" href="Images/cover.jpg"  media-type="image/jpeg"/>
+<item id="css" href="Style/epub.css" media-type="text/css"/>
+<item id="css2" href="Style/app.css" media-type="text/css"/>
+<item id="ncx" href="Navigation/toc.ncx" media-type="application/x-dtbncx+xml"/>
+<item id="nav" href="Navigation/nav.xhtml" properties="nav" media-type="application/xhtml+xml"/>
+<item id="cover" href="Content/cover.xhtml"  media-type="application/xhtml+xml"/>
+<item id="hindawi_logo-" href="Images/hindawi_logo.svg"  media-type="image/svg+xml"/>
+<item id="hindawi_logo_black-" href="Images/hindawi_logo_black.svg"  media-type="image/svg+xml"/>
+<item id="minbaralhurriyaLogo-" href="Images/minbaralhurriyaLogo.svg"  media-type="image/svg+xml"/>
+<item id="minbaralhurriyaLogo_black-" href="Images/minbaralhurriyaLogo_black.svg"  media-type="image/svg+xml"/>
+<item id="SIBF_Logo-" href="Images/SIBF_Logo.svg"  media-type="image/svg+xml"/>
+<item id="figure1-" href="Images/figure1.png"  media-type="image/png"/>
+<item id="figure2-" href="Images/figure2.png"  media-type="image/png"/>
+<item id="goethelogo-" href="Images/goethelogo.png"  media-type="image/png"/>
+<item id="hindawilogo-" href="Images/hindawilogo.png"  media-type="image/png"/>
+<item id="hindawi_kalimat_logo-" href="Images/hindawi_kalimat_logo.png"  media-type="image/png"/>
+<item id="kalimalogo-" href="Images/kalimalogo.png"  media-type="image/png"/>
+<item id="pollandlogo-" href="Images/pollandlogo.png"  media-type="image/png"/>
+<item id="sibflogo-" href="Images/sibflogo.png"  media-type="image/png"/>
+<item id="fp1" href="Content/fp1.xhtml" media-type="application/xhtml+xml"/>
+<item id="fp2" href="Content/fp2.xhtml" media-type="application/xhtml+xml"/>
+<item id="copyright" href="Content/copyright.xhtml" media-type="application/xhtml+xml"/>
+<item id="art1" href="Content/preface-1-1.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art2" href="Content/dedication-1-2.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art3" href="Content/preface-1-3.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art4" href="Content/preface-1-4.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art5" href="Content/chapter-1-5.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art6" href="Content/chapter-1-6.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art7" href="Content/chapter-1-7.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art8" href="Content/chapter-1-8.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art9" href="Content/chapter-1-9.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art10" href="Content/chapter-1-10.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art11" href="Content/chapter-1-11.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art12" href="Content/chapter-1-12.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art13" href="Content/chapter-1-13.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art14" href="Content/chapter-1-14.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art15" href="Content/chapter-1-15.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art16" href="Content/chapter-1-16.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art17" href="Content/chapter-1-17.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art18" href="Content/chapter-1-18.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art19" href="Content/chapter-1-19.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art20" href="Content/chapter-1-20.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art21" href="Content/chapter-1-21.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art22" href="Content/chapter-1-22.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art23" href="Content/chapter-1-23.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art24" href="Content/chapter-1-24.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art25" href="Content/chapter-1-25.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art26" href="Content/chapter-1-26.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art27" href="Content/chapter-1-27.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art28" href="Content/chapter-1-28.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art29" href="Content/chapter-1-29.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art30" href="Content/chapter-1-30.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art31" href="Content/chapter-1-31.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art32" href="Content/chapter-1-32.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art33" href="Content/chapter-1-33.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art34" href="Content/chapter-1-34.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art35" href="Content/chapter-1-35.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art36" href="Content/chapter-1-36.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art37" href="Content/chapter-1-37.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art38" href="Content/chapter-1-38.xhtml"  media-type="application/xhtml+xml"/>
+<item id="art39" href="Content/chapter-1-39.xhtml"  media-type="application/xhtml+xml"/>
+<item id="font.estre" href="Fonts/estre.ttf" media-type="application/x-font-truetype"/>
+<item id="font.EversonMono" href="Fonts/EversonMono.ttf" media-type="application/x-font-truetype"/>
+<item id="font.Antinoou" href="Fonts/Antinoou.ttf" media-type="application/x-font-truetype"/>
+<item id="font.EgyptianHieroglyphics-He" href="Fonts/EgyptianHieroglyphics-He.ttf" media-type="application/x-font-truetype"/>
+<item id="font.YakoutLinotypeLight-RegularKH" href="Fonts/YakoutLinotypeLight-RegularKH.ttf" media-type="application/x-font-truetype"/>
+<item id="font.Quran" href="Fonts/Quran.ttf" media-type="application/x-font-truetype"/>
+<item id="font.frank" href="Fonts/frank.ttf" media-type="application/x-font-truetype"/>
+<item id="font.SimSun" href="Fonts/SimSun.ttf" media-type="application/x-font-truetype"/>
+<item id="font.NotoNaskhArabic" href="Fonts/NotoNaskhArabic.ttf" media-type="application/x-font-truetype"/>
+<item id="font.NotoNaskhArabic-Bold" href="Fonts/NotoNaskhArabic-Bold.ttf" media-type="application/x-font-truetype"/>
+<item id="font.NotoKufiArabic" href="Fonts/NotoKufiArabic.ttf" media-type="application/x-font-truetype"/>
+<item id="font.NotoKufiArabic-Bold" href="Fonts/NotoKufiArabic-Bold.ttf" media-type="application/x-font-truetype"/>
+<item id="font.Material-Design-Iconic-Font" href="Fonts/Material-Design-Iconic-Font.ttf" media-type="application/x-font-truetype"/>
+</manifest>
+<spine toc="ncx" page-progression-direction="rtl">
+<itemref idref="cover"/>
+<itemref idref="fp1"/>
+<itemref idref="fp2"/>
+<itemref idref="copyright"/>
+<itemref idref="art1"/>
+<itemref idref="art2"/>
+<itemref idref="art3"/>
+<itemref idref="art4"/>
+<itemref idref="art5"/>
+<itemref idref="art6"/>
+<itemref idref="art7"/>
+<itemref idref="art8"/>
+<itemref idref="art9"/>
+<itemref idref="art10"/>
+<itemref idref="art11"/>
+<itemref idref="art12"/>
+<itemref idref="art13"/>
+<itemref idref="art14"/>
+<itemref idref="art15"/>
+<itemref idref="art16"/>
+<itemref idref="art17"/>
+<itemref idref="art18"/>
+<itemref idref="art19"/>
+<itemref idref="art20"/>
+<itemref idref="art21"/>
+<itemref idref="art22"/>
+<itemref idref="art23"/>
+<itemref idref="art24"/>
+<itemref idref="art25"/>
+<itemref idref="art26"/>
+<itemref idref="art27"/>
+<itemref idref="art28"/>
+<itemref idref="art29"/>
+<itemref idref="art30"/>
+<itemref idref="art31"/>
+<itemref idref="art32"/>
+<itemref idref="art33"/>
+<itemref idref="art34"/>
+<itemref idref="art35"/>
+<itemref idref="art36"/>
+<itemref idref="art37"/>
+<itemref idref="art38"/>
+<itemref idref="art39"/>
+</spine>
+<guide>
+<reference type="cover" title="Cover Image" href="Content/cover.xhtml"/>
+</guide>
+</package>
