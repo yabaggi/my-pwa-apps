@@ -1182,7 +1182,9 @@
     </div>
 
     <script>
-        
+        // --- PASSWORD PROTECTION & KEY RECONSTRUCTION ---
+
+        // Truncated keys, with the last 2 characters removed.
         const TRUNC_DEV_KEY = 'AIzaSyCNZ-KXs7iX45AlhpqLKhFsmC_Ym6iD0';
         const TRUNC_BIN_ID = '6954ed8343b1c97be9101e';
         const TRUNC_MASTER_KEY = '$2a$10$8c.vLWaiWSjGjO.7VVjhb.339iJIfHzDC72HBTVz.cjQSMyotEL';
@@ -1208,7 +1210,7 @@
             }
 
             try {
-                
+                // Reconstruct keys from truncated versions and password parts
                 DEVELOPER_KEY = TRUNC_DEV_KEY + password.substring(0, 2);
                 BIN_ID = TRUNC_BIN_ID + password.substring(2, 4);
                 MASTER_KEY = TRUNC_MASTER_KEY + password.substring(4, 6);
@@ -1720,4 +1722,3 @@
     </script>
 </body>
 </html>
-
