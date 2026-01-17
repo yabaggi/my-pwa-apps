@@ -52,7 +52,45 @@
             padding: 30px;
         }
 
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            font-size: 14px;
+            flex-wrap: wrap;
+        }
 
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #666;
+        }
+
+        .breadcrumb-item.active {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .breadcrumb-link {
+            color: #667eea;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .breadcrumb-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .breadcrumb-separator {
+            color: #ccc;
+        }
 
         .selection-section {
             margin-bottom: 30px;
@@ -682,13 +720,17 @@
             </div>
             
             <div id="appContent" style="display: none;">
-
+                <nav id="breadcrumb" class="breadcrumb" style="display: none;">
+                    <div class="breadcrumb-item">
+                        <a class="breadcrumb-link" onclick="goHome()">Home</a>
+                    </div>
+                </nav>
 
                 <div class="selection-section">
                     <div class="category-section">
                         <div class="category-header">
                             <label class="category-label"></label>
-                            <div style="display: flex; gap: 60px;">
+                            <div style="display: flex; gap: 10px;">
                                 <button class="btn btn-secondary" onclick="window.location.href='loadvideos.html'">Videos upload</button>
                                 <button class="hamburger-btn" onclick="toggleMenu()">
                                     <div class="hamburger-icon">
@@ -776,6 +818,8 @@
         });
 
         function setupBackButtonHandler() {
+            history.pushState({ page: 'home' }, 'Home', window.location.href);
+            
             window.addEventListener('popstate', function(event) {
                 const playerSection = document.getElementById('videoPlayerSection');
                 const fullscreenContainer = document.getElementById('fullscreenContainer');
@@ -836,17 +880,20 @@
             setupEventListeners();
             displayStats();
             
-            // Do not set "All" as default on initial load
-            selectedCategory = null;
+            // Set "All" as default without messing with history
+            selectedCategory = 'All';
             updateMenuSelection();
             const chips = document.querySelectorAll('.chip');
-            chips.forEach(chip => chip.classList.remove('active'));
-
-            // Ensure placeholder is visible initially
-            document.getElementById('placeholder').style.display = 'block';
-            document.getElementById('videoGrid').classList.remove('show'); // Ensure video grid is hidden
-            
-            isOnHomePage = true; // Still on "home" page but empty
+            chips.forEach(chip => {
+                if (chip.dataset.category === 'All') {
+                    chip.classList.add('active');
+                } else {
+                    chip.classList.remove('active');
+                }
+            });
+            displayVideosInCategory('All');
+            updateBreadcrumb();
+            isOnHomePage = true; // "All" is our new home
         }
 
         function categorizeVideos() {
@@ -1007,7 +1054,54 @@
             });
         }
 
+        function updateBreadcrumb() {
+            const breadcrumb = document.getElementById('breadcrumb');
+            breadcrumb.innerHTML = '<div class="breadcrumb-item"><a class="breadcrumb-link" onclick="goHome()">Home</a></div>';
+            
+            if (selectedCategory && selectedCategory !== 'All') {
+                const separator1 = document.createElement('span');
+                separator1.className = 'breadcrumb-separator';
+                separator1.textContent = '›';
+                breadcrumb.appendChild(separator1);
+                
+                if (selectedVideo) {
+                    const categoryItem = document.createElement('div');
+                    categoryItem.className = 'breadcrumb-item';
+                    categoryItem.innerHTML = `<a class="breadcrumb-link" onclick="backToCategory()">${selectedCategory}</a>`;
+                    breadcrumb.appendChild(categoryItem);
+                    
+                    const separator2 = document.createElement('span');
+                    separator2.className = 'breadcrumb-separator';
+                    separator2.textContent = '›';
+                    breadcrumb.appendChild(separator2);
+                    
+                    const videoItem = document.createElement('div');
+                    videoItem.className = 'breadcrumb-item active';
+                    const truncatedTitle = selectedVideo.title.length > 50 
+                        ? selectedVideo.title.substring(0, 50) + '...' 
+                        : selectedVideo.title;
+                    videoItem.textContent = truncatedTitle;
+                    breadcrumb.appendChild(videoItem);
+                } else {
+                    const categoryItem = document.createElement('div');
+                    categoryItem.className = 'breadcrumb-item active';
+                    categoryItem.textContent = selectedCategory;
+                    breadcrumb.appendChild(categoryItem);
+                }
+                
+                breadcrumb.style.display = 'flex';
+            } else {
+                breadcrumb.style.display = 'none';
+            }
+        }
 
+        function goHome() {
+            clearVideoSelection();
+        }
+
+        function backToCategory() {
+            backToVideos();
+        }
 
         function selectCategory(category) {
             const chips = document.querySelectorAll('.chip');
@@ -1023,6 +1117,7 @@
             selectedCategory = category;
             selectedVideo = null;
             displayVideosInCategory(category);
+            updateBreadcrumb();
             updateMenuSelection();
             if (category === 'All') {
                 isOnHomePage = true;
@@ -1099,6 +1194,7 @@
             event.currentTarget.classList.add('selected');
             
             displayVideoPlayer(video);
+            updateBreadcrumb();
             history.pushState({ page: 'video' }, 'Video', window.location.href);
         }
 
@@ -1144,6 +1240,7 @@
             const cards = document.querySelectorAll('.video-card');
             cards.forEach(card => card.classList.remove('selected'));
             
+            updateBreadcrumb();
             document.getElementById('videoGrid').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
@@ -1196,20 +1293,27 @@
         }
 
         function clearVideoSelection() {
-            selectedCategory = null; // No category selected
+            selectedCategory = 'All'; // Set to all
             selectedVideo = null;
             
             const chips = document.querySelectorAll('.chip');
             chips.forEach(chip => {
-                chip.classList.remove('active'); // Remove active from all chips
+                if(chip.dataset.category === 'All') {
+                    chip.classList.add('active');
+                } else {
+                    chip.classList.remove('active');
+                }
             });
             
-            document.getElementById('videoGrid').classList.remove('show'); // Hide video grid
-            document.getElementById('placeholder').style.display = 'block'; // Show placeholder
-            document.getElementById('videoPlayerSection').classList.remove('show'); // Hide video player
+            document.getElementById('videoGrid').classList.add('show');
+            displayVideosInCategory('All'); // Show all videos
+            document.getElementById('placeholder').style.display = 'none'; // hide placeholder
+            document.getElementById('videoPlayerSection').classList.remove('show');
             
             const iframe = document.getElementById('videoIframe');
             iframe.src = '';
+            
+            updateBreadcrumb();
             updateMenuSelection();
         }
 
