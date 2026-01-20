@@ -1,0 +1,1695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <title>Edu App Test Client</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      color: #333;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      margin: 0 0 8px 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    header p {
+      margin: 0;
+      opacity: 0.9;
+      font-size: 0.9rem;
+    }
+
+    .config-section {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    /* Tab Styles */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      border-bottom: 2px solid #e0e0e0;
+      background: white;
+      padding: 8px 16px 0;
+      border-radius: 12px 12px 0 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .tab {
+      padding: 12px 24px;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: #666;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 8px 8px 0 0;
+      transition: all 0.2s ease;
+      position: relative;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .tab:hover {
+      background: #f8f9fa;
+      color: #667eea;
+    }
+
+    .tab.active {
+      color: #667eea;
+      background: #f8f9fa;
+    }
+
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: #667eea;
+      border-radius: 2px 2px 0 0;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    section {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    section.collapsed .section-content {
+      display: none;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: #667eea;
+      font-weight: 600;
+    }
+
+    .toggle-icon {
+      font-size: 1.2rem;
+      color: #667eea;
+      transition: transform 0.3s ease;
+    }
+
+    section.collapsed .toggle-icon {
+      transform: rotate(-90deg);
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 500;
+      color: #555;
+      font-size: 0.9rem;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 1rem;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      background: white;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    }
+
+    textarea.code {
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      min-height: 150px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .form-row .form-group {
+      flex: 1;
+      min-width: 140px;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 6px rgba(102, 126, 234, 0.3);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    button:hover {
+      box-shadow: 0 6px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .result-section {
+      margin-top: 16px;
+    }
+
+    .result-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 12px;
+    }
+
+    .result-label {
+      font-weight: 600;
+      color: #555;
+      font-size: 0.9rem;
+      flex: 1;
+    }
+
+    .copy-button {
+      padding: 8px 16px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      width: auto;
+    }
+
+    .copy-button:hover {
+      background: #218838;
+      box-shadow: 0 4px 8px rgba(40, 167, 69, 0.4);
+    }
+
+    .copy-button:active {
+      transform: scale(0.95);
+    }
+
+    .copy-button.copied {
+      background: #17a2b8;
+    }
+
+    .copy-button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .result-content {
+      background: #f8f9fa;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 16px;
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .result-content.empty {
+      color: #999;
+      font-style: italic;
+      text-align: center;
+      padding: 24px;
+    }
+
+    .result-content.code-output {
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    /* Quiz Question Styles */
+    .quiz-question {
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .quiz-question:last-child {
+      margin-bottom: 0;
+    }
+
+    .question-number {
+      display: inline-block;
+      background: #667eea;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .question-text {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: #333;
+      margin: 12px 0 16px 0;
+      line-height: 1.5;
+    }
+
+    .option-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 16px 0;
+    }
+
+    .option-item {
+      padding: 10px 12px;
+      margin: 8px 0;
+      border-radius: 6px;
+      background: #f8f9fa;
+      border: 2px solid #e9ecef;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .option-item.correct {
+      background: #d4edda;
+      border-color: #28a745;
+    }
+
+    .option-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      background: #667eea;
+      color: white;
+      border-radius: 50%;
+      font-weight: 600;
+      font-size: 0.85rem;
+      margin-right: 10px;
+      flex-shrink: 0;
+    }
+
+    .option-item.correct .option-letter {
+      background: #28a745;
+    }
+
+    .option-text {
+      flex: 1;
+      padding-top: 2px;
+    }
+
+    .correct-indicator {
+      color: #28a745;
+      font-weight: 600;
+      margin-left: 8px;
+      font-size: 0.9rem;
+    }
+
+    .explanation-box {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 12px;
+      border-radius: 4px;
+      margin-top: 12px;
+    }
+
+    .explanation-label {
+      font-weight: 600;
+      color: #856404;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+
+    .explanation-text {
+      color: #856404;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Explanation Response Styles */
+    .explanation-response {
+      line-height: 1.7;
+      color: #333;
+    }
+
+    .explanation-response p {
+      margin: 0 0 12px 0;
+    }
+
+    .explanation-response ul,
+    .explanation-response ol {
+      margin: 0 0 12px 20px;
+      padding: 0;
+    }
+
+    .explanation-response li {
+      margin: 6px 0;
+    }
+
+    /* Study Guide Styles */
+    .study-guide {
+      line-height: 1.7;
+    }
+
+    .study-guide h3 {
+      color: #667eea;
+      font-size: 1.1rem;
+      margin: 24px 0 12px 0;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    .study-guide h3:first-child {
+      margin-top: 0;
+    }
+
+    .study-guide ul,
+    .study-guide ol {
+      margin: 0 0 16px 20px;
+      padding: 0;
+    }
+
+    .study-guide li {
+      margin: 8px 0;
+      line-height: 1.6;
+    }
+
+    .study-guide p {
+      margin: 0 0 12px 0;
+    }
+
+    .study-guide strong {
+      color: #667eea;
+    }
+
+    /* Loading and Error States */
+    .loading {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+      color: #667eea;
+      font-style: italic;
+    }
+
+    .error {
+      color: #dc3545;
+      background: #f8d7da;
+      border: 1px solid #f5c6cb;
+      padding: 16px;
+      border-radius: 8px;
+      line-height: 1.5;
+    }
+
+    .error-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Model info styles */
+    .model-info {
+      margin-top: 8px;
+      padding: 10px 12px;
+      background: #e7f3ff;
+      border-left: 3px solid #667eea;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      color: #014361;
+      line-height: 1.4;
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+      .container {
+        padding: 12px;
+      }
+
+      h1 {
+        font-size: 1.3rem;
+      }
+
+      header {
+        padding: 16px 12px;
+      }
+
+      section, .config-section {
+        padding: 12px;
+        margin-bottom: 12px;
+      }
+
+      .tabs {
+        padding: 8px 12px 0;
+      }
+
+      .tab {
+        padding: 10px 16px;
+        font-size: 0.9rem;
+      }
+
+      .section-header h2 {
+        font-size: 1rem;
+      }
+
+      input[type="text"],
+      input[type="number"],
+      select,
+      textarea {
+        padding: 10px;
+        font-size: 16px;
+      }
+
+      button {
+        padding: 12px 20px;
+      }
+
+      .form-row {
+        flex-direction: column;
+      }
+
+      .form-row .form-group {
+        min-width: 100%;
+      }
+
+      .quiz-question {
+        padding: 12px;
+      }
+
+      .question-text {
+        font-size: 1rem;
+      }
+
+      .result-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .copy-button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 380px) {
+      h1 {
+        font-size: 1.2rem;
+      }
+
+      .section-header h2 {
+        font-size: 0.95rem;
+      }
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    textarea:focus-visible {
+      outline: 3px solid #667eea;
+      outline-offset: 2px;
+    }
+  </style>
+    <meta name="theme-color" content="#2196f3">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Edu App Test">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>📚 Edu App – Test Client</h1>
+      <p>Configure settings and test API endpoints below</p>
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Configuration Section (Global) -->
+    <div class="config-section">
+      <div class="form-group">
+        <label for="baseUrl">API Base URL</label>
+        <input id="baseUrl" type="text" value="https://agents2backend.onrender.com" placeholder="Enter API base URL" />
+      </div>
+
+      <div class="form-group">
+        <label for="modelSelect">Model Selection</label>
+        <select id="modelSelect">
+          <option value="">Loading models...</option>
+        </select>
+        <div id="modelInfo" class="model-info" style="display: none;"></div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('study')">📚 Study</button>
+      <button class="tab" onclick="switchTab('code')">💻 Code</button>
+    </div>
+
+    <!-- STUDY TAB CONTENT -->
+    <div id="studyTab" class="tab-content active">
+      <!-- QUIZ SECTION -->
+      <section id="quizSection">
+        <div class="section-header" onclick="toggleSection('quizSection')">
+          <h2>1️⃣ Generate Quiz from Lesson</h2>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content">
+          <div class="form-group">
+            <label for="quizLessonText">Lesson Text</label>
+            <textarea id="quizLessonText" placeholder="Enter lesson text...">Data privacy is about protecting personal information from unauthorized access or misuse. Organizations must handle user data carefully, only collect what is needed, and provide transparent policies.</textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="quizNumQuestions">Number of Questions</label>
+              <input id="quizNumQuestions" type="number" value="3" min="1" max="20" />
+            </div>
+
+            <div class="form-group">
+              <label for="quizDifficulty">Difficulty Level</label>
+              <select id="quizDifficulty">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="expert">Expert</option>
+              </select>
+            </div>
+          </div>
+
+          <button onclick="callQuiz()">Generate Quiz</button>
+
+          <div class="result-section">
+            <div class="result-header">
+              <div class="result-label">Response:</div>
+              <button class="copy-button" id="copyQuizBtn" onclick="copyQuizContent()" style="display: none;">
+                <span>📋</span>
+                <span class="copy-text">Copy</span>
+              </button>
+            </div>
+            <div id="quizResult" class="result-content empty">Results will appear here...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPLAIN SECTION -->
+      <section id="explainSection">
+        <div class="section-header" onclick="toggleSection('explainSection')">
+          <h2>2️⃣ Explain Text</h2>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content">
+          <div class="form-group">
+            <label for="explainText">Text to Explain</label>
+            <textarea id="explainText" placeholder="Enter text to explain...">A hash function maps data of arbitrary size to a fixed-size value, typically used for integrity checks and indexing.</textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="explainLevel">Explanation Level</label>
+            <select id="explainLevel">
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="expert">Expert</option>
+            </select>
+          </div>
+
+          <button onclick="callExplain()">Explain</button>
+
+          <div class="result-section">
+            <div class="result-header">
+              <div class="result-label">Response:</div>
+              <button class="copy-button" id="copyExplainBtn" onclick="copyExplainContent()" style="display: none;">
+                <span>📋</span>
+                <span class="copy-text">Copy</span>
+              </button>
+            </div>
+            <div id="explainResult" class="result-content empty">Results will appear here...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STUDY GUIDE SECTION -->
+      <section id="guideSection">
+        <div class="section-header" onclick="toggleSection('guideSection')">
+          <h2>3️⃣ Generate Study Guide</h2>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content">
+          <div class="form-group">
+            <label for="guideLessonText">Lesson Text</label>
+            <textarea id="guideLessonText" placeholder="Enter lesson text...">Secure coding means writing software in a way that prevents common vulnerabilities like SQL injection, cross-site scripting, and buffer overflows. Developers should validate inputs, use parameterized queries, and follow security best practices.</textarea>
+          </div>
+
+          <button onclick="callStudyGuide()">Generate Study Guide</button>
+
+          <div class="result-section">
+            <div class="result-header">
+              <div class="result-label">Response:</div>
+              <button class="copy-button" id="copyGuideBtn" onclick="copyGuideContent()" style="display: none;">
+                <span>📋</span>
+                <span class="copy-text">Copy</span>
+              </button>
+            </div>
+            <div id="guideResult" class="result-content empty">Results will appear here...</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- CODE TAB CONTENT -->
+    <div id="codeTab" class="tab-content">
+      <!-- COMMIT MESSAGE SECTION -->
+      <section id="commitSection">
+        <div class="section-header" onclick="toggleSection('commitSection')">
+          <h2>1️⃣ Generate Commit Message</h2>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content">
+          <div class="form-group">
+            <label for="commitDiff">Git Diff (Staged Changes)</label>
+            <textarea id="commitDiff" class="code" placeholder="Paste your git diff here...">diff --git a/src/utils.py b/src/utils.py
+index 1234567..abcdefg 100644
+--- a/src/utils.py
++++ b/src/utils.py
+@@ -10,6 +10,8 @@ def process_data(data):
++    if not data:
++        return None
+     return result</textarea>
+          </div>
+
+          <button onclick="callCommitMessage()">Generate Commit Message</button>
+
+          <div class="result-section">
+            <div class="result-header">
+              <div class="result-label">Response:</div>
+              <button class="copy-button" id="copyCommitBtn" onclick="copyCommitContent()" style="display: none;">
+                <span>📋</span>
+                <span class="copy-text">Copy</span>
+              </button>
+            </div>
+            <div id="commitResult" class="result-content empty">Results will appear here...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- EXPLAIN CODE SECTION -->
+      <section id="explainCodeSection">
+        <div class="section-header" onclick="toggleSection('explainCodeSection')">
+          <h2>2️⃣ Explain Code</h2>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content">
+          <div class="form-group">
+            <label for="explainCode">Code Snippet</label>
+            <textarea id="explainCode" class="code" placeholder="Paste your code here...">def fibonacci(n):
+    if n <= 1:
+        return n
+    return fibonacci(n-1) + fibonacci(n-2)</textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="codeLanguage">Programming Language (Optional)</label>
+            <input id="codeLanguage" type="text" placeholder="e.g., Python, JavaScript, Java" />
+          </div>
+
+          <button onclick="callExplainCode()">Explain Code</button>
+
+          <div class="result-section">
+            <div class="result-header">
+              <div class="result-label">Response:</div>
+              <button class="copy-button" id="copyExplainCodeBtn" onclick="copyExplainCodeContent()" style="display: none;">
+                <span>📋</span>
+                <span class="copy-text">Copy</span>
+              </button>
+            </div>
+            <div id="explainCodeResult" class="result-content empty">Results will appear here...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- DOCSTRING SECTION -->
+      <section id="docstringSection">
+        <div class="section-header" onclick="toggleSection('docstringSection')">
+          <h2>3️⃣ Generate Docstring</h2>
+          <span class="toggle-icon">▼</span>
+        </div>
+        <div class="section-content">
+          <div class="form-group">
+            <label for="docstringFunction">Function Source Code</label>
+            <textarea id="docstringFunction" class="code" placeholder="Paste your function here...">def calculate_discount(price, discount_percent):
+    if discount_percent < 0 or discount_percent > 100:
+        raise ValueError("Discount must be between 0 and 100")
+    return price * (1 - discount_percent / 100)</textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="docstringStyle">Docstring Style</label>
+            <select id="docstringStyle">
+              <option value="google">Google Style</option>
+              <option value="numpy">NumPy Style</option>
+              <option value="sphinx">Sphinx Style</option>
+            </select>
+          </div>
+
+          <button onclick="callDocstring()">Generate Docstring</button>
+
+          <div class="result-section">
+            <div class="result-header">
+              <div class="result-label">Response:</div>
+              <button class="copy-button" id="copyDocstringBtn" onclick="copyDocstringContent()" style="display: none;">
+                <span>📋</span>
+                <span class="copy-text">Copy</span>
+              </button>
+            </div>
+            <div id="docstringResult" class="result-content empty">Results will appear here...</div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // ====================================================================
+    // MODELS DATA
+    // ====================================================================
+    const MODELS_DATA = {
+      "models": [
+        {
+          "id": "qwen/qwen3-coder:free",
+          "name": "Qwen 3 Coder",
+          "provider": "Qwen",
+          "category": "code",
+          "context_length": 32768,
+          "pricing": "free",
+          "description": "Optimized for coding tasks, great for code explanation and generation",
+          "recommended_for": "Code generation, debugging, documentation"
+        },
+        {
+          "id": "google/gemini-2.0-flash-exp:free",
+          "name": "Gemini 2.0 Flash",
+          "provider": "Google",
+          "category": "general",
+          "context_length": 1000000,
+          "pricing": "free",
+          "description": "Fast and efficient, good for general tasks",
+          "recommended_for": "Study guides, explanations, general Q&A"
+        },
+        {
+          "id": "google/gemma-3-27b-it:free",
+          "name": "Gemma 3 27B",
+          "provider": "Google",
+          "category": "general",
+          "context_length": 8192,
+          "pricing": "free",
+          "description": "Balanced performance for various tasks",
+          "recommended_for": "Quiz generation, text explanations"
+        },
+        {
+          "id": "qwen/qwen3-4b:free",
+          "name": "Qwen 3 4B",
+          "provider": "Qwen",
+          "category": "general",
+          "context_length": 32768,
+          "pricing": "free",
+          "description": "Lightweight and fast, good for simple tasks",
+          "recommended_for": "Quick explanations, simple Q&A"
+        },
+        {
+          "id": "moonshotai/kimi-k2:free",
+          "name": "Kimi K2",
+          "provider": "Moonshot AI",
+          "category": "general",
+          "context_length": 128000,
+          "pricing": "free",
+          "description": "Efficient model with good reasoning",
+          "recommended_for": "Long context tasks, study materials"
+        },
+        {
+          "id": "openai/gpt-oss-20b:free",
+          "name": "GPT OSS 20B",
+          "provider": "OpenAI",
+          "category": "general",
+          "context_length": 8192,
+          "pricing": "free",
+          "description": "Open source GPT variant",
+          "recommended_for": "General purpose tasks"
+        },
+        {
+          "id": "google/gemini-2.0-flash-thinking-exp:free",
+          "name": "Gemini 2.0 Flash Thinking",
+          "provider": "Google",
+          "category": "general",
+          "context_length": 32768,
+          "pricing": "free",
+          "description": "Enhanced reasoning capabilities",
+          "recommended_for": "Complex problem solving, detailed explanations"
+        },
+        {
+          "id": "anthropic/claude-3.5-sonnet",
+          "name": "Claude 3.5 Sonnet",
+          "provider": "Anthropic",
+          "category": "general",
+          "context_length": 200000,
+          "pricing": "paid",
+          "description": "Best-in-class reasoning, coding, and analysis",
+          "recommended_for": "Complex coding, detailed analysis, high-quality content"
+        },
+        {
+          "id": "openai/gpt-4o",
+          "name": "GPT-4o",
+          "provider": "OpenAI",
+          "category": "general",
+          "context_length": 128000,
+          "pricing": "paid",
+          "description": "Latest GPT-4 optimized model with multimodal capabilities",
+          "recommended_for": "Complex reasoning, creative writing, coding"
+        },
+        {
+          "id": "openai/gpt-4o-mini",
+          "name": "GPT-4o Mini",
+          "provider": "OpenAI",
+          "category": "general",
+          "context_length": 128000,
+          "pricing": "paid",
+          "description": "Faster and more affordable GPT-4o variant",
+          "recommended_for": "Fast responses, cost-effective tasks"
+        },
+        {
+          "id": "deepseek/deepseek-chat",
+          "name": "DeepSeek Chat",
+          "provider": "DeepSeek",
+          "category": "code",
+          "context_length": 64000,
+          "pricing": "paid",
+          "description": "Excellent for complex coding and technical tasks",
+          "recommended_for": "Advanced coding, system architecture"
+        },
+        {
+          "id": "meta-llama/llama-3.1-405b-instruct",
+          "name": "Llama 3.1 405B",
+          "provider": "Meta",
+          "category": "general",
+          "context_length": 131072,
+          "pricing": "paid",
+          "description": "Largest open-source model with excellent performance",
+          "recommended_for": "Complex tasks, long context understanding"
+        },
+        {
+          "id": "meta-llama/llama-3.1-70b-instruct",
+          "name": "Llama 3.1 70B",
+          "provider": "Meta",
+          "category": "general",
+          "context_length": 131072,
+          "pricing": "paid",
+          "description": "Balanced performance and cost",
+          "recommended_for": "General purpose, good value"
+        },
+        {
+          "id": "google/gemini-pro-1.5",
+          "name": "Gemini Pro 1.5",
+          "provider": "Google",
+          "category": "general",
+          "context_length": 2000000,
+          "pricing": "paid",
+          "description": "Long context and multimodal capabilities",
+          "recommended_for": "Very long documents, complex analysis"
+        },
+        {
+          "id": "mistralai/mistral-large-2411",
+          "name": "Mistral Large",
+          "provider": "Mistral AI",
+          "category": "general",
+          "context_length": 128000,
+          "pricing": "paid",
+          "description": "High-performance European model",
+          "recommended_for": "Multilingual tasks, code generation"
+        }
+      ],
+      "total": 15
+    };
+
+    // ====================================================================
+    // MODEL LOADING
+    // ====================================================================
+    function loadModels() {
+      const modelSelect = document.getElementById("modelSelect");
+      const models = MODELS_DATA.models;
+      
+      // Clear loading message
+      modelSelect.innerHTML = '';
+      
+      // Add default option
+      const defaultOption = document.createElement('option');
+      defaultOption.value = '';
+      defaultOption.textContent = 'Use backend default';
+      modelSelect.appendChild(defaultOption);
+      
+      // Group models by category
+      const categories = {
+        'code': [],
+        'general': []
+      };
+      
+      models.forEach(model => {
+        const category = model.category || 'general';
+        if (!categories[category]) categories[category] = [];
+        categories[category].push(model);
+      });
+      
+      // Add models by category
+      for (const [category, categoryModels] of Object.entries(categories)) {
+        if (categoryModels.length === 0) continue;
+        
+        // Create optgroup
+        const optgroup = document.createElement('optgroup');
+        optgroup.label = `${category.charAt(0).toUpperCase() + category.slice(1)} Models`;
+        
+        categoryModels.forEach(model => {
+          const option = document.createElement('option');
+          option.value = model.id;
+          
+          // Format display text
+          const pricing = model.pricing === 'free' ? '🆓' : '💎';
+          const contextStr = model.context_length >= 1000000 ? 
+            `${(model.context_length / 1000000).toFixed(1)}M` : 
+            `${(model.context_length / 1000).toFixed(0)}K`;
+          
+          option.textContent = `${pricing} ${model.name} (${contextStr})`;
+          option.dataset.modelData = JSON.stringify(model);
+          
+          optgroup.appendChild(option);
+        });
+        
+        modelSelect.appendChild(optgroup);
+      }
+      
+      const freeCount = models.filter(m => m.pricing === 'free').length;
+      console.log(`✅ Loaded ${models.length} models (${freeCount} free, ${models.length - freeCount} paid)`);
+      
+      // Show model info on change
+      modelSelect.addEventListener('change', showModelInfo);
+    }
+
+    function showModelInfo() {
+      const modelSelect = document.getElementById("modelSelect");
+      const modelInfo = document.getElementById("modelInfo");
+      const selectedOption = modelSelect.options[modelSelect.selectedIndex];
+      
+      if (!selectedOption.dataset.modelData) {
+        modelInfo.style.display = 'none';
+        return;
+      }
+      
+      const model = JSON.parse(selectedOption.dataset.modelData);
+      modelInfo.style.display = 'block';
+      modelInfo.innerHTML = `
+        <strong>${model.provider}</strong> • ${model.description}<br>
+        <strong>Best for:</strong> ${model.recommended_for}
+      `;
+    }
+
+    // Load models on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadModels();
+    });
+
+    // ====================================================================
+    // EXISTING CODE (unchanged)
+    // ====================================================================
+
+    // Store the raw data for copying
+    let quizData = null;
+    let explainData = null;
+    let guideData = null;
+    let commitData = null;
+    let explainCodeData = null;
+    let docstringData = null;
+
+    // Tab switching
+    function switchTab(tabName) {
+      // Update tab buttons
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // Update tab content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      if (tabName === 'study') {
+        document.getElementById('studyTab').classList.add('active');
+      } else if (tabName === 'code') {
+        document.getElementById('codeTab').classList.add('active');
+      }
+    }
+
+    // Section toggle functionality
+    function toggleSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      section.classList.toggle('collapsed');
+    }
+
+    function getSelectedModel() {
+      const select = document.getElementById("modelSelect");
+      const value = select.value.trim();
+      return value || null;
+    }
+
+    async function postJson(path, body) {
+      const baseUrl = document.getElementById("baseUrl").value.replace(/\/+$/, "");
+      const url = baseUrl + path;
+
+      const modelId = getSelectedModel();
+      if (modelId) {
+        body.model = modelId;
+      }
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(body)
+      });
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`HTTP ${res.status}: ${text}`);
+      }
+      return res.json();
+    }
+
+    function setLoading(elementId, button) {
+      const element = document.getElementById(elementId);
+      element.className = 'result-content loading';
+      element.innerHTML = '<span class="spinner"></span>Loading...';
+      if (button) button.disabled = true;
+    }
+
+    function setError(elementId, message, button) {
+      const element = document.getElementById(elementId);
+      element.className = 'result-content';
+      element.innerHTML = `
+        <div class="error">
+          <div class="error-title">⚠️ Error</div>
+          <div>${escapeHtml(message)}</div>
+        </div>
+      `;
+      if (button) button.disabled = false;
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Copy functionality
+    async function copyToClipboard(text, buttonId) {
+      const button = document.getElementById(buttonId);
+      const copyText = button.querySelector('.copy-text');
+      
+      try {
+        await navigator.clipboard.writeText(text);
+        button.classList.add('copied');
+        copyText.textContent = 'Copied!';
+        
+        setTimeout(() => {
+          button.classList.remove('copied');
+          copyText.textContent = 'Copy';
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+        copyText.textContent = 'Failed';
+        setTimeout(() => {
+          copyText.textContent = 'Copy';
+        }, 2000);
+      }
+    }
+
+    function copyQuizContent() {
+      if (!quizData || !quizData.questions) return;
+      
+      const optionLabels = ['A', 'B', 'C', 'D'];
+      let text = '=== QUIZ ===\n\n';
+      
+      quizData.questions.forEach((q, index) => {
+        text += `Question ${index + 1}: ${q.question}\n\n`;
+        
+        q.options.forEach((option, optIndex) => {
+          const marker = optIndex === q.correct_index ? '✓' : ' ';
+          text += `  ${optionLabels[optIndex]}. ${option} ${marker}\n`;
+        });
+        
+        text += `\nCorrect Answer: ${optionLabels[q.correct_index]}\n`;
+        text += `Explanation: ${q.explanation}\n\n`;
+        text += '---\n\n';
+      });
+      
+      copyToClipboard(text, 'copyQuizBtn');
+    }
+
+    function copyExplainContent() {
+      if (!explainData || !explainData.explanation) return;
+      
+      const text = `=== EXPLANATION ===\n\n${explainData.explanation}`;
+      copyToClipboard(text, 'copyExplainBtn');
+    }
+
+    function copyGuideContent() {
+      if (!guideData || !guideData.summary) return;
+      
+      const text = `=== STUDY GUIDE ===\n\n${guideData.summary}`;
+      copyToClipboard(text, 'copyGuideBtn');
+    }
+
+    function copyCommitContent() {
+      if (!commitData) return;
+      copyToClipboard(commitData, 'copyCommitBtn');
+    }
+
+    function copyExplainCodeContent() {
+      if (!explainCodeData) return;
+      copyToClipboard(explainCodeData, 'copyExplainCodeBtn');
+    }
+
+    function copyDocstringContent() {
+      if (!docstringData) return;
+      copyToClipboard(docstringData, 'copyDocstringBtn');
+    }
+
+    // Format Quiz Response
+    function formatQuizResponse(data) {
+      if (!data.questions || data.questions.length === 0) {
+        return '<div class="empty">No questions generated.</div>';
+      }
+
+      const optionLabels = ['A', 'B', 'C', 'D'];
+      
+      let html = '';
+      data.questions.forEach((q, index) => {
+        html += `
+          <div class="quiz-question">
+            <span class="question-number">Question ${index + 1}</span>
+            <div class="question-text">${escapeHtml(q.question)}</div>
+            <ul class="option-list">
+        `;
+
+        q.options.forEach((option, optIndex) => {
+          const isCorrect = optIndex === q.correct_index;
+          const correctClass = isCorrect ? 'correct' : '';
+          const correctIndicator = isCorrect ? '<span class="correct-indicator">✓ Correct Answer</span>' : '';
+          
+          html += `
+            <li class="option-item ${correctClass}">
+              <span class="option-letter">${optionLabels[optIndex]}</span>
+              <span class="option-text">${escapeHtml(option)}${correctIndicator}</span>
+            </li>
+          `;
+        });
+
+        html += `
+            </ul>
+            <div class="explanation-box">
+              <div class="explanation-label">💡 Explanation:</div>
+              <div class="explanation-text">${escapeHtml(q.explanation)}</div>
+            </div>
+          </div>
+        `;
+      });
+
+      return html;
+    }
+
+    // Format Explanation Response
+    function formatExplanationResponse(data) {
+      if (!data.explanation) {
+        return '<div class="empty">No explanation generated.</div>';
+      }
+
+      const text = data.explanation;
+      const paragraphs = text.split('\n\n').filter(p => p.trim());
+      
+      let html = '<div class="explanation-response">';
+      paragraphs.forEach(para => {
+        if (para.includes('\n-') || para.includes('\n•')) {
+          const lines = para.split('\n').filter(l => l.trim());
+          html += '<ul>';
+          lines.forEach(line => {
+            const cleaned = line.replace(/^[-•]\s*/, '').trim();
+            if (cleaned) {
+              html += `<li>${escapeHtml(cleaned)}</li>`;
+            }
+          });
+          html += '</ul>';
+        } else {
+          html += `<p>${escapeHtml(para)}</p>`;
+        }
+      });
+      html += '</div>';
+
+      return html;
+    }
+
+    // Format Study Guide Response
+    function formatStudyGuideResponse(data) {
+      if (!data.summary) {
+        return '<div class="empty">No study guide generated.</div>';
+      }
+
+      let html = '<div class="study-guide">';
+      const content = data.summary;
+      
+      const lines = content.split('\n');
+      let inList = false;
+      let listType = null;
+
+      lines.forEach(line => {
+        const trimmed = line.trim();
+        
+        if (!trimmed) {
+          if (inList) {
+            html += listType === 'ul' ? '</ul>' : '</ol>';
+            inList = false;
+          }
+          return;
+        }
+
+        if (trimmed.startsWith('###')) {
+          if (inList) {
+            html += listType === 'ul' ? '</ul>' : '</ol>';
+            inList = false;
+          }
+          html += `<h3>${escapeHtml(trimmed.replace(/^###\s*/, ''))}</h3>`;
+        }
+        else if (trimmed.startsWith('##')) {
+          if (inList) {
+            html += listType === 'ul' ? '</ul>' : '</ol>';
+            inList = false;
+          }
+          html += `<h3>${escapeHtml(trimmed.replace(/^##\s*/, ''))}</h3>`;
+        }
+        else if (trimmed.match(/^[-•*]\s/)) {
+          if (!inList) {
+            html += '<ul>';
+            inList = true;
+            listType = 'ul';
+          }
+          html += `<li>${escapeHtml(trimmed.replace(/^[-•*]\s*/, ''))}</li>`;
+        }
+        else if (trimmed.match(/^\d+\.\s/)) {
+          if (!inList || listType !== 'ol') {
+            if (inList) html += '</ul>';
+            html += '<ol>';
+            inList = true;
+            listType = 'ol';
+          }
+          html += `<li>${escapeHtml(trimmed.replace(/^\d+\.\s*/, ''))}</li>`;
+        }
+        else {
+          if (inList) {
+            html += listType === 'ul' ? '</ul>' : '</ol>';
+            inList = false;
+          }
+          
+          let processedLine = escapeHtml(trimmed);
+          processedLine = processedLine.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+          
+          html += `<p>${processedLine}</p>`;
+        }
+      });
+
+      if (inList) {
+        html += listType === 'ul' ? '</ul>' : '</ol>';
+      }
+
+      html += '</div>';
+      return html;
+    }
+
+    // Format Code Response (for commit message, code explanation, docstring)
+    function formatCodeResponse(text) {
+      return `<div class="code-output">${escapeHtml(text)}</div>`;
+    }
+
+    // STUDY TAB FUNCTIONS
+    async function callQuiz() {
+      const button = event.target;
+      const lessonText = document.getElementById("quizLessonText").value;
+      const numQuestions = parseInt(document.getElementById("quizNumQuestions").value, 10);
+      const difficulty = document.getElementById("quizDifficulty").value;
+      
+      document.getElementById('copyQuizBtn').style.display = 'none';
+      setLoading("quizResult", button);
+
+      try {
+        const data = await postJson("/quiz/from-lesson", {
+          lesson_text: lessonText,
+          num_questions: numQuestions,
+          difficulty: difficulty
+        });
+        
+        quizData = data;
+        
+        const element = document.getElementById("quizResult");
+        element.className = 'result-content';
+        element.innerHTML = formatQuizResponse(data);
+        button.disabled = false;
+        
+        document.getElementById('copyQuizBtn').style.display = 'flex';
+      } catch (err) {
+        setError("quizResult", err.message, button);
+      }
+    }
+
+    async function callExplain() {
+      const button = event.target;
+      const text = document.getElementById("explainText").value;
+      const level = document.getElementById("explainLevel").value;
+      
+      document.getElementById('copyExplainBtn').style.display = 'none';
+      setLoading("explainResult", button);
+
+      try {
+        const data = await postJson("/explain", {
+          text: text,
+          level: level
+        });
+        
+        explainData = data;
+        
+        const element = document.getElementById("explainResult");
+        element.className = 'result-content';
+        element.innerHTML = formatExplanationResponse(data);
+        button.disabled = false;
+        
+        document.getElementById('copyExplainBtn').style.display = 'flex';
+      } catch (err) {
+        setError("explainResult", err.message, button);
+      }
+    }
+
+    async function callStudyGuide() {
+      const button = event.target;
+      const lessonText = document.getElementById("guideLessonText").value;
+      
+      document.getElementById('copyGuideBtn').style.display = 'none';
+      setLoading("guideResult", button);
+
+      try {
+        const data = await postJson("/study-guide", {
+          lesson_text: lessonText
+        });
+        
+        guideData = data;
+        
+        const element = document.getElementById("guideResult");
+        element.className = 'result-content';
+        element.innerHTML = formatStudyGuideResponse(data);
+        button.disabled = false;
+        
+        document.getElementById('copyGuideBtn').style.display = 'flex';
+      } catch (err) {
+        setError("guideResult", err.message, button);
+      }
+    }
+
+    // CODE TAB FUNCTIONS
+    async function callCommitMessage() {
+      const button = event.target;
+      const diff = document.getElementById("commitDiff").value;
+      
+      document.getElementById('copyCommitBtn').style.display = 'none';
+      setLoading("commitResult", button);
+
+      try {
+        const data = await postJson("/code/commit-message", {
+          diff: diff
+        });
+        
+        commitData = data.message || data;
+        
+        const element = document.getElementById("commitResult");
+        element.className = 'result-content code-output';
+        element.textContent = commitData;
+        button.disabled = false;
+        
+        document.getElementById('copyCommitBtn').style.display = 'flex';
+      } catch (err) {
+        setError("commitResult", err.message, button);
+      }
+    }
+
+    async function callExplainCode() {
+      const button = event.target;
+      const code = document.getElementById("explainCode").value;
+      const language = document.getElementById("codeLanguage").value;
+      
+      document.getElementById('copyExplainCodeBtn').style.display = 'none';
+      setLoading("explainCodeResult", button);
+
+      try {
+        const body = { code: code };
+        if (language) body.language = language;
+        
+        const data = await postJson("/code/explain", body);
+        
+        explainCodeData = data.explanation || data;
+        
+        const element = document.getElementById("explainCodeResult");
+        element.className = 'result-content code-output';
+        element.textContent = explainCodeData;
+        button.disabled = false;
+        
+        document.getElementById('copyExplainCodeBtn').style.display = 'flex';
+      } catch (err) {
+        setError("explainCodeResult", err.message, button);
+      }
+    }
+
+    async function callDocstring() {
+      const button = event.target;
+      const functionSource = document.getElementById("docstringFunction").value;
+      const style = document.getElementById("docstringStyle").value;
+      
+      document.getElementById('copyDocstringBtn').style.display = 'none';
+      setLoading("docstringResult", button);
+
+      try {
+        const data = await postJson("/code/docstring", {
+          function_source: functionSource,
+          style: style
+        });
+        
+        docstringData = data.docstring || data;
+        
+        const element = document.getElementById("docstringResult");
+        element.className = 'result-content code-output';
+        element.textContent = docstringData;
+        button.disabled = false;
+        
+        document.getElementById('copyDocstringBtn').style.display = 'flex';
+      } catch (err) {
+        setError("docstringResult", err.message, button);
+      }
+    }
+  </script>
+
+    <script>
+        // PWA Service Worker Registration
+        // Generated by PWA Converter v2.0.1
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Use RELATIVE path for service worker (works with multi-app setup)
+                navigator.serviceWorker.register('sw.js')
+                    .then(registration => {
+                        console.log('✓ Service Worker registered:', registration.scope);
+                        console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
+                        console.log('✓ App: Edu App Test Client');
+                        console.log('✓ Folder: agents2frontend');
+                        console.log('✓ Total files cached: 5'); // +3 for manifest, sw, offline
+                        
+                        // Check for updates periodically
+                        setInterval(() => {
+                            registration.update();
+                        }, 60000); // Check every minute
+                    })
+                    .catch(error => {
+                        console.error('✗ Service Worker registration failed:', error);
+                    });
+            });
+        } else {
+            console.warn('⚠ Service Workers not supported in this browser');
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('💡 PWA install prompt available');
+            // Show custom install UI
+            showInstallPromotion();
+        });
+
+        function showInstallPromotion() {
+            // You can implement custom install UI here
+            console.log('📱 App can be installed - Click browser menu or use custom UI');
+        }
+
+        // Install PWA function (call from your custom install button)
+        async function installPWA() {
+            if (!deferredPrompt) {
+                console.log('❌ Install prompt not available');
+                return;
+            }
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to install prompt: ${outcome}`);
+            deferredPrompt = null;
+        }
+
+        // Track installation
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA installed successfully!');
+            console.log('✅ App: Edu App Test Client');
+            console.log('✅ App ID: agents2frontend-id');
+            console.log('✅ Folder: agents2frontend');
+            deferredPrompt = null;
+        });
+
+        // Display mode detection
+        function getPWADisplayMode() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            if (document.referrer.startsWith('android-app://')) {
+                return 'twa';
+            } else if (navigator.standalone || isStandalone) {
+                return 'standalone';
+            }
+            return 'browser';
+        }
+
+        const displayMode = getPWADisplayMode();
+        console.log('🖥️ Display mode:', displayMode);
+        
+        // Log PWA configuration
+        console.log('⚙️ PWA Configuration:');
+        console.log('  - App Name: Edu App Test Client');
+        console.log('  - App ID: agents2frontend-id');
+        console.log('  - Start URL: /agents2frontend/');
+        console.log('  - Scope: /agents2frontend/');
+        console.log('  - Folder: agents2frontend');
+        console.log('  - Files included: 2');
+    </script>
+</body>
+</html>

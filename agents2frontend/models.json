@@ -1,0 +1,231 @@
+{
+  "models": [
+    {
+      "id": "qwen/qwen3-coder:free",
+      "name": "Qwen 3 Coder",
+      "provider": "Qwen",
+      "category": "code",
+      "context_length": 32768,
+      "pricing": "free",
+      "description": "Optimized for coding tasks, great for code explanation and generation",
+      "capabilities": [
+        "code",
+        "debug",
+        "explain"
+      ],
+      "recommended_for": "Code generation, debugging, documentation"
+    },
+    {
+      "id": "google/gemini-2.0-flash-exp:free",
+      "name": "Gemini 2.0 Flash",
+      "provider": "Google",
+      "category": "general",
+      "context_length": 1000000,
+      "pricing": "free",
+      "description": "Fast and efficient, good for general tasks",
+      "capabilities": [
+        "text",
+        "reasoning",
+        "analysis"
+      ],
+      "recommended_for": "Study guides, explanations, general Q&A"
+    },
+    {
+      "id": "google/gemma-3-27b-it:free",
+      "name": "Gemma 3 27B",
+      "provider": "Google",
+      "category": "general",
+      "context_length": 8192,
+      "pricing": "free",
+      "description": "Balanced performance for various tasks",
+      "capabilities": [
+        "text",
+        "reasoning",
+        "analysis"
+      ],
+      "recommended_for": "Quiz generation, text explanations"
+    },
+    {
+      "id": "qwen/qwen3-4b:free",
+      "name": "Qwen 3 4B",
+      "provider": "Qwen",
+      "category": "general",
+      "context_length": 32768,
+      "pricing": "free",
+      "description": "Lightweight and fast, good for simple tasks",
+      "capabilities": [
+        "text",
+        "reasoning",
+        "analysis"
+      ],
+      "recommended_for": "Quick explanations, simple Q&A"
+    },
+    {
+      "id": "moonshotai/kimi-k2:free",
+      "name": "Kimi K2",
+      "provider": "Moonshot AI",
+      "category": "general",
+      "context_length": 128000,
+      "pricing": "free",
+      "description": "Efficient model with good reasoning",
+      "capabilities": [
+        "text",
+        "reasoning",
+        "analysis"
+      ],
+      "recommended_for": "Long context tasks, study materials"
+    },
+    {
+      "id": "openai/gpt-oss-20b:free",
+      "name": "GPT OSS 20B",
+      "provider": "OpenAI",
+      "category": "general",
+      "context_length": 8192,
+      "pricing": "free",
+      "description": "Open source GPT variant",
+      "capabilities": [
+        "text",
+        "reasoning",
+        "analysis"
+      ],
+      "recommended_for": "General purpose tasks"
+    },
+    {
+      "id": "google/gemini-2.0-flash-thinking-exp:free",
+      "name": "Gemini 2.0 Flash Thinking",
+      "provider": "Google",
+      "category": "general",
+      "context_length": 32768,
+      "pricing": "free",
+      "description": "Enhanced reasoning capabilities",
+      "capabilities": [
+        "text",
+        "reasoning",
+        "analysis"
+      ],
+      "recommended_for": "Complex problem solving, detailed explanations"
+    },
+    {
+      "id": "anthropic/claude-3.5-sonnet",
+      "name": "Claude 3.5 Sonnet",
+      "provider": "Anthropic",
+      "category": "general",
+      "context_length": 200000,
+      "pricing": "paid",
+      "description": "Best-in-class reasoning, coding, and analysis",
+      "capabilities": [
+        "text",
+        "reasoning",
+        "analysis"
+      ],
+      "recommended_for": "Complex coding, detailed analysis, high-quality content"
+    },
+    {
+      "id": "openai/gpt-4o",
+      "name": "GPT-4o",
+      "provider": "OpenAI",
+      "category": "general",
+      "context_length": 128000,
+      "pricing": "paid",
+      "description": "Latest GPT-4 optimized model with multimodal capabilities",
+      "capabilities": [
+        "text",
+        "reasoning",
+        "analysis"
+      ],
+      "recommended_for": "Complex reasoning, creative writing, coding"
+    },
+    {
+      "id": "openai/gpt-4o-mini",
+      "name": "GPT-4o Mini",
+      "provider": "OpenAI",
+      "category": "general",
+      "context_length": 128000,
+      "pricing": "paid",
+      "description": "Faster and more affordable GPT-4o variant",
+      "capabilities": [
+        "text",
+        "reasoning",
+        "analysis"
+      ],
+      "recommended_for": "Fast responses, cost-effective tasks"
+    },
+    {
+      "id": "deepseek/deepseek-chat",
+      "name": "DeepSeek Chat",
+      "provider": "DeepSeek",
+      "category": "code",
+      "context_length": 64000,
+      "pricing": "paid",
+      "description": "Excellent for complex coding and technical tasks",
+      "capabilities": [
+        "code",
+        "debug",
+        "explain"
+      ],
+      "recommended_for": "Advanced coding, system architecture"
+    },
+    {
+      "id": "meta-llama/llama-3.1-405b-instruct",
+      "name": "Llama 3.1 405B",
+      "provider": "Meta",
+      "category": "general",
+      "context_length": 131072,
+      "pricing": "paid",
+      "description": "Largest open-source model with excellent performance",
+      "capabilities": [
+        "text",
+        "reasoning",
+        "analysis"
+      ],
+      "recommended_for": "Complex tasks, long context understanding"
+    },
+    {
+      "id": "meta-llama/llama-3.1-70b-instruct",
+      "name": "Llama 3.1 70B",
+      "provider": "Meta",
+      "category": "general",
+      "context_length": 131072,
+      "pricing": "paid",
+      "description": "Balanced performance and cost",
+      "capabilities": [
+        "text",
+        "reasoning",
+        "analysis"
+      ],
+      "recommended_for": "General purpose, good value"
+    },
+    {
+      "id": "google/gemini-pro-1.5",
+      "name": "Gemini Pro 1.5",
+      "provider": "Google",
+      "category": "general",
+      "context_length": 2000000,
+      "pricing": "paid",
+      "description": "Long context and multimodal capabilities",
+      "capabilities": [
+        "text",
+        "reasoning",
+        "analysis"
+      ],
+      "recommended_for": "Very long documents, complex analysis"
+    },
+    {
+      "id": "mistralai/mistral-large-2411",
+      "name": "Mistral Large",
+      "provider": "Mistral AI",
+      "category": "general",
+      "context_length": 128000,
+      "pricing": "paid",
+      "description": "High-performance European model",
+      "capabilities": [
+        "text",
+        "reasoning",
+        "analysis"
+      ],
+      "recommended_for": "Multilingual tasks, code generation"
+    }
+  ],
+  "total": 15,
+  "generated_at": "2026-01-19"
+}

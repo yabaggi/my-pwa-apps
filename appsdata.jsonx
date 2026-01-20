@@ -1,10 +1,7 @@
 [
-
-
-  
   {
     "href": "booksshelf/",
-    "category": "books",
+    "category": "others",
     "category-ar": "كتب",
     "keywords": "Next application",
     "keywords-ar": "",
@@ -15,9 +12,22 @@
     "description-ar": "# 📚 (قارئ كتاب) هذا تطبيق ويب بسيط وحديث وغير متصل بصفحة واحدة لقراءة الكتب الإلكترونية. إنه مصمم للعمل مع محتوى EPUB غير المضغوط ويوفر تجربة قراءة نظيفة وقابلة للتخصيص وسهلة الاستخدام. التطبيق يعمل في متصفحك دون الحاجة إلى خادم الواجهة الخلفية  ",
     "badges": []
   },
+   {
+    "href": "agentgen/",
+    "category": "productivity",
+    "category-ar": "إنتاجية",
+    "keywords": "agent ai",
+    "keywords-ar": "وكيل ",
+    "icon": "🤖 ",
+    "name": "Ai agent Generator",
+    "name-ar": "توليد وكيل اصطناعي",
+    "description": "# AI Agent Generator A powerful web application that lets you create custom AI agents with an intuitive UI. Generate ready-to-deploy AI agents in minutes without writing code!",
+    "description-ar": "توليد وكيل ذكاء اصطناعي تطبيق ويب قوي يتيح لك إنشاء وكلاء ذكاء اصطناعي مخصصين باستخدام واجهة مستخدم بديهية. إنشاء وكلاء الذكاء الاصطناعي جاهزة للنشر في دقائق دون كتابة التعليمات البرمجية!",
+    "badges": []
+  },
 {
     "href": "vplayer/",
-    "category": "Explore",
+    "category": "others",
     "category-ar": "مشاهدة",
     "keywords": "view explore",
     "keywords-ar": "مشاهدة",
@@ -30,7 +40,7 @@
   },
  {
     "href": "quotes/",
-    "category": "Next",
+    "category": "others",
     "category-ar": "التالي",
     "keywords": "Quotes",
     "keywords-ar": "حكم وامثال وإقتباسات",
@@ -44,7 +54,7 @@
 
   {
     "href": "hadith/",
-    "category": "Religion",
+    "category": "others",
     "category-ar": "الدين",
     "keywords": "Search and read books",
     "keywords-ar": "بحث وقراءة الكتب",
@@ -59,7 +69,7 @@
   },
   {
     "href": "books-store-new/",
-    "category": "utilities",
+    "category": "others",
     "category-ar": "أدوات",
     "keywords": "Search and read books",
     "keywords-ar": "بحث وقراءة الكتب",
@@ -104,7 +114,7 @@
   },
   {
     "href": "games/",
-    "category": "productivity",
+    "category": "games",
     "category-ar": "إنتاجية",
     "keywords": "tasks organize list notes",
     "keywords-ar": "مهام تنظيم قائمة ملاحظات",
@@ -117,7 +127,7 @@
   },
   {
     "href": "openverse/",
-    "category": "productivity",
+    "category": "creative",
     "category-ar": "إنتاجية",
     "keywords": "Media collection",
     "keywords-ar": "مجموعة وسائط",
@@ -130,7 +140,7 @@
   },
   {
     "href": "quransearch/",
-    "category": "Religion",
+    "category": "others",
     "category-ar": "الدين",
     "keywords": "search a word in quran",
     "keywords-ar": "ابحث عن كلمة في القرآن",
@@ -158,7 +168,7 @@
   },
   {
     "href": "imgutls/",
-    "category": "productivity",
+    "category": "creative",
     "category-ar": "إنتاجية",
     "keywords": "Image edit/create",
     "keywords-ar": "تعديل/إنشاء الصور",
@@ -171,7 +181,7 @@
   },
   {
     "href": "discoverquran/",
-    "category": "Religion",
+    "category": "others",
     "category-ar": "الدين",
     "keywords": "Disciver Quran, search, read listen, cooy",
     "keywords-ar": "اكتشف القرآن، بحث، قراءة، استماع، نسخ",
@@ -196,3 +206,4 @@
     "badges": []
   }
 ]
+

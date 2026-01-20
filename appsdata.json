@@ -1,4 +1,19 @@
 [
+
+ {
+    "href": "agents2frontend/",
+    "category": "Productivity",
+    "category-ar": "انتاجية",
+    "keywords": "Agent",
+    "keywords-ar": "وكيل",
+    "icon": "➡️ ",
+    "name": "Study/Code Agent",
+    "name-ar": "وكيل تعليمي",
+    "description": "📚 Study & Code Agents App > AI-powered educational and development tools using multiple LLM providers A full-stack web application that leverages AI models to help students learn and developers code more efficiently. Built with FastAPI backend and vanilla JavaScript frontend.",
+    "description-ar": "📚 Study & Code Agents App > أدوات تعليمية وتطويرية مدعومة بالذكاء الاصطناعي باستخدام العديد من مزودي LLM تطبيق ويب كامل يستفيد من نماذج الذكاء الاصطناعي لمساعدة الطلاب على التعلم والمطورين للبرمجة بشكل أكثر كفاءة. بنيت مع الواجهة الخلفية FastAPI والواجهة الأمامية JavaScript الفانيليا.",
+    "badges": []
+  },
+
   {
     "href": "booksshelf/",
     "category": "others",
@@ -206,4 +221,3 @@
     "badges": []
   }
 ]
-
