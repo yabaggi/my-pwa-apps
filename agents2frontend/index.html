@@ -666,7 +666,7 @@
         <div class="section-content">
           <div class="form-group">
             <label for="quizLessonText">Lesson Text</label>
-            <textarea id="quizLessonText" placeholder="Enter lesson text...">Data privacy is about protecting personal information from unauthorized access or misuse. Organizations must handle user data carefully, only collect what is needed, and provide transparent policies.</textarea>
+            <textarea id="quizLessonText" placeholder="Enter Lesson Text"></textarea>
           </div>
 
           <div class="form-row">
@@ -709,7 +709,7 @@
         <div class="section-content">
           <div class="form-group">
             <label for="explainText">Text to Explain</label>
-            <textarea id="explainText" placeholder="Enter text to explain...">A hash function maps data of arbitrary size to a fixed-size value, typically used for integrity checks and indexing.</textarea>
+            <textarea id="explainText" placeholder="Enter Text to Explain"></textarea>
           </div>
 
           <div class="form-group">
@@ -745,7 +745,7 @@
         <div class="section-content">
           <div class="form-group">
             <label for="guideLessonText">Lesson Text</label>
-            <textarea id="guideLessonText" placeholder="Enter lesson text...">Secure coding means writing software in a way that prevents common vulnerabilities like SQL injection, cross-site scripting, and buffer overflows. Developers should validate inputs, use parameterized queries, and follow security best practices.</textarea>
+            <textarea id="guideLessonText" placeholder="Enter Lesson Text"></textarea>
           </div>
 
           <button onclick="callStudyGuide()">Generate Study Guide</button>
@@ -775,14 +775,14 @@
         <div class="section-content">
           <div class="form-group">
             <label for="commitDiff">Git Diff (Staged Changes)</label>
-            <textarea id="commitDiff" class="code" placeholder="Paste your git diff here...">diff --git a/src/utils.py b/src/utils.py
+            <textarea id="commitDiff" class="code" placeholder="diff --git a/src/utils.py b/src/utils.py
 index 1234567..abcdefg 100644
 --- a/src/utils.py
 +++ b/src/utils.py
 @@ -10,6 +10,8 @@ def process_data(data):
 +    if not data:
 +        return None
-     return result</textarea>
+     return result"></textarea>
           </div>
 
           <button onclick="callCommitMessage()">Generate Commit Message</button>
@@ -809,10 +809,10 @@ index 1234567..abcdefg 100644
         <div class="section-content">
           <div class="form-group">
             <label for="explainCode">Code Snippet</label>
-            <textarea id="explainCode" class="code" placeholder="Paste your code here...">def fibonacci(n):
+            <textarea id="explainCode" class="code" placeholder="def fibonacci(n):
     if n <= 1:
         return n
-    return fibonacci(n-1) + fibonacci(n-2)</textarea>
+    return fibonacci(n-1) + fibonacci(n-2)"></textarea>
           </div>
 
           <div class="form-group">
@@ -844,10 +844,10 @@ index 1234567..abcdefg 100644
         <div class="section-content">
           <div class="form-group">
             <label for="docstringFunction">Function Source Code</label>
-            <textarea id="docstringFunction" class="code" placeholder="Paste your function here...">def calculate_discount(price, discount_percent):
+            <textarea id="docstringFunction" class="code" placeholder="def calculate_discount(price, discount_percent):
     if discount_percent < 0 or discount_percent > 100:
         raise ValueError("Discount must be between 0 and 100")
-    return price * (1 - discount_percent / 100)</textarea>
+    return price * (1 - discount_percent / 100)"></textarea>
           </div>
 
           <div class="form-group">
