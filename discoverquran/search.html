@@ -7,6 +7,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Quran Search</title>
+    <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -423,6 +424,59 @@
         .result-action-btn.loading {
             background: var(--bg-elevated);
             color: var(--text-secondary);
+        }
+
+        .tafseer-section {
+            padding: 12px 16px 16px;
+            border-top: 1px solid var(--border);
+        }
+
+        .tafseer-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .tafseer-tab-btn {
+            flex: 1;
+            height: 36px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+            cursor: pointer;
+        }
+
+        .tafseer-tab-btn:hover {
+            background: var(--bg-elevated);
+            color: var(--text-primary);
+        }
+
+        .tafseer-tab-btn.active {
+            background: var(--accent);
+            color: white;
+        }
+
+        .tafseer-content {
+            direction: rtl;
+            text-align: justify;
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            max-height: 250px;
+            overflow-y: auto;
+            background: var(--bg-tertiary);
+            padding: 12px 16px;
+            border-radius: 8px;
+        }
+        
+        .tafseer-content .spinner {
+            margin: 30px auto;
+            width: 28px;
+            height: 28px;
+            border-width: 3px;
         }
 
         .highlight {
@@ -1222,11 +1276,37 @@
                                     التالي
                                 </button>
                             </div>
+                            <div class="tafseer-section">
+                                <div class="tafseer-tabs">
+                                    <button class="tafseer-tab-btn" data-tafseer-id="8">الطبري</button>
+                                    <button class="tafseer-tab-btn" data-tafseer-id="4">ابن كثير</button>
+                                    <button class="tafseer-tab-btn" data-tafseer-id="6">البغوي</button>
+                                    <button class="tafseer-tab-btn" data-tafseer-id="7">القرطبي</button>
+                                </div>
+                                <div class="tafseer-content" hidden>
+                                    <div class="tafseer-text"></div>
+                                </div>
+                            </div>
                         </div>
                     `;
                 }).join('');
 
                 showStatus('results');
+            }
+
+            async function fetchTafseer(id, surah, ayah, targetElement) {
+                targetElement.innerHTML = '<div class="spinner"></div>';
+                try {
+                    const response = await fetch(`http://api.quran-tafseer.com/tafseer/${id}/${surah}/${ayah}`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+                    targetElement.innerHTML = data.text;
+                } catch (error) {
+                    targetElement.innerHTML = 'فشل تحميل التفسير. يرجى المحاولة مرة أخرى.';
+                    console.error('Failed to fetch tafseer:', error);
+                }
             }
 
             function updateAyah(cardElement, surahNumber, ayahNumberInSurah, direction) {
@@ -1273,6 +1353,15 @@
 
                 prevBtn.disabled = (newAyahIndex === 0);
                 nextBtn.disabled = (newAyahIndex === surah.ayahs.length - 1);
+                
+                // Reset tafseer section
+                const tafseerContent = cardElement.querySelector('.tafseer-content');
+                if (tafseerContent) {
+                    tafseerContent.hidden = true;
+                    tafseerContent.querySelector('.tafseer-text').innerHTML = '';
+                }
+                cardElement.querySelectorAll('.tafseer-tab-btn').forEach(btn => btn.classList.remove('active'));
+
 
                 if (reciteBtn.classList.contains('playing') || reciteBtn.classList.contains('loading')) {
                     if (currentAudio) {
@@ -1721,6 +1810,34 @@
                     const { surah, ayah } = nextBtn.dataset;
                     const card = nextBtn.closest('.result-card');
                     updateAyah(card, parseInt(surah), parseInt(ayah), 'next');
+                    return;
+                }
+
+                const tafseerBtn = e.target.closest('.tafseer-tab-btn');
+                if (tafseerBtn) {
+                    const card = tafseerBtn.closest('.result-card');
+                    
+                    if (tafseerBtn.classList.contains('active')) {
+                        tafseerBtn.classList.remove('active');
+                        card.querySelector('.tafseer-content').hidden = true;
+                        card.querySelector('.tafseer-text').innerHTML = '';
+                        return;
+                    }
+
+                    const tafseerId = tafseerBtn.dataset.tafseerId;
+                    const reciteBtnFromCard = card.querySelector('.recite-btn');
+                    const surah = reciteBtnFromCard.dataset.surah;
+                    const ayah = reciteBtnFromCard.dataset.ayah;
+
+                    card.querySelectorAll('.tafseer-tab-btn').forEach(btn => btn.classList.remove('active'));
+                    tafseerBtn.classList.add('active');
+                    
+                    const contentDiv = card.querySelector('.tafseer-content');
+                    const textDiv = card.querySelector('.tafseer-text');
+                    
+                    contentDiv.hidden = false;
+                    
+                    fetchTafseer(tafseerId, surah, ayah, textDiv);
                 }
             });
 
