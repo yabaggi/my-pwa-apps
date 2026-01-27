@@ -829,7 +829,6 @@
             }
         }
     </style>
-    <link rel="manifest" href="manifest.json">
 </head>
 <body>
     <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -1294,22 +1293,25 @@
 
                 showStatus('results');
             }
-
+  
             async function fetchTafseer(id, surah, ayah, targetElement) {
-                targetElement.innerHTML = '<div class="spinner"></div>';
-                try {
-                    const response = await fetch(`http://api.quran-tafseer.com/tafseer/${id}/${surah}/${ayah}`);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    targetElement.innerHTML = data.text;
-                } catch (error) {
-                    targetElement.innerHTML = 'فشل تحميل التفسير. يرجى المحاولة مرة أخرى.';
-                    console.error('Failed to fetch tafseer:', error);
-                }
-            }
-
+    targetElement.innerHTML = '<div class="spinner"></div>';
+    try {
+        const proxyUrl = "https://corsproxy.io/?";
+        const apiUrl = `http://api.quran-tafseer.com/tafseer/${id}/${surah}/${ayah}`;
+        const response = await fetch(proxyUrl + encodeURIComponent(apiUrl));
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        targetElement.innerHTML = data.text;
+    } catch (error) {
+        targetElement.innerHTML = 'فشل تحميل التفسير. يرجى المحاولة مرة أخرى.';
+        console.error('Failed to fetch tafseer:', error);
+    }
+}
+            
+            
             function updateAyah(cardElement, surahNumber, ayahNumberInSurah, direction) {
                 if (!quranData) return;
 
@@ -1933,8 +1935,5 @@
             updateAutoButton();
         })();
     </script>
-
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>console.log('SW registered:',r)).catch(e=>console.error('SW registration failed:',e))})</script>
 </body>
 </html>
-
