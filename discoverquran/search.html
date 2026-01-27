@@ -1293,22 +1293,25 @@
 
                 showStatus('results');
             }
-
+  
             async function fetchTafseer(id, surah, ayah, targetElement) {
-                targetElement.innerHTML = '<div class="spinner"></div>';
-                try {
-                    const response = await fetch(`http://api.quran-tafseer.com/tafseer/${id}/${surah}/${ayah}`);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    const data = await response.json();
-                    targetElement.innerHTML = data.text;
-                } catch (error) {
-                    targetElement.innerHTML = 'فشل تحميل التفسير. يرجى المحاولة مرة أخرى.';
-                    console.error('Failed to fetch tafseer:', error);
-                }
-            }
-
+    targetElement.innerHTML = '<div class="spinner"></div>';
+    try {
+        const proxyUrl = "https://corsproxy.io/?";
+        const apiUrl = `http://api.quran-tafseer.com/tafseer/${id}/${surah}/${ayah}`;
+        const response = await fetch(proxyUrl + encodeURIComponent(apiUrl));
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        targetElement.innerHTML = data.text;
+    } catch (error) {
+        targetElement.innerHTML = 'فشل تحميل التفسير. يرجى المحاولة مرة أخرى.';
+        console.error('Failed to fetch tafseer:', error);
+    }
+}
+            
+            
             function updateAyah(cardElement, surahNumber, ayahNumberInSurah, direction) {
                 if (!quranData) return;
 
@@ -1934,4 +1937,3 @@
     </script>
 </body>
 </html>
-
