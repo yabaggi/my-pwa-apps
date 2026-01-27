@@ -1297,7 +1297,9 @@
             async function fetchTafseer(id, surah, ayah, targetElement) {
     targetElement.innerHTML = '<div class="spinner"></div>';
     try {
-        const proxyUrl = "https://corsproxy.io/?";
+        const proxyUrl ="https://old-band-312d.yabaggi.workers.dev/?quest=";
+        
+         <!--"https://corsproxy.io/?";-->
         const apiUrl = `http://api.quran-tafseer.com/tafseer/${id}/${surah}/${ayah}`;
         const response = await fetch(proxyUrl + encodeURIComponent(apiUrl));
         if (!response.ok) {
@@ -1937,3 +1939,4 @@
     </script>
 </body>
 </html>
+
