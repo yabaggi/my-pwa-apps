@@ -937,7 +937,7 @@
 
         <div id="readingTab" class="tab-content active">
                         <div class="reading-nav">
-                            <select id="pageSelect" class="reading-nav-select" aria-label="Go to page"></select>
+                            <input type="number" id="pageSelect" class="reading-nav-input" min="1" max="604" placeholder="رقم الصفحة" aria-label="Go to page">
                             <select id="surahSelect" class="reading-nav-select" aria-label="Go to Surah"></select>
                         </div>
             <main class="main-content" id="readingContent">
@@ -1297,7 +1297,9 @@
             async function fetchTafseer(id, surah, ayah, targetElement) {
     targetElement.innerHTML = '<div class="spinner"></div>';
     try {
-        const proxyUrl = "https://corsproxy.io/?";
+        const proxyUrl ="https://old-band-312d.yabaggi.workers.dev/?quest=";
+        
+         <!--"https://corsproxy.io/?";-->
         const apiUrl = `http://api.quran-tafseer.com/tafseer/${id}/${surah}/${ayah}`;
         const response = await fetch(proxyUrl + encodeURIComponent(apiUrl));
         if (!response.ok) {
@@ -1689,20 +1691,7 @@
 
             // --- Reading View Navigation ---
 
-            function populatePageSelect() {
-                pageSelect.innerHTML = '';
-                const defaultOption = document.createElement('option');
-                defaultOption.value = "";
-                defaultOption.textContent = "الصفحة";
-                pageSelect.appendChild(defaultOption);
 
-                for (let i = 1; i <= totalPages; i++) {
-                    const option = document.createElement('option');
-                    option.value = i;
-                    option.textContent = `Page ${i}`;
-                    pageSelect.appendChild(option);
-                }
-            }
 
             function populateSurahSelect() {
                 if (!surahsData) return;
@@ -1721,12 +1710,19 @@
             }
             
             function handlePageSelect() {
-                const pageNumber = parseInt(pageSelect.value);
-                if (!isNaN(pageNumber)) {
-                    renderPage(pageNumber);
-                    readingContent.scrollTop = 0;
-                    surahSelect.value = "";
+                let pageNumber = parseInt(pageSelect.value);
+                if (isNaN(pageNumber) || pageNumber < 1 || pageNumber > totalPages) {
+                    // Optionally, reset the input or show a message if invalid
+                    // For now, we'll just default to page 1 or keep the current page
+                    if (pageSelect.value !== "") { // Only if user typed something invalid, not just cleared
+                         showToast(`الرجاء إدخال رقم صفحة بين 1 و ${totalPages}`, 'warning');
+                    }
+                    // Do not change page if input is invalid, just return
+                    return;
                 }
+                renderPage(pageNumber);
+                readingContent.scrollTop = 0;
+                surahSelect.value = "";
             }
 
             function handleSurahSelect() {
@@ -1746,7 +1742,7 @@
 
                         // Event Listeners
 
-                        pageSelect.addEventListener('change', handlePageSelect);
+                        pageSelect.addEventListener('input', handlePageSelect);
 
                         surahSelect.addEventListener('change', handleSurahSelect);
 
@@ -1924,7 +1920,7 @@
                     searchButton.disabled = false;
                     showStatus('ready');
                     renderPage(1);
-                    populatePageSelect();
+
                 })
                 .catch(error => {
                     console.error('Error loading Quran data:', error);
@@ -1937,3 +1933,4 @@
     </script>
 </body>
 </html>
+

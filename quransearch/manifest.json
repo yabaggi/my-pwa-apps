@@ -7,7 +7,7 @@
   "scope": "/my-pwa-apps/quransearch/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "theme_color": "#0a0a0a",
+  "theme_color": "#3830c2",
   "background_color": "#ffffff",
   "icons": [
     {
