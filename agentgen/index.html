@@ -17,12 +17,18 @@
         }
     </style>
   
+    <meta name="theme-color" content="#2196f3">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 </head>
 <body>
     
     <iframe src="https://agent-gen-eight.vercel.app/">
     </iframe>
 
+
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>console.log('SW registered:',r)).catch(e=>console.error('SW registration failed:',e))})</script>
 </body>
 </html>
 
