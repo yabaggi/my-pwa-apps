@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>القبلة – Qibla Compass</title>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Outfit:wght@300;400;600&family=Noto+Naskh+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+:root {
+  --gold:#C9A84C; --gold-light:#E8C96A; --gold-dim:#8B6914;
+  --bg:#0A0D0F; --surface:#111518; --surface2:#1C2128;
+  --text:#F0E8D8; --text-dim:#8A7A60;
+  --green:#4CAF7C; --red:#E05050;
+}
+
+body {
+  background:var(--bg); color:var(--text);
+  font-family:'Noto Naskh Arabic','Outfit',sans-serif;
+  min-height:100vh;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:20px; overflow:hidden; position:relative;
+}
+body.lang-en { font-family:'Outfit',sans-serif; direction:ltr; }
+
+body::before {
+  content:''; position:fixed; inset:0; pointer-events:none;
+  background-image:
+    repeating-linear-gradient(45deg,transparent,transparent 30px,rgba(201,168,76,.03) 30px,rgba(201,168,76,.03) 31px),
+    repeating-linear-gradient(-45deg,transparent,transparent 30px,rgba(201,168,76,.03) 30px,rgba(201,168,76,.03) 31px);
+}
+body::after {
+  content:''; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:600px; height:600px; pointer-events:none;
+  background:radial-gradient(circle,rgba(201,168,76,.06) 0%,transparent 70%);
+}
+
+/* ── App shell ── */
+.app {
+  position:relative; z-index:1;
+  display:flex; flex-direction:column; align-items:center; gap:18px;
+  width:100%; max-width:420px;
+}
+
+/* ── Top bar: lang toggle + location picker button ── */
+.top-bar {
+  display:flex; justify-content:space-between; align-items:center;
+  width:100%; gap:10px;
+}
+
+.lang-toggle {
+  display:flex; background:var(--surface);
+  border:1px solid rgba(201,168,76,.2);
+  border-radius:50px; padding:3px; gap:2px;
+  flex-shrink:0;
+}
+.lang-btn {
+  border:none; background:transparent; color:var(--text-dim);
+  font-size:.78rem; font-weight:600; padding:5px 14px;
+  border-radius:50px; cursor:pointer;
+  transition:all .25s; letter-spacing:.05em; font-family:inherit;
+}
+.lang-btn.active { background:linear-gradient(135deg,var(--gold-dim),var(--gold)); color:var(--bg); }
+.lang-btn:not(.active):hover { color:var(--gold); }
+
+/* Location picker trigger button */
+.loc-btn {
+  flex:1; display:flex; align-items:center; gap:8px;
+  background:var(--surface); border:1px solid rgba(201,168,76,.2);
+  border-radius:10px; padding:8px 12px; cursor:pointer;
+  transition:border-color .2s, background .2s;
+  min-width:0;
+}
+.loc-btn:hover { border-color:rgba(201,168,76,.5); background:var(--surface2); }
+.loc-btn .loc-btn-icon { font-size:1.1rem; flex-shrink:0; }
+.loc-btn .loc-btn-text { flex:1; min-width:0; text-align:start; }
+.loc-btn .loc-btn-name {
+  font-size:.8rem; font-weight:600; color:var(--text);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.loc-btn .loc-btn-coords {
+  font-size:.62rem; color:var(--text-dim);
+  font-family:'Outfit',sans-serif; direction:ltr; text-align:left;
+}
+.loc-btn .loc-btn-arrow {
+  font-size:.75rem; color:var(--text-dim); flex-shrink:0;
+}
+
+/* ── Header ── */
+header { text-align:center; }
+.arabic-title {
+  font-family:'Amiri',serif; font-size:2.2rem; color:var(--gold);
+  line-height:1; text-shadow:0 0 30px rgba(201,168,76,.4);
+}
+body.lang-en .arabic-title { font-family:'Outfit',sans-serif; font-size:1.55rem; letter-spacing:.08em; }
+.subtitle {
+  font-size:.72rem; letter-spacing:.28em; text-transform:uppercase;
+  color:var(--text-dim); margin-top:5px; font-family:'Outfit',sans-serif;
+}
+body.lang-en .subtitle { display:none; }
+
+/* ── Compass ── */
+.compass-wrapper { position:relative; width:300px; height:300px; flex-shrink:0; }
+
+.compass-outer {
+  position:absolute; inset:0; border-radius:50%;
+  background:conic-gradient(from 0deg,var(--gold-dim),var(--gold),var(--gold-light),var(--gold),var(--gold-dim),var(--gold),var(--gold-light),var(--gold),var(--gold-dim));
+  padding:3px;
+  box-shadow:0 0 40px rgba(201,168,76,.2),inset 0 0 20px rgba(0,0,0,.5);
+  transition:box-shadow .4s;
+}
+.compass-outer.aligned {
+  box-shadow:0 0 55px rgba(76,175,124,.4),0 0 15px rgba(76,175,124,.2),inset 0 0 20px rgba(0,0,0,.5);
+}
+.compass-outer-inner {
+  width:100%; height:100%; border-radius:50%;
+  background:var(--surface);
+  display:flex; align-items:center; justify-content:center;
+}
+.compass-rose { position:absolute; inset:8px; border-radius:50%; transition:transform .1s ease-out; }
+.compass-rose svg { width:100%; height:100%; }
+.needle-container { position:absolute; inset:0; pointer-events:none; }
+.needle-svg { width:100%; height:100%; transition:transform .15s ease-out; }
+.center-dot {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:16px; height:16px; border-radius:50%;
+  background:radial-gradient(circle,var(--gold-light),var(--gold));
+  box-shadow:0 0 10px rgba(201,168,76,.6); z-index:10;
+}
+.north-marker {
+  position:absolute; top:-2px; left:50%; transform:translateX(-50%);
+  width:0; height:0;
+  border-left:5px solid transparent; border-right:5px solid transparent;
+  border-bottom:12px solid var(--red); z-index:5;
+  filter:drop-shadow(0 0 4px rgba(224,80,80,.6));
+}
+
+/* ── Banner ── */
+.qibla-banner {
+  width:100%; border-radius:14px; padding:0 18px;
+  display:flex; align-items:center; gap:12px;
+  overflow:hidden; max-height:0; opacity:0;
+  transition:max-height .5s cubic-bezier(.16,1,.3,1),opacity .4s,padding .4s;
+  border:1px solid transparent; pointer-events:none;
+}
+.qibla-banner.facing {
+  max-height:90px; opacity:1; padding:14px 18px;
+  background:linear-gradient(135deg,rgba(76,175,124,.13),rgba(76,175,124,.05));
+  border-color:rgba(76,175,124,.35);
+}
+.qibla-banner.close {
+  max-height:90px; opacity:1; padding:14px 18px;
+  background:linear-gradient(135deg,rgba(201,168,76,.1),rgba(201,168,76,.04));
+  border-color:rgba(201,168,76,.25);
+}
+.banner-icon { font-size:1.7rem; flex-shrink:0; }
+.qibla-banner.facing .banner-icon { animation:pulse-glow 1.8s ease-in-out infinite; }
+@keyframes pulse-glow {
+  0%,100% { transform:scale(1); filter:drop-shadow(0 0 4px rgba(76,175,124,.5)); }
+  50%     { transform:scale(1.13); filter:drop-shadow(0 0 10px rgba(76,175,124,.9)); }
+}
+.banner-text { flex:1; min-width:0; }
+.banner-title { font-size:.9rem; font-weight:700; line-height:1.3; }
+.qibla-banner.facing .banner-title { color:var(--green); }
+.qibla-banner.close  .banner-title { color:var(--gold);  }
+.banner-sub { font-size:.7rem; color:var(--text-dim); margin-top:2px; font-family:'Outfit',sans-serif; }
+
+/* ── Info grid ── */
+.info-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%; }
+.info-card {
+  background:var(--surface); border:1px solid rgba(201,168,76,.15);
+  border-radius:12px; padding:13px; text-align:center;
+}
+.info-card .label { font-size:.63rem; letter-spacing:.15em; text-transform:uppercase; color:var(--text-dim); margin-bottom:4px; font-family:'Outfit',sans-serif; }
+.info-card .value { font-size:1.4rem; font-weight:600; color:var(--gold); font-variant-numeric:tabular-nums; font-family:'Outfit',sans-serif; direction:ltr; }
+.info-card .unit  { font-size:.65rem; color:var(--text-dim); font-family:'Outfit',sans-serif; }
+
+/* ── Status / btn ── */
+.status { font-size:.73rem; color:var(--text-dim); text-align:center; min-height:18px; letter-spacing:.04em; font-family:'Outfit',sans-serif; }
+.status.ok    { color:var(--green); }
+.status.error { color:var(--red);   }
+
+.btn {
+  background:linear-gradient(135deg,var(--gold-dim),var(--gold)); color:var(--bg);
+  border:none; border-radius:10px; padding:12px 28px;
+  font-family:'Outfit',sans-serif; font-size:.85rem; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase; cursor:pointer;
+  transition:opacity .2s,transform .1s;
+}
+.btn:hover  { opacity:.9; transform:translateY(-1px); }
+.btn:active { transform:translateY(0); }
+
+.divider { width:60px; height:1px; background:linear-gradient(90deg,transparent,var(--gold-dim),transparent); }
+
+/* ═══════════════════════════════════════════════
+   LOCATION PICKER MODAL
+═══════════════════════════════════════════════ */
+.modal-overlay {
+  position:fixed; inset:0; z-index:100;
+  background:rgba(0,0,0,.75); backdrop-filter:blur(6px);
+  display:flex; align-items:flex-end; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition:opacity .3s;
+}
+.modal-overlay.open { opacity:1; pointer-events:all; }
+
+.modal {
+  width:100%; max-width:480px;
+  background:var(--surface2);
+  border-radius:20px 20px 0 0;
+  border:1px solid rgba(201,168,76,.2);
+  border-bottom:none;
+  transform:translateY(100%);
+  transition:transform .35s cubic-bezier(.16,1,.3,1);
+  max-height:88vh;
+  display:flex; flex-direction:column;
+  overflow:hidden;
+}
+.modal-overlay.open .modal { transform:translateY(0); }
+
+/* Modal handle */
+.modal-handle {
+  width:40px; height:4px; border-radius:2px;
+  background:rgba(201,168,76,.3);
+  margin:12px auto 0;
+  flex-shrink:0;
+}
+
+/* Modal header */
+.modal-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 18px 10px;
+  flex-shrink:0;
+}
+.modal-title { font-size:1rem; font-weight:700; color:var(--gold); font-family:'Outfit',sans-serif; }
+.modal-close {
+  width:30px; height:30px; border-radius:50%;
+  background:rgba(201,168,76,.1); border:none; cursor:pointer;
+  color:var(--text-dim); font-size:1rem; display:flex; align-items:center; justify-content:center;
+  transition:background .2s;
+}
+.modal-close:hover { background:rgba(201,168,76,.2); }
+
+/* Search box */
+.modal-search-wrap {
+  padding:0 18px 12px;
+  flex-shrink:0;
+  position:relative;
+}
+.modal-search {
+  width:100%;
+  background:var(--surface); border:1px solid rgba(201,168,76,.2);
+  border-radius:10px; padding:10px 14px 10px 36px;
+  color:var(--text); font-family:'Outfit',sans-serif; font-size:.85rem;
+  outline:none; transition:border-color .2s;
+  direction:ltr;
+}
+.modal-search:focus { border-color:rgba(201,168,76,.5); }
+.modal-search::placeholder { color:var(--text-dim); }
+.search-icon {
+  position:absolute; left:30px; top:50%; transform:translateY(-50%);
+  font-size:.85rem; pointer-events:none; opacity:.5;
+}
+body:not(.lang-en) .search-icon { left:auto; right:30px; }
+body:not(.lang-en) .modal-search { padding:10px 36px 10px 14px; }
+
+/* Tab bar: List / Manual */
+.modal-tabs {
+  display:flex; border-bottom:1px solid rgba(201,168,76,.12);
+  flex-shrink:0;
+}
+.modal-tab {
+  flex:1; padding:10px; border:none; background:transparent;
+  color:var(--text-dim); font-family:'Outfit',sans-serif; font-size:.8rem; font-weight:600;
+  cursor:pointer; letter-spacing:.06em; text-transform:uppercase;
+  border-bottom:2px solid transparent; transition:color .2s,border-color .2s;
+}
+.modal-tab.active { color:var(--gold); border-bottom-color:var(--gold); }
+
+/* Location list */
+.modal-list-wrap { flex:1; overflow-y:auto; overscroll-behavior:contain; }
+.modal-list-wrap::-webkit-scrollbar { width:4px; }
+.modal-list-wrap::-webkit-scrollbar-thumb { background:rgba(201,168,76,.2); border-radius:2px; }
+
+.loc-list { list-style:none; padding:6px 0 16px; }
+.loc-item {
+  display:flex; align-items:center; gap:12px;
+  padding:11px 18px; cursor:pointer;
+  transition:background .15s;
+  border-bottom:1px solid rgba(255,255,255,.03);
+}
+.loc-item:hover { background:rgba(201,168,76,.06); }
+.loc-item.selected { background:rgba(201,168,76,.1); }
+.loc-item-icon { font-size:1rem; flex-shrink:0; opacity:.7; }
+.loc-item-text { flex:1; min-width:0; }
+.loc-item-name { font-size:.85rem; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-family:'Outfit',sans-serif; }
+.loc-item-coords { font-size:.65rem; color:var(--text-dim); font-family:'Outfit',sans-serif; direction:ltr; text-align:left; }
+.loc-item-check { font-size:.9rem; color:var(--green); flex-shrink:0; }
+
+.loc-empty { padding:24px 18px; text-align:center; color:var(--text-dim); font-size:.82rem; font-family:'Outfit',sans-serif; }
+
+/* Manual entry tab */
+.manual-tab-content { padding:18px; display:flex; flex-direction:column; gap:14px; }
+.manual-field label { display:block; font-size:.7rem; letter-spacing:.15em; text-transform:uppercase; color:var(--text-dim); margin-bottom:6px; font-family:'Outfit',sans-serif; }
+.manual-field input {
+  width:100%; background:var(--surface); border:1px solid rgba(201,168,76,.2);
+  border-radius:10px; padding:10px 14px; color:var(--text);
+  font-family:'Outfit',sans-serif; font-size:.9rem; outline:none;
+  transition:border-color .2s; direction:ltr;
+}
+.manual-field input:focus { border-color:rgba(201,168,76,.5); }
+.manual-field input::placeholder { color:var(--text-dim); }
+.manual-apply-btn {
+  width:100%; padding:13px; border-radius:10px; border:none; cursor:pointer;
+  background:linear-gradient(135deg,var(--gold-dim),var(--gold));
+  color:var(--bg); font-family:'Outfit',sans-serif; font-size:.88rem; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase;
+  transition:opacity .2s,transform .1s;
+  margin-top:4px;
+}
+.manual-apply-btn:hover  { opacity:.9; transform:translateY(-1px); }
+.manual-apply-btn:active { transform:translateY(0); }
+.manual-error { font-size:.75rem; color:var(--red); text-align:center; font-family:'Outfit',sans-serif; min-height:18px; }
+
+/* No JSON file notice */
+.no-json-notice {
+  padding:20px 18px; text-align:center;
+  color:var(--text-dim); font-size:.8rem; font-family:'Outfit',sans-serif; line-height:1.6;
+}
+.no-json-notice code {
+  background:var(--surface); border:1px solid rgba(201,168,76,.2);
+  border-radius:4px; padding:2px 6px; font-size:.75rem; color:var(--gold); direction:ltr; display:inline-block;
+}
+</style>
+    <meta name="theme-color" content="#2196f3">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+</head>
+<body>
+<div class="app">
+
+  <!-- Top bar -->
+  <div class="top-bar">
+    <!-- Location picker trigger -->
+    <button class="loc-btn" onclick="openModal()" id="locBtn">
+      <span class="loc-btn-icon">📍</span>
+      <span class="loc-btn-text">
+        <span class="loc-btn-name"  id="locBtnName">جارٍ تحديد الموقع…</span>
+        <span class="loc-btn-coords" id="locBtnCoords"></span>
+      </span>
+      <span class="loc-btn-arrow">▾</span>
+    </button>
+    <!-- Language toggle -->
+    <div class="lang-toggle">
+      <button class="lang-btn active" id="btnAr" onclick="setLang('ar')">عربي</button>
+      <button class="lang-btn"        id="btnEn" onclick="setLang('en')">EN</button>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="arabic-title" id="mainTitle">القِبلة</div>
+    <div class="subtitle">Qibla Direction Compass</div>
+  </header>
+
+  <div class="divider"></div>
+
+  <!-- Compass -->
+  <div class="compass-wrapper">
+    <div class="north-marker"></div>
+    <div class="compass-outer" id="compassOuter">
+      <div class="compass-outer-inner">
+        <div class="compass-rose" id="compassRose">
+          <svg viewBox="0 0 284 284" xmlns="http://www.w3.org/2000/svg">
+            <g stroke="#C9A84C" stroke-width="1">
+              <line x1="142" y1="6"   x2="142" y2="22"  opacity=".8"/>
+              <line x1="213" y1="21"  x2="205" y2="35"  opacity=".6"/>
+              <line x1="263" y1="71"  x2="249" y2="79"  opacity=".6"/>
+              <line x1="278" y1="142" x2="262" y2="142" opacity=".8"/>
+              <line x1="263" y1="213" x2="249" y2="205" opacity=".6"/>
+              <line x1="213" y1="263" x2="205" y2="249" opacity=".6"/>
+              <line x1="142" y1="278" x2="142" y2="262" opacity=".8"/>
+              <line x1="71"  y1="263" x2="79"  y2="249" opacity=".6"/>
+              <line x1="21"  y1="213" x2="35"  y2="205" opacity=".6"/>
+              <line x1="6"   y1="142" x2="22"  y2="142" opacity=".8"/>
+              <line x1="21"  y1="71"  x2="35"  y2="79"  opacity=".6"/>
+              <line x1="71"  y1="21"  x2="79"  y2="35"  opacity=".6"/>
+            </g>
+            <g stroke="#C9A84C" stroke-width=".5" opacity=".3">
+              <line x1="174" y1="7.7"   x2="171" y2="13"/>
+              <line x1="110" y1="7.7"   x2="113" y2="13"/>
+              <line x1="276.3" y1="174" x2="271" y2="171"/>
+              <line x1="276.3" y1="110" x2="271" y2="113"/>
+              <line x1="174" y1="276.3" x2="171" y2="271"/>
+              <line x1="110" y1="276.3" x2="113" y2="271"/>
+              <line x1="7.7" y1="174"   x2="13"  y2="171"/>
+              <line x1="7.7" y1="110"   x2="13"  y2="113"/>
+            </g>
+            <text id="roseN" x="142" y="38"  text-anchor="middle" fill="#E05050" font-family="Outfit,sans-serif" font-size="17" font-weight="700">ش</text>
+            <text id="roseE" x="248" y="147" text-anchor="middle" fill="#C9A84C" font-family="Outfit,sans-serif" font-size="13" font-weight="600" opacity=".85">ش.ق</text>
+            <text id="roseS" x="142" y="257" text-anchor="middle" fill="#C9A84C" font-family="Outfit,sans-serif" font-size="17" font-weight="600" opacity=".85">ج</text>
+            <text id="roseW" x="36"  y="147" text-anchor="middle" fill="#C9A84C" font-family="Outfit,sans-serif" font-size="13" font-weight="600" opacity=".85">غ</text>
+            <circle cx="142" cy="142" r="60" fill="none" stroke="#C9A84C" stroke-width=".5" opacity=".2"/>
+            <circle cx="142" cy="142" r="90" fill="none" stroke="#C9A84C" stroke-width=".3" opacity=".15"/>
+          </svg>
+        </div>
+        <div class="needle-container">
+          <svg class="needle-svg" id="needleSvg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#E8C96A"/>
+                <stop offset="100%" stop-color="#8B6914"/>
+              </linearGradient>
+              <filter id="glow">
+                <feGaussianBlur stdDeviation="2" result="blur"/>
+                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+              </filter>
+            </defs>
+            <polygon points="150,30 143,150 157,150" fill="url(#goldGrad)" filter="url(#glow)"/>
+            <polygon points="150,270 143,150 157,150" fill="#3A3020" opacity=".5"/>
+            <rect x="143" y="21" width="14" height="14" rx="2" fill="#0A0D0F" stroke="#C9A84C" stroke-width="1.5"/>
+            <text x="150" y="31" text-anchor="middle" font-size="9" fill="#C9A84C">🕋</text>
+          </svg>
+        </div>
+        <div class="center-dot"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Facing Qibla Banner -->
+  <div class="qibla-banner" id="qiblaBanner">
+    <div class="banner-icon" id="bannerIcon">🕋</div>
+    <div class="banner-text">
+      <div class="banner-title" id="bannerTitle"></div>
+      <div class="banner-sub"   id="bannerSub"></div>
+    </div>
+  </div>
+
+  <!-- Info grid -->
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="label" id="labelBearing">اتجاه القبلة</div>
+      <div class="value" id="qiblaBearing">—</div>
+      <div class="unit"  id="unitBearing">° من الشمال</div>
+    </div>
+    <div class="info-card">
+      <div class="label" id="labelHeading">الاتجاه الحالي</div>
+      <div class="value" id="heading">—</div>
+      <div class="unit"  id="unitHeading">° مغناطيسي</div>
+    </div>
+  </div>
+
+  <div class="status" id="status">جارٍ تحديد الموقع…</div>
+  <button class="btn" id="permBtn" style="display:none" onclick="requestCompass()">تفعيل البوصلة</button>
+
+</div>
+
+<!-- ═══════════ LOCATION PICKER MODAL ═══════════ -->
+<div class="modal-overlay" id="modalOverlay" onclick="handleOverlayClick(event)">
+  <div class="modal" id="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-header">
+      <span class="modal-title" id="modalTitle">اختر الموقع</span>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <!-- Search -->
+    <div class="modal-search-wrap">
+      <span class="search-icon">🔍</span>
+      <input class="modal-search" id="searchInput" type="text" placeholder="ابحث عن مدينة…" oninput="filterList()" autocomplete="off" spellcheck="false"/>
+    </div>
+
+    <!-- Tabs -->
+    <div class="modal-tabs">
+      <button class="modal-tab active" id="tabList"   onclick="switchTab('list')"   id="tabListBtn">القائمة</button>
+      <button class="modal-tab"        id="tabManual" onclick="switchTab('manual')" id="tabManualBtn">إدخال يدوي</button>
+    </div>
+
+    <!-- List tab -->
+    <div class="modal-list-wrap" id="listTabContent">
+      <ul class="loc-list" id="locList">
+        <li class="loc-empty" id="locEmpty" style="display:none"></li>
+      </ul>
+    </div>
+
+    <!-- Manual tab -->
+    <div class="manual-tab-content" id="manualTabContent" style="display:none">
+      <div class="manual-field">
+        <label id="manualLatLabel">خط العرض (Latitude)</label>
+        <input type="number" id="manualLat" placeholder="23.6673" step="any" min="-90" max="90"/>
+      </div>
+      <div class="manual-field">
+        <label id="manualLngLabel">خط الطول (Longitude)</label>
+        <input type="number" id="manualLng" placeholder="58.1912" step="any" min="-180" max="180"/>
+      </div>
+      <div class="manual-field">
+        <label id="manualNameLabel">الاسم (اختياري)</label>
+        <input type="text" id="manualName" placeholder="موقعي"/>
+      </div>
+      <div class="manual-error" id="manualError"></div>
+      <button class="manual-apply-btn" id="manualApplyBtn" onclick="applyManual()">تطبيق</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── Constants ──
+const KAABA_LAT = 21.4225, KAABA_LNG = 39.8262;
+
+// ── State ──
+let userLat = null, userLng = null, locationName = '';
+let qiblaBearing = null, currentHeading = 0;
+let lang = 'ar';
+let allLocations = [];        // loaded from locations.json
+let selectedIndex = -1;       // which list item is active (-1 = auto/manual)
+let activeTab = 'list';
+let lastDiff = null;
+let compassStarted = false;
+let lastAbsolute = false;
+
+// ── Translations ──
+const T = {
+  ar: {
+    mainTitle:'القِبلة', detecting:'جارٍ تحديد الموقع…',
+    detectingIP:'جارٍ تحديد عنوان IP…', fetchingGeo:'جارٍ تحديد الموقع الجغرافي…',
+    locationFound:'تم تحديد الموقع. جارٍ تفعيل البوصلة…',
+    locationFail:'فشل تحديد الموقع. اختر موقعاً يدوياً.',
+    compassActive:'✦ البوصلة نشطة — وجّه الهاتف نحو القبلة',
+    compassDenied:'تم رفض إذن البوصلة.', compassError:'خطأ في إذن البوصلة.',
+    noMagnet:'البوصلة غير متاحة على هذا الجهاز.',
+    enableCompass:'تفعيل البوصلة',
+    labelBearing:'اتجاه القبلة', unitBearing:'° من الشمال',
+    labelHeading:'الاتجاه الحالي', unitHeading:'° مغناطيسي',
+    facingTitle:'✓ أنت تواجه القبلة',
+    facingSub:'محاذٍ نحو الكعبة المشرفة في مكة المكرمة',
+    closeTitle:(dir,deg)=>`اقتربت — انعطف ${dir} قليلاً`,
+    closeSub:(deg)=>`${deg}° عن اتجاه القبلة`,
+    dirRight:'يميناً', dirLeft:'يساراً',
+    roseN:'ش', roseE:'ش.ق', roseS:'ج', roseW:'غ',
+    modalTitle:'اختر الموقع', tabList:'القائمة', tabManual:'إدخال يدوي',
+    searchPlaceholder:'ابحث عن مدينة…', noResults:'لا توجد نتائج',
+    noJson:'لم يتم العثور على ملف locations.json\nضع الملف في نفس مجلد هذا الملف',
+    manualLatLabel:'خط العرض (Latitude)', manualLngLabel:'خط الطول (Longitude)',
+    manualNameLabel:'الاسم (اختياري)', manualApply:'تطبيق',
+    manualNamePlaceholder:'موقعي',
+    errLat:'خط العرض يجب أن يكون بين -90 و 90',
+    errLng:'خط الطول يجب أن يكون بين -180 و 180',
+    errEmpty:'أدخل قيم خط العرض والطول',
+    autoDetect:'تحديد تلقائي',
+  },
+  en: {
+    mainTitle:'Qibla Compass', detecting:'Detecting location…',
+    detectingIP:'Detecting IP address…', fetchingGeo:'Fetching geo location…',
+    locationFound:'Location found. Activating compass…',
+    locationFail:'Location fetch failed. Pick a location manually.',
+    compassActive:'✦ Compass active — point phone toward Qibla',
+    compassDenied:'Compass permission denied.', compassError:'Compass permission error.',
+    noMagnet:'Magnetometer not available on this device.',
+    enableCompass:'Enable Compass',
+    labelBearing:'Qibla Bearing', unitBearing:'° from North',
+    labelHeading:'Heading', unitHeading:'° magnetic',
+    facingTitle:"You're facing the Qibla ✓",
+    facingSub:'Aligned toward the Kaaba in Mecca',
+    closeTitle:(dir,deg)=>`Almost there — turn ${dir}`,
+    closeSub:(deg)=>`${deg}° off from Qibla`,
+    dirRight:'right', dirLeft:'left',
+    roseN:'N', roseE:'E', roseS:'S', roseW:'W',
+    modalTitle:'Choose Location', tabList:'Locations', tabManual:'Manual Entry',
+    searchPlaceholder:'Search cities…', noResults:'No results',
+    noJson:'locations.json not found\nPlace it in the same folder as this file',
+    manualLatLabel:'Latitude', manualLngLabel:'Longitude',
+    manualNameLabel:'Name (optional)', manualApply:'Apply',
+    manualNamePlaceholder:'My Location',
+    errLat:'Latitude must be between -90 and 90',
+    errLng:'Longitude must be between -180 and 180',
+    errEmpty:'Please enter latitude and longitude',
+    autoDetect:'Auto-detected',
+  }
+};
+
+function t(k,...a){ const v=T[lang][k]; return typeof v==='function'?v(...a):v; }
+
+// ── Maths ──
+function toRad(d){ return d*Math.PI/180; }
+function toDeg(r){ return r*180/Math.PI; }
+function calcQibla(lat1,lon1,lat2,lon2){
+  const φ1=toRad(lat1),φ2=toRad(lat2),Δλ=toRad(lon2-lon1);
+  const y=Math.sin(Δλ)*Math.cos(φ2);
+  const x=Math.cos(φ1)*Math.sin(φ2)-Math.sin(φ1)*Math.cos(φ2)*Math.cos(Δλ);
+  return(toDeg(Math.atan2(y,x))+360)%360;
+}
+
+// ── Status ──
+function setStatus(msg,cls=''){
+  const el=document.getElementById('status');
+  el.textContent=msg; el.className='status '+cls;
+}
+
+// ── Apply a location ──
+function applyLocation(lat,lng,name){
+  userLat=lat; userLng=lng; locationName=name||'';
+  document.getElementById('locBtnName').textContent   = name || `${lat.toFixed(4)}°, ${lng.toFixed(4)}°`;
+  document.getElementById('locBtnCoords').textContent = `${lat.toFixed(4)}° N, ${lng.toFixed(4)}° E`;
+  qiblaBearing = calcQibla(lat,lng,KAABA_LAT,KAABA_LNG);
+  document.getElementById('qiblaBearing').textContent = Math.round(qiblaBearing);
+  updateNeedle();
+  if(!compassStarted){ requestCompass(); }
+  else { setStatus(t('compassActive'),'ok'); }
+}
+
+// ── Banner ──
+function updateBanner(diff){
+  lastDiff=diff;
+  if(diff===null) return;
+  const banner=document.getElementById('qiblaBanner');
+  const bannerTitle=document.getElementById('bannerTitle');
+  const bannerSub=document.getElementById('bannerSub');
+  const bannerIcon=document.getElementById('bannerIcon');
+  const co=document.getElementById('compassOuter');
+  const abs=Math.abs(diff);
+  if(abs<=10){
+    banner.className='qibla-banner facing';
+    bannerIcon.textContent='🕋';
+    bannerTitle.textContent=t('facingTitle');
+    bannerSub.textContent=t('facingSub');
+    co.classList.add('aligned');
+  } else if(abs<=25){
+    const dir=diff>0?t('dirRight'):t('dirLeft');
+    const arrow=diff>0?'➡️':'⬅️';
+    banner.className='qibla-banner close';
+    bannerIcon.textContent=arrow;
+    bannerTitle.textContent=t('closeTitle',dir,Math.round(abs));
+    bannerSub.textContent=t('closeSub',Math.round(abs));
+    co.classList.remove('aligned');
+  } else {
+    banner.className='qibla-banner';
+    co.classList.remove('aligned');
+  }
+}
+
+// ── Needle update ──
+function updateNeedle(){
+  if(qiblaBearing===null) return;
+  document.getElementById('compassRose').style.transform=`rotate(${-currentHeading}deg)`;
+  const nr=qiblaBearing-currentHeading;
+  document.getElementById('needleSvg').style.transform=`rotate(${nr}deg)`;
+  document.getElementById('qiblaBearing').textContent=Math.round(qiblaBearing);
+  document.getElementById('heading').textContent=Math.round(currentHeading);
+  let diff=((nr%360)+360)%360;
+  if(diff>180) diff-=360;
+  updateBanner(diff);
+}
+
+// ── Compass ──
+function requestCompass(){
+  document.getElementById('permBtn').style.display='none';
+  if(typeof DeviceOrientationEvent!=='undefined'&&typeof DeviceOrientationEvent.requestPermission==='function'){
+    DeviceOrientationEvent.requestPermission()
+      .then(s=>{ if(s==='granted'){startCompass();}
+        else{setStatus(t('compassDenied'),'error');document.getElementById('permBtn').style.display='';} })
+      .catch(()=>{ setStatus(t('compassError'),'error');document.getElementById('permBtn').style.display=''; });
+  } else { startCompass(); }
+}
+
+function startCompass(){
+  compassStarted=true;
+  if(window.DeviceOrientationEvent){
+    window.addEventListener('deviceorientationabsolute',handleOrientation,true);
+    window.addEventListener('deviceorientation',handleOrientation,true);
+    setStatus(t('compassActive'),'ok');
+  } else {
+    setStatus(t('noMagnet'),'error');
+    if(qiblaBearing!==null) document.getElementById('needleSvg').style.transform=`rotate(${qiblaBearing}deg)`;
+  }
+}
+
+function handleOrientation(event){
+  let heading=null;
+  if(event.type==='deviceorientationabsolute'&&event.absolute){
+    lastAbsolute=true;
+    heading=event.alpha!=null?(360-event.alpha)%360:null;
+  } else if(!lastAbsolute&&event.type==='deviceorientation'){
+    if(event.webkitCompassHeading!=null){ heading=event.webkitCompassHeading; }
+    else if(event.alpha!=null){ heading=(360-event.alpha)%360; }
+  }
+  if(heading!==null){ currentHeading=heading; updateNeedle(); }
+}
+
+// ── IP-based auto-detect ──
+async function autoDetect(){
+  try {
+    setStatus(t('detectingIP'));
+    const ipRes = await fetch('https://get.geojs.io/v1/ip');
+    const ip    = (await ipRes.text()).trim();
+    setStatus(t('fetchingGeo'));
+    const geoRes = await fetch(`https://get.geojs.io/v1/ip/geo/${ip}`);
+    const geo    = await geoRes.json();
+    const lat = parseFloat(geo.latitude), lng = parseFloat(geo.longitude);
+    const name = [geo.city,geo.country].filter(Boolean).join(', ') || t('autoDetect');
+    selectedIndex = -1;
+    applyLocation(lat,lng,name);
+    setStatus(t('locationFound'),'ok');
+  } catch(e) {
+    setStatus(t('locationFail'),'error');
+    document.getElementById('permBtn').style.display='';
+    openModal();
+  }
+}
+
+// ═══════════ MODAL ═══════════
+
+function openModal(){
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('searchInput').value='';
+  filterList();
+  setTimeout(()=>document.getElementById('searchInput').focus(),350);
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+function handleOverlayClick(e){
+  if(e.target===document.getElementById('modalOverlay')) closeModal();
+}
+
+function switchTab(tab){
+  activeTab=tab;
+  document.getElementById('listTabContent').style.display   = tab==='list'?'':'none';
+  document.getElementById('manualTabContent').style.display = tab==='manual'?'':'none';
+  document.getElementById('tabList').classList.toggle('active',   tab==='list');
+  document.getElementById('tabManual').classList.toggle('active', tab==='manual');
+  document.getElementById('searchInput').parentElement.style.display = tab==='list'?'':'none';
+}
+
+// ── Build list ──
+function buildList(items){
+  const ul=document.getElementById('locList');
+  const empty=document.getElementById('locEmpty');
+  // remove all except the empty sentinel
+  Array.from(ul.children).forEach(c=>{ if(c!==empty) c.remove(); });
+
+  if(!items||items.length===0){
+    empty.style.display='';
+    empty.textContent = allLocations.length===0 ? t('noJson') : t('noResults');
+    return;
+  }
+  empty.style.display='none';
+
+  items.forEach((loc,idx)=>{
+    const li=document.createElement('li');
+    li.className='loc-item'+(loc._idx===selectedIndex?' selected':'');
+    li.innerHTML=`
+      <span class="loc-item-icon">📍</span>
+      <span class="loc-item-text">
+        <span class="loc-item-name">${loc.name}</span>
+        <span class="loc-item-coords">${parseFloat(loc.lat).toFixed(4)}° N, ${parseFloat(loc.lng).toFixed(4)}° E</span>
+      </span>
+      ${loc._idx===selectedIndex?'<span class="loc-item-check">✓</span>':''}
+    `;
+    li.addEventListener('click',()=>{
+      selectedIndex=loc._idx;
+      applyLocation(parseFloat(loc.lat),parseFloat(loc.lng),loc.name);
+      setStatus(t('locationFound'),'ok');
+      closeModal();
+    });
+    ul.appendChild(li);
+  });
+}
+
+function filterList(){
+  const q=document.getElementById('searchInput').value.trim().toLowerCase();
+  const filtered = allLocations
+    .map((l,i)=>({...l,_idx:i}))
+    .filter(l=>!q||l.name.toLowerCase().includes(q));
+  buildList(filtered);
+}
+
+// ── Manual entry ──
+function applyManual(){
+  const latStr=document.getElementById('manualLat').value.trim();
+  const lngStr=document.getElementById('manualLng').value.trim();
+  const nameStr=document.getElementById('manualName').value.trim()||t('manualNamePlaceholder');
+  const errEl=document.getElementById('manualError');
+
+  if(!latStr||!lngStr){ errEl.textContent=t('errEmpty'); return; }
+  const lat=parseFloat(latStr), lng=parseFloat(lngStr);
+  if(isNaN(lat)||lat<-90||lat>90){ errEl.textContent=t('errLat'); return; }
+  if(isNaN(lng)||lng<-180||lng>180){ errEl.textContent=t('errLng'); return; }
+
+  errEl.textContent='';
+  selectedIndex=-1;
+  applyLocation(lat,lng,nameStr);
+  setStatus(t('locationFound'),'ok');
+  closeModal();
+}
+
+// ── Load locations.json ──
+async function loadLocations(){
+  try {
+    const res=await fetch('locations.json');
+    if(!res.ok) throw new Error('not found');
+    const data=await res.json();
+    allLocations=data;
+  } catch(e){
+    allLocations=[];
+  }
+  filterList();
+}
+
+// ── Language switch ──
+function setLang(l){
+  lang=l;
+  const isAr=l==='ar';
+  document.body.classList.toggle('lang-en',!isAr);
+  document.body.setAttribute('dir',isAr?'rtl':'ltr');
+  document.documentElement.setAttribute('lang',l);
+  document.documentElement.setAttribute('dir',isAr?'rtl':'ltr');
+  document.getElementById('btnAr').classList.toggle('active',isAr);
+  document.getElementById('btnEn').classList.toggle('active',!isAr);
+
+  document.getElementById('mainTitle').textContent     = t('mainTitle');
+  document.getElementById('labelBearing').textContent  = t('labelBearing');
+  document.getElementById('unitBearing').textContent   = t('unitBearing');
+  document.getElementById('labelHeading').textContent  = t('labelHeading');
+  document.getElementById('unitHeading').textContent   = t('unitHeading');
+  document.getElementById('permBtn').textContent       = t('enableCompass');
+  document.getElementById('modalTitle').textContent    = t('modalTitle');
+  document.getElementById('tabList').textContent       = t('tabList');
+  document.getElementById('tabManual').textContent     = t('tabManual');
+  document.getElementById('searchInput').placeholder   = t('searchPlaceholder');
+  document.getElementById('manualLatLabel').textContent= t('manualLatLabel');
+  document.getElementById('manualLngLabel').textContent= t('manualLngLabel');
+  document.getElementById('manualNameLabel').textContent=t('manualNameLabel');
+  document.getElementById('manualName').placeholder    = t('manualNamePlaceholder');
+  document.getElementById('manualApplyBtn').textContent= t('manualApply');
+
+  document.getElementById('roseN').textContent=t('roseN');
+  document.getElementById('roseE').textContent=t('roseE');
+  document.getElementById('roseS').textContent=t('roseS');
+  document.getElementById('roseW').textContent=t('roseW');
+
+  // Update loc-btn name if still showing placeholder
+  const locBtnName=document.getElementById('locBtnName').textContent;
+  if(locBtnName===T['ar'].detecting||locBtnName===T['en'].detecting)
+    document.getElementById('locBtnName').textContent=t('detecting');
+
+  filterList();
+  updateBanner(lastDiff);
+}
+
+// ── Boot ──
+(async function(){
+  setLang('ar');
+  await loadLocations();
+  autoDetect();
+})();
+</script>
+
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>console.log('SW registered:',r)).catch(e=>console.error('SW registration failed:',e))})</script>
+</body>
+</html>
+
