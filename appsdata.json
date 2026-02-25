@@ -1,4 +1,17 @@
 [
+  {
+    "href": "qibla/",
+    "category": "Others",
+    "category-ar": "",
+    "keywords": "Nn",
+    "keywords-ar": "",
+    "icon": "➡️ ",
+    "name": "Qibla",
+    "name-ar": "القبلة",
+    "description": "!",
+    "description-ar": "!",
+    "badges": []
+  },
  {
     "href": "discoverquran/",
     "category": "others",
@@ -219,3 +232,4 @@
     "badges": []
   }
 ]
+
