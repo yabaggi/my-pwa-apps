@@ -5,13 +5,28 @@
     "category-ar": "",
     "keywords": "Nn",
     "keywords-ar": "",
-    "icon": "🌍",
+    "icon": "🧭",
     "name": "Qibla",
     "name-ar": "القبلة",
     "description": "!",
     "description-ar": "!",
     "badges": []
   },
+  
+    {
+    "href": "mosquesui/",
+    "category": "Others",
+    "category-ar": "",
+    "keywords": "Nn",
+    "keywords-ar": "",
+    "icon": "🌟",
+    "name": "Oman Mosques",
+    "name-ar": "مساجد عمان",
+    "description": "!",
+    "description-ar": "!",
+    "badges": []
+  },
+  
   
     {
     "href": "foodorderui/",
