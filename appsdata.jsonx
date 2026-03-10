@@ -1,4 +1,32 @@
 [
+  {
+    "href": "qibla/",
+    "category": "Others",
+    "category-ar": "",
+    "keywords": "Nn",
+    "keywords-ar": "",
+    "icon": "➡️ ",
+    "name": "Qibla",
+    "name-ar": "القبلة",
+    "description": "!",
+    "description-ar": "!",
+    "badges": []
+  },
+  
+    {
+    "href": "foodorderui/",
+    "category": "Others",
+    "category-ar": "",
+    "keywords": "Nn",
+    "keywords-ar": "",
+    "icon": "➡️ ",
+    "name": "Food Order",
+    "name-ar": "طلبات",
+    "description": "!",
+    "description-ar": "!",
+    "badges": []
+  },
+  
  {
     "href": "discoverquran/",
     "category": "others",
@@ -219,3 +247,5 @@
     "badges": []
   }
 ]
+
+
