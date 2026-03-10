@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placeholder Image Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea.warning {
+            border-color: #ffc107;
+        }
+
+        textarea.error {
+            border-color: #dc3545;
+        }
+
+        .dimension-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .color-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .color-input-wrapper {
+            display: flex;
+            gap: 10px;
+        }
+
+        .color-input-wrapper input[type="color"] {
+            width: 60px;
+            height: 44px;
+            padding: 4px;
+            cursor: pointer;
+        }
+
+        .color-input-wrapper input[type="text"] {
+            flex: 1;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+        }
+
+        .checkbox-group label {
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .text-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .text-controls button {
+            flex: 1;
+            padding: 10px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .text-controls button:hover {
+            background: #5568d3;
+        }
+
+        .char-counter {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .char-counter.safe {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .char-counter.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .char-counter.danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .char-count {
+            font-weight: 600;
+        }
+
+        .preview-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 25px 0;
+        }
+
+        .preview-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .url-display {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            word-break: break-all;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            border: 2px solid #e0e0e0;
+            margin-bottom: 15px;
+        }
+
+        .image-preview {
+            text-align: center;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        .btn-download {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-download:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .info-text {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+        }
+
+        .alert-warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .wrap-settings {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .wrap-settings-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .slider-group {
+            margin-bottom: 10px;
+        }
+
+        .slider-group input[type="range"] {
+            padding: 0;
+        }
+
+        .slider-value {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .dimension-group,
+            .color-group,
+            .button-group,
+            .wrap-settings-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .color-input-wrapper {
+                flex-direction: column;
+            }
+
+            .color-input-wrapper input[type="color"] {
+                width: 100%;
+            }
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #333;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🖼️ Placeholder Generator</h1>
+            <p>Create custom placeholder images with placeholder.co</p>
+        </div>
+
+        <div class="content">
+            <!-- Dimensions -->
+            <div class="dimension-group">
+                <div class="form-group">
+                    <label for="width">Width (px)</label>
+                    <input type="number" id="width" value="600" min="10" max="4000">
+                    <div class="info-text">Min: 10, Max: 4000</div>
+                </div>
+                <div class="form-group">
+                    <label for="height">Height (px)</label>
+                    <input type="number" id="height" value="400" min="10" max="4000">
+                    <div class="info-text">Min: 10, Max: 4000</div>
+                </div>
+            </div>
+
+            <!-- Colors -->
+            <div class="color-group">
+                <div class="form-group">
+                    <label for="bgColor">Background Color</label>
+                    <div class="color-input-wrapper">
+                        <input type="color" id="bgColorPicker" value="#cccccc">
+                        <input type="text" id="bgColor" value="cccccc" placeholder="e.g., cccccc or orange">
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="transparentBg">
+                        <label for="transparentBg">Transparent Background</label>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="textColor">Text Color</label>
+                    <div class="color-input-wrapper">
+                        <input type="color" id="textColorPicker" value="#333333">
+                        <input type="text" id="textColor" value="333333" placeholder="e.g., 333333 or white">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Format -->
+            <div class="form-group">
+                <label for="format">Image Format</label>
+                <select id="format">
+                    <option value="svg">SVG (Default)</option>
+                    <option value="png">PNG</option>
+                    <option value="jpg">JPEG</option>
+                    <option value="gif">GIF</option>
+                    <option value="webp">WebP</option>
+                    <option value="avif">AVIF</option>
+                </select>
+            </div>
+
+            <!-- Custom Text -->
+            <div class="form-group">
+                <label for="customText">Custom Text</label>
+                <textarea id="customText" rows="3" placeholder="Enter your custom text (keep it short!)"></textarea>
+                
+                <div class="char-counter" id="charCounter">
+                    <span>Characters: <span class="char-count" id="charCount">0</span> / 100</span>
+                    <span id="charStatus">✅ Within limit</span>
+                </div>
+
+                <div class="alert alert-warning" id="textAlert">
+                    ⚠️ <strong>Text may be too long!</strong> Placeholder.co typically supports up to ~100 characters. Consider shortening your text or using fewer line breaks.
+                </div>
+
+                <div class="info-text">Leave empty to show dimensions. Keep text under 100 characters for best results.</div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="autoWrap">
+                    <label for="autoWrap">🔄 Enable Smart Text Wrapping</label>
+                </div>
+
+                <div class="wrap-settings" id="wrapSettings" style="display: none;">
+                    <div class="slider-group">
+                        <label>
+                            Font Size: <span class="slider-value" id="fontSizeValue">20px</span>
+                        </label>
+                        <input type="range" id="fontSize" min="10" max="100" value="20">
+                        <div class="info-text">Estimated font size for wrapping calculation</div>
+                    </div>
+
+                    <div class="slider-group">
+                        <label>
+                            Padding: <span class="slider-value" id="paddingValue">10%</span>
+                        </label>
+                        <input type="range" id="padding" min="0" max="30" value="10">
+                        <div class="info-text">Text padding from edges</div>
+                    </div>
+
+                    <div class="slider-group">
+                        <label>
+                            Max Lines: <span class="slider-value" id="maxLinesValue">3</span>
+                        </label>
+                        <input type="range" id="maxLines" min="1" max="5" value="3">
+                        <div class="info-text">Limit number of lines to stay within character limit</div>
+                    </div>
+
+                    <div class="text-controls">
+                        <button onclick="applyWrap()">📏 Apply Wrapping</button>
+                        <button onclick="clearWrapping()">✖️ Clear Breaks</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Font -->
+            <div class="form-group">
+                <label for="font">Font (Optional)</label>
+                <select id="font">
+                    <option value="">Default</option>
+                    <option value="roboto">Roboto</option>
+                    <option value="open-sans">Open Sans</option>
+                    <option value="montserrat">Montserrat</option>
+                    <option value="lora">Lora</option>
+                    <option value="playfair-display">Playfair Display</option>
+                    <option value="raleway">Raleway</option>
+                    <option value="poppins">Poppins</option>
+                    <option value="source-sans-pro">Source Sans Pro</option>
+                </select>
+            </div>
+
+            <!-- Retina -->
+            <div class="form-group">
+                <label for="retina">High-DPI (Retina)</label>
+                <select id="retina">
+                    <option value="">Standard (1x)</option>
+                    <option value="@2x">2x Resolution (@2x)</option>
+                    <option value="@3x">3x Resolution (@3x)</option>
+                </select>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="preview-section">
+                <h3>Generated URL</h3>
+                <div class="url-display" id="urlDisplay">https://placehold.co/600x400</div>
+                
+                <h3 style="margin-top: 20px;">Image Preview</h3>
+                <div class="image-preview">
+                    <img id="previewImage" src="https://placehold.co/600x400" alt="Preview">
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="button-group">
+                <button class="btn-primary" onclick="copyURL()">📋 Copy URL</button>
+                <button class="btn-download" onclick="downloadImage()">⬇️ Download Image</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // Character limit for placeholder.co
+        const CHAR_LIMIT = 100;
+        const CHAR_WARNING = 80;
+
+        // Get all input elements
+        const width = document.getElementById('width');
+        const height = document.getElementById('height');
+        const bgColor = document.getElementById('bgColor');
+        const bgColorPicker = document.getElementById('bgColorPicker');
+        const textColor = document.getElementById('textColor');
+        const textColorPicker = document.getElementById('textColorPicker');
+        const transparentBg = document.getElementById('transparentBg');
+        const format = document.getElementById('format');
+        const customText = document.getElementById('customText');
+        const font = document.getElementById('font');
+        const retina = document.getElementById('retina');
+        const urlDisplay = document.getElementById('urlDisplay');
+        const previewImage = document.getElementById('previewImage');
+        const autoWrap = document.getElementById('autoWrap');
+        const wrapSettings = document.getElementById('wrapSettings');
+        const fontSize = document.getElementById('fontSize');
+        const fontSizeValue = document.getElementById('fontSizeValue');
+        const padding = document.getElementById('padding');
+        const paddingValue = document.getElementById('paddingValue');
+        const maxLines = document.getElementById('maxLines');
+        const maxLinesValue = document.getElementById('maxLinesValue');
+        const charCounter = document.getElementById('charCounter');
+        const charCount = document.getElementById('charCount');
+        const charStatus = document.getElementById('charStatus');
+        const textAlert = document.getElementById('textAlert');
+
+        // Show/hide wrap settings
+        autoWrap.addEventListener('change', () => {
+            wrapSettings.style.display = autoWrap.checked ? 'block' : 'none';
+        });
+
+        // Update slider values
+        fontSize.addEventListener('input', (e) => {
+            fontSizeValue.textContent = e.target.value + 'px';
+        });
+
+        padding.addEventListener('input', (e) => {
+            paddingValue.textContent = e.target.value + '%';
+        });
+
+        maxLines.addEventListener('input', (e) => {
+            maxLinesValue.textContent = e.target.value;
+        });
+
+        // Update character count
+        customText.addEventListener('input', updateCharCount);
+
+        function updateCharCount() {
+            const text = customText.value;
+            const count = text.length;
+            
+            charCount.textContent = count;
+            
+            // Update styling based on count
+            charCounter.className = 'char-counter';
+            customText.className = '';
+            
+            if (count === 0) {
+                charCounter.classList.add('safe');
+                charStatus.textContent = '✅ Within limit';
+                textAlert.classList.remove('show');
+            } else if (count < CHAR_WARNING) {
+                charCounter.classList.add('safe');
+                charStatus.textContent = '✅ Within limit';
+                textAlert.classList.remove('show');
+            } else if (count < CHAR_LIMIT) {
+                charCounter.classList.add('warning');
+                charStatus.textContent = '⚠️ Approaching limit';
+                customText.classList.add('warning');
+                textAlert.classList.add('show');
+            } else {
+                charCounter.classList.add('danger');
+                charStatus.textContent = '❌ Over limit!';
+                customText.classList.add('error');
+                textAlert.classList.add('show');
+            }
+            
+            generateURL();
+        }
+
+        // Sync color picker with text input
+        bgColorPicker.addEventListener('input', (e) => {
+            bgColor.value = e.target.value.replace('#', '');
+            generateURL();
+        });
+
+        bgColor.addEventListener('input', (e) => {
+            const color = e.target.value.replace('#', '');
+            if (/^[0-9A-Fa-f]{6}$/.test(color)) {
+                bgColorPicker.value = '#' + color;
+            }
+            generateURL();
+        });
+
+        textColorPicker.addEventListener('input', (e) => {
+            textColor.value = e.target.value.replace('#', '');
+            generateURL();
+        });
+
+        textColor.addEventListener('input', (e) => {
+            const color = e.target.value.replace('#', '');
+            if (/^[0-9A-Fa-f]{6}$/.test(color)) {
+                textColorPicker.value = '#' + color;
+            }
+            generateURL();
+        });
+
+        // Transparent background toggle
+        transparentBg.addEventListener('change', generateURL);
+
+        // Add event listeners to all inputs
+        [width, height, format, font, retina].forEach(element => {
+            element.addEventListener('input', generateURL);
+        });
+
+        function applyWrap() {
+            const text = customText.value.trim();
+            if (!text) {
+                showToast('⚠️ Please enter some text first');
+                return;
+            }
+
+            // Remove existing line breaks
+            const cleanText = text.replace(/\\n/g, ' ').replace(/\n/g, ' ').replace(/\s+/g, ' ');
+            
+            // Calculate wrapping
+            const wrappedText = wrapText(cleanText);
+            
+            // Check if wrapped text exceeds limit
+            if (wrappedText.length > CHAR_LIMIT) {
+                const suggestion = truncateToFit(cleanText);
+                if (confirm(`Wrapped text (${wrappedText.length} chars) exceeds the ${CHAR_LIMIT} character limit.\n\nWould you like to truncate it to fit? (${suggestion.length} chars)`)) {
+                    customText.value = wrapText(suggestion);
+                    showToast('✅ Text wrapped and truncated to fit!');
+                } else {
+                    customText.value = wrappedText;
+                    showToast('⚠️ Text wrapped but may be too long');
+                }
+            } else {
+                customText.value = wrappedText;
+                showToast('✅ Text wrapping applied!');
+            }
+            
+            updateCharCount();
+        }
+
+        function clearWrapping() {
+            const text = customText.value;
+            const cleanText = text.replace(/\\n/g, ' ').replace(/\n/g, ' ').replace(/\s+/g, ' ');
+            customText.value = cleanText;
+            updateCharCount();
+            showToast('✅ Line breaks removed!');
+        }
+
+        function truncateToFit(text) {
+            const words = text.split(' ');
+            const maxLinesCount = parseInt(maxLines.value) || 3;
+            const charsPerLine = Math.floor((CHAR_LIMIT - (maxLinesCount - 1) * 2) / maxLinesCount); // Account for \n
+            
+            let result = '';
+            let lineCount = 0;
+            
+            for (let word of words) {
+                const testLine = result ? result + ' ' + word : word;
+                if (testLine.length <= charsPerLine * (lineCount + 1) + lineCount * 2) {
+                    result = testLine;
+                } else if (lineCount < maxLinesCount - 1) {
+                    result += '\\n';
+                    lineCount++;
+                    result += word;
+                } else {
+                    break; // Stop adding words
+                }
+            }
+            
+            return result.split(' ').join(' ').replace(/\\n /g, '\\n');
+        }
+
+        function wrapText(text) {
+            const w = parseInt(width.value) || 600;
+            const fSize = parseInt(fontSize.value) || 20;
+            const pad = parseInt(padding.value) || 10;
+            const maxLinesCount = parseInt(maxLines.value) || 3;
+            
+            // Calculate available width
+            const paddingPixels = (w * pad) / 100;
+            const availableWidth = w - (paddingPixels * 2);
+            
+            // Estimate character width
+            const avgCharWidth = fSize * 0.6;
+            
+            // Calculate characters per line
+            const charsPerLine = Math.floor(availableWidth / avgCharWidth);
+            
+            if (charsPerLine <= 0) {
+                return text;
+            }
+            
+            // Split text into words
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = '';
+            
+            for (let word of words) {
+                const testLine = currentLine ? currentLine + ' ' + word : word;
+                
+                if (testLine.length <= charsPerLine) {
+                    currentLine = testLine;
+                } else {
+                    if (currentLine) {
+                        lines.push(currentLine);
+                        if (lines.length >= maxLinesCount) {
+                            break; // Stop at max lines
+                        }
+                    }
+                    currentLine = word;
+                }
+            }
+            
+            if (currentLine && lines.length < maxLinesCount) {
+                lines.push(currentLine);
+            }
+            
+            // Join with \n
+            return lines.join('\\n');
+        }
+
+        function generateURL() {
+            const w = parseInt(width.value) || 600;
+            const h = parseInt(height.value) || 400;
+            const bg = transparentBg.checked ? 'transparent' : (bgColor.value.trim() || 'cccccc');
+            const txt = textColor.value.trim() || '333333';
+            const fmt = format.value || 'svg';
+            const customTxt = customText.value.trim();
+            const fnt = font.value;
+            const ret = retina.value;
+
+            // Build URL
+            let url = `https://placehold.co/${w}x${h}/${bg}/${txt}`;
+            
+            // Add retina if selected
+            if (ret) {
+                url += ret;
+            }
+
+            // Add format
+            url += `.${fmt}`;
+
+            // Add query parameters
+            const params = [];
+            if (customTxt) {
+                // Replace spaces with +
+                const encodedText = customTxt.replace(/\s+/g, '+');
+                params.push(`text=${encodedText}`);
+            }
+            if (fnt) {
+                params.push(`font=${fnt}`);
+            }
+
+            if (params.length > 0) {
+                url += '?' + params.join('&');
+            }
+
+            // Update display and preview
+            urlDisplay.textContent = url;
+            previewImage.src = url;
+        }
+
+        function copyURL() {
+            const url = urlDisplay.textContent;
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('✅ URL copied to clipboard!');
+            }).catch(() => {
+                showToast('❌ Failed to copy URL');
+            });
+        }
+
+        function downloadImage() {
+            const url = urlDisplay.textContent;
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `placeholder-${width.value}x${height.value}.${format.value}`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('⬇️ Download started!');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // Generate initial URL
+        generateURL();
+        updateCharCount();
+    </script>
+</body>
+</html>
