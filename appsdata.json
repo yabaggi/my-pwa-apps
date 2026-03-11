@@ -42,6 +42,37 @@
     "badges": []
   },
   
+  
+  
+  
+    {
+    "href": "placeholder/",
+    "category": "Others",
+    "category-ar": "",
+    "keywords": "Nn",
+    "keywords-ar": "",
+    "icon": "🧩",
+    "name": "Image placeholder",
+    "name-ar": "إنشاء image URL",
+    "description": "!",
+    "description-ar": "!",
+    "badges": []
+  },
+  
+    {
+    "href": "lpage-gen/",
+    "category": "Others",
+    "category-ar": "",
+    "keywords": "Nn",
+    "keywords-ar": "",
+    "icon": "💻",
+    "name": "Landing page generator",
+    "name-ar": "إنشاء صفحة رئيسية",
+    "description": "!",
+    "description-ar": "!",
+    "badges": []
+  },
+  
  {
     "href": "discoverquran/",
     "category": "others",
