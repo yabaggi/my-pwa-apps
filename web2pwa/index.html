@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Convert your web app into a Progressive Web App instantly. Free online PWA converter tool.">
+    <meta name="theme-color" content="#2196F3">
+    <meta name="author" content="PWA Converter">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="PWA Converter - Web App to PWA">
+    <meta property="og:description" content="Transform your web application into a Progressive Web App in minutes">
+    <meta property="og:type" content="website">
+    
+    <title>PWA Converter - Transform Web Apps into Progressive Web Apps</title>
+    <link rel="stylesheet" href="styles.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <span class="logo-icon">🚀</span>
+                <h1>PWA Converter</h1>
+            </div>
+            <p class="subtitle">Transform your web app into a Progressive Web App in minutes</p>
+            <div class="features-badges">
+                <span class="badge">✓ Folder Upload</span>
+                <span class="badge">✓ Instant Generation</span>
+                <span class="badge">✓ Production Ready</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Step 1: Folder Upload Section -->
+            <section id="upload-section" class="card active">
+                <div class="card-header">
+                    <span class="step-number">1</span>
+                    <h2>Upload Your App Folder</h2>
+                </div>
+                
+                <div class="card-body">
+                    <p class="section-description">
+                        Select the folder containing your web application. The folder must include an 
+                        <strong>index.html</strong> file in the root. All files and subfolders will be included in your PWA.
+                    </p>
+
+                    <div class="upload-area">
+                        <!-- Folder Upload -->
+                        <div class="file-input-group required-file folder-upload-group">
+                            <label for="folder-input" class="file-label">
+                                <span class="file-icon">📁</span>
+                                <span class="file-label-text">
+                                    <strong>Select App Folder</strong>
+                                    <span class="required-badge">Required</span>
+                                </span>
+                            </label>
+                            <input 
+                                type="file" 
+                                id="folder-input" 
+                                webkitdirectory 
+                                directory 
+                                multiple
+                                required
+                                class="file-input"
+                            >
+                            <span class="file-status" id="folder-status"></span>
+                            <div class="file-info" id="folder-info"></div>
+                            
+                            <!-- Folder Contents Preview -->
+                            <div class="folder-contents" id="folder-contents" style="display: none;">
+                                <h4>📂 Folder Contents:</h4>
+                                <div class="folder-tree" id="folder-tree"></div>
+                            </div>
+                        </div>
+
+                        <!-- Icon Upload (Separate) -->
+                        <div class="file-input-group">
+                            <label for="icon-file" class="file-label">
+                                <span class="file-icon">🖼️</span>
+                                <span class="file-label-text">
+                                    <strong>App Icon</strong>
+                                    <span class="optional-badge">Optional</span>
+                                </span>
+                            </label>
+                            <input 
+                                type="file" 
+                                id="icon-file" 
+                                accept="image/png,image/jpeg,image/jpg,image/svg+xml"
+                                class="file-input"
+                            >
+                            <span class="file-status" id="icon-status"></span>
+                            <div class="file-info" id="icon-info"></div>
+                            <small class="help-text">Recommended: 512x512px PNG. If not provided, we'll generate one for you.</small>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <span class="info-icon">💡</span>
+                        <div class="info-content">
+                            <strong>Pro Tip:</strong> Your folder can contain any files and subfolders (JSON, images, audio, etc.). 
+                            Everything will be included in the final PWA. Just make sure <code>index.html</code> is in the root of your selected folder!
+                        </div>
+                    </div>
+
+                    <div class="requirements-box">
+                        <h4>✅ Requirements:</h4>
+                        <ul>
+                            <li><strong>index.html</strong> must be in the root of your folder</li>
+                            <li>Folder size should be under 100MB</li>
+                            <li>All files and subfolders will be preserved</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <button 
+                        id="next-to-config" 
+                        class="btn btn-primary btn-large"
+                        disabled
+                    >
+                        Next: Configure PWA Settings
+                        <span class="btn-icon">→</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Step 2: PWA Configuration Section -->
+            <section id="config-section" class="card">
+                <div class="card-header">
+                    <span class="step-number">2</span>
+                    <h2>Configure PWA Settings</h2>
+                </div>
+
+                <div class="card-body">
+                    <p class="section-description">
+                        Customize your Progressive Web App settings. These values will be used 
+                        to generate the manifest and service worker.
+                    </p>
+
+                    <form id="pwa-config-form">
+                        <!-- Basic Information -->
+                        <div class="form-section">
+                            <h3 class="form-section-title">Basic Information</h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="app-name" class="form-label required">
+                                        App Name
+                                        <span class="help-icon" title="Full name of your application">?</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="app-name" 
+                                        class="form-input"
+                                        required 
+                                        placeholder="My Awesome App"
+                                        maxlength="45"
+                                    >
+                                    <small class="help-text">Maximum 45 characters</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="short-name" class="form-label required">
+                                        Short Name
+                                        <span class="help-icon" title="Displayed on home screen">?</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="short-name" 
+                                        class="form-input"
+                                        required 
+                                        placeholder="MyApp"
+                                        maxlength="12"
+                                    >
+                                    <small class="help-text">Maximum 12 characters (home screen)</small>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="description" class="form-label">
+                                    Description
+                                    <span class="help-icon" title="Brief description of your app">?</span>
+                                </label>
+                                <textarea 
+                                    id="description" 
+                                    class="form-input"
+                                    rows="3" 
+                                    placeholder="A brief description of your application..."
+                                    maxlength="200"
+                                ></textarea>
+                                <small class="help-text">Maximum 200 characters</small>
+                            </div>
+                        </div>
+
+                        <!-- Appearance -->
+                        <div class="form-section">
+                            <h3 class="form-section-title">Appearance</h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="theme-color" class="form-label required">
+                                        Theme Color
+                                        <span class="help-icon" title="Browser toolbar color">?</span>
+                                    </label>
+                                    <div class="color-input-wrapper">
+                                        <input 
+                                            type="color" 
+                                            id="theme-color" 
+                                            class="color-input"
+                                            value="#2196F3" 
+                                            required
+                                        >
+                                        <input 
+                                            type="text" 
+                                            id="theme-color-text" 
+                                            class="form-input color-text"
+                                            value="#2196F3"
+                                            pattern="^#[0-9A-Fa-f]{6}$"
+                                        >
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="background-color" class="form-label required">
+                                        Background Color
+                                        <span class="help-icon" title="Splash screen background">?</span>
+                                    </label>
+                                    <div class="color-input-wrapper">
+                                        <input 
+                                            type="color" 
+                                            id="background-color" 
+                                            class="color-input"
+                                            value="#ffffff" 
+                                            required
+                                        >
+                                        <input 
+                                            type="text" 
+                                            id="background-color-text" 
+                                            class="form-input color-text"
+                                            value="#ffffff"
+                                            pattern="^#[0-9A-Fa-f]{6}$"
+                                        >
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Behavior -->
+                        <div class="form-section">
+                            <h3 class="form-section-title">Behavior</h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="app-id" class="form-label required">
+                                        App ID
+                                        <span class="help-icon" title="Unique identifier for your app">?</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="app-id" 
+                                        class="form-input"
+                                        required 
+                                        placeholder="myapp-id"
+                                    >
+                                    <small class="help-text">Unique identifier (auto-generated from folder name)</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="folder-name" class="form-label required">
+                                        Folder Name
+                                        <span class="help-icon" title="Deployment folder name">?</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="folder-name" 
+                                        class="form-input"
+                                        required 
+                                        placeholder="myapp"
+                                        readonly
+                                    >
+                                    <small class="help-text">From your selected folder (auto-filled)</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="start-url" class="form-label">
+                                        Start URL
+                                        <span class="help-icon" title="URL to open when app launches">?</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="start-url" 
+                                        class="form-input"
+                                        value="/" 
+                                        placeholder="/myapp/"
+                                    >
+                                    <small class="help-text">Auto-updates based on folder name</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="scope" class="form-label">
+                                        Scope
+                                        <span class="help-icon" title="Navigation scope of PWA">?</span>
+                                    </label>
+                                    <input 
+                                        type="text" 
+                                        id="scope" 
+                                        class="form-input"
+                                        value="/" 
+                                        placeholder="/myapp/"
+                                    >
+                                    <small class="help-text">Auto-updates based on folder name</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="display-mode" class="form-label required">
+                                        Display Mode
+                                        <span class="help-icon" title="How app appears when launched">?</span>
+                                    </label>
+                                    <select id="display-mode" class="form-input" required>
+                                        <option value="standalone" selected>Standalone (Recommended)</option>
+                                        <option value="fullscreen">Fullscreen</option>
+                                        <option value="minimal-ui">Minimal UI</option>
+                                        <option value="browser">Browser</option>
+                                    </select>
+                                    <small class="help-text">Standalone hides browser UI</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="orientation" class="form-label">
+                                        Orientation
+                                        <span class="help-icon" title="Screen orientation preference">?</span>
+                                    </label>
+                                    <select id="orientation" class="form-input">
+                                        <option value="any">Any</option>
+                                        <option value="portrait">Portrait</option>
+                                        <option value="landscape">Landscape</option>
+                                        <option value="portrait-primary" selected>Portrait Primary</option>
+                                        <option value="landscape-primary">Landscape Primary</option>
+                                    </select>
+                                    <small class="help-text">Default: Portrait Primary</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Performance & Caching -->
+                        <div class="form-section">
+                            <h3 class="form-section-title">Performance & Caching</h3>
+                            
+                            <div class="form-group full-width">
+                                <label for="cache-strategy" class="form-label required">
+                                    Caching Strategy
+                                    <span class="help-icon" title="How to cache resources">?</span>
+                                </label>
+                                <select id="cache-strategy" class="form-input" required>
+                                    <option value="cache-first">Cache First - Best for static assets (Fastest)</option>
+                                    <option value="network-first">Network First - Best for dynamic content</option>
+                                    <option value="stale-while-revalidate" selected>Stale While Revalidate - Balanced approach (Recommended)</option>
+                                </select>
+                                <small class="help-text strategy-description">
+                                    Serves cached content while fetching updates in background. All your files will be cached.
+                                </small>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="enable-offline" checked>
+                                    <span>Enable offline fallback page</span>
+                                </label>
+                            </div>
+
+                            <div class="form-group full-width">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="enable-notifications">
+                                    <span>Enable push notifications support</span>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card-footer">
+                    <div class="button-group">
+                        <button 
+                            id="back-to-upload" 
+                            class="btn btn-secondary"
+                        >
+                            <span class="btn-icon">←</span>
+                            Back
+                        </button>
+                        <button 
+                            type="submit" 
+                            form="pwa-config-form"
+                            class="btn btn-primary btn-large"
+                        >
+                            Generate PWA
+                            <span class="btn-icon">🚀</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 3: Download Section -->
+            <section id="download-section" class="card">
+                <div class="card-header success">
+                    <span class="step-number success">✓</span>
+                    <h2>Your PWA is Ready!</h2>
+                </div>
+
+                <div class="card-body">
+                    <div class="success-message">
+                        <div class="success-icon">🎉</div>
+                        <h3>Success!</h3>
+                        <p>Your Progressive Web App has been generated successfully.</p>
+                        <div class="success-stats" id="success-stats">
+                            <div class="stat">
+                                <span class="stat-value" id="files-generated">0</span>
+                                <span class="stat-label">Total Files</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="icons-generated">0</span>
+                                <span class="stat-label">Icons Created</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="folders-preserved">0</span>
+                                <span class="stat-label">Folders Preserved</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="download-section-content">
+                        <button id="download-all" class="btn btn-primary btn-large btn-download-all">
+                            <span class="btn-icon">📦</span>
+                            Download Complete PWA (ZIP)
+                        </button>
+                        
+                        <div class="zip-contents-info">
+                            <h4>📦 ZIP Package Contains:</h4>
+                            <ul>
+                                <li>✅ All your original files and folders (preserved)</li>
+                                <li>✅ Enhanced index.html (with PWA code)</li>
+                                <li>✅ manifest.json (PWA manifest)</li>
+                                <li>✅ sw.js (Service Worker - caches all files)</li>
+                                <li>✅ icons/ folder (8 generated icons)</li>
+                                <li>✅ offline.html (if enabled)</li>
+                                <li>✅ README.md (deployment instructions)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="instructions-box">
+                        <h3>📋 Installation Instructions</h3>
+                        <ol class="instructions-list">
+                            <li>
+                                <strong>Extract the ZIP file</strong>
+                                <p>Unzip all files to your pwaApps folder</p>
+                            </li>
+                            <li>
+                                <strong>Verify folder structure</strong>
+                                <p>All your original files + PWA files should be present</p>
+                            </li>
+                            <li>
+                                <strong>Start Python server</strong>
+                                <p>Run from pwaApps folder: <code>python -m http.server 8000</code></p>
+                            </li>
+                            <li>
+                                <strong>Access your PWA</strong>
+                                <p>Open: <code>http://localhost:8000/<span id="folder-url-display">yourapp</span>/</code></p>
+                            </li>
+                            <li>
+                                <strong>Install on device</strong>
+                                <p>Click "Install" button in Chrome browser</p>
+                            </li>
+                        </ol>
+                    </div>
+
+                    <div class="deployment-options">
+                        <h3>🚀 Quick Deploy Options</h3>
+                        <div class="deployment-grid">
+                            <a href="https://www.netlify.com/drop" target="_blank" class="deployment-card">
+                                <span class="deployment-icon">N</span>
+                                <strong>Netlify</strong>
+                                <small>Drag & drop deployment</small>
+                            </a>
+                            <a href="https://vercel.com/new" target="_blank" class="deployment-card">
+                                <span class="deployment-icon">▲</span>
+                                <strong>Vercel</strong>
+                                <small>Git-based deployment</small>
+                            </a>
+                            <a href="https://pages.github.com/" target="_blank" class="deployment-card">
+                                <span class="deployment-icon">G</span>
+                                <strong>GitHub Pages</strong>
+                                <small>Free static hosting</small>
+                            </a>
+                            <a href="https://firebase.google.com/docs/hosting" target="_blank" class="deployment-card">
+                                <span class="deployment-icon">F</span>
+                                <strong>Firebase</strong>
+                                <small>Google's hosting platform</small>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="info-box">
+                        <span class="info-icon">💡</span>
+                        <div class="info-content">
+                            <strong>Perfect for Multi-App Setup!</strong> Your PWA is configured to work in a subfolder. 
+                            All your files, subfolders, and assets have been preserved in the final package.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer">
+                    <button id="start-over" class="btn btn-secondary btn-large">
+                        <span class="btn-icon">↺</span>
+                        Create Another PWA
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <p>Built with ❤️ for the web community</p>
+                <div class="footer-links">
+                    <a href="https://web.dev/progressive-web-apps/" target="_blank">Learn about PWAs</a>
+                    <span>•</span>
+                    <a href="https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps" target="_blank">MDN Documentation</a>
+                    <span>•</span>
+                    <a href="https://github.com" target="_blank">View on GitHub</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p class="loading-text">Generating your PWA...</p>
+            <p class="loading-subtext" id="loading-status">Processing files</p>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- JSZip Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    
+    <!-- Main Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>

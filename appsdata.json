@@ -5,7 +5,7 @@
     "category-ar": "",
     "keywords": "Nn",
     "keywords-ar": "",
-    "icon": "📝",
+    "icon": "🧭",
     "name": "PECO",
     "name-ar": "بيكو",
     "description": "Events Documentary App",
@@ -57,6 +57,19 @@
   },
   
   
+    {
+    "href": "web2pwa/",
+    "category": "Others",
+    "category-ar": "",
+    "keywords": "Nn",
+    "keywords-ar": "",
+    "icon": "🪄",
+    "name": "PWA Convertor",
+    "name-ar": "PWA Convertor",
+    "description": "Converts you web app into a PWA App!",
+    "description-ar": "!",
+    "badges": []
+  },
   
   
     {
@@ -307,4 +320,6 @@
     "badges": []
   }
 ]
+
+
 
