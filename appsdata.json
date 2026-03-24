@@ -1,4 +1,18 @@
 [
+ {
+    "href": "pecoX/",
+    "category": "Others",
+    "category-ar": "",
+    "keywords": "Nn",
+    "keywords-ar": "",
+    "icon": "📝",
+    "name": "PECO",
+    "name-ar": "بيكو",
+    "description": "Events Documentary App",
+    "description-ar": "توثيق المناسبات السعيدة",
+    "badges": []
+  },
+
   {
     "href": "qibla/",
     "category": "Others",
@@ -293,5 +307,4 @@
     "badges": []
   }
 ]
-
 
