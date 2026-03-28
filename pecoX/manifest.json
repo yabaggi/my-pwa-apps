@@ -1,0 +1,21 @@
+{
+  "name": "PECO — Event Documentary Builder",
+  "short_name": "PECO",
+  "description": "Places, Events, Celebrations, Occasions documentary tool.",
+  "start_url": "/pecoX/index.html",
+  "display": "standalone",
+  "background_color": "#f5f0e8",
+  "theme_color": "#0e0e10",
+  "icons": [
+    {
+      "src": "/pecoX/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/pecoX/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
