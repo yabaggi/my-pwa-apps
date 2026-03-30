@@ -2,7 +2,7 @@
   "name": "FeedFlow RSS Reader",
   "short_name": "FeedFlow",
   "description": "A fast, beautiful RSS reader with Reddit and web feeds",
-  "start_url": "feedflow/",
+  "start_url": "/my-pwa-apps/feedflow/",
   "display": "standalone",
   "background_color": "#0a0a0c",
   "theme_color": "#e8c547",
