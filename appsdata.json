@@ -1,5 +1,20 @@
 [
  {
+    "href": "feedflow/",
+    "category": "Others",
+    "category-ar": "",
+    "keywords": "Nn",
+    "keywords-ar": "",
+    "icon": "🧐",
+    "name": "Feed flow",
+    "name-ar": "Rss قارئ",
+    "description": "A fast, beautiful, and fully-featured RSS reader built as a single-page app, deployed on Netlify with a serverless backend function. Supports Reddit feeds, any RSS/Atom source, offline access, PWA installation, and rich personalization.",
+    "description-ar": "قارئ RSS سريع ومميز بالكامل تم بناؤه كتطبيق من صفحة واحدة، تم نشره على Netlify مع وظيفة الواجهة الخلفية بدون خادم. يدعم خلاصات Reddit، وأي مصدر RSS / Atom، والوصول دون اتصال بالإنترنت، وتركيب PWA، والتخصيص الغني.",
+    "badges": []
+  },
+  
+  
+  {
     "href": "peco/",
     "category": "Others",
     "category-ar": "",
@@ -320,6 +335,3 @@
     "badges": []
   }
 ]
-
-
-
