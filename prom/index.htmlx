@@ -1874,59 +1874,5 @@
         console.log('  - Folder: prom');
         console.log('  - Files included: 2');
     </script>
-    
-    
-    
-    
-    <!-- Important: Use type="module" to allow imports -->
-<script type="module">
-  // 1. Import the necessary Firebase functions from the CDN
-  import { initializeApp } from "https://gstatic.com";
-  import { getMessaging, getToken } from "https://gstatic.com";
-
-  // 2. Your Firebase configuration (Get this from Firebase Console)
-  
-  
-  const firebaseConfig = { 
-    apiKey: "AIzaSyCnRiWaq8gIRvPvnV5mTW6elJBFAol2vg8",
-    authDomain: "books-library-b70cf.firebaseapp.com",
-    projectId: "books-library-b70cf",
-    storageBucket: "books-library-b70cf.firebasestorage.app",
-    messagingSenderId: "903495800021",
-    appId: "1:903495800021:web:a7e5d7e63579208445be5c" };
-
-
-  // 3. Initialize Firebase and Messaging
-  const app = initializeApp(firebaseConfig);
-  const messaging = getMessaging(app);
-
-  // 4. Request Permission and Get Token
-  Notification.requestPermission().then((permission) => {
-    if (permission === 'granted') {
-      console.log('Notification permission granted.');
-      
-      getToken(messaging, { vapidKey: 'BGABiuxoSD6xLIAW6bQG2fnU9yyGKtUss8JIoF4t_EwiIgAvpoekk59Ew6jSk0p0LGXhhhOmGiJRBTQG6SKCYqE' })
-        .then((currentToken) => {
-          if (currentToken) {
-            console.log("Receiver Token:", currentToken);
-            // Copy this token from your browser console to use in Termux
-          } else {
-            console.log('No registration token available. Request permission to generate one.');
-          }
-        }).catch((err) => {
-          console.log('An error occurred while retrieving token. ', err);
-        });
-    } else {
-      console.log('Unable to get permission to notify.');
-    }
-  });
-</script>
-
-    
-    
-    
-    
-    
 </body>
 </html>
-
