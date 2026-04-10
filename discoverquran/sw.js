@@ -6,33 +6,27 @@
  * Total Files Cached: 23
  */
 
-const CACHE_NAME = 'discoverquran-v1';
-const OFFLINE_URL = '/discoverquran/offline.html';
+const CACHE_NAME = 'discoverquran-v2';
+const OFFLINE_URL = './offline.html';
 
 const urlsToCache = [
-  "/discoverquran/",
-  "/discoverquran/index.html",
-  "/discoverquran/manifest.json",
-  "/discoverquran/.gitignore",
-  "/discoverquran/index.htmlx",
-  "/discoverquran/KpWQhgRnd1.jpg",
-  "/discoverquran/README.md",
-  "/discoverquran/favicon.ico",
-  "/discoverquran/fgYdWjAl.jpg",
-  "/discoverquran/hGfVkpbyda.jpg",
-  "/discoverquran/heroimage.jpg",
-  "/discoverquran/hjKEn76bwsh2.jpg",
-  "/discoverquran/index.html",
-  "/discoverquran/owgj23Ftaym.jpg",
-  "/discoverquran/quran.json",
-  "/discoverquran/search.html",
-  "/discoverquran/tjd_kMdObwsh1.jpg",
-  "/discoverquran/uuVHgrAnd2.jpg",
-  "/discoverquran/search.htmlx",
-  "/discoverquran/surahs.json",
-  "/discoverquran/fgtrMaj.jpg",
-  "/discoverquran/h123maj.jpg",
-  "/discoverquran/offline.html"
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./KpWQhgRnd1.jpg",
+  "./favicon.ico",
+  "./fgYdWjAl.jpg",
+  "./hGfVkpbyda.jpg",
+  "./heroimage.jpg",
+  "./hjKEn76bwsh2.jpg",
+  "./owgj23Ftaym.jpg",
+  "./quran.json",
+  "./search.html",
+  "./tjd_kMdObwsh1.jpg",
+  "./uuVHgrAnd2.jpg",
+  "./surahs.json",
+  "./fgtrMaj.jpg",
+  "./h123maj.jpg"
 ];
 
 // Install event - cache ALL resources
