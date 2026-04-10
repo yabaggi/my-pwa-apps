@@ -2,7 +2,7 @@
   "name": "PECO — Event Documentary Builder",
   "short_name": "PECO",
   "description": "Places, Events, Celebrations, Occasions documentary tool.",
-  "start_url": "/peco/index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f5f0e8",
   "theme_color": "#0e0e10",

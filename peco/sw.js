@@ -1,4 +1,4 @@
-const CACHE_NAME = 'peco-v1';
+const CACHE_NAME = 'peco-v2';
 const ASSETS = [
   './',
   './index.html',
