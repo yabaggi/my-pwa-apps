@@ -1,0 +1,60 @@
+import json
+import requests
+from google.oauth2 import service_account
+import google.auth.transport.requests
+
+# 1. Path to your service account JSON
+SERVICE_ACCOUNT_FILE = '../service_account.json'
+
+# 2. Your Registration Token (Paste it here)
+TOKEN = 'eRIjHxbgtDW4WUITNDpebU:APA91bFbtHvId-6p47lVZr-maTWetsWavhgamkYQoYah3hoa4DeaQsrxYD_JAd-axzDC1sqNZUvU8JVma89wGMSjxdPzQzmwu2YKnQGr8yX8mVCZdEWeqfA'
+
+def send_fcm_notification(token, title, body):
+    # Authenticate using the service account
+    scoped_credentials = service_account.Credentials.from_service_account_file(
+        SERVICE_ACCOUNT_FILE,
+        scopes=['https://www.googleapis.com/auth/firebase.messaging']
+    )
+    
+    # Generate an access token
+    auth_request = google.auth.transport.requests.Request()
+    scoped_credentials.refresh(auth_request)
+    access_token = scoped_credentials.token
+
+    # Project ID from the service account file
+    with open(SERVICE_ACCOUNT_FILE) as f:
+        project_id = json.load(f)['project_id']
+
+    # FCM API endpoint
+    url = f'https://fcm.googleapis.com/v1/projects/{project_id}/messages:send'
+
+    # Notification payload
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+        'Content-Type': 'application/json; UTF-8',
+    }
+
+    payload = {
+        "message": {
+            "token": token,
+            "notification": {
+                "title": title,
+                "body": body
+            }
+        }
+    }
+
+    # Send the request
+    response = requests.post(url, headers=headers, data=json.dumps(payload))
+    
+    if response.status_code == 200:
+        print('Successfully sent message:', response.json())
+    else:
+        print('Error sending message:', response.status_code, response.text)
+
+if __name__ == '__main__':
+    if TOKEN == 'YOUR_REGISTRATION_TOKEN_HERE':
+        print("Please update the TOKEN variable in the script with your registration token.")
+    else:
+        send_fcm_notification(TOKEN, 'Hello from Termux!', 'This is a lightweight notification test.')
+

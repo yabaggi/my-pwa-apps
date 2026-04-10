@@ -3,13 +3,13 @@
   "name": "Prompt Explorer",
   "short_name": "Prompt Explo",
   "description": "",
-  "start_url": "/my-pwa-apps/prom/",
-  "scope": "/my-pwa-apps/prom/",
+  "start_url": "/prom/",
+  "scope": "/prom/",
   "display": "standalone",
   "orientation": "portrait-primary",
+  "gcm_sender_id": "903495800021",
   "theme_color": "#2196f3",
   "background_color": "#ffffff",
-  "gcm_sender_id": "103953800507",
   "icons": [
     {
       "src": "icons/icon-72x72.png",

@@ -746,16 +746,16 @@
             <div class="header-content">
                 <div class="app-title">
                     <span class="title-icon">💡</span>
-                    <span>Prompt Explorer</span>
+                    <span>Prompt ExplorerXX</span>
                     <span class="storage-badge">IndexedDB</span>
                 </div>
                 <div class="header-actions">
                     <button class="header-btn" id="addPromptBtn">➕ Add</button>
                     <button class="header-btn" id="importBtn" title="Import from JSON">
-                        📂 Import
+                        📂 ImportX
                     </button>
                     <button class="header-btn" id="exportBtn" title="Export to JSON">
-                        💾 Export
+                        💾 ExportX
                     </button>
                     <button class="header-btn" id="clearAllBtn">🗑️ Clear All</button>
                 </div>
@@ -1874,59 +1874,93 @@
         console.log('  - Folder: prom');
         console.log('  - Files included: 2');
     </script>
-    
-    
-    
-    
-    <!-- Important: Use type="module" to allow imports -->
-<script type="module">
-  // 1. Import the necessary Firebase functions from the CDN
-  import { initializeApp } from "https://gstatic.com";
-  import { getMessaging, getToken } from "https://gstatic.com";
 
-  // 2. Your Firebase configuration (Get this from Firebase Console)
-  
-  
-  const firebaseConfig = { 
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
+
+  const firebaseConfig = {
     apiKey: "AIzaSyCnRiWaq8gIRvPvnV5mTW6elJBFAol2vg8",
     authDomain: "books-library-b70cf.firebaseapp.com",
     projectId: "books-library-b70cf",
     storageBucket: "books-library-b70cf.firebasestorage.app",
     messagingSenderId: "903495800021",
-    appId: "1:903495800021:web:a7e5d7e63579208445be5c" };
+    appId: "1:903495800021:web:a7e5d7e63579208445be5c"};
 
-
-  // 3. Initialize Firebase and Messaging
   const app = initializeApp(firebaseConfig);
   const messaging = getMessaging(app);
 
-  // 4. Request Permission and Get Token
-  Notification.requestPermission().then((permission) => {
-    if (permission === 'granted') {
-      console.log('Notification permission granted.');
-      
-      getToken(messaging, { vapidKey: 'BGABiuxoSD6xLIAW6bQG2fnU9yyGKtUss8JIoF4t_EwiIgAvpoekk59Ew6jSk0p0LGXhhhOmGiJRBTQG6SKCYqE' })
-        .then((currentToken) => {
-          if (currentToken) {
-            console.log("Receiver Token:", currentToken);
-            // Copy this token from your browser console to use in Termux
-          } else {
-            console.log('No registration token available. Request permission to generate one.');
-          }
-        }).catch((err) => {
-          console.log('An error occurred while retrieving token. ', err);
-        });
-    } else {
-      console.log('Unable to get permission to notify.');
-    }
+  // Handle foreground messages
+  onMessage(messaging, (payload) => {
+    console.log('Message received. ', payload);
+    const title = payload.notification.title || "Notification";
+    const body = payload.notification.body || "";
+    showToast(`🔔 ${title}: ${body}`, "info");
+    
+    // Using service worker registration for better system notification support
+    navigator.serviceWorker.getRegistration('/prom/firebase-messaging-sw.js')
+      .then(registration => {
+        if (registration) {
+          registration.showNotification(title, { body: body });
+        }
+      });
   });
-</script>
 
-    
-    
-    
-    
-    
+  async function initNotifications() {
+    // Debug helper
+    showToast("Initializing FCM...", "info");
+    console.log("initNotifications start");
+
+  console.log("Requesting permission...");
+  const permission = await Notification.requestPermission();
+  console.log("Permission status:", permission);
+  
+  if (permission === 'granted') {
+    // This is the critical part—pointing to the subfolder
+    navigator.serviceWorker.register('/prom/firebase-messaging-sw.js')
+      .then((registration) => {
+        return getToken(messaging, { 
+          vapidKey: 'BGABiuxoSD6xLIAW6bQG2fnU9yyGKtUss8JIoF4t_EwiIgAvpoekk59Ew6jSk0p0LGXhhhOmGiJRBTQG6SKCYqE',
+          serviceWorkerRegistration: registration 
+        });
+      })
+      .then((token) => {
+        console.log("Token generated:", token);
+        // Create UI to display token
+        const tokenDisplay = document.createElement('div');
+        tokenDisplay.id = 'fcmTokenDisplay';
+        tokenDisplay.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#333;color:white;padding:15px;font-size:12px;word-break:break-all;z-index:9999;box-shadow:0 -2px 10px rgba(0,0,0,0.5);';
+        tokenDisplay.innerHTML = `
+          <div style="margin-bottom:8px"><strong>FCM Token:</strong></div>
+          <div id="tokenText" style="margin-bottom:10px">${token}</div>
+          <div style="display:flex;gap:10px">
+            <button id="copyTokenBtn" style="flex:1;padding:8px;background:#4CAF50;color:white;border:none;border-radius:4px">Copy Token</button>
+            <button onclick="document.getElementById('fcmTokenDisplay').remove()" style="flex:1;padding:8px;background:#f44336;color:white;border:none;border-radius:4px">Close</button>
+          </div>
+        `;
+        document.body.appendChild(tokenDisplay);
+
+        document.getElementById('copyTokenBtn').onclick = () => {
+          navigator.clipboard.writeText(token).then(() => {
+            const btn = document.getElementById('copyTokenBtn');
+            const originalText = btn.innerText;
+            btn.innerText = 'Copied!';
+            setTimeout(() => btn.innerText = originalText, 2000);
+          });
+        };
+      })
+      .catch((err) => {
+        console.error("Token error:", err);
+        const errorDisplay = document.createElement('div');
+        errorDisplay.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#f44336;color:white;padding:15px;z-index:9999;';
+        errorDisplay.innerHTML = `<strong>Token Error:</strong> ${err.message}<br><button onclick="this.parentElement.remove()" style="margin-top:10px">Close</button>`;
+        document.body.appendChild(errorDisplay);
+      });
+    }
+  }
+
+
+  initNotifications();
+</script>
 </body>
 </html>
-

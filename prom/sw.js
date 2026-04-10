@@ -6,7 +6,7 @@
  * Total Files Cached: 6
  */
 
-const CACHE_NAME = 'prom-v1';
+const CACHE_NAME = 'prom-v2';
 const OFFLINE_URL = '/prom/offline.html';
 
 const urlsToCache = [

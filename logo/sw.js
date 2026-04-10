@@ -6,15 +6,15 @@
  * Total Files Cached: 5
  */
 
-const CACHE_NAME = 'logo-v1';
-const OFFLINE_URL = '/logo/offline.html';
+const CACHE_NAME = 'logo-v2';
+const OFFLINE_URL = './offline.html';
 
 const urlsToCache = [
-  "/logo/",
-  "/logo/index.html",
-  "/logo/manifest.json",
-  "/logo/index.html",
-  "/logo/offline.html"
+  "./",
+  "./index.html",
+  "./manifest.json",
+  "./index.html",
+  "./offline.html"
 ];
 
 // Install event - cache ALL resources
