@@ -2,7 +2,7 @@
   "id": "discoverquran-id",
   "name": "مع القرآن الكريم",
   "short_name": "مع القرآن ال",
-  "description": "",
+  "description": "Places, Events, Celebrations, Occasions documentary tool.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
