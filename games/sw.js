@@ -5,14 +5,14 @@
  * Folder: games
  */
 
-const CACHE_NAME = 'gamehub---di-v1';
+const CACHE_NAME = 'gamehub---di-gh1';
 const OFFLINE_URL = '/games/offline.html';
 
 const urlsToCache = [
-  "/games/",
-  "/games/index.html",
-  "/games/manifest.json",
-  "/games/offline.html"
+  "/my-pwa-apps/games/",
+  "/my-pwa-apps/games/index.html",
+  "/my-pwa-apps/games/manifest.json",
+  "/my-pwa-apps/games/offline.html"
 ];
 
 // Install event - cache resources

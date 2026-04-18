@@ -6,13 +6,13 @@
 
 'use strict';
 
-const CACHE_NAME = 'mosquesui-v1';
+const CACHE_NAME = 'mosquesui-gh1';
 const OFFLINE_URL = '/mosquesui/offline.html';
 const URLS_TO_CACHE = [
-  "/mosquesui/",
-  "/mosquesui/index.html",
-  "/mosquesui/manifest.json",
-  "/mosquesui/offline.html"
+  "/my-pwa-apps/mosquesui/",
+  "/my-pwa-apps/mosquesui/index.html",
+  "/my-pwa-apps/mosquesui/manifest.json",
+  "/my-pwa-apps/mosquesui/offline.html"
 ];
 
 self.addEventListener('install', event => {

@@ -6,14 +6,13 @@
  * Total Files Cached: 5
  */
 
-const CACHE_NAME = 'logo-v2';
-const OFFLINE_URL = './offline.html';
+const CACHE_NAME = 'logo-gh1';
+const OFFLINE_URL = '/my-pwa-apps/logo/offline.html';
 
 const urlsToCache = [
   "./",
   "./index.html",
   "./manifest.json",
-  "./index.html",
   "./offline.html"
 ];
 

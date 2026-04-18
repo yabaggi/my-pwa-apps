@@ -6,26 +6,26 @@
 
 'use strict';
 
-const CACHE_NAME = 'imgutls-v1';
+const CACHE_NAME = 'imgutls-gh1';
 const OFFLINE_URL = '/imgutls/offline.html';
 const URLS_TO_CACHE = [
-  "/imgutls/",
-  "/imgutls/index.html",
-  "/imgutls/manifest.json",
-  "/imgutls/offline.html",
-  "/imgutls/emoji.html",
-  "/imgutls/README.md",
-  "/imgutls/script.js",
-  "/imgutls/style.css",
-  "/imgutls/gifgen.html",
-  "/imgutls/imgresize.html",
-  "/imgutls/unicode.html",
-  "/imgutls/unicodedata.json",
-  "/imgutls/merge-script.js",
-  "/imgutls/merge-styles.css",
-  "/imgutls/merge.html",
-  "/imgutls/index.htmlx",
-  "/imgutls/placeholder.html"
+  "/my-pwa-apps/imgutls/",
+  "/my-pwa-apps/imgutls/index.html",
+  "/my-pwa-apps/imgutls/manifest.json",
+  "/my-pwa-apps/imgutls/offline.html",
+  "/my-pwa-apps/imgutls/emoji.html",
+  "/my-pwa-apps/imgutls/README.md",
+  "/my-pwa-apps/imgutls/script.js",
+  "/my-pwa-apps/imgutls/style.css",
+  "/my-pwa-apps/imgutls/gifgen.html",
+  "/my-pwa-apps/imgutls/imgresize.html",
+  "/my-pwa-apps/imgutls/unicode.html",
+  "/my-pwa-apps/imgutls/unicodedata.json",
+  "/my-pwa-apps/imgutls/merge-script.js",
+  "/my-pwa-apps/imgutls/merge-styles.css",
+  "/my-pwa-apps/imgutls/merge.html",
+  "/my-pwa-apps/imgutls/index.htmlx",
+  "/my-pwa-apps/imgutls/placeholder.html"
 ];
 
 self.addEventListener('install', event => {

@@ -6,13 +6,13 @@
 
 'use strict';
 
-const CACHE_NAME = 'placeholder-v1';
+const CACHE_NAME = 'placeholder-gh1';
 const OFFLINE_URL = '/placeholder/offline.html';
 const URLS_TO_CACHE = [
-  "/placeholder/",
-  "/placeholder/index.html",
-  "/placeholder/manifest.json",
-  "/placeholder/offline.html"
+  "/my-pwa-apps/placeholder/",
+  "/my-pwa-apps/placeholder/index.html",
+  "/my-pwa-apps/placeholder/manifest.json",
+  "/my-pwa-apps/placeholder/offline.html"
 ];
 
 self.addEventListener('install', event => {

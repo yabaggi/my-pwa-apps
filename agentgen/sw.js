@@ -6,14 +6,14 @@
 
 'use strict';
 
-const CACHE_NAME = 'agentgen-v1';
+const CACHE_NAME = 'agentgen-gh1';
 const OFFLINE_URL = '/agentgen/offline.html';
 const URLS_TO_CACHE = [
-  "/agentgen/",
-  "/agentgen/index.html",
-  "/agentgen/manifest.json",
-  "/agentgen/offline.html",
-  "/agentgen/note.txt"
+  "/my-pwa-apps/agentgen/",
+  "/my-pwa-apps/agentgen/index.html",
+  "/my-pwa-apps/agentgen/manifest.json",
+  "/my-pwa-apps/agentgen/offline.html",
+  "/my-pwa-apps/agentgen/note.txt"
 ];
 
 self.addEventListener('install', event => {

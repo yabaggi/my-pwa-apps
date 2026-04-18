@@ -6,15 +6,14 @@
  * Total Files Cached: 5
  */
 
-const CACHE_NAME = 'books-store-new-v1';
+const CACHE_NAME = 'books-store-new-gh1';
 const OFFLINE_URL = '/books-store-new/offline.html';
 
 const urlsToCache = [
-  "/books-store-new/",
-  "/books-store-new/index.html",
-  "/books-store-new/manifest.json",
-  "/books-store-new/index.html",
-  "/books-store-new/offline.html"
+  "/my-pwa-apps/books-store-new/",
+  "/my-pwa-apps/books-store-new/index.html",
+  "/my-pwa-apps/books-store-new/manifest.json",
+  "/my-pwa-apps/books-store-new/offline.html"
 ];
 
 // Install event - cache ALL resources

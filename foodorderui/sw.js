@@ -6,13 +6,13 @@
 
 'use strict';
 
-const CACHE_NAME = 'foodorderui-v1';
+const CACHE_NAME = 'foodorderui-gh1';
 const OFFLINE_URL = '/foodorderui/offline.html';
 const URLS_TO_CACHE = [
-  "/foodorderui/",
-  "/foodorderui/index.html",
-  "/foodorderui/manifest.json",
-  "/foodorderui/offline.html"
+  "/my-pwa-apps/foodorderui/",
+  "/my-pwa-apps/foodorderui/index.html",
+  "/my-pwa-apps/foodorderui/manifest.json",
+  "/my-pwa-apps/foodorderui/offline.html"
 ];
 
 self.addEventListener('install', event => {

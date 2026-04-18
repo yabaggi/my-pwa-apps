@@ -6,8 +6,8 @@
  * Total Files Cached: 23
  */
 
-const CACHE_NAME = 'discoverquran-v2';
-const OFFLINE_URL = './offline.html';
+const CACHE_NAME = 'discoverquran-gh1';
+const OFFLINE_URL = '/my-pwa-apps/discoverquran/offline.html';
 
 const urlsToCache = [
   "./",

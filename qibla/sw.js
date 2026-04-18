@@ -6,14 +6,14 @@
 
 'use strict';
 
-const CACHE_NAME = 'qibla-v1';
+const CACHE_NAME = 'qibla-gh1';
 const OFFLINE_URL = '/qibla/offline.html';
 const URLS_TO_CACHE = [
-  "/qibla/",
-  "/qibla/index.html",
-  "/qibla/manifest.json",
-  "/qibla/offline.html",
-  "/qibla/locations.json"
+  "/my-pwa-apps/qibla/",
+  "/my-pwa-apps/qibla/index.html",
+  "/my-pwa-apps/qibla/manifest.json",
+  "/my-pwa-apps/qibla/offline.html",
+  "/my-pwa-apps/qibla/locations.json"
 ];
 
 self.addEventListener('install', event => {

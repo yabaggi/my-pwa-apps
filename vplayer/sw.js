@@ -6,15 +6,15 @@
  * Total Files Cached: 8
  */
 
-const CACHE_NAME = 'vplayer-v1';
+const CACHE_NAME = 'vplayer-gh1';
 const OFFLINE_URL = '/vplayer/offline.html';
 
 const urlsToCache = [
-  "/vplayer/",
-  "/vplayer/index.html",
-  "/vplayer/manifest.json",
-  "/vplayer/loadvideos.html",
-  "/vplayer/offline.html"
+  "/my-pwa-apps/vplayer/",
+  "/my-pwa-apps/vplayer/index.html",
+  "/my-pwa-apps/vplayer/manifest.json",
+  "/my-pwa-apps/vplayer/loadvideos.html",
+  "/my-pwa-apps/vplayer/offline.html"
 ];
 
 // Install event - cache ALL resources

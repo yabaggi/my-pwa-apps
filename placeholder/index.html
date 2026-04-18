@@ -373,7 +373,7 @@
         }
     </style>
     <meta name="theme-color" content="#2196f3">
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="/my-pwa-apps/placeholder/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 </head>
@@ -844,6 +844,6 @@
         updateCharCount();
     </script>
 
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').then(r=>console.log('SW registered:',r)).catch(e=>console.error('SW registration failed:',e))})</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('/my-pwa-apps/placeholder/sw.js').then(r=>console.log('SW registered:',r)).catch(e=>console.error('SW registration failed:',e))})</script>
 </body>
 </html>

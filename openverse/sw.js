@@ -6,18 +6,17 @@
  * Total Files Cached: 8
  */
 
-const CACHE_NAME = 'openverse-v1';
+const CACHE_NAME = 'openverse-gh1';
 const OFFLINE_URL = '/openverse/offline.html';
 
 const urlsToCache = [
-  "/openverse/",
-  "/openverse/index.html",
-  "/openverse/manifest.json",
-  "/openverse/README.md",
-  "/openverse/index.html",
-  "/openverse/script.js",
-  "/openverse/style.css",
-  "/openverse/offline.html"
+  "/my-pwa-apps/openverse/",
+  "/my-pwa-apps/openverse/index.html",
+  "/my-pwa-apps/openverse/manifest.json",
+  "/my-pwa-apps/openverse/README.md",
+  "/my-pwa-apps/openverse/script.js",
+  "/my-pwa-apps/openverse/style.css",
+  "/my-pwa-apps/openverse/offline.html"
 ];
 
 // Install event - cache ALL resources

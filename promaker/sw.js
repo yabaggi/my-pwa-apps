@@ -6,19 +6,18 @@
  * Total Files Cached: 9
  */
 
-const CACHE_NAME = 'promaker-v1';
+const CACHE_NAME = 'promaker-gh1';
 const OFFLINE_URL = '/promaker/offline.html';
 
 const urlsToCache = [
-  "/promaker/",
-  "/promaker/index.html",
-  "/promaker/manifest.json",
-  "/promaker/data.json",
-  "/promaker/index.html",
-  "/promaker/script.js",
-  "/promaker/style.css",
-  "/promaker/README.md",
-  "/promaker/offline.html"
+  "/my-pwa-apps/promaker/",
+  "/my-pwa-apps/promaker/index.html",
+  "/my-pwa-apps/promaker/manifest.json",
+  "/my-pwa-apps/promaker/data.json",
+  "/my-pwa-apps/promaker/script.js",
+  "/my-pwa-apps/promaker/style.css",
+  "/my-pwa-apps/promaker/README.md",
+  "/my-pwa-apps/promaker/offline.html"
 ];
 
 // Install event - cache ALL resources

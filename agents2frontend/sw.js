@@ -6,16 +6,15 @@
  * Total Files Cached: 6
  */
 
-const CACHE_NAME = 'agents2frontend-v1';
+const CACHE_NAME = 'agents2frontend-gh1';
 const OFFLINE_URL = '/agents2frontend/offline.html';
 
 const urlsToCache = [
-  "/agents2frontend/",
-  "/agents2frontend/index.html",
-  "/agents2frontend/manifest.json",
-  "/agents2frontend/index.html",
-  "/agents2frontend/models.json",
-  "/agents2frontend/offline.html"
+  "/my-pwa-apps/agents2frontend/",
+  "/my-pwa-apps/agents2frontend/index.html",
+  "/my-pwa-apps/agents2frontend/manifest.json",
+  "/my-pwa-apps/agents2frontend/models.json",
+  "/my-pwa-apps/agents2frontend/offline.html"
 ];
 
 // Install event - cache ALL resources

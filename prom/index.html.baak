@@ -734,7 +734,7 @@
         }
     </style>
     <meta name="theme-color" content="#2196f3">
-    <link rel="manifest" href="/my-pwa-apps/prom/manifest.json">
+    <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Prompt Explo">
@@ -1794,7 +1794,7 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 // Use RELATIVE path for service worker (works with multi-app setup)
-                navigator.serviceWorker.register('/my-pwa-apps/prom/sw.js')
+                navigator.serviceWorker.register('sw.js')
                     .then(registration => {
                         console.log('✓ Service Worker registered:', registration.scope);
                         console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
@@ -1898,7 +1898,7 @@
     showToast(`🔔 ${title}: ${body}`, "info");
     
     // Using service worker registration for better system notification support
-    navigator.serviceWorker.getRegistration('/my-pwa-apps/prom/firebase-messaging-sw.js')
+    navigator.serviceWorker.getRegistration('/prom/firebase-messaging-sw.js')
       .then(registration => {
         if (registration) {
           registration.showNotification(title, { body: body });
@@ -1917,7 +1917,7 @@
   
   if (permission === 'granted') {
     // This is the critical part—pointing to the subfolder
-    navigator.serviceWorker.register('/my-pwa-apps/prom/firebase-messaging-sw.js')
+    navigator.serviceWorker.register('/prom/firebase-messaging-sw.js')
       .then((registration) => {
         return getToken(messaging, { 
           vapidKey: 'BGABiuxoSD6xLIAW6bQG2fnU9yyGKtUss8JIoF4t_EwiIgAvpoekk59Ew6jSk0p0LGXhhhOmGiJRBTQG6SKCYqE',

@@ -6,24 +6,23 @@
  * Total Files Cached: 14
  */
 
-const CACHE_NAME = 'quotes-v1';
+const CACHE_NAME = 'quotes-gh1';
 const OFFLINE_URL = '/quotes/offline.html';
 
 const urlsToCache = [
-  "/quotes/",
-  "/quotes/index.html",
-  "/quotes/manifest.json",
-  "/quotes/arabic-quotes.json",
-  "/quotes/app.js",
-  "/quotes/top50authors.json",
-  "/quotes/top50categories.json",
-  "/quotes/index.html",
-  "/quotes/random_quotes_splits/quotes_1.json",
-  "/quotes/random_quotes_splits/quotes_11.json",
-  "/quotes/random_quotes_splits/manifest.json",
-  "/quotes/top_authors_quotes/William_Shakespeare.json",
-  "/quotes/top_authors_quotes/miscellaneous_1.json",
-  "/quotes/offline.html"
+  "/my-pwa-apps/quotes/",
+  "/my-pwa-apps/quotes/index.html",
+  "/my-pwa-apps/quotes/manifest.json",
+  "/my-pwa-apps/quotes/arabic-quotes.json",
+  "/my-pwa-apps/quotes/app.js",
+  "/my-pwa-apps/quotes/top50authors.json",
+  "/my-pwa-apps/quotes/top50categories.json",
+  "/my-pwa-apps/quotes/random_quotes_splits/quotes_1.json",
+  "/my-pwa-apps/quotes/random_quotes_splits/quotes_11.json",
+  "/my-pwa-apps/quotes/random_quotes_splits/manifest.json",
+  "/my-pwa-apps/quotes/top_authors_quotes/William_Shakespeare.json",
+  "/my-pwa-apps/quotes/top_authors_quotes/miscellaneous_1.json",
+  "/my-pwa-apps/quotes/offline.html"
 ];
 
 // Install event - cache ALL resources

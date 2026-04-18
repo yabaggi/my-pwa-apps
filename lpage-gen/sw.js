@@ -6,13 +6,13 @@
 
 'use strict';
 
-const CACHE_NAME = 'lpage-gen-v1';
+const CACHE_NAME = 'lpage-gen-gh1';
 const OFFLINE_URL = '/lpage-gen/offline.html';
 const URLS_TO_CACHE = [
-  "/lpage-gen/",
-  "/lpage-gen/index.html",
-  "/lpage-gen/manifest.json",
-  "/lpage-gen/offline.html"
+  "/my-pwa-apps/lpage-gen/",
+  "/my-pwa-apps/lpage-gen/index.html",
+  "/my-pwa-apps/lpage-gen/manifest.json",
+  "/my-pwa-apps/lpage-gen/offline.html"
 ];
 
 self.addEventListener('install', event => {

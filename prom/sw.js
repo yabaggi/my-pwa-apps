@@ -6,16 +6,15 @@
  * Total Files Cached: 6
  */
 
-const CACHE_NAME = 'prom-v2';
+const CACHE_NAME = 'prom-gh1';
 const OFFLINE_URL = '/prom/offline.html';
 
 const urlsToCache = [
-  "/prom/",
-  "/prom/index.html",
-  "/prom/manifest.json",
-  "/prom/index.html",
-  "/prom/prompts-copy.json",
-  "/prom/offline.html"
+  "/my-pwa-apps/prom/",
+  "/my-pwa-apps/prom/index.html",
+  "/my-pwa-apps/prom/manifest.json",
+  "/my-pwa-apps/prom/prompts-copy.json",
+  "/my-pwa-apps/prom/offline.html"
 ];
 
 // Install event - cache ALL resources
