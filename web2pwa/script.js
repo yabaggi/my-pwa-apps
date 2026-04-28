@@ -1,0 +1,966 @@
+/**
+ * PWA Converter - Main Application Logic
+ * Converts standard web applications into Progressive Web Apps
+ * FOLDER UPLOAD VERSION - Preserves entire folder structure
+ *
+ * @version 2.1.0 (Fixed SW generation: Cache-First, favicon, persist)
+ * @author PWA Converter Team
+ */
+
+'use strict';
+
+// ============================================================================ 
+// PWAConverter Class - Main Application Controller
+// ============================================================================ 
+
+class PWAConverter {
+    constructor() {
+        // File storage
+        this.files = {
+            folderName: null,
+            sanitizedName: null,
+            allFiles: [],
+            totalSize: 0,
+            index: null,
+            css: null,
+            js: null,
+            icon: null
+        };
+        this.config = {};
+        this.generatedFiles = {};
+        this.init();
+    }
+
+    init() {
+        this.setupEventListeners();
+        this.setupColorInputSync();
+        this.setupCacheStrategyDescription();
+        console.log('PWA Converter initialized successfully (v2.1.0)');
+    }
+
+    setupEventListeners() {
+        document.getElementById('folder-input').addEventListener('change', (e) => this.handleFolderUpload(e));
+        document.getElementById('icon-file').addEventListener('change', (e) => this.handleIconUpload(e));
+        document.getElementById('next-to-config').addEventListener('click', () => this.showSection('config'));
+        document.getElementById('back-to-upload').addEventListener('click', () => this.showSection('upload'));
+        document.getElementById('start-over').addEventListener('click', () => this.reset());
+        document.getElementById('pwa-config-form').addEventListener('submit', (e) => this.generatePWA(e));
+        document.getElementById('download-all').addEventListener('click', () => this.downloadAll());
+        document.getElementById('app-name').addEventListener('input', (e) => {
+            const shortNameInput = document.getElementById('short-name');
+            if (!shortNameInput.value || shortNameInput.value === '') {
+                shortNameInput.value = e.target.value.substring(0, 12);
+            }
+        });
+        document.getElementById('short-name').addEventListener('input', (e) => {
+            const appIdInput = document.getElementById('app-id');
+            if (!appIdInput.dataset.userModified) {
+                const appId = this.sanitizeFolderName(e.target.value) + '-id';
+                appIdInput.value = appId;
+            }
+        });
+        document.getElementById('folder-name').addEventListener('input', (e) => this.updateUrlFields(e.target.value));
+        ['app-id', 'start-url', 'scope'].forEach(fieldId => {
+            const field = document.getElementById(fieldId);
+            if (field) {
+                field.addEventListener('focus', () => {
+                    field.dataset.userModified = 'true';
+                });
+            }
+        });
+    }
+
+    /**
+     * NEW, ROBUST path handling logic for file uploads.
+     */
+    async handleFolderUpload(event) {
+        const inputFiles = Array.from(event.target.files);
+        if (inputFiles.length === 0) return;
+
+        const statusElement = document.getElementById('folder-status');
+        statusElement.textContent = 'Processing folder...';
+        statusElement.className = 'file-status';
+
+        try {
+            // Step 1: Normalize all the paths provided by the browser.
+            const cleanPaths = inputFiles.map(file => {
+                const rawPath = file.webkitRelativePath || file.name;
+                let cleanPath = rawPath;
+                try {
+                    cleanPath = rawPath.split('/').map(part => decodeURIComponent(part)).join('/');
+                } catch (e) {
+                    console.error("Could not decode path component:", rawPath);
+                }
+                return { file, cleanPath };
+            });
+
+            // Step 2: Find the common base directory from the clean paths.
+            const baseDir = this.findCommonBaseDirectory(cleanPaths.map(p => p.cleanPath));
+            
+            // Step 3: Determine the folder name from the base directory.
+            const folderName = baseDir.split('/').pop() || 'pwa-app';
+            this.files.folderName = folderName;
+            this.files.sanitizedName = this.sanitizeFolderName(folderName);
+            
+            // Step 4: Create the final file list with correct relative paths.
+            this.files.allFiles = cleanPaths.map(({ file, cleanPath }) => {
+                const relativePath = baseDir ? cleanPath.substring(baseDir.length + 1) : cleanPath;
+                return {
+                    path: relativePath,
+                    blob: file,
+                    type: file.type || this.guessFileType(relativePath),
+                    size: file.size,
+                    name: file.name
+                };
+            });
+            
+            this.files.totalSize = inputFiles.reduce((sum, file) => sum + file.size, 0);
+            if (this.files.totalSize > 100 * 1024 * 1024) {
+                 throw new Error(`Folder too large (${this.formatFileSize(this.files.totalSize)}). Maximum size is 100MB.`);
+            }
+
+            // Step 5: Process the files as before.
+            await this.processAllFiles(this.files.allFiles);
+            this.validateFolderStructure();
+            this.autoFillConfiguration();
+            
+            // Update UI
+            statusElement.textContent = `✓ Folder "${folderName}" loaded successfully (${this.files.allFiles.length} files, ${this.formatFileSize(this.files.totalSize)})`;
+            statusElement.className = 'file-status success';
+            document.getElementById('folder-info').textContent = `Total: ${this.files.allFiles.length} files.`;
+            this.displayFolderTree(this.files.allFiles);
+            document.getElementById('folder-contents').style.display = 'block';
+            document.getElementById('next-to-config').disabled = false;
+            this.showToast(`Folder "${folderName}" uploaded successfully!`, 'success');
+
+        } catch (error) {
+            statusElement.textContent = `✗ Error: ${error.message}`;
+            statusElement.className = 'file-status error';
+            this.reset();
+            this.showToast(`Failed to upload folder: ${error.message}`, 'error');
+            console.error('Folder upload error:', error);
+        }
+    }
+
+    /**
+     * Finds the common base directory from a list of file paths.
+     */
+    findCommonBaseDirectory(paths) {
+        if (!paths || paths.length === 0) return '';
+        if (paths.length === 1) {
+            const path = paths[0];
+            return path.substring(0, path.lastIndexOf('/'));
+        }
+
+        const sorted = [...paths].sort();
+        const first = sorted[0];
+        const last = sorted[sorted.length - 1];
+        let i = 0;
+        while (i < first.length && first.charAt(i) === last.charAt(i)) {
+            i++;
+        }
+        let prefix = first.substring(0, i);
+        let lastSlash = prefix.lastIndexOf('/');
+        if (lastSlash === -1) return '';
+        return prefix.substring(0, lastSlash);
+    }
+    
+    /**
+     * Processes the final list of files with their correct relative paths.
+     */
+    async processAllFiles(fileList) {
+        this.files.index = null;
+        this.files.css = null;
+        this.files.js = null;
+
+        for (const fileInfo of fileList) {
+            if (fileInfo.path === 'index.html') {
+                this.files.index = {
+                    path: fileInfo.path,
+                    content: await this.readTextFile(fileInfo.blob),
+                    blob: fileInfo.blob
+                };
+            } else if (fileInfo.path.endsWith('.css') && !this.files.css) {
+                this.files.css = {
+                    path: fileInfo.path,
+                    content: await this.readTextFile(fileInfo.blob),
+                    blob: fileInfo.blob
+                };
+            } else if (fileInfo.path.endsWith('.js') && !this.files.js) {
+                 if (!fileInfo.path.includes('node_modules') && !fileInfo.path.includes('dist')) {
+                    this.files.js = {
+                        path: fileInfo.path,
+                        content: await this.readTextFile(fileInfo.blob),
+                        blob: fileInfo.blob
+                    };
+                }
+            }
+        }
+    }
+
+    validateFolderStructure() {
+        if (!this.files.index) {
+            throw new Error('index.html not found in folder root. Please make sure index.html is in the root of your selected folder.');
+        }
+        if (!this.validateHTML(this.files.index.content)) {
+            throw new Error('index.html appears to be invalid. Please check your HTML file.');
+        }
+    }
+
+    displayFolderTree(fileList) {
+        const container = document.getElementById('folder-tree');
+        const tree = this.buildFileTree(fileList);
+        container.innerHTML = this.renderFileTree(tree, 0);
+    }
+
+    buildFileTree(fileList) {
+        const tree = {};
+        fileList.forEach(fileInfo => {
+            const parts = fileInfo.path.split('/');
+            let current = tree;
+            parts.forEach((part, index) => {
+                if (index === parts.length - 1) {
+                    if (!current._files) current._files = [];
+                    current._files.push({ name: part, path: fileInfo.path });
+                } else {
+                    if (!current[part]) current[part] = {};
+                    current = current[part];
+                }
+            });
+        });
+        return tree;
+    }
+
+    guessFileType(filename) {
+        const ext = filename.split('.').pop().toLowerCase();
+        const types = {'html': 'text/html', 'css': 'text/css', 'js': 'application/javascript', 'json': 'application/json', 'png': 'image/png', 'jpg': 'image/jpeg', 'jpeg': 'image/jpeg', 'gif': 'image/gif', 'svg': 'image/svg+xml', 'webp': 'image/webp', 'mp3': 'audio/mpeg', 'wav': 'audio/wav', 'ogg': 'audio/ogg', 'mp4': 'video/mp4', 'webm': 'video/webm', 'woff': 'font/woff', 'woff2': 'font/woff2', 'ttf': 'font/ttf', 'txt': 'text/plain', 'xml': 'application/xml'};
+        return types[ext] || 'application/octet-stream';
+    }
+
+    validateHTML(content) {
+        const lower = content.toLowerCase();
+        return lower.includes('<!doctype') || lower.includes('<html');
+    }
+
+    renderFileTree(tree, level) {
+        let html = '';
+        Object.keys(tree).forEach(key => {
+            if (key !== '_files') {
+                html += `<div class="folder-tree-item subfolder" style="padding-left: ${level * 1.5}rem"><span class="folder-tree-icon">📁</span> ${key}/</div>`;
+                html += this.renderFileTree(tree[key], level + 1);
+            }
+        });
+        if (tree._files) {
+            tree._files.forEach(fileInfo => {
+                const isImportant = fileInfo.name === 'index.html' || fileInfo.name.endsWith('.css') || fileInfo.name.endsWith('.js');
+                const className = isImportant ? 'folder-tree-item file important' : 'folder-tree-item file';
+                html += `<div class="${className}" style="padding-left: ${level * 1.5}rem"><span class="folder-tree-icon">${this.getFileIcon(fileInfo.name)}</span> ${fileInfo.name}</div>`;
+            });
+        }
+        return html;
+    }
+
+    getFileIcon(filename) {
+        const ext = filename.split('.').pop().toLowerCase();
+        const icons = {'html': '📄', 'css': '🎨', 'js': '⚡', 'json': '📋', 'png': '🖼️', 'jpg': '🖼️', 'jpeg': '🖼️', 'gif': '🖼️', 'svg': '🖼️', 'mp3': '🎵', 'wav': '🎵', 'ogg': '🎵', 'mp4': '🎬', 'webm': '🎬', 'txt': '📝', 'md': '📝'};
+        return icons[ext] || '📄';
+    }
+
+    sanitizeFolderName(name) {
+        return name.toLowerCase().trim().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    }
+
+    autoFillConfiguration() {
+        document.getElementById('folder-name').value = this.files.sanitizedName;
+        document.getElementById('app-id').value = this.files.sanitizedName + '-id';
+        this.updateUrlFields(this.files.sanitizedName);
+        if (this.files.index) {
+            this.extractMetadata(this.files.index.content);
+        }
+        if (this.files.folderName !== this.files.sanitizedName) {
+            this.showToast(`Folder name sanitized: "${this.files.folderName}" → "${this.files.sanitizedName}"`, 'info');
+        }
+    }
+
+    updateUrlFields(folderName) {
+        if (!folderName) return;
+        const startUrlInput = document.getElementById('start-url');
+        const scopeInput = document.getElementById('scope');
+        if (!startUrlInput.dataset.userModified) {
+            startUrlInput.value = `/${folderName}/`;
+        }
+        if (!scopeInput.dataset.userModified) {
+            scopeInput.value = `/${folderName}/`;
+        }
+    }
+
+    extractMetadata(html) {
+        const titleMatch = html.match(/<title>(.*?)<\/title>/i);
+        if (titleMatch && !document.getElementById('app-name').value) {
+            const title = titleMatch[1].trim();
+            document.getElementById('app-name').value = title;
+            const shortName = title.substring(0, 12);
+            if (!document.getElementById('short-name').value) {
+                document.getElementById('short-name').value = shortName;
+            }
+        }
+        const themeMatch = html.match(/<meta\s+name=[\"']theme-color[\"']\s+content=[\"'](.*?)["']/i);
+        if (themeMatch) {
+            const color = themeMatch[1];
+            document.getElementById('theme-color').value = color;
+            document.getElementById('theme-color-text').value = color.toUpperCase();
+        }
+        const descMatch = html.match(/<meta\s+name=[\"']description[\"']\s+content=[\"'](.*?)["']/i);
+        if (descMatch && !document.getElementById('description').value) {
+            document.getElementById('description').value = descMatch[1];
+        }
+    }
+
+    async handleIconUpload(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const statusElement = document.getElementById('icon-status');
+        const infoElement = document.getElementById('icon-info');
+        statusElement.textContent = 'Processing...';
+        statusElement.className = 'file-status';
+        try {
+            this.files.icon = await this.processIcon(file);
+            statusElement.textContent = `✓ ${file.name} loaded successfully`;
+            statusElement.className = 'file-status success';
+            infoElement.textContent = `Size: ${this.formatFileSize(file.size)} | ${this.files.icon.width}x${this.files.icon.height}`;
+            infoElement.className = 'file-info visible';
+            this.showToast(`Icon ${file.name} uploaded successfully`, 'success');
+        } catch (error) {
+            statusElement.textContent = `✗ Error: ${error.message}`;
+            statusElement.className = 'file-status error';
+            this.files.icon = null;
+            infoElement.className = 'file-info';
+            this.showToast(`Failed to upload icon: ${error.message}`, 'error');
+        }
+    }
+
+    processIcon(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => resolve({ dataUrl: e.target.result, width: img.width, height: img.height, file: file });
+                img.onerror = () => reject(new Error('Invalid image file'));
+                img.src = e.target.result;
+            };
+            reader.onerror = () => reject(new Error('Failed to read image'));
+            reader.readAsDataURL(file);
+        });
+    }
+
+    readTextFile(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = () => reject(new Error('Failed to read file'));
+            reader.readAsText(file);
+        });
+    }
+
+    setupColorInputSync() {
+        const themeColor = document.getElementById('theme-color');
+        const themeColorText = document.getElementById('theme-color-text');
+        themeColor.addEventListener('input', (e) => { themeColorText.value = e.target.value.toUpperCase(); });
+        themeColorText.addEventListener('input', (e) => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) { themeColor.value = e.target.value; } });
+        const bgColor = document.getElementById('background-color');
+        const bgColorText = document.getElementById('background-color-text');
+        bgColor.addEventListener('input', (e) => { bgColorText.value = e.target.value.toUpperCase(); });
+        bgColorText.addEventListener('input', (e) => { if (/^#[0-9A-Fa-f]{6}$/.test(e.target.value)) { bgColor.value = e.target.value; } });
+    }
+
+    setupCacheStrategyDescription() {
+        const cacheStrategy = document.getElementById('cache-strategy');
+        const description = document.querySelector('.strategy-description');
+        const descriptions = {
+            'cache-first': 'Serves cached content immediately, updates cache in background (fastest, best for offline). Recommended for static PWAs.',
+            'network-first': 'Always tries network first, falls back to cache if offline (fresh content, slower). All your files will be cached.',
+            'stale-while-revalidate': 'Serves cached content while fetching updates in background (balanced approach). All your files will be cached.'
+        };
+        cacheStrategy.addEventListener('change', (e) => { description.textContent = descriptions[e.target.value]; });
+    }
+
+    showSection(section) {
+        document.querySelectorAll('.card').forEach(card => { card.classList.remove('active'); });
+        document.getElementById(`${section}-section`).classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    async generatePWA(event) {
+        event.preventDefault();
+        this.showLoading('Generating PWA files...');
+        try {
+            this.config = {
+                name: document.getElementById('app-name').value,
+                shortName: document.getElementById('short-name').value,
+                appId: document.getElementById('app-id').value,
+                folderName: document.getElementById('folder-name').value,
+                description: document.getElementById('description').value,
+                themeColor: document.getElementById('theme-color').value,
+                backgroundColor: document.getElementById('background-color').value,
+                startUrl: document.getElementById('start-url').value,
+                scope: document.getElementById('scope').value,
+                display: document.getElementById('display-mode').value,
+                orientation: document.getElementById('orientation').value,
+                cacheStrategy: document.getElementById('cache-strategy').value,
+                enableOffline: document.getElementById('enable-offline').checked,
+                enableNotifications: document.getElementById('enable-notifications').checked
+            };
+            this.updateLoadingStatus('Generating manifest.json...');
+            await this.delay(300);
+            this.generatedFiles.manifest = this.generateManifest();
+            this.updateLoadingStatus('Generating service worker...');
+            await this.delay(300);
+            this.generatedFiles.serviceWorker = this.generateServiceWorker();
+            this.updateLoadingStatus('Injecting PWA code into HTML...');
+            await this.delay(300);
+            this.generatedFiles.html = this.injectPWACode();
+            if (this.files.js) {
+                this.updateLoadingStatus('Enhancing JavaScript...');
+                await this.delay(300);
+                this.generatedFiles.js = this.enhanceJavaScript();
+            }
+            if (this.config.enableOffline) {
+                this.updateLoadingStatus('Creating offline fallback page...');
+                await this.delay(300);
+                this.generatedFiles.offline = this.generateOfflinePage();
+            }
+            if (this.files.icon) {
+                this.updateLoadingStatus('Generating app icons from uploaded image...');
+                await this.generateIcons();
+            } else {
+                this.updateLoadingStatus('Creating default app icons...');
+                await this.generateDefaultIcons();
+            }
+            await this.delay(500);
+            this.hideLoading();
+            this.showDownloadSection();
+            this.showSection('download');
+            this.showToast('PWA generated successfully!', 'success');
+        } catch (error) {
+            this.hideLoading();
+            this.showToast(`Error generating PWA: ${error.message}`, 'error');
+            console.error('Generation error:', error);
+        }
+    }
+
+    generateManifest() {
+        const manifest = {
+            id: this.config.appId,
+            name: this.config.name,
+            short_name: this.config.shortName,
+            description: this.config.description,
+            start_url: this.config.startUrl,
+            scope: this.config.scope,
+            display: this.config.display,
+            orientation: this.config.orientation,
+            theme_color: this.config.themeColor,
+            background_color: this.config.backgroundColor,
+            icons: []
+        };
+        const sizes = [72, 192, 384, 512];
+        sizes.forEach(size => {
+            manifest.icons.push({
+                src: `${this.config.startUrl}icons/icon-${size}x${size}.png`,
+                sizes: `${size}x${size}`,
+                type: 'image/png',
+                purpose: size >= 192 ? 'any maskable' : 'any'
+            });
+        });
+        manifest.categories = ['utilities', 'productivity'];
+        return JSON.stringify(manifest, null, 2);
+    }
+
+    generateServiceWorker() {
+        const cacheName = `${this.config.folderName}-v1`;
+        const startUrl = this.config.startUrl;
+
+        // ── Build urlsToCache ──────────────────────────────────────────────
+        // favicon.ico first — prevents cache.addAll() failure if browser requests it
+        const initialUrls = [
+            `${startUrl}favicon.ico`,
+            startUrl,
+            `${startUrl}index.html`,
+            `${startUrl}manifest.json`
+        ];
+
+        if (this.config.enableOffline) {
+            initialUrls.push(`${startUrl}offline.html`);
+        }
+
+        // Include all icon sizes explicitly
+        const iconSizes = [72, 192, 384, 512];
+        iconSizes.forEach(size => {
+            initialUrls.push(`${startUrl}icons/icon-${size}x${size}.png`);
+        });
+
+        const fileUrls = this.files.allFiles.map(file => `${startUrl}${file.path}`);
+
+        // Deduplicate
+        const urlsToCache = [...new Set([...initialUrls, ...fileUrls])];
+
+        const cacheStrategies = {
+            'cache-first': this.generateCacheFirstStrategy(),
+            'network-first': this.generateNetworkFirstStrategy(),
+            // stale-while-revalidate mapped to cache-first — better for offline reliability
+            'stale-while-revalidate': this.generateCacheFirstStrategy()
+        };
+
+        return `/**
+ * Service Worker for ${this.config.name}
+ * Cache Strategy: ${this.config.cacheStrategy}
+ * Generated by PWA Converter v2.1.0
+ */
+
+'use strict';
+
+const CACHE_NAME = '${cacheName}';
+const OFFLINE_URL = '${this.config.enableOffline ? `${startUrl}offline.html` : ''}';
+const urlsToCache = ${JSON.stringify(urlsToCache, null, 2)};
+
+self.addEventListener('install', event => {
+    console.log('[Service Worker] Installing for ${this.config.name}...');
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => {
+                console.log('[Service Worker] Caching app shell and all files for ${this.config.name}');
+                return cache.addAll(urlsToCache);
+            })
+            .then(() => {
+                console.log('[Service Worker] All files cached successfully for ${this.config.name}');
+                return self.skipWaiting();
+            })
+            .then(() => {
+                // Request persistent storage to prevent cache eviction
+                if (navigator.storage && navigator.storage.persist) {
+                    navigator.storage.persist().then(granted => {
+                        console.log('[Service Worker] Persistent storage granted:', granted);
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('[Service Worker] Caching failed for ${this.config.name}:', error);
+            })
+    );
+});
+
+self.addEventListener('activate', event => {
+    console.log('[Service Worker] Activating for ${this.config.name}...');
+    // Extract app prefix from cache name (e.g. 'logo' from 'logo-v3')
+    const cachePrefix = CACHE_NAME.replace(/-v\d+$/, '');
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames
+                    // Only delete OLD caches belonging to THIS app — not other apps' caches
+                    .filter(name => name.startsWith(cachePrefix + '-') && name !== CACHE_NAME)
+                    .map(name => {
+                        console.log('[Service Worker] Deleting old cache:', name);
+                        return caches.delete(name);
+                    })
+            );
+        }).then(() => self.clients.claim())
+    );
+});
+
+// Fetch event - Optimized Cache-First Strategy
+self.addEventListener('fetch', event => {
+${cacheStrategies[this.config.cacheStrategy]}
+});
+${this.config.enableNotifications ? this.generateNotificationHandlers() : ''}
+function isNavigationRequest(request) {
+    return request.mode === 'navigate' ||
+           (request.method === 'GET' && request.headers.get('accept').includes('text/html'));
+}
+
+console.log('[Service Worker] Loaded successfully for ${this.config.name}');
+console.log('[Service Worker] Scope: ${startUrl}');`;
+    }
+
+    // ── Cache Strategies ────────────────────────────────────────────────────
+
+    generateCacheFirstStrategy() {
+        return `    if (event.request.method !== 'GET') return;
+
+    // Handle Favicon
+    if (event.request.url.includes('favicon.ico')) {
+        event.respondWith(
+            caches.match(event.request).then(response => {
+                return response || fetch(event.request).catch(() => new Response(null, { status: 204 }));
+            })
+        );
+        return;
+    }
+
+    // Main Strategy: Cache-First
+    event.respondWith(
+        caches.match(event.request).then(cachedResponse => {
+            // If found in cache, return immediately
+            if (cachedResponse) return cachedResponse;
+
+            // Otherwise, get from network and add to cache
+            return fetch(event.request).then(response => {
+                if (response && response.status === 200) {
+                    const responseToCache = response.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, responseToCache);
+                    });
+                }
+                return response;
+            }).catch(() => {
+                // If offline and navigating, show offline page
+                if (isNavigationRequest(event.request)) {
+                    return caches.match(OFFLINE_URL);
+                }
+            });
+        })
+    );`;
+    }
+
+    generateNetworkFirstStrategy() {
+        return `    if (event.request.method !== 'GET') return;
+
+    // Handle Favicon
+    if (event.request.url.includes('favicon.ico')) {
+        event.respondWith(
+            caches.match(event.request).then(response => {
+                return response || fetch(event.request).catch(() => new Response(null, { status: 204 }));
+            })
+        );
+        return;
+    }
+
+    // Main Strategy: Network-First
+    event.respondWith(
+        fetch(event.request)
+            .then(networkResponse => {
+                if (networkResponse && networkResponse.status === 200) {
+                    const responseToCache = networkResponse.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, responseToCache);
+                    });
+                }
+                return networkResponse;
+            })
+            .catch(() => {
+                return caches.match(event.request).then(cachedResponse => {
+                    if (cachedResponse) return cachedResponse;
+                    if (isNavigationRequest(event.request)) {
+                        return caches.match(OFFLINE_URL);
+                    }
+                });
+            })
+    );`;
+    }
+
+    generateStaleWhileRevalidateStrategy() {
+        return `    if (event.request.method !== 'GET') return;
+
+    // Handle Favicon
+    if (event.request.url.includes('favicon.ico')) {
+        event.respondWith(
+            caches.match(event.request).then(response => {
+                return response || fetch(event.request).catch(() => new Response(null, { status: 204 }));
+            })
+        );
+        return;
+    }
+
+    // Main Strategy: Stale-While-Revalidate
+    event.respondWith(
+        caches.match(event.request).then(cachedResponse => {
+            const fetchPromise = fetch(event.request).then(response => {
+                if (response && response.status === 200) {
+                    const responseToCache = response.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, responseToCache);
+                    });
+                }
+                return response;
+            }).catch(() => {
+                if (isNavigationRequest(event.request)) {
+                    return caches.match(OFFLINE_URL);
+                }
+            });
+
+            return cachedResponse || fetchPromise;
+        })
+    );`;
+    }
+
+    generateNotificationHandlers() {
+        return `
+self.addEventListener('push', event => {
+    console.log('[Service Worker] Push Received.');
+    const data = event.data ? event.data.json() : {};
+    const title = data.title || '${this.config.name}';
+    const options = {
+        body: data.body || 'New notification',
+        icon: '${this.config.startUrl}icons/icon-192x192.png',
+        badge: '${this.config.startUrl}icons/icon-72x72.png'
+    };
+    event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener('notificationclick', event => {
+    console.log('[Service Worker] Notification click Received.');
+    event.notification.close();
+    event.waitUntil(
+        clients.openWindow('${this.config.startUrl}')
+    );
+});`;
+    }
+
+    injectPWACode() {
+        let html = this.files.index.content;
+        const startUrl = this.config.startUrl; // e.g. /logo/
+        if (!html.toLowerCase().includes('viewport')) html = html.replace(/<head>/i, '<head>\n    <meta name="viewport" content="width=device-width, initial-scale=1.0">');
+        if (!html.toLowerCase().includes('theme-color')) html = html.replace(/<\/head>/i, `    <meta name="theme-color" content="${this.config.themeColor}">\n</head>`);
+        // Use subfolder-aware path: /foldername/manifest.json not /manifest.json
+        if (!html.toLowerCase().includes('manifest')) html = html.replace(/<\/head>/i, `    <link rel="manifest" href="${startUrl}manifest.json">\n</head>`);
+        // Use subfolder-aware path: /foldername/icons/ not /icons/
+        if (!html.toLowerCase().includes('apple-mobile-web-app')) html = html.replace(/<\/head>/i, `    <meta name="apple-mobile-web-app-capable" content="yes">\n    <link rel="apple-touch-icon" href="${startUrl}icons/icon-192x192.png">\n</head>`);
+        // Use subfolder-aware sw.js path with well-formatted registration code
+        const swRegistration = `
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('${startUrl}sw.js', { scope: '${startUrl}' })
+                    .then(registration => {
+                        console.log('[PWA] Service Worker registered:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('[PWA] Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('[PWA] App can be installed');
+        });
+
+        // Call this function from a custom install button in your UI
+        async function installPWA() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log('[PWA] Install prompt outcome:', outcome);
+            deferredPrompt = null;
+        }
+
+        window.addEventListener('appinstalled', () => {
+            console.log('[PWA] App installed successfully');
+            deferredPrompt = null;
+        });
+    </script>`;
+        return html.replace(/<\/body>/i, `${swRegistration}\n</body>`);
+    }
+
+    enhanceJavaScript() { return `/* PWA-enhanced */\n${this.files.js.content}`; }
+
+    generateOfflinePage() {
+        return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline - ${this.config.name}</title>
+    <style>
+        body { font-family: sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; background: #f5f5f5; }
+        .container { text-align: center; padding: 2rem; }
+        h1 { color: #333; }
+        p { color: #666; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📵 You are offline</h1>
+        <p>Please check your internet connection and try again.</p>
+        <button onclick="location.reload()">Try Again</button>
+    </div>
+</body>
+</html>`;
+    }
+
+    async generateIcons() {
+        const s = [72, 192, 384, 512];
+        this.generatedFiles.icons = {};
+        for (const z of s) {
+            const b = await this.resizeImage(this.files.icon.dataUrl, z, z);
+            this.generatedFiles.icons[`icon-${z}x${z}.png`] = b;
+        }
+        // Generate favicon.ico (32x32) placed in app root
+        this.generatedFiles.favicon = await this.resizeImage(this.files.icon.dataUrl, 32, 32);
+    }
+
+    async generateDefaultIcons() {
+        const s = [72, 192, 384, 512];
+        this.generatedFiles.icons = {};
+        for (const z of s) {
+            const b = await this.generateCanvasIcon(z);
+            this.generatedFiles.icons[`icon-${z}x${z}.png`] = b;
+        }
+        // Generate favicon.ico (32x32) placed in app root
+        this.generatedFiles.favicon = await this.generateCanvasIcon(32);
+    }
+
+    generateCanvasIcon(z) {
+        return new Promise(res => {
+            const c = document.createElement('canvas');
+            c.width = z; c.height = z;
+            const x = c.getContext('2d');
+            const g = x.createLinearGradient(0, 0, z, z);
+            g.addColorStop(0, this.config.themeColor);
+            g.addColorStop(1, this.adjustColor(this.config.themeColor, -30));
+            x.fillStyle = g;
+            x.fillRect(0, 0, z, z);
+            x.fillStyle = 'white';
+            x.font = `bold ${z * 0.5}px sans-serif`;
+            x.textAlign = 'center';
+            x.textBaseline = 'middle';
+            x.fillText(this.config.shortName.charAt(0).toUpperCase(), z / 2, z / 2);
+            c.toBlob(res, 'image/png');
+        });
+    }
+
+    resizeImage(dU, w, h) {
+        return new Promise(r => {
+            const i = new Image();
+            i.onload = () => {
+                const c = document.createElement('canvas');
+                c.width = w; c.height = h;
+                const x = c.getContext('2d');
+                const s = Math.max(w / i.width, h / i.height);
+                const o = (w / 2) - (i.width / 2) * s;
+                const f = (h / 2) - (i.height / 2) * s;
+                x.fillStyle = this.config.backgroundColor;
+                x.fillRect(0, 0, w, h);
+                x.drawImage(i, o, f, i.width * s, i.height * s);
+                c.toBlob(r, 'image/png');
+            };
+            i.src = dU;
+        });
+    }
+
+    adjustColor(c, a) {
+        const C = n => Math.min(Math.max(n, 0), 255);
+        const N = parseInt(c.slice(1), 16);
+        const r = C((N >> 16) + a);
+        const g = C(((N >> 8) & 0x00FF) + a);
+        const b = C((N & 0x0000FF) + a);
+        return `#${((r << 16) | (g << 8) | b).toString(16).padStart(6, '0')}`;
+    }
+
+    showDownloadSection() {
+        let t = this.files.allFiles.length + 3;
+        if (this.generatedFiles.offline) t++;
+        const i = Object.keys(this.generatedFiles.icons || {}).length;
+        document.getElementById('files-generated').textContent = t + i;
+        document.getElementById('icons-generated').textContent = i;
+        document.getElementById('folder-url-display').textContent = this.config.folderName;
+    }
+
+    async downloadAll() {
+        this.showLoading('Creating ZIP file...');
+        try {
+            const z = new JSZip();
+            for (const f of this.files.allFiles) {
+                f.path === 'index.html' ? z.file('index.html', this.generatedFiles.html) : z.file(f.path, f.blob);
+            }
+            z.file('manifest.json', this.generatedFiles.manifest);
+            z.file('sw.js', this.generatedFiles.serviceWorker);
+            if (this.generatedFiles.offline) z.file('offline.html', this.generatedFiles.offline);
+            // favicon.ico goes in app root, not icons folder
+            if (this.generatedFiles.favicon) z.file('favicon.ico', this.generatedFiles.favicon);
+            if (this.generatedFiles.icons) {
+                const iF = z.folder('icons');
+                for (const [fN, b] of Object.entries(this.generatedFiles.icons)) iF.file(fN, b);
+            }
+            z.file('README.md', this.generateReadme());
+            const c = await z.generateAsync(
+                { type: 'blob', compression: 'DEFLATE', compressionOptions: { level: 9 } },
+                m => this.updateLoadingStatus(`Compressing... ${m.percent.toFixed(0)}%`)
+            );
+            this.hideLoading();
+            this.triggerDownload(c, `${this.config.folderName}-pwa.zip`);
+            this.showToast('All files downloaded!', 'success');
+        } catch (e) {
+            this.hideLoading();
+            this.showToast(`Error ZIP: ${e.message}`, 'error');
+        }
+    }
+
+    generateReadme() {
+        return `# ${this.config.name}\n\nGenerated by PWA Converter v2.1.0.\n\nTo deploy, extract the ZIP and upload all files to a web server.\n\nAccess at: http://localhost:8000/${this.config.folderName}/`;
+    }
+
+    triggerDownload(b, f) {
+        const u = URL.createObjectURL(b);
+        const a = document.createElement('a');
+        a.href = u; a.download = f;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(u);
+    }
+
+    formatFileSize(b) {
+        if (b === 0) return '0 B';
+        const k = 1024;
+        const s = ['B', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(b) / Math.log(k));
+        return parseFloat((b / Math.pow(k, i)).toFixed(2)) + ' ' + s[i];
+    }
+
+    showLoading(m) { document.querySelector('.loading-text').textContent = m; document.getElementById('loading-overlay').style.display = 'flex'; }
+    updateLoadingStatus(s) { document.getElementById('loading-status').textContent = s; }
+    hideLoading() { document.getElementById('loading-overlay').style.display = 'none'; }
+
+    showToast(m, t = 'info') {
+        const o = document.getElementById('toast');
+        o.textContent = `${{ success: '✓', error: '✗', info: 'ℹ' }[t]} ${m}`;
+        o.className = `toast show ${t}`;
+        setTimeout(() => o.className = 'toast', 3000);
+    }
+
+    delay(ms) { return new Promise(res => setTimeout(res, ms)); }
+
+    reset() {
+        this.files = { folderName: null, sanitizedName: null, allFiles: [], totalSize: 0, index: null, css: null, js: null, icon: null };
+        this.config = {};
+        this.generatedFiles = {};
+        document.getElementById('folder-input').value = '';
+        document.getElementById('icon-file').value = '';
+        document.querySelectorAll('.file-status').forEach(s => s.textContent = '');
+        document.querySelectorAll('.file-info').forEach(i => i.textContent = '');
+        document.getElementById('folder-contents').style.display = 'none';
+        document.getElementById('folder-tree').innerHTML = '';
+        document.getElementById('pwa-config-form').reset();
+        document.getElementById('theme-color').value = '#2196F3';
+        document.getElementById('theme-color-text').value = '#2196F3';
+        document.getElementById('background-color').value = '#ffffff';
+        document.getElementById('background-color-text').value = '#FFFFFF';
+        document.getElementById('orientation').value = 'portrait-primary';
+        ['app-id', 'start-url', 'scope'].forEach(id => {
+            const f = document.getElementById(id);
+            if (f) delete f.dataset.userModified;
+        });
+        document.getElementById('next-to-config').disabled = true;
+        this.showSection('upload');
+        this.showToast('Application reset', 'info');
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    new PWAConverter();
+});
+

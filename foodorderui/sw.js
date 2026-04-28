@@ -6,13 +6,22 @@
 
 'use strict';
 
-const CACHE_NAME = 'foodorderui-gh1';
+const CACHE_NAME = 'foodorderui-v4';
 const OFFLINE_URL = '/foodorderui/offline.html';
-const URLS_TO_CACHE = [
-  "/my-pwa-apps/foodorderui/",
-  "/my-pwa-apps/foodorderui/index.html",
-  "/my-pwa-apps/foodorderui/manifest.json",
-  "/my-pwa-apps/foodorderui/offline.html"
+const urlsToCache = [
+  "/foodorderui/favicon.ico",
+  "/foodorderui/icons/icon-72x72.png", 
+  "/foodorderui/icons/icon-96x96.png", 
+  "/foodorderui/icons/icon-128x128.png", 
+  "/foodorderui/icons/icon-144x144.png", 
+  "/foodorderui/icons/icon-152x152.png", 
+  "/foodorderui/icons/icon-192x192.png", 
+  "/foodorderui/icons/icon-384x384.png", 
+  "/foodorderui/icons/icon-512x512.png",
+  "/foodorderui/",
+  "/foodorderui/index.html",
+  "/foodorderui/manifest.json",
+  "/foodorderui/offline.html"
 ];
 
 self.addEventListener('install', event => {
@@ -21,11 +30,18 @@ self.addEventListener('install', event => {
         caches.open(CACHE_NAME)
             .then(cache => {
                 console.log('[Service Worker] Caching app shell and all files for Food Ordering');
-                return cache.addAll(URLS_TO_CACHE);
+                return cache.addAll(urlsToCache);
             })
             .then(() => {
                 console.log('[Service Worker] All files cached successfully for Food Ordering');
                 return self.skipWaiting();
+            }).then(() => {
+                // Request persistent storage to prevent cache eviction
+                if (navigator.storage && navigator.storage.persist) {
+                    navigator.storage.persist().then(granted => {
+                        console.log('[Service Worker] Persistent storage granted:', granted);
+                    });
+                }
             })
             .catch(error => {
                 console.error('[Service Worker] Caching failed for Food Ordering:', error);
@@ -39,7 +55,10 @@ self.addEventListener('activate', event => {
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames
-                    .filter(name => name !== CACHE_NAME)
+                    .filter(name => {
+                        const cachePrefix = CACHE_NAME.replace(/-v\d+$/, "");
+                        return name.startsWith(cachePrefix + "-") && name !== CACHE_NAME;
+                    })
                     .map(name => {
                         console.log('[Service Worker] Deleting old cache:', name);
                         return caches.delete(name);
@@ -49,16 +68,28 @@ self.addEventListener('activate', event => {
     );
 });
 
+// Fetch event - Optimized Cache-First Strategy
 self.addEventListener('fetch', event => {
-// Stale While Revalidate Strategy
-    if (event.request.method !== 'GET') {
+    if (event.request.method !== 'GET') return;
+
+    // Handle Favicon
+    if (event.request.url.includes('favicon.ico')) {
+        event.respondWith(
+            caches.match(event.request).then(response => {
+                return response || fetch(event.request).catch(() => new Response(null, { status: 204 }));
+            })
+        );
         return;
     }
 
+    // Main Strategy: Cache-First
     event.respondWith(
         caches.match(event.request).then(cachedResponse => {
-            const fetchPromise = fetch(event.request).then(response => {
-                // Check if we received a valid response
+            // If found in cache, return immediately
+            if (cachedResponse) return cachedResponse;
+
+            // Otherwise, get from network and add to cache
+            return fetch(event.request).then(response => {
                 if (response && response.status === 200) {
                     const responseToCache = response.clone();
                     caches.open(CACHE_NAME).then(cache => {
@@ -66,17 +97,12 @@ self.addEventListener('fetch', event => {
                     });
                 }
                 return response;
-            }).catch(error => {
-                // If the network request fails, and it's a navigation request,
-                // serve the offline page.
-                console.error('[Service Worker] Fetch failed; returning offline page if navigation.', error);
+            }).catch(() => {
+                // If offline and navigating, show offline page
                 if (isNavigationRequest(event.request)) {
                     return caches.match(OFFLINE_URL);
                 }
             });
-
-            // Return the cached response if it exists, otherwise wait for the network
-            return cachedResponse || fetchPromise;
         })
     );
 });

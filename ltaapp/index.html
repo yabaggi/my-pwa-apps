@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Letta Agent Manager</title>
+    <style>
+        :root {
+            --bg: #0f172a; --sidebar: #1e293b; --accent: #6366f1;
+            --text: #f8fafc; --dim: #94a3b8; --border: #334155; --danger: #ef4444;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { height: 100%; width: 100%; overflow: hidden; position: fixed; font-family: -apple-system, system-ui, sans-serif; background: var(--bg); color: var(--text); display: flex; }
+
+        /* Sidebar Navigation */
+        #sidebar { width: 280px; background: var(--sidebar); border-right: 1px solid var(--border); display: flex; flex-direction: column; transition: transform 0.3s ease; z-index: 1000; height: 100%; }
+        .sb-head { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        #agent-list { flex: 1; overflow-y: auto; padding: 10px; }
+        .agent-card { padding: 12px; margin-bottom: 8px; border-radius: 8px; cursor: pointer; border: 1px solid transparent; background: #ffffff05; }
+        .agent-card:hover { background: #ffffff10; }
+        .agent-card.active { background: var(--accent); border-color: #818cf8; }
+        
+        /* Main Chat Area */
+        #main { flex: 1; display: flex; flex-direction: column; height: 100%; position: relative; min-width: 0; }
+        header { height: 70px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 15px; justify-content: space-between; flex-shrink: 0; background: #0f172acc; backdrop-filter: blur(10px); }
+        
+        .header-title-area { display: flex; flex-direction: column; overflow: hidden; }
+        .agent-meta { font-size: 10px; color: var(--dim); margin-top: 4px; font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        #chat-window { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; gap: 10px; -webkit-overflow-scrolling: touch; }
+        .msg { max-width: 85%; padding: 12px 16px; border-radius: 12px; font-size: 14px; line-height: 1.5; position: relative; }
+        .msg.user { align-self: flex-end; background: #312e81; border-bottom-right-radius: 2px; }
+        .msg.agent {
+            align-self: flex-start; background: #334155; border-bottom-left-radius: 2px;
+            padding-right: 40px; /* Make space for the button */
+            padding-bottom: 30px; /* Ensure button doesn't overlap text if message is short */
+        }
+        .copy-btn {
+            position: absolute; /* Position absolutely within the parent .msg */
+            right: 5px; /* Adjust as needed */
+            bottom: 5px; /* Adjust as needed */
+            background: rgba(0, 0, 0, 0.4); /* Subtle dark background */
+            color: var(--text); /* White text */
+            padding: 4px 8px; /* More padding */
+            border-radius: 6px; /* Rounded corners */
+            font-size: 0.8em; /* Smaller font for discreteness */
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out, background 0.2s ease-in-out;
+            line-height: 1; /* Keep text centered */
+            z-index: 1; /* Ensure it's above text if there's overlap */
+        }
+        .msg.agent:hover .copy-btn {
+            opacity: 1;
+        }
+        .copy-btn:hover { /* Add hover effect for button itself */
+            background: rgba(0, 0, 0, 0.6);
+        }
+        .copy-btn:active {
+            background: var(--accent); /* More prominent feedback on click */
+            color: white;
+        }
+
+        /* Drawer / Settings */
+        #drawer { position: absolute; right: 0; top: 0; bottom: 0; width: 320px; background: var(--sidebar); border-left: 1px solid var(--border); transform: translateX(100%); transition: 0.3s; z-index: 1100; display: flex; flex-direction: column; }
+        #drawer.open { transform: translateX(0); }
+        .drawer-tabs { display: flex; border-bottom: 1px solid var(--border); background: #000; }
+        .tab-btn { flex: 1; padding: 15px; border: none; background: none; color: var(--dim); font-weight: bold; font-size: 11px; cursor: pointer; }
+        .tab-btn.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+
+        .input-area { padding: 15px; border-top: 1px solid var(--border); background: var(--bg); }
+        .input-row { display: flex; gap: 8px; max-width: 1000px; margin: 0 auto; }
+        input[type="text"], textarea { background: #1e293b; border: 1px solid var(--border); color: white; padding: 12px; border-radius: 8px; font-size: 15px; width: 100%; outline: none; }
+        
+        button { padding: 12px 18px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; transition: 0.2s; white-space: nowrap; }
+        .btn-p { background: var(--accent); color: white; }
+        .btn-d { background: var(--danger); color: white; }
+        .btn-g { background: transparent; color: var(--dim); border: 1px solid var(--border); }
+
+        @media (max-width: 768px) {
+            #sidebar { position: fixed; left: 0; transform: translateX(-100%); width: 85%; }
+            #sidebar.mobile-open { transform: translateX(0); }
+            #drawer { width: 100%; }
+        }
+    </style>
+    
+    
+    
+    <meta name="theme-color" content="#2196f3">
+    <link rel="manifest" href="/ltaapp/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="/ltaapp/icons/icon-192x192.png">
+</head>
+<body>
+
+    <!-- Sidebar Menu -->
+    <aside id="sidebar">
+        <div class="sb-head">
+            <h3 style="font-size: 16px;">🤖 Letta Agents</h3>
+            <button class="btn-g" onclick="toggleSidebar()" style="padding: 8px 12px;">✕ Close</button>
+        </div>
+        <div id="agent-list">
+            <div style="padding: 20px; text-align: center; color: var(--dim);">Fetching agents...</div>
+        </div>
+        <div style="padding: 15px; border-top: 1px solid var(--border);">
+            <button class="btn-g" style="width:100%" onclick="refreshAgents()">🔄 Refresh List</button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main id="main">
+        <header>
+            <div style="display:flex; align-items:center; gap:10px; overflow: hidden;">
+                <button class="btn-g" onclick="toggleSidebar()">☰ Menu</button>
+                <div class="header-title-area">
+                    <h4 id="agent-name" style="font-size: 15px; white-space: nowrap;">Select Agent</h4>
+                    <div id="agent-config-info" class="agent-meta"></div>
+                </div>
+            </div>
+            <div id="controls" style="display:none; gap:5px">
+                <!-- <button class="btn-g" title="Memory" onclick="openDrawer('memory')">🧠</button> -->
+                <button class="btn-g" title="Settings" onclick="openDrawer('settings')">⚙️</button>
+            </div>
+        </header>
+
+        <div id="chat-window">
+            <div style="margin:auto; text-align:center; color:var(--dim); padding: 40px;">
+                <p style="font-size: 40px; margin-bottom: 10px;">💬</p>
+                <p>Select an agent from the <b>Menu</b> to start.</p>
+            </div>
+        </div>
+
+        <div id="thinking-indicator" style="display: none; padding: 0 15px 10px;">
+             <div class="msg agent">Thinking...</div>
+        </div>
+
+        <div class="input-area">
+            <form class="input-row" onsubmit="handleChat(event)">
+                <input type="text" id="chat-input" placeholder="Type a message..." disabled autocomplete="off">
+                <button type="submit" id="chat-btn" class="btn-p" disabled>Send</button>
+            </form>
+        </div>
+
+        <!-- Right Side Settings Drawer -->
+        <div id="drawer">
+            <div class="drawer-tabs">
+                <button class="tab-btn active" id="t-memory" onclick="showTab('memory')">MEMORY</button>
+                <button class="tab-btn" id="t-settings" onclick="showTab('settings')">INFO</button>
+                <button class="tab-btn" style="flex:0; padding: 0 20px;" onclick="closeDrawer()">✕</button>
+            </div>
+            <div style="flex:1; overflow-y:auto; padding:20px">
+                <!-- Memory Pane -->
+                <div id="p-memory">
+                    <div id="mem-container"></div>
+                    <button class="btn-p" style="width:100%; margin-top:15px" id="save-mem-btn" onclick="saveMemory()">Save Memory</button>
+                </div>
+                <!-- Info/Settings Pane -->
+                <div id="p-settings" style="display:none">
+                    <label style="font-size:11px; color:var(--dim); display:block; margin-bottom:10px; font-weight:bold;">AGENT CONFIGURATION</label>
+                    <div id="info-details" style="font-size: 13px; line-height: 1.6; background: #00000033; padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
+                        Loading...
+                    </div>
+
+                    <div style="margin-top: 30px;">
+                        <label style="font-size:11px; color:var(--dim); display:block; margin-bottom:10px; font-weight:bold;">AVAILABLE LLM MODELS</label>
+                        <div id="models-list" style="font-size: 13px; line-height: 1.6; background: #00000033; padding: 15px; border-radius: 8px; border: 1px solid var(--border);">
+                            Loading models...
+                        </div>
+                    </div>
+                    
+                    <!-- <div style="margin-top: 50px; padding-top: 20px; border-top: 1px solid var(--border);">
+                        <button class="btn-d" style="width:100%" onclick="deleteAgent()">🗑️ Delete Agent Permanently</button>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let curId = null;
+        const api = "https://lettaapps.onrender.com";
+
+        async function call(url, method="GET", body=null) {
+            const opt = { method, headers: {'Content-Type': 'application/json'} };
+            if(body) opt.body = JSON.stringify(body);
+            const res = await fetch(api + url, opt);
+            if(!res.ok) { const err = await res.json(); throw err; }
+            return res.json();
+        }
+
+        async function refreshAgents() {
+            try {
+                const agents = await call('/agents');
+                const list = document.getElementById('agent-list');
+                list.innerHTML = agents.map(a => `
+                    <div class="agent-card ${curId === a.id ? 'active' : ''}" onclick="selectAgent('${a.id}', '${a.name}')">
+                        <strong>${a.name}</strong><br>
+                        <small style="opacity:0.6; font-size:10px;">${a.id.slice(0,24)}...</small>
+                    </div>
+                `).join('');
+            } catch(e) { document.getElementById('agent-list').innerText = "Failed to load agents."; }
+        }
+
+        async function selectAgent(id, name) {
+            curId = id;
+            document.getElementById('agent-name').innerText = name;
+            document.getElementById('controls').style.display = 'flex';
+            document.getElementById('chat-input').disabled = false;
+            document.getElementById('chat-btn').disabled = false;
+            document.getElementById('chat-window').innerHTML = `<div class="msg agent">Connected to <b>${name}</b>.</div>`;
+            
+            updateConfigDisplay(); 
+            if(window.innerWidth <= 768) toggleSidebar();
+            refreshAgents();
+            closeDrawer();
+        }
+
+        async function updateConfigDisplay() {
+            const headerInfo = document.getElementById('agent-config-info');
+            const drawerInfo = document.getElementById('info-details');
+            headerInfo.innerText = "Loading config...";
+            drawerInfo.innerText = "Loading configuration...";
+            
+            try {
+                const config = await call(`/agents/${curId}/config`);
+                const modelText = config.model || 'Unknown';
+                const embedText = config.embedding || 'Unknown';
+                
+                headerInfo.innerText = `Model: ${modelText} | Embed: ${embedText}`;
+                drawerInfo.innerHTML = `
+                    <p><strong>LLM Model:</strong><br>${modelText}</p>
+                    <p style="margin-top:10px;"><strong>Embedding:</strong><br>${embedText}</p>
+                `;
+            } catch(e) { 
+                headerInfo.innerText = "Config retrieval failed."; 
+                drawerInfo.innerText = "Error retrieving agent details.";
+            }
+        }
+
+        async function loadModels() {
+            const container = document.getElementById('models-list');
+            container.innerHTML = '<p style="color:var(--dim)">Loading models...</p>';
+            try {
+                const data = await call('/models');
+                if (Array.isArray(data) && data.length > 0) {
+                    container.innerHTML = data.map(model => `<div style="padding: 2px 0;">• ${model.name}</div>`).join('');
+                } else {
+                    container.innerHTML = 'No models available.';
+                }
+            } catch(e) { container.innerHTML = 'Error loading models.'; }
+        }
+
+        async function handleChat(e) {
+            e.preventDefault();
+            const inp = document.getElementById('chat-input');
+            const btn = document.getElementById('chat-btn');
+            const indicator = document.getElementById('thinking-indicator');
+            const msg = inp.value.trim(); if(!msg) return;
+
+            addMsg(msg, 'user');
+            inp.value = '';
+            
+            inp.disabled = true;
+            btn.disabled = true;
+            indicator.style.display = 'block';
+            document.getElementById('chat-window').scrollTop = document.getElementById('chat-window').scrollHeight;
+
+            try {
+                const res = await call(`/agents/${curId}/chat`, 'POST', {message: msg});
+                addMsg(res.response, 'agent');
+            } catch(e) {
+                addMsg("Error: " + (e.detail || "Request failed"), 'agent');
+            } finally {
+                indicator.style.display = 'none';
+                inp.disabled = false;
+                btn.disabled = false;
+                inp.focus();
+            }
+        }
+
+        function addMsg(t, r) {
+            const win = document.getElementById('chat-window');
+            const d = document.createElement('div');
+            d.className = `msg ${r}`;
+
+            const messageText = document.createElement('span');
+            messageText.className = 'message-text';
+            messageText.innerText = t;
+            d.appendChild(messageText);
+
+            if (r === 'agent') {
+                const copyButton = document.createElement('button');
+                copyButton.innerText = 'Copy'; // Changed from emoji
+                copyButton.className = 'copy-btn';
+                copyButton.title = 'Copy to clipboard';
+                copyButton.onclick = () => {
+                    navigator.clipboard.writeText(t).then(() => {
+                        copyButton.innerText = 'Copied!';
+                        setTimeout(() => copyButton.innerText = 'Copy', 1500); // Changed from emoji
+                    }).catch(err => {
+                        console.error('Failed to copy text: ', err);
+                        alert('Failed to copy text.');
+                    });
+                };
+                d.appendChild(copyButton);
+            }
+            win.appendChild(d); win.scrollTop = win.scrollHeight;
+        }
+
+        function showTab(t) {
+            document.getElementById('p-memory').style.display = t === 'memory' ? 'block' : 'none';
+            document.getElementById('p-settings').style.display = t === 'settings' ? 'block' : 'none';
+            document.getElementById('t-memory').classList.toggle('active', t === 'memory');
+            document.getElementById('t-settings').classList.toggle('active', t === 'settings');
+            if(t === 'memory') loadMemory();
+            if(t === 'settings') {
+                updateConfigDisplay();
+                loadModels();
+            }
+        }
+
+        async function loadMemory() {
+            const container = document.getElementById('mem-container');
+            container.innerHTML = '<p style="color:var(--dim)">Loading memory...</p>';
+            try {
+                const data = await call(`/agents/${curId}/inspect`);
+                container.innerHTML = Object.entries(data.memory).map(([l, v]) => `
+                    <div style="margin-bottom:15px">
+                        <label style="font-size:11px; color:var(--dim); text-transform:uppercase; font-weight:bold;">${l}</label>
+                        <textarea style="height:100px; margin-top:5px;" data-label="${l}">${v}</textarea>
+                    </div>
+                `).join('');
+            } catch(e) { container.innerHTML = 'Error loading memory.'; }
+        }
+
+        async function saveMemory() {
+            const btn = document.getElementById('save-mem-btn');
+            btn.innerText = "Saving..."; btn.disabled = true;
+            try {
+                const tas = document.querySelectorAll('#mem-container textarea');
+                for(let t of tas) {
+                    await call(`/agents/${curId}/blocks`, 'PATCH', {label: t.dataset.label, value: t.value});
+                }
+                alert("Memory saved successfully!");
+            } catch(e) { alert("Failed to save."); }
+            finally { btn.innerText = "Save Memory"; btn.disabled = false; }
+        }
+
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('mobile-open'); }
+        function openDrawer(t) { document.getElementById('drawer').classList.add('open'); showTab(t); }
+        function closeDrawer() { document.getElementById('drawer').classList.remove('open'); }
+        
+        async function deleteAgent() { 
+            if(confirm("Are you sure? This cannot be undone.")) { 
+                try { await call(`/agents/${curId}`, 'DELETE'); location.reload(); } catch(e) { alert("Delete failed."); }
+            } 
+        }
+
+        refreshAgents();
+    </script>
+
+
+
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/ltaapp/sw.js', { scope: '/ltaapp/' })
+                    .then(registration => {
+                        console.log('[PWA] Service Worker registered:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('[PWA] Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('[PWA] App can be installed');
+        });
+
+        // Call this function from a custom install button in your UI
+        async function installPWA() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log('[PWA] Install prompt outcome:', outcome);
+            deferredPrompt = null;
+        }
+
+        window.addEventListener('appinstalled', () => {
+            console.log('[PWA] App installed successfully');
+            deferredPrompt = null;
+        });
+    </script>
+</body>
+</html>
+
+

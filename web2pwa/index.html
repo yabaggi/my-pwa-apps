@@ -17,6 +17,8 @@
     
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="/web2pwa/icons/icon-192x192.png">
 </head>
 <body>
     <div class="container">
@@ -356,9 +358,12 @@
                                     <span class="help-icon" title="How to cache resources">?</span>
                                 </label>
                                 <select id="cache-strategy" class="form-input" required>
-                                    <option value="cache-first">Cache First - Best for static assets (Fastest)</option>
-                                    <option value="network-first">Network First - Best for dynamic content</option>
-                                    <option value="stale-while-revalidate" selected>Stale While Revalidate - Balanced approach (Recommended)</option>
+                                    
+                                    
+ <option value="cache-first" selected>Cache First - Best for offline reliability (Recommended)</option>
+<option value="network-first">Network First - Best for dynamic content</option>
+<option value="stale-while-revalidate">Stale While Revalidate - Balanced approach</option>                      
+                                           
                                 </select>
                                 <small class="help-text strategy-description">
                                     Serves cached content while fetching updates in background. All your files will be cached.
@@ -552,6 +557,44 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     
     <!-- Main Application Script -->
-    <script src="app.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/web2pwa/sw.js', { scope: '/web2pwa/' })
+                    .then(registration => {
+                        console.log('[PWA] Service Worker registered:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('[PWA] Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('[PWA] App can be installed');
+        });
+
+        // Call this function from a custom install button in your UI
+        async function installPWA() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log('[PWA] Install prompt outcome:', outcome);
+            deferredPrompt = null;
+        }
+
+        window.addEventListener('appinstalled', () => {
+            console.log('[PWA] App installed successfully');
+            deferredPrompt = null;
+        });
+    </script>
 </body>
 </html>
+

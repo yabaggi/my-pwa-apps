@@ -430,6 +430,31 @@
                 </select>
             </div>
 
+            <!-- Font & Size -->
+            <div class="dimension-group">
+                <div class="form-group">
+                    <label for="font">Font (Optional)</label>
+                    <select id="font">
+                        <option value="">Default</option>
+                        <option value="roboto">Roboto</option>
+                        <option value="open-sans">Open Sans</option>
+                        <option value="montserrat">Montserrat</option>
+                        <option value="lora">Lora</option>
+                        <option value="playfair-display">Playfair Display</option>
+                        <option value="raleway">Raleway</option>
+                        <option value="poppins">Poppins</option>
+                        <option value="source-sans-pro">Source Sans Pro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        Font Size: <span class="slider-value" id="fontSizeValue">24px</span>
+                    </label>
+                    <input type="range" id="fontSize" min="10" max="200" value="24">
+                    <div class="info-text">Works best with Arabic/Unicode text</div>
+                </div>
+            </div>
+
             <!-- Custom Text -->
             <div class="form-group">
                 <label for="customText">Custom Text</label>
@@ -454,14 +479,6 @@
                 <div class="wrap-settings" id="wrapSettings" style="display: none;">
                     <div class="slider-group">
                         <label>
-                            Font Size: <span class="slider-value" id="fontSizeValue">20px</span>
-                        </label>
-                        <input type="range" id="fontSize" min="10" max="100" value="20">
-                        <div class="info-text">Estimated font size for wrapping calculation</div>
-                    </div>
-
-                    <div class="slider-group">
-                        <label>
                             Padding: <span class="slider-value" id="paddingValue">10%</span>
                         </label>
                         <input type="range" id="padding" min="0" max="30" value="10">
@@ -481,22 +498,6 @@
                         <button onclick="clearWrapping()">✖️ Clear Breaks</button>
                     </div>
                 </div>
-            </div>
-
-            <!-- Font -->
-            <div class="form-group">
-                <label for="font">Font (Optional)</label>
-                <select id="font">
-                    <option value="">Default</option>
-                    <option value="roboto">Roboto</option>
-                    <option value="open-sans">Open Sans</option>
-                    <option value="montserrat">Montserrat</option>
-                    <option value="lora">Lora</option>
-                    <option value="playfair-display">Playfair Display</option>
-                    <option value="raleway">Raleway</option>
-                    <option value="poppins">Poppins</option>
-                    <option value="source-sans-pro">Source Sans Pro</option>
-                </select>
             </div>
 
             <!-- Retina -->
@@ -570,6 +571,7 @@
         // Update slider values
         fontSize.addEventListener('input', (e) => {
             fontSizeValue.textContent = e.target.value + 'px';
+            generateURL();
         });
 
         padding.addEventListener('input', (e) => {
@@ -773,30 +775,30 @@
             const fnt = font.value;
             const ret = retina.value;
 
-            // Build URL
-            let url = `https://placehold.co/${w}x${h}/${bg}/${txt}`;
+            // Check for non-ASCII characters (like Arabic)
+            const hasUnicode = /[^\x00-\x7F]/.test(customTxt);
             
-            // Add retina if selected
-            if (ret) {
-                url += ret;
-            }
+            // Build URL
+            let url;
+            const encodedText = customTxt ? encodeURIComponent(customTxt).replace(/%20/g, '+') : '';
+            const fSize = fontSize.value || 24;
 
-            // Add format
-            url += `.${fmt}`;
-
-            // Add query parameters
-            const params = [];
-            if (customTxt) {
-                // Replace spaces with +
-                const encodedText = customTxt.replace(/\s+/g, '+');
-                params.push(`text=${encodedText}`);
-            }
-            if (fnt) {
-                params.push(`font=${fnt}`);
-            }
-
-            if (params.length > 0) {
-                url += '?' + params.join('&');
+            if (hasUnicode) {
+                // Use placehold.jp for better Unicode/Arabic support
+                // Note: placehold.jp doesn't support transparency via URL as easily as placehold.co
+                const bgJP = bg === 'transparent' ? 'cccccc' : bg;
+                url = `https://placehold.jp/${fSize}/${bgJP}/${txt}/${w}x${h}.${fmt}`;
+                if (encodedText) url += `?text=${encodedText}`;
+            } else {
+                // Use placehold.co for standard ASCII
+                url = `https://placehold.co/${w}x${h}/${bg}/${txt}`;
+                if (ret) url += ret;
+                url += `.${fmt}`;
+                
+                const params = [];
+                if (encodedText) params.push(`text=${encodedText}`);
+                if (fnt) params.push(`font=${fnt}`);
+                if (params.length > 0) url += '?' + params.join('&');
             }
 
             // Update display and preview

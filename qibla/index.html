@@ -334,7 +334,7 @@ body:not(.lang-en) .modal-search { padding:10px 36px 10px 14px; }
 }
 </style>
     <meta name="theme-color" content="#2196f3">
-    <link rel="manifest" href="/my-pwa-apps/qibla/manifest.json">
+    <link rel="manifest" href="/qibla/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
 </head>
@@ -859,7 +859,7 @@ function setLang(l){
 })();
 </script>
 
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('/my-pwa-apps/qibla/sw.js').then(r=>console.log('SW registered:',r)).catch(e=>console.error('SW registration failed:',e))})</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('/qibla/sw.js').then(r=>console.log('SW registered:',r)).catch(e=>console.error('SW registration failed:',e))})</script>
 </body>
 </html>
 

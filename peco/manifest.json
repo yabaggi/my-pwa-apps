@@ -1,22 +1,66 @@
 {
-  "name": "PECO — Event Documentary Builder",
-  "short_name": "PECO",
-  "description": "Places, Events, Celebrations, Occasions documentary tool.",
-  "start_url": "/my-pwa-apps/peco/",
-  "scope": "/my-pwa-apps/peco/",
+  "id": "pecox-id",
+  "name": "PECO Documentary App",
+  "short_name": "PECO Documen",
+  "description": "",
+  "start_url": "/peco/",
+  "scope": "/peco/",
   "display": "standalone",
-  "background_color": "#f5f0e8",
-  "theme_color": "#0e0e10",
+  "orientation": "portrait-primary",
+  "theme_color": "#2196f3",
+  "background_color": "#ffffff",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "any"
+      "src": "/peco/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/peco/icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/peco/icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/peco/icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/peco/icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/peco/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/peco/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/peco/icons/icon-512x512.png",
       "sizes": "512x512",
-      "type": "any"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
+  ],
+  "categories": [
+    "utilities",
+    "productivity"
   ]
 }

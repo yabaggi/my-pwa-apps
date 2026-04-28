@@ -3,57 +3,57 @@
   "name": "Website Prompt Builder - HTML/CSS/JS",
   "short_name": "Website Prom",
   "description": "",
-  "start_url": "/my-pwa-apps/promaker/",
-  "scope": "/my-owa-apps/promaker/",
+  "start_url": "/promaker/",
+  "scope": "/promaker/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#2196f3",
   "background_color": "#ffffff",
   "icons": [
     {
-      "src": "/my-pwa-apps/promaker/icons/icon-72x72.png",
+      "src": "/promaker/icons/icon-72x72.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/my-pwa-apps/promaker/icons/icon-96x96.png",
+      "src": "/promaker/icons/icon-96x96.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/my-pwa-apps/promaker/icons/icon-128x128.png",
+      "src": "/promaker/icons/icon-128x128.png",
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/my-pwa-apps/promaker/icons/icon-144x144.png",
+      "src": "/promaker/icons/icon-144x144.png",
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/my-pwa-apps/promaker/icons/icon-152x152.png",
+      "src": "/promaker/icons/icon-152x152.png",
       "sizes": "152x152",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/my-pwa-apps/promaker/icons/icon-192x192.png",
+      "src": "/promaker/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/my-pwa-apps/promaker/icons/icon-384x384.png",
+      "src": "/promaker/icons/icon-384x384.png",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/my-pwa-apps/promaker/icons/icon-512x512.png",
+      "src": "/promaker/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

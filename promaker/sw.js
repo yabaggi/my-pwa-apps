@@ -6,18 +6,26 @@
  * Total Files Cached: 9
  */
 
-const CACHE_NAME = 'promaker-gh1';
+const CACHE_NAME = 'promaker-v4';
 const OFFLINE_URL = '/promaker/offline.html';
 
 const urlsToCache = [
-  "/my-pwa-apps/promaker/",
-  "/my-pwa-apps/promaker/index.html",
-  "/my-pwa-apps/promaker/manifest.json",
-  "/my-pwa-apps/promaker/data.json",
-  "/my-pwa-apps/promaker/script.js",
-  "/my-pwa-apps/promaker/style.css",
-  "/my-pwa-apps/promaker/README.md",
-  "/my-pwa-apps/promaker/offline.html"
+  "/promaker/favicon.ico",
+  "/promaker/icons/icon-72x72.png", 
+  "/promaker/icons/icon-96x96.png", 
+  "/promaker/icons/icon-128x128.png", 
+  "/promaker/icons/icon-144x144.png", 
+  "/promaker/icons/icon-152x152.png", 
+  "/promaker/icons/icon-192x192.png", 
+  "/promaker/icons/icon-384x384.png", 
+  "/promaker/icons/icon-512x512.png",
+  "/promaker/",
+  "/promaker/index.html",
+  "/promaker/manifest.json",
+  "/promaker/data.json",
+  "/promaker/script.js",
+  "/promaker/style.css",
+  "/promaker/offline.html"
 ];
 
 // Install event - cache ALL resources
@@ -33,6 +41,13 @@ self.addEventListener('install', event => {
             .then(() => {
                 console.log('[Service Worker] All files cached successfully');
                 return self.skipWaiting();
+            }).then(() => {
+                // Request persistent storage to prevent cache eviction
+                if (navigator.storage && navigator.storage.persist) {
+                    navigator.storage.persist().then(granted => {
+                        console.log('[Service Worker] Persistent storage granted:', granted);
+                    });
+                }
             })
             .catch(error => {
                 console.error('[Service Worker] Cache failed:', error);
@@ -47,7 +62,10 @@ self.addEventListener('activate', event => {
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames
-                    .filter(name => name !== CACHE_NAME)
+                    .filter(name => {
+                        const cachePrefix = CACHE_NAME.replace(/-v\d+$/, "");
+                        return name.startsWith(cachePrefix + "-") && name !== CACHE_NAME;
+                    })
                     .map(name => {
                         console.log('[Service Worker] Deleting old cache:', name);
                         return caches.delete(name);
@@ -57,32 +75,41 @@ self.addEventListener('activate', event => {
     );
 });
 
-// Fetch event - serve from cache or network
+// Fetch event - Optimized Cache-First Strategy
 self.addEventListener('fetch', event => {
-        // Stale While Revalidate Strategy - Balanced approach
-    if (event.request.method !== 'GET') {
+    if (event.request.method !== 'GET') return;
+
+    // Handle Favicon
+    if (event.request.url.includes('favicon.ico')) {
+        event.respondWith(
+            caches.match(event.request).then(response => {
+                return response || fetch(event.request).catch(() => new Response(null, { status: 204 }));
+            })
+        );
         return;
     }
 
+    // Main Strategy: Cache-First
     event.respondWith(
         caches.match(event.request).then(cachedResponse => {
-            const fetchPromise = fetch(event.request).then(response => {
-                if (response.status === 200) {
+            // If found in cache, return immediately
+            if (cachedResponse) return cachedResponse;
+
+            // Otherwise, get from network and add to cache
+            return fetch(event.request).then(response => {
+                if (response && response.status === 200) {
                     const responseToCache = response.clone();
                     caches.open(CACHE_NAME).then(cache => {
                         cache.put(event.request, responseToCache);
                     });
                 }
                 return response;
-            }).catch(error => {
-                
+            }).catch(() => {
+                // If offline and navigating, show offline page
                 if (isNavigationRequest(event.request)) {
                     return caches.match(OFFLINE_URL);
                 }
-                throw error;
             });
-
-            return cachedResponse || fetchPromise;
         })
     );
 });

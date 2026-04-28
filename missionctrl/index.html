@@ -1,0 +1,1654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mission Control</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- QR Code Library - Using a working CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    :root {
+      --bg: #111827;
+      --card-bg: #1f2937;
+      --border: #374151;
+      --text: #f9fafb;
+      --accent: #38bdf8;
+      --accent-2: #10b981;
+      --shadow: rgba(56, 189, 248, 0.25);
+      --warning: #f87171;
+      --success: #10b981;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 1rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      position: relative;
+    }
+    header h1 { font-size: 2rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    header p { color: #9ca3af; margin-top: 0.5rem; }
+
+    /* Status Bar */
+    .status-bar {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.8rem 1.5rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .status-left { display: flex; align-items: center; gap: 0.75rem; }
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--warning);
+      transition: all 0.3s ease;
+    }
+    .status-indicator.online { background: var(--success); transform: scale(1.2); }
+    .status-indicator.loading { background: #f59e0b; animation: pulse 1.5s infinite; }
+    @keyframes pulse {
+      0% { opacity: 0.6; }
+      50% { opacity: 1; }
+      100% { opacity: 0.6; }
+    }
+    .status-message { font-weight: 500; }
+    .status-actions { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .btn {
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .btn-primary { background: var(--accent); color: var(--bg); }
+    .btn-warning { background: var(--warning); color: var(--bg); }
+    .btn-success { background: var(--success); color: var(--bg); }
+    .btn-secondary { background: #6366f1; color: white; }
+    .btn:active { transform: translateY(1px); }
+    .btn:hover { opacity: 0.9; }
+
+    /* Hidden file input */
+    #importFileInput {
+      display: none;
+    }
+
+    /* Main Content */
+    #stats {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .stat-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.75rem 1.25rem;
+      text-align: center;
+      min-width: 50px;
+      position: relative;
+    }
+    .stat-box .number {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .stat-box .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #9ca3af;
+    }
+
+    #controls {
+      max-width: 900px;
+      margin: 0 auto 1.5rem;
+    }
+    #search {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+      margin-bottom: 0.75rem;
+    }
+    #filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+    #filters button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 9999px;
+      background: var(--card-bg);
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    #filters button:active { transform: scale(0.96); }
+    #filters button.active { background: var(--accent); color: var(--bg); }
+
+    #apps {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.25rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* App Card */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    .card:hover { 
+      transform: translateY(-6px);
+      box-shadow: 0 10px 30px var(--shadow);
+    }
+    .card-header {
+      padding: 1.25rem 1.25rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+    .card-icon {
+      font-size: 2.5rem;
+      min-width: 2.5rem;
+    }
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      word-break: break-word;
+    }
+    .card-subtitle {
+      color: #9ca3af;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .card-body {
+      padding: 0 1.25rem 1.25rem;
+      flex: 1;
+    }
+    .card-description {
+      color: #d1d5db;
+      line-height: 1.6;
+      margin: 0.75rem 0;
+      min-height: 60px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-tags {
+      display: flex;
+      gap: 0.5rem;
+      margin: 0.75rem 0;
+      flex-wrap: wrap;
+    }
+    .tag {
+      padding: 0.35rem 0.8rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .tag.type { background: var(--accent); color: var(--bg); }
+    .tag.platform { background: var(--accent-2); color: var(--bg); }
+    .card-footer {
+      padding: 0 1.25rem 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+    .action-btn {
+      flex: 1;
+      min-width: 90px;
+      padding: 0.8rem;
+      border-radius: 10px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: transform 0.15s;
+      font-size: 0.85rem;
+    }
+    .action-btn:active { transform: scale(0.97); }
+    .btn-launch { background: var(--accent); color: var(--bg); }
+    .btn-details { background: #4b5563; color: white; }
+    .btn-qrcode { background: #8b5cf6; color: white; }
+    .btn-edit { background: #f59e0b; color: var(--bg); }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .modal.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    .modal-content {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      width: 95%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow: auto;
+      padding: 2rem;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: #9ca3af;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    .modal h2 {
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      color: var(--accent);
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.85rem;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #111827;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 1rem;
+    }
+    .form-group textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* Import Modal Specific Styles */
+    .import-option {
+      background: #111827;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .import-option:hover {
+      border-color: var(--accent);
+      background: #1a2332;
+    }
+    .import-option input[type="radio"] {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    .import-option-content h4 {
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+    }
+    .import-option-content p {
+      color: #9ca3af;
+      font-size: 0.9rem;
+    }
+
+    /* QR Code Modal Styles */
+    .qr-container {
+      text-align: center;
+      padding: 2rem;
+    }
+    .qr-image {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      margin: 1rem auto;
+      background: white;
+      padding: 1rem;
+      display: block;
+    }
+    .qr-info {
+      background: #111827;
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      word-break: break-all;
+      color: #d1d5db;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      grid-column: 1/-1;
+      padding: 3rem;
+    }
+    .empty-state i {
+      font-size: 4rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+    .empty-state p {
+      color: #9ca3af;
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    .loading-spinner {
+      border: 3px solid #374151;
+      border-top: 3px solid var(--accent);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 1.5rem;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      #apps { grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); }
+      .status-bar { flex-direction: column; align-items: stretch; }
+      .status-left, .status-actions { width: 100%; justify-content: center; }
+    }
+  </style>
+    <meta name="theme-color" content="#ff0000">
+    <link rel="manifest" href="/missionctrl/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Mission Ctrl">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+</head>
+<body>
+  <header>
+    <h1><i class="fas fa-rocket"></i> Mission Control</h1>
+    <p>Your living product shelf – launch any app instantly</p>
+  </header>
+
+  <div class="status-bar">
+    <div class="status-left">
+      <span class="status-indicator loading" id="fileStatus"></span>
+      <span class="status-message" id="statusText">Loading apps data...</span>
+    </div>
+    <div class="status-actions">
+      <button class="btn btn-secondary" id="importBtn">
+        <i class="fas fa-upload"></i> Import JSON
+      </button>
+      <button class="btn btn-success" id="downloadBtn">
+        <i class="fas fa-download"></i> Export Data
+      </button>
+    </div>
+  </div>
+
+  <!-- Hidden file input for import -->
+  <input type="file" id="importFileInput" accept=".json,application/json" />
+
+  <section id="stats" aria-label="Statistics">
+    <div class="stat-box">
+      <span class="number">0</span>
+      <span class="label">Apps</span>
+    </div>
+    <div class="stat-box">
+      <span class="number">0</span>
+      <span class="label">Platforms</span>
+    </div>
+    <div class="stat-box">
+      <span class="number">0</span>
+      <span class="label">Types</span>
+    </div>
+  </section>
+
+  <section id="controls" aria-label="Search and filters">
+    <input type="search" id="search" placeholder="Search apps by name or description..." autocomplete="off" />
+    <div id="filters"></div>
+  </section>
+
+  <main id="apps" aria-live="polite">
+    <div class="empty-state">
+      <div class="loading-spinner"></div>
+      <p>Loading your apps portfolio...</p>
+    </div>
+  </main>
+
+  <!-- App Details Modal -->
+  <div class="modal" id="detailsModal">
+    <div class="modal-content">
+      <button class="modal-close" id="closeDetailsModal"><i class="fas fa-times"></i></button>
+      <h2 id="modalTitle">App Details</h2>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- QR Code Modal -->
+  <div class="modal" id="qrcodeModal">
+    <div class="modal-content">
+      <button class="modal-close" id="closeQRModal"><i class="fas fa-times"></i></button>
+      <h2 id="qrModalTitle">QR Code</h2>
+      <div id="qrModalContent" class="qr-container"></div>
+    </div>
+  </div>
+
+  <!-- Edit App Modal -->
+  <div class="modal" id="editModal">
+    <div class="modal-content">
+      <button class="modal-close" id="closeEditModal"><i class="fas fa-times"></i></button>
+      <h2 id="editModalTitle">Add New App</h2>
+      <form id="editForm">
+        <input type="hidden" id="editId">
+        <div class="form-group">
+          <label for="editName">App Name *</label>
+          <input type="text" id="editName" required>
+        </div>
+        <div class="form-group">
+          <label for="editLink">URL *</label>
+          <input type="url" id="editLink" required placeholder="https://">
+        </div>
+        <div class="form-group">
+          <label for="editType">Type *</label>
+          <input type="text" id="editType" required placeholder="App, API, Library, etc.">
+        </div>
+        <div class="form-group">
+          <label for="editPlatform">Platform *</label>
+          <input type="text" id="editPlatform" required placeholder="GitHub Pages, Vercel, Netlify, etc.">
+        </div>
+        <div class="form-group">
+          <label for="editDescription">Description *</label>
+          <textarea id="editDescription" required placeholder="Brief summary of what this app does"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="editReadme">README Content (Optional)</label>
+          <textarea id="editReadme" placeholder="Paste README.md content here"></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-warning" id="deleteAppBtn" style="display:none;">
+            <i class="fas fa-trash"></i> Delete App
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Save App
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Import Options Modal -->
+  <div class="modal" id="importModal">
+    <div class="modal-content">
+      <button class="modal-close" id="closeImportModal"><i class="fas fa-times"></i></button>
+      <h2><i class="fas fa-upload"></i> Import JSON Data</h2>
+      <p style="color:#9ca3af; margin-bottom:1.5rem;">Choose how to import the data:</p>
+      
+      <div class="import-option" id="mergeOption">
+        <input type="radio" name="importType" value="merge" id="mergeRadio" checked>
+        <div class="import-option-content">
+          <h4><i class="fas fa-layer-group"></i> Merge with Existing</h4>
+          <p>Add new apps from the file to your current collection. Existing apps will be kept.</p>
+        </div>
+      </div>
+
+      <div class="import-option" id="replaceOption">
+        <input type="radio" name="importType" value="replace" id="replaceRadio">
+        <div class="import-option-content">
+          <h4><i class="fas fa-sync-alt"></i> Replace All Data</h4>
+          <p>⚠️ Delete all current apps and replace with data from the file.</p>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-warning" id="cancelImportBtn">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+        <button class="btn btn-primary" id="confirmImportBtn">
+          <i class="fas fa-check"></i> Proceed
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // DOM Elements
+    const fileStatus = document.getElementById('fileStatus');
+    const statusText = document.getElementById('statusText');
+    const appsContainer = document.getElementById('apps');
+    const statsContainer = document.getElementById('stats');
+    const searchInput = document.getElementById('search');
+    const filtersContainer = document.getElementById('filters');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const importBtn = document.getElementById('importBtn');
+    const importFileInput = document.getElementById('importFileInput');
+    const detailsModal = document.getElementById('detailsModal');
+    const qrcodeModal = document.getElementById('qrcodeModal');
+    const editModal = document.getElementById('editModal');
+    const importModal = document.getElementById('importModal');
+    const editForm = document.getElementById('editForm');
+    const editModalTitle = document.getElementById('editModalTitle');
+    const deleteAppBtn = document.getElementById('deleteAppBtn');
+
+    // State
+    let appData = [];
+    let activeFilter = null;
+    let currentEditId = null;
+    let pendingImportData = null;
+
+    // Platform Icons Mapping
+    const platformIcons = {
+      "github pages": "fab fa-github",
+      "vercel": "fas fa-bolt",
+      "netlify": "fas fa-cloud",
+      "firebase": "fas fa-fire",
+      "render": "fas fa-cube",
+      "aws": "fab fa-aws",
+      "digitalocean": "fab fa-digital-ocean"
+    };
+
+    const typeIcons = {
+      "app": "fas fa-mobile-alt",
+      "api": "fas fa-plug",
+      "raw": "fas fa-database",
+      "tool": "fas fa-wrench",
+      "library": "fas fa-book",
+      "game": "fas fa-gamepad"
+    };
+
+    // QR Code Generation Function using Canvas API
+    async function generateQRCodeCanvas(text) {
+      return new Promise((resolve, reject) => {
+        try {
+          // Create a temporary container
+          const tempContainer = document.createElement('div');
+          tempContainer.id = 'qr-temp-' + Date.now();
+          tempContainer.style.position = 'absolute';
+          tempContainer.style.left = '-9999px';
+          document.body.appendChild(tempContainer);
+
+          // Generate QR code using the library
+          const qr = new QRCode(tempContainer, {
+            text: text,
+            width: 300,
+            height: 300,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+          });
+
+          // Wait for the QR code to be generated
+          setTimeout(() => {
+            const canvas = tempContainer.querySelector('canvas');
+            if (canvas) {
+              const base64Image = canvas.toDataURL('image/png');
+              document.body.removeChild(tempContainer);
+              resolve(base64Image);
+            } else {
+              // Fallback: try to get the image
+              const img = tempContainer.querySelector('img');
+              if (img && img.src) {
+                const base64Image = img.src;
+                document.body.removeChild(tempContainer);
+                resolve(base64Image);
+              } else {
+                document.body.removeChild(tempContainer);
+                reject(new Error('Could not generate QR code'));
+              }
+            }
+          }, 500);
+        } catch (error) {
+          reject(error);
+        }
+      });
+    }
+
+    // Initialize
+    function init() {
+      location.hash = "";
+      // Event listeners
+      downloadBtn.addEventListener('click', downloadAppData);
+      importBtn.addEventListener('click', () => importFileInput.click());
+      importFileInput.addEventListener('change', handleFileSelect);
+      searchInput.addEventListener('input', renderApps);
+      editForm.addEventListener('submit', saveAppChanges);
+      deleteAppBtn.addEventListener('click', confirmDeleteApp);
+      
+      // Import modal event listeners
+      document.getElementById('closeImportModal').addEventListener('click', closeImportModal);
+      document.getElementById('cancelImportBtn').addEventListener('click', closeImportModal);
+      document.getElementById('confirmImportBtn').addEventListener('click', processImport);
+      document.getElementById('mergeOption').addEventListener('click', () => {
+        document.getElementById('mergeRadio').checked = true;
+      });
+      document.getElementById('replaceOption').addEventListener('click', () => {
+        document.getElementById('replaceRadio').checked = true;
+      });
+      
+      // Handle browser back button for modals
+      window.addEventListener('hashchange', () => {
+        if (location.hash === '') {
+            detailsModal.classList.remove('active');
+            qrcodeModal.classList.remove('active');
+            editModal.classList.remove('active');
+            importModal.classList.remove('active');
+        }
+      });
+
+      // Modal closers
+      document.getElementById('closeDetailsModal').addEventListener('click', closeDetailsModal);
+      document.getElementById('closeQRModal').addEventListener('click', closeQRModal);
+      document.getElementById('closeEditModal').addEventListener('click', closeEditModal);
+      
+      // Auto-load data on startup
+      loadData();
+      
+      // Add keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeDetailsModal();
+          closeQRModal();
+          closeEditModal();
+          closeImportModal();
+        }
+        if (e.ctrlKey && e.key === 'a') {
+          e.preventDefault();
+          openAddAppModal();
+        }
+        if (e.ctrlKey && e.key === 's') {
+          e.preventDefault();
+          downloadAppData();
+        }
+        if (e.ctrlKey && e.key === 'i') {
+          e.preventDefault();
+          importFileInput.click();
+        }
+      });
+    }
+
+    async function loadData() {
+      updateStatus('loading', 'Loading apps data...');
+      
+      // Prioritize loading from localStorage first
+      const savedData = localStorage.getItem('missionControlApps');
+      if (savedData) {
+        try {
+          appData = JSON.parse(savedData);
+          updateStatus('online', `Loaded ${appData.length} apps from browser storage`);
+          renderAll();
+          return; // Exit function since we loaded from storage
+        } catch (localStorageError) {
+          console.error('LocalStorage parse error:', localStorageError);
+          // If parsing fails, proceed to load from file as a fallback
+        }
+      }
+
+      // If localStorage is empty or failed, fall back to appdata.json
+      try {
+        const response = await fetch('appdata.json');
+        
+        if (!response.ok) {
+          throw new Error(`Failed to load appdata.json: ${response.status}`);
+        }
+        
+        appData = await response.json();
+        saveToLocalStorage(); // Save the initial file data to localStorage for future use
+        updateStatus('online', `Loaded ${appData.length} apps from file`);
+        renderAll();
+      } catch (fileError) {
+        console.warn('File load failed:', fileError);
+        handleLoadFailure(); // This is called if both localStorage and file fail
+      }
+    }
+
+    function handleLoadFailure() {
+      updateStatus('offline', 'No app data found');
+      appData = [];
+      renderAll();
+      
+      // Show helpful empty state with add button
+      setTimeout(() => {
+        if (!appData.length) {
+          const emptyState = document.querySelector('.empty-state');
+          if (emptyState) {
+            emptyState.innerHTML = `
+              <i class="fas fa-database" style="font-size:4rem; color:#6b7280; margin-bottom:1rem;"></i>
+              <p style="color:#9ca3af; font-size:1.2rem;">No apps data found</p>
+              <p style="color:#6b7280; margin-bottom:1.5rem;">Create your first app entry or import from JSON</p>
+              <button class="btn btn-primary" id="addFirstAppBtn">
+                <i class="fas fa-plus"></i> Add First App
+              </button>
+            `;
+            document.getElementById('addFirstAppBtn').addEventListener('click', openAddAppModal);
+          }
+        }
+      }, 500);
+    }
+
+    function updateStatus(status, message) {
+      // Update status indicator
+      fileStatus.className = 'status-indicator';
+      if (status === 'loading') {
+        fileStatus.classList.add('loading');
+      } else if (status === 'online') {
+        fileStatus.classList.add('online');
+      }
+      
+      // Update status text
+      statusText.textContent = message;
+      
+      // Update color
+      if (status === 'online') {
+        statusText.style.color = '#10b981';
+      } else if (status === 'offline') {
+        statusText.style.color = '#f87171';
+      } else {
+        statusText.style.color = '#f59e0b';
+      }
+    }
+
+    function saveToLocalStorage() {
+      localStorage.setItem('missionControlApps', JSON.stringify(appData));
+    }
+
+    function renderAll() {
+      renderStats();
+      renderFilters();
+      renderApps();
+      
+      // Add "Add App" button to stats section
+      setTimeout(addAddAppButton, 300);
+    }
+
+    function renderStats() {
+      if (!appData.length) {
+        statsContainer.innerHTML = `
+          <div class="stat-box">
+            <span class="number">0</span>
+            <span class="label">Apps</span>
+          </div>
+          <div class="stat-box">
+            <span class="number">0</span>
+            <span class="label">Platforms</span>
+          </div>
+          <div class="stat-box">
+            <span class="number">0</span>
+            <span class="label">Types</span>
+          </div>
+        `;
+        return;
+      }
+      
+      const platforms = new Set(appData.map(a => a.platform));
+      const types = new Set(appData.map(a => a.type));
+      
+      statsContainer.innerHTML = `
+        <div class="stat-box">
+          <span class="number">${appData.length}</span>
+          <span class="label">Apps</span>
+        </div>
+        <div class="stat-box">
+          <span class="number">${platforms.size}</span>
+          <span class="label">Platforms</span>
+        </div>
+        <div class="stat-box">
+          <span class="number">${types.size}</span>
+          <span class="label">Types</span>
+        </div>
+      `;
+    }
+
+    function renderFilters() {
+      if (!appData.length) {
+        filtersContainer.innerHTML = '';
+        return;
+      }
+      
+      const types = new Set(appData.map(a => a.type));
+      const platforms = new Set(appData.map(a => a.platform));
+      
+      let html = `<button class="${!activeFilter ? 'active' : ''}" data-filter="all">
+                    <i class="fas fa-filter"></i> All Apps
+                  </button>`;
+      
+      // Type filters
+      html += `<div style="margin: 0 0.5rem; color: #9ca3af;">| Types |</div>`;
+      types.forEach(type => {
+        const isActive = activeFilter?.key === 'type' && activeFilter?.value === type;
+        html += `<button class="${isActive ? 'active' : ''}" data-filter="type:${type}">
+                  <i class="${typeIcons[type.toLowerCase()] || 'fas fa-tag'}"></i> ${type}
+                </button>`;
+      });
+      
+      // Platform filters
+      html += `<div style="margin: 0 0.5rem; color: #9ca3af;">| Platforms |</div>`;
+      platforms.forEach(platform => {
+        const isActive = activeFilter?.key === 'platform' && activeFilter?.value === platform;
+        html += `<button class="${isActive ? 'active' : ''}" data-filter="platform:${platform}">
+                  <i class="${platformIcons[platform.toLowerCase()] || 'fas fa-server'}"></i> ${platform}
+                </button>`;
+      });
+      
+      filtersContainer.innerHTML = html;
+      
+      // Add event listeners
+      filtersContainer.querySelectorAll('button').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const filterValue = e.target.dataset.filter;
+          
+          if (filterValue === 'all') {
+            activeFilter = null;
+          } else if (filterValue.startsWith('type:')) {
+            activeFilter = { 
+              key: 'type', 
+              value: filterValue.split(':')[1] 
+            };
+          } else if (filterValue.startsWith('platform:')) {
+            activeFilter = { 
+              key: 'platform', 
+              value: filterValue.split(':')[1] 
+            };
+          }
+          
+          renderApps();
+        });
+      });
+    }
+
+    function renderApps() {
+      if (!appData.length) {
+        appsContainer.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-database" style="font-size:4rem; color:#6b7280; margin-bottom:1rem;"></i>
+            <p style="color:#9ca3af; font-size:1.2rem;">No apps loaded</p>
+            <p style="color:#6b7280; margin-bottom:1.5rem;">Add your first app or import from JSON</p>
+            <button class="btn btn-primary" id="addAppBtn" style="margin-right:0.5rem;">
+              <i class="fas fa-plus"></i> Add New App
+            </button>
+            <button class="btn btn-secondary" id="importAppBtn">
+              <i class="fas fa-upload"></i> Import JSON
+            </button>
+          </div>
+        `;
+        document.getElementById('addAppBtn')?.addEventListener('click', openAddAppModal);
+        document.getElementById('importAppBtn')?.addEventListener('click', () => importFileInput.click());
+        return;
+      }
+      
+      const searchTerm = searchInput.value.toLowerCase();
+      const filteredApps = appData.filter(app => {
+        const matchesSearch = 
+          app.name.toLowerCase().includes(searchTerm) || 
+          app.description.toLowerCase().includes(searchTerm);
+        
+        const matchesFilter = !activeFilter || 
+          app[activeFilter.key].toLowerCase() === activeFilter.value.toLowerCase();
+        
+        return matchesSearch && matchesFilter;
+      });
+      
+      if (!filteredApps.length) {
+        appsContainer.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-search" style="font-size:4rem; color:#6b7280; margin-bottom:1rem;"></i>
+            <p style="color:#9ca3af; font-size:1.2rem;">No apps match your search</p>
+            <p style="color:#6b7280; margin-top:0.5rem;">Try different keywords or clear filters</p>
+          </div>
+        `;
+        return;
+      }
+      
+      let html = '';
+      filteredApps.forEach(app => {
+        const platformIcon = platformIcons[app.platform.toLowerCase()] || 'fas fa-globe';
+        const typeIcon = typeIcons[app.type.toLowerCase()] || 'fas fa-cube';
+        
+        html += `
+          <article class="card" data-id="${app.id}">
+            <div class="card-header">
+              <div class="card-icon">
+                <i class="${platformIcon}"></i>
+              </div>
+              <div>
+                <h3 class="card-title">${app.name}</h3>
+                <div class="card-subtitle">
+                  <i class="${typeIcon}"></i> ${app.type} on ${app.platform}
+                </div>
+              </div>
+            </div>
+            
+            <div class="card-body">
+              <p class="card-description">${app.description}</p>
+              
+              <div class="card-tags">
+                <span class="tag type">
+                  <i class="${typeIcon}"></i> ${app.type}
+                </span>
+                <span class="tag platform">
+                  <i class="${platformIcon}"></i> ${app.platform}
+                </span>
+              </div>
+            </div>
+            
+            <div class="card-footer">
+              <button class="action-btn btn-launch" data-link="${app.link}">
+                <i class="fas fa-external-link-alt"></i> Launch
+              </button>
+              <button class="action-btn btn-edit" data-id="${app.id}">
+                <i class="fas fa-edit"></i> Edit
+              </button>
+              <button class="action-btn btn-qrcode" data-id="${app.id}">
+                <i class="fas fa-qrcode"></i> QR
+              </button>
+              <button class="action-btn btn-details" data-id="${app.id}">
+                <i class="fas fa-info-circle"></i> Info
+              </button>
+            </div>
+          </article>
+        `;
+      });
+      
+      appsContainer.innerHTML = html;
+      
+      // Add event listeners
+      document.querySelectorAll('.btn-launch').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const link = e.currentTarget.dataset.link;
+          window.open(link, '_blank', 'noopener,noreferrer');
+        });
+      });
+      
+      document.querySelectorAll('.btn-edit').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const appId = e.currentTarget.dataset.id;
+          openEditAppModal(appId);
+        });
+      });
+      
+      document.querySelectorAll('.btn-qrcode').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const appId = e.currentTarget.dataset.id;
+          showQRCode(appId);
+        });
+      });
+      
+      document.querySelectorAll('.btn-details').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const appId = e.currentTarget.dataset.id;
+          showAppDetails(appId);
+        });
+      });
+    }
+
+    async function showQRCode(appId) {
+      const app = appData.find(a => a.id === appId);
+      if (!app) return;
+      
+      document.getElementById('qrModalTitle').textContent = `QR Code - ${app.name}`;
+      const qrContent = document.getElementById('qrModalContent');
+      
+      qrContent.innerHTML = `
+        <div class="loading-spinner" style="margin: 2rem auto;"></div>
+        <p style="color:#9ca3af;">Generating QR Code...</p>
+      `;
+      
+      qrcodeModal.classList.add('active');
+      location.hash = 'open';
+      
+      try {
+        let qrBase64;
+        
+        // Check if QR code already exists
+        if (app.qrcode && app.qrcode.startsWith('data:image')) {
+          qrBase64 = app.qrcode;
+        } else {
+          // Generate new QR code
+          qrBase64 = await generateQRCodeCanvas(app.link);
+          
+          // Update app data with QR code
+          const appIndex = appData.findIndex(a => a.id === appId);
+          if (appIndex !== -1) {
+            appData[appIndex].qrcode = qrBase64;
+            saveToLocalStorage();
+          }
+        }
+        
+        qrContent.innerHTML = `
+          <h3 style="margin-bottom:1rem; color:var(--accent);">${app.name}</h3>
+          <img src="${qrBase64}" alt="QR Code for ${app.name}" class="qr-image" />
+          <div class="qr-info">
+            <strong>URL:</strong><br/>
+            <a href="${app.link}" target="_blank" style="color:var(--accent); word-break:break-all;">
+              ${app.link}
+            </a>
+          </div>
+          <button class="btn btn-primary" id="downloadQRBtn" style="margin-top:1rem;">
+            <i class="fas fa-download"></i> Download QR Code
+          </button>
+        `;
+        
+        // Add download event listener
+        document.getElementById('downloadQRBtn').addEventListener('click', () => {
+          downloadQRCode(qrBase64, app.name);
+        });
+        
+      } catch (error) {
+        console.error('QR Code generation failed:', error);
+        qrContent.innerHTML = `
+          <i class="fas fa-exclamation-triangle" style="font-size:3rem; color:var(--warning); margin-bottom:1rem;"></i>
+          <p style="color:var(--warning);">Failed to generate QR Code</p>
+          <p style="color:#9ca3af; margin-top:0.5rem;">${error.message}</p>
+        `;
+      }
+    }
+
+    function downloadQRCode(base64Data, appName) {
+      const link = document.createElement('a');
+      link.href = base64Data;
+      link.download = `${appName.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_qrcode.png`;
+      link.click();
+    }
+
+    function closeQRModal() {
+      if (qrcodeModal.classList.contains('active')) {
+        location.hash = '';
+      }
+    }
+
+    function showAppDetails(appId) {
+      const app = appData.find(a => a.id === appId);
+      if (!app) return;
+      
+      let content = `
+        <h3 style="margin:1rem 0; color:var(--accent);">${app.name}</h3>
+        <p style="color:#d1d5db; margin-bottom:1.5rem;">${app.description}</p>
+        
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin:1.5rem 0;">
+          <div style="background:#111827; padding:1rem; border-radius:10px;">
+            <div style="color:#9ca3af; font-size:0.85rem; margin-bottom:0.5rem;">TYPE</div>
+            <div style="font-weight:600; display:flex; align-items:center; gap:0.5rem;">
+              <i class="${typeIcons[app.type.toLowerCase()] || 'fas fa-cube'}"></i>
+              ${app.type}
+            </div>
+          </div>
+          <div style="background:#111827; padding:1rem; border-radius:10px;">
+            <div style="color:#9ca3af; font-size:0.85rem; margin-bottom:0.5rem;">PLATFORM</div>
+            <div style="font-weight:600; display:flex; align-items:center; gap:0.5rem;">
+              <i class="${platformIcons[app.platform.toLowerCase()] || 'fas fa-server'}"></i>
+              ${app.platform}
+            </div>
+          </div>
+        </div>
+        
+        <div style="background:#111827; border-radius:10px; padding:1.5rem; margin:1.5rem 0;">
+          <h4 style="margin-bottom:1rem; color:var(--accent);">
+            <i class="fas fa-link"></i> Application URL
+          </h4>
+          <a href="${app.link}" target="_blank" style="color:var(--accent); text-decoration:underline; word-break:break-all;">
+            ${app.link}
+          </a>
+        </div>
+      `;
+      
+      if (app.readme && app.readme !== '#') {
+        content += `
+          <div style="margin-top:1.5rem; padding-top:1.5rem; border-top:1px solid var(--border);">
+            <h4 style="margin-bottom:1rem; color:var(--accent);">
+              <i class="fab fa-markdown"></i> README Summary
+            </h4>
+            <div style="background:#111827; border-radius:10px; padding:1.25rem; font-family:monospace; font-size:0.95rem; line-height:1.6; max-height:300px; overflow:auto;">
+              ${app.readme.split('\n').slice(0, 8).join('<br>')}
+              ${app.readme.split('\n').length > 8 ? '<br><span style="color:#9ca3af;">... (view full README in repository)</span>' : ''}
+            </div>
+          </div>
+        `;
+      }
+      
+      document.getElementById('modalTitle').textContent = app.name;
+      document.getElementById('modalContent').innerHTML = content;
+      detailsModal.classList.add('active');
+      location.hash = 'open';
+    }
+
+    function closeDetailsModal() {
+      if (detailsModal.classList.contains('active')) {
+        location.hash = '';
+      }
+    }
+
+    function openAddAppModal() {
+      currentEditId = null;
+      document.getElementById('editId').value = generateId();
+      document.getElementById('editName').value = '';
+      document.getElementById('editLink').value = '';
+      document.getElementById('editType').value = 'App';
+      document.getElementById('editPlatform').value = 'github pages';
+      document.getElementById('editDescription').value = '';
+      document.getElementById('editReadme').value = '';
+      
+      editModalTitle.textContent = 'Add New App';
+      deleteAppBtn.style.display = 'none';
+      editModal.classList.add('active');
+      location.hash = 'open';
+    }
+
+    function openEditAppModal(appId) {
+      const app = appData.find(a => a.id === appId);
+      if (!app) return;
+      
+      currentEditId = appId;
+      document.getElementById('editId').value = app.id;
+      document.getElementById('editName').value = app.name;
+      document.getElementById('editLink').value = app.link;
+      document.getElementById('editType').value = app.type;
+      document.getElementById('editPlatform').value = app.platform;
+      document.getElementById('editDescription').value = app.description;
+      document.getElementById('editReadme').value = app.readme || '';
+      
+      editModalTitle.textContent = `Edit App: ${app.name}`;
+      deleteAppBtn.style.display = 'block';
+      editModal.classList.add('active');
+      location.hash = 'open';
+    }
+
+    function closeEditModal() {
+      if (editModal.classList.contains('active')) {
+        location.hash = '';
+      }
+    }
+
+    function generateId() {
+      return 'app_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 5);
+    }
+
+    async function saveAppChanges(e) {
+      e.preventDefault();
+      
+      const id = document.getElementById('editId').value;
+      const url = document.getElementById('editLink').value.trim();
+      
+      const app = {
+        id: id,
+        name: document.getElementById('editName').value.trim(),
+        link: url,
+        type: document.getElementById('editType').value.trim(),
+        platform: document.getElementById('editPlatform').value.trim(),
+        description: document.getElementById('editDescription').value.trim(),
+        readme: document.getElementById('editReadme').value.trim()
+      };
+      
+      if (!app.name || !app.link || !app.type || !app.platform || !app.description) {
+        alert('All required fields (marked with *) must be filled');
+        return;
+      }
+      
+      // Generate QR code for new/updated URL
+      try {
+        const qrBase64 = await generateQRCodeCanvas(url);
+        app.qrcode = qrBase64;
+      } catch (error) {
+        console.error('QR Code generation failed:', error);
+        // Continue without QR code
+        app.qrcode = '';
+      }
+      
+      if (currentEditId) {
+        // Update existing app
+        const index = appData.findIndex(a => a.id === currentEditId);
+        if (index !== -1) {
+          appData[index] = app;
+        }
+      } else {
+        // Add new app
+        appData.push(app);
+      }
+      
+      // Save to localStorage
+      saveToLocalStorage();
+      
+      // Refresh UI
+      renderAll();
+      closeEditModal();
+      
+      // Show success message
+      updateStatus('online', currentEditId ? 'App updated successfully!' : 'New app added!');
+      setTimeout(() => {
+        if (statusText.textContent.includes('updated') || statusText.textContent.includes('added')) {
+          updateStatus('online', `Loaded ${appData.length} apps`);
+        }
+      }, 2000);
+    }
+
+    function confirmDeleteApp() {
+      if (!currentEditId) return;
+      
+      const appName = appData.find(a => a.id === currentEditId)?.name || 'this app';
+      
+      if (confirm(`Are you sure you want to delete "${appName}"? This action cannot be undone.`)) {
+        appData = appData.filter(a => a.id !== currentEditId);
+        saveToLocalStorage();
+        renderAll();
+        closeEditModal();
+        
+        updateStatus('online', 'App deleted!');
+        setTimeout(() => {
+          if (statusText.textContent.includes('deleted')) {
+            updateStatus('online', `Loaded ${appData.length} apps`);
+          }
+        }, 2000);
+      }
+    }
+
+    function downloadAppData() {
+      if (!appData.length) {
+        alert('No apps to export. Add some apps first.');
+        return;
+      }
+      
+      // Explicitly create the objects for export to ensure the correct structure,
+      // matching the original appdata.json file.
+      const dataToExport = appData.map(app => ({
+        id: app.id,
+        type: app.type,
+        platform: app.platform,
+        name: app.name,
+        description: app.description,
+        link: app.link,
+        readme: app.readme
+      }));
+
+      const dataStr = JSON.stringify(dataToExport, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+      
+      const exportFileDefaultName = 'appdata.json';
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+      
+      updateStatus('online', 'Data exported successfully!');
+      setTimeout(() => {
+        if (statusText.textContent.includes('exported')) {
+          updateStatus('online', `Loaded ${appData.length} apps`);
+        }
+      }, 2000);
+    }
+
+    // ===== NEW: IMPORT FUNCTIONALITY =====
+    function handleFileSelect(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      
+      // Validate file type
+      if (!file.name.endsWith('.json')) {
+        alert('Please select a valid JSON file');
+        importFileInput.value = ''; // Reset input
+        return;
+      }
+      
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const importedData = JSON.parse(e.target.result);
+          
+          // Validate structure
+          if (!Array.isArray(importedData)) {
+            throw new Error('JSON file must contain an array of apps');
+          }
+          
+          // Validate each app has required fields
+          const isValid = importedData.every(app => 
+            app.name && app.link && app.type && app.platform && app.description
+          );
+          
+          if (!isValid) {
+            throw new Error('Invalid app data structure. Each app must have: name, link, type, platform, description');
+          }
+          
+          // Store data and show import modal
+          pendingImportData = importedData;
+          showImportModal();
+          
+        } catch (error) {
+          alert(`Failed to import JSON: ${error.message}`);
+          console.error('Import error:', error);
+        }
+        
+        // Reset file input
+        importFileInput.value = '';
+      };
+      
+      reader.onerror = () => {
+        alert('Failed to read file');
+        importFileInput.value = '';
+      };
+      
+      reader.readAsText(file);
+    }
+
+    function showImportModal() {
+      document.getElementById('mergeRadio').checked = true;
+      importModal.classList.add('active');
+      location.hash = 'open';
+    }
+
+    function closeImportModal() {
+      if (importModal.classList.contains('active')) {
+        pendingImportData = null;
+        location.hash = '';
+      }
+    }
+
+    async function processImport() {
+      if (!pendingImportData) {
+        closeImportModal();
+        return;
+      }
+      
+      const importType = document.querySelector('input[name="importType"]:checked').value;
+      
+      if (importType === 'replace') {
+        // Replace all data
+        if (!confirm('⚠️ This will DELETE all current apps. Are you sure?')) {
+          return;
+        }
+        appData = pendingImportData;
+      } else {
+        // Merge: Add new apps, avoid duplicates by ID
+        const existingIds = new Set(appData.map(app => app.id));
+        let addedCount = 0;
+        
+        pendingImportData.forEach(importedApp => {
+          if (!existingIds.has(importedApp.id)) {
+            appData.push(importedApp);
+            addedCount++;
+          }
+        });
+        
+        if (addedCount === 0) {
+          alert('No new apps were added. All imported apps already exist.');
+          closeImportModal();
+          return;
+        }
+      }
+      
+      // Generate QR codes for imported apps (in background)
+      generateQRCodesForImportedApps();
+      
+      // Save and refresh
+      saveToLocalStorage();
+      renderAll();
+      closeImportModal();
+      
+      const message = importType === 'replace' 
+        ? `Replaced all data with ${appData.length} apps` 
+        : `Imported successfully! Total apps: ${appData.length}`;
+      
+      updateStatus('online', message);
+      setTimeout(() => {
+        updateStatus('online', `Loaded ${appData.length} apps`);
+      }, 3000);
+    }
+
+    async function generateQRCodesForImportedApps() {
+      // Generate QR codes in background for apps that don't have them
+      for (let i = 0; i < appData.length; i++) {
+        if (!appData[i].qrcode) {
+          try {
+            const qrBase64 = await generateQRCodeCanvas(appData[i].link);
+            appData[i].qrcode = qrBase64;
+          } catch (error) {
+            console.error(`Failed to generate QR for ${appData[i].name}:`, error);
+            appData[i].qrcode = '';
+          }
+        }
+      }
+      saveToLocalStorage();
+    }
+    // ===== END IMPORT FUNCTIONALITY =====
+
+    function addAddAppButton() {
+      const statsBox = document.querySelectorAll('.stat-box')[0];
+      if (statsBox && !statsBox.querySelector('#addAppFloatingBtn')) {
+        const addBtn = document.createElement('button');
+        addBtn.id = 'addAppFloatingBtn';
+        addBtn.className = 'btn btn-primary';
+        addBtn.style.position = 'absolute';
+        addBtn.style.bottom = '-20px';
+        addBtn.style.left = '50%';
+        addBtn.style.transform = 'translateX(-50%)';
+        addBtn.style.width = '120px';
+        addBtn.style.padding = '0.5rem';
+        addBtn.style.fontSize = '0.85rem';
+        addBtn.style.zIndex = '10';
+        addBtn.innerHTML = '<i class="fas fa-plus"></i> Add App';
+        addBtn.onclick = openAddAppModal;
+        statsBox.style.position = 'relative';
+        statsBox.appendChild(addBtn);
+      }
+    }
+
+    // Initialize the app
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/missionctl/sw.js')
+                    .then(registration => {
+                        console.log('✓ Service Worker registered:', registration.scope);
+                        
+                        // Check for updates periodically
+                        setInterval(() => {
+                            registration.update();
+                        }, 60000); // Check every minute
+                    })
+                    .catch(error => {
+                        console.error('✗ Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Show custom install UI
+            showInstallPromotion();
+        });
+
+        function showInstallPromotion() {
+            // You can implement custom install UI here
+            console.log('PWA install prompt available');
+        }
+
+        // Show install button (example)
+        async function installPWA() {
+            if (!deferredPrompt) {
+                return;
+            }
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to install prompt: ${outcome}`);
+            deferredPrompt = null;
+        }
+
+        // Track installation
+        window.addEventListener('appinstalled', () => {
+            console.log('✓ PWA installed successfully');
+            deferredPrompt = null;
+        });
+
+        // Display mode detection
+        function getPWADisplayMode() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            if (document.referrer.startsWith('android-app://')) {
+                return 'twa';
+            } else if (navigator.standalone || isStandalone) {
+                return 'standalone';
+            }
+            return 'browser';
+        }
+
+        console.log('Display mode:', getPWADisplayMode());
+    </script>
+
+    <script>
+        // PWA Service Worker Registration
+        // Generated by PWA Converter v2.0.1
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                // Use RELATIVE path for service worker (works with multi-app setup)
+                navigator.serviceWorker.register('/missionctrl/sw.js')
+                    .then(registration => {
+                        console.log('✓ Service Worker registered:', registration.scope);
+                        console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
+                        console.log('✓ App: Mission Control');
+                        console.log('✓ Folder: missionctrl');
+                        console.log('✓ Total files cached: 5'); // +3 for manifest, sw, offline
+                        
+                        // Check for updates periodically
+                        setInterval(() => {
+                            registration.update();
+                        }, 60000); // Check every minute
+                    })
+                    .catch(error => {
+                        console.error('✗ Service Worker registration failed:', error);
+                    });
+            });
+        } else {
+            console.warn('⚠ Service Workers not supported in this browser');
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('💡 PWA install prompt available');
+            // Show custom install UI
+            showInstallPromotion();
+        });
+
+        function showInstallPromotion() {
+            // You can implement custom install UI here
+            console.log('📱 App can be installed - Click browser menu or use custom UI');
+        }
+
+        // Install PWA function (call from your custom install button)
+        async function installPWA() {
+            if (!deferredPrompt) {
+                console.log('❌ Install prompt not available');
+                return;
+            }
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log(`User response to install prompt: ${outcome}`);
+            deferredPrompt = null;
+        }
+
+        // Track installation
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA installed successfully!');
+            console.log('✅ App: Mission Control');
+            console.log('✅ App ID: missionctrl-id');
+            console.log('✅ Folder: missionctrl');
+            deferredPrompt = null;
+        });
+
+        // Display mode detection
+        function getPWADisplayMode() {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            if (document.referrer.startsWith('android-app://')) {
+                return 'twa';
+            } else if (navigator.standalone || isStandalone) {
+                return 'standalone';
+            }
+            return 'browser';
+        }
+
+        const displayMode = getPWADisplayMode();
+        console.log('🖥️ Display mode:', displayMode);
+        
+        // Log PWA configuration
+        console.log('⚙️ PWA Configuration:');
+        console.log('  - App Name: Mission Control');
+        console.log('  - App ID: missionctrl-id');
+        console.log('  - Start URL: /missionctrl/');
+        console.log('  - Scope: /missionctrl/');
+        console.log('  - Folder: missionctrl');
+        console.log('  - Files included: 2');
+    </script>
+</body>
+</html>

@@ -2,7 +2,8 @@
   "name": "FeedFlow RSS Reader",
   "short_name": "FeedFlow",
   "description": "A fast, beautiful RSS reader with Reddit and web feeds",
-  "start_url": "/my-pwa-apps/feedflow/",
+  "start_url": "/feedflow/",
+  "scope": "/feedflow/",
   "display": "standalone",
   "background_color": "#0a0a0c",
   "theme_color": "#e8c547",
@@ -10,13 +11,13 @@
 
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "/feedflow/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "/feedflow/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

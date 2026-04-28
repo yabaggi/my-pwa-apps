@@ -1,0 +1,42 @@
+~/githubreps/my-pwa-apps $ ltr
+total 234
+-rw-------. 1 u0_a376 u0_a376  1621 Dec  9 22:53 notes.txt
+-rwx------. 1 u0_a376 u0_a376  4072 Dec 11 23:11 baggi_emoji2.png
+-rw-------. 1 u0_a376 u0_a376  3674 Dec 15 14:45 README.md
+-rw-------. 1 u0_a376 u0_a376 21514 Mar 30 23:37 appsdata.json
+-rw-------. 1 u0_a376 u0_a376 42749 Apr 10 09:55 index.html
+-rw-------. 1 u0_a376 u0_a376 10241 Apr 18 21:29 check-pwa.shx
+-rwx------. 1 u0_a376 u0_a376  1102 Apr 18 21:29 indxfix.sh
+-rw-------. 1 u0_a376 u0_a376 11044 Apr 18 21:29 fix-for-github-pages.sh
+drwx------. 3 u0_a376 u0_a376  3452 Apr 18 21:29 books-store-new
+drwx------. 4 u0_a376 u0_a376  3452 Apr 18 21:29 booksshelf
+drwx------. 2 u0_a376 u0_a376  3452 Apr 18 21:29 nextapp
+drwx------. 3 u0_a376 u0_a376  3452 Apr 18 21:29 openverse
+-rw-------. 1 u0_a376 u0_a376  1774 Apr 18 21:42 issues.txt
+-rw-------. 1 u0_a376 u0_a376 18347 Apr 19 21:59 check-pwa.sh
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 15:19 peco
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:21 qibla
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 ltaapp
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 promaker
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 imgutls
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 games
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 missionctrl
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 agentgen
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 prom
+drwx------. 4 u0_a376 u0_a376  3452 Apr 28 17:22 hadith
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 quransearch
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 appshells
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 logo
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 vplayer
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 prom2
+drwx------. 5 u0_a376 u0_a376  3452 Apr 28 17:22 quotes
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 img2asset
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 foodorderui
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 agents2frontend
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 mosquesui
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 discoverquran
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 lpage-gen
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 placeholder
+drwx------. 4 u0_a376 u0_a376  3452 Apr 28 17:22 feedflow
+drwx------. 3 u0_a376 u0_a376  3452 Apr 28 17:22 web2pwa
+~/githubreps/my-pwa-apps $

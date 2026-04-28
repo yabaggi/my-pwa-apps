@@ -66,7 +66,7 @@ body.dark-mode label[for="play-next10"]{color:#e0e0e0}
 body.dark-mode #reciter-info{color:#e0e0e0}
 </style>
     <meta name="theme-color" content="#2196f3">
-    <link rel="manifest" href="/my-pwa-apps/discoverquran/manifest.json">
+    <link rel="manifest" href="/discoverquran/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="مع القرآن ال">
@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 // Use RELATIVE path for service worker (works with multi-app setup)
-                navigator.serviceWorker.register('/my-pwa-apps/discoverquran/sw.js')
+                navigator.serviceWorker.register('/discoverquran/sw.js')
                     .then(registration => {
                         console.log('✓ Service Worker registered:', registration.scope);
                         console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');

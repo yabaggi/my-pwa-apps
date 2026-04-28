@@ -6,14 +6,23 @@
  * Total Files Cached: 5
  */
 
-const CACHE_NAME = 'logo-gh1';
-const OFFLINE_URL = '/my-pwa-apps/logo/offline.html';
+const CACHE_NAME = 'logo-v5';
+const OFFLINE_URL = '/logo/offline.html';
 
 const urlsToCache = [
-  "./",
-  "./index.html",
-  "./manifest.json",
-  "./offline.html"
+  "/logo/favicon.ico",
+  "/logo/",
+  "/logo/index.html",
+  "/logo/manifest.json",
+  "/logo/offline.html",
+  "/logo/icons/icon-72x72.png",
+  "/logo/icons/icon-96x96.png",
+  "/logo/icons/icon-128x128.png",
+  "/logo/icons/icon-144x144.png",
+  "/logo/icons/icon-152x152.png",
+  "/logo/icons/icon-192x192.png",
+  "/logo/icons/icon-384x384.png",
+  "/logo/icons/icon-512x512.png"
 ];
 
 // Install event - cache ALL resources
@@ -29,6 +38,13 @@ self.addEventListener('install', event => {
             .then(() => {
                 console.log('[Service Worker] All files cached successfully');
                 return self.skipWaiting();
+            }).then(() => {
+                // Request persistent storage to prevent cache eviction
+                if (navigator.storage && navigator.storage.persist) {
+                    navigator.storage.persist().then(granted => {
+                        console.log('[Service Worker] Persistent storage granted:', granted);
+                    });
+                }
             })
             .catch(error => {
                 console.error('[Service Worker] Cache failed:', error);
@@ -43,7 +59,10 @@ self.addEventListener('activate', event => {
         caches.keys().then(cacheNames => {
             return Promise.all(
                 cacheNames
-                    .filter(name => name !== CACHE_NAME)
+                    .filter(name => {
+                        const cachePrefix = CACHE_NAME.replace(/-v\d+$/, "");
+                        return name.startsWith(cachePrefix + "-") && name !== CACHE_NAME;
+                    })
                     .map(name => {
                         console.log('[Service Worker] Deleting old cache:', name);
                         return caches.delete(name);
@@ -53,32 +72,41 @@ self.addEventListener('activate', event => {
     );
 });
 
-// Fetch event - serve from cache or network
+// Fetch event - Optimized Cache-First Strategy
 self.addEventListener('fetch', event => {
-        // Stale While Revalidate Strategy - Balanced approach
-    if (event.request.method !== 'GET') {
+    if (event.request.method !== 'GET') return;
+
+    // Handle Favicon
+    if (event.request.url.includes('favicon.ico')) {
+        event.respondWith(
+            caches.match(event.request).then(response => {
+                return response || fetch(event.request).catch(() => new Response(null, { status: 204 }));
+            })
+        );
         return;
     }
 
+    // Main Strategy: Cache-First
     event.respondWith(
         caches.match(event.request).then(cachedResponse => {
-            const fetchPromise = fetch(event.request).then(response => {
-                if (response.status === 200) {
+            // If found in cache, return immediately
+            if (cachedResponse) return cachedResponse;
+
+            // Otherwise, get from network and add to cache
+            return fetch(event.request).then(response => {
+                if (response && response.status === 200) {
                     const responseToCache = response.clone();
                     caches.open(CACHE_NAME).then(cache => {
                         cache.put(event.request, responseToCache);
                     });
                 }
                 return response;
-            }).catch(error => {
-                
+            }).catch(() => {
+                // If offline and navigating, show offline page
                 if (isNavigationRequest(event.request)) {
                     return caches.match(OFFLINE_URL);
                 }
-                throw error;
             });
-
-            return cachedResponse || fetchPromise;
         })
     );
 });

@@ -1,0 +1,93 @@
+[
+  {
+    "id": "Rawdata-001",
+    "type": "App",
+    "platform": "github pages",
+    "name": "Rawdata",
+    "description": "#",
+    "link": "https://yabaggi.github.io/Rawdata/",
+    "readme": "#"
+  },
+  {
+    "id": "Web2PWA-001",
+    "type": "App",
+    "platform": "github pages",
+    "name": "Web2PWA",
+    "description": "#",
+    "link": "https://yabaggi.github.io/Web2PWA/",
+    "readme": "#"
+  },
+  {
+    "id": "Promaker-001",
+    "type": "App",
+    "platform": "github pages",
+    "name": "Promaker",
+    "description": "#",
+    "link": "https://yabaggi.github.io/Promaker/",
+    "readme": "#"
+  },
+  {
+    "id": "Apiscollection-001",
+    "type": "App",
+    "platform": "github pages",
+    "name": "Apiscollection",
+    "description": "#",
+    "link": "https://yabaggi.github.io/Apiscollection/",
+    "readme": "#"
+  },
+  {
+    "id": "imgutls-001",
+    "type": "App",
+    "platform": "github pages",
+    "name": "imgutls",
+    "description": "#",
+    "link": "https://yabaggi.github.io/imgutls/",
+    "readme": "#"
+  },
+  {
+    "id": "DiscoverQuran-001",
+    "type": "App",
+    "platform": "github pages",
+    "name": "DiscoverQuran",
+    "description": "#",
+    "link": "https://yabaggi.github.io/DiscoverQuran/",
+    "readme": "#"
+  },
+  {
+    "id": "QuranSearch-001",
+    "type": "App",
+    "platform": "github pages",
+    "name": "QuranSearch",
+    "description": "#",
+    "link": "https://yabaggi.github.io/QuranSearch/",
+    "readme": "#"
+  },
+  {
+    "id": "openverse-001",
+    "type": "App",
+    "platform": "github pages",
+    "name": "openverse",
+    "description": "#",
+    "link": "https://yabaggi.github.io/openverse/",
+    "readme": "#"
+  },
+  {
+    "id": "booksTore-001",
+    "type": "App",
+    "platform": "github pages",
+    "name": "booksTore",
+    "description": "#",
+    "link": "https://yabaggi.github.io/booksTore/",
+    "readme": "#"
+  },
+  {
+    "id": "books-store-new-001",
+    "type": "App",
+    "platform": "github pages",
+    "name": "books-store-new",
+    "description": "#",
+    "link": "https://yabaggi.github.io/books-store-new/",
+    "readme": "#"
+  }
+]
+
