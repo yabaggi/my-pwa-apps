@@ -7,17 +7,17 @@
 'use strict';
 
 const CACHE_NAME = 'games-v1';
-const OFFLINE_URL = '/games/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/games/offline.html';
 const urlsToCache = [
-  "/games/favicon.ico",
-  "/games/",
-  "/games/index.html",
-  "/games/manifest.json",
-  "/games/offline.html",
-  "/games/icons/icon-72x72.png",
-  "/games/icons/icon-192x192.png",
-  "/games/icons/icon-384x384.png",
-  "/games/icons/icon-512x512.png"
+  "/my-pwa-apps/games/favicon.ico",
+  "/my-pwa-apps/games/",
+  "/my-pwa-apps/games/index.html",
+  "/my-pwa-apps/games/manifest.json",
+  "/my-pwa-apps/games/offline.html",
+  "/my-pwa-apps/games/icons/icon-72x72.png",
+  "/my-pwa-apps/games/icons/icon-192x192.png",
+  "/my-pwa-apps/games/icons/icon-384x384.png",
+  "/my-pwa-apps/games/icons/icon-512x512.png"
 ];
 
 self.addEventListener('install', event => {
@@ -110,4 +110,4 @@ function isNavigationRequest(request) {
 }
 
 console.log('[Service Worker] Loaded successfully for GameHub - Discover Free Games');
-console.log('[Service Worker] Scope: /games/');
+console.log('[Service Worker] Scope: /my-pwa-apps/games/');

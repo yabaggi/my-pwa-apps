@@ -7,23 +7,23 @@
  */
 
 const CACHE_NAME = 'prom-v5';
-const OFFLINE_URL = '/prom/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/prom/offline.html';
 
 const urlsToCache = [
-  "/prom/favicon.ico",
-  "/prom/icons/icon-72x72.png", 
-  "/prom/icons/icon-96x96.png", 
-  "/prom/icons/icon-128x128.png", 
-  "/prom/icons/icon-144x144.png", 
-  "/prom/icons/icon-152x152.png", 
-  "/prom/icons/icon-192x192.png", 
-  "/prom/icons/icon-384x384.png", 
-  "/prom/icons/icon-512x512.png",
-  "/prom/",
-  "/prom/index.html",
-  "/prom/manifest.json",
-  "/prom/prompts-copy.json",
-  "/prom/offline.html"
+  "/my-pwa-apps/prom/favicon.ico",
+  "/my-pwa-apps/prom/icons/icon-72x72.png", 
+  "/my-pwa-apps/prom/icons/icon-96x96.png", 
+  "/my-pwa-apps/prom/icons/icon-128x128.png", 
+  "/my-pwa-apps/prom/icons/icon-144x144.png", 
+  "/my-pwa-apps/prom/icons/icon-152x152.png", 
+  "/my-pwa-apps/prom/icons/icon-192x192.png", 
+  "/my-pwa-apps/prom/icons/icon-384x384.png", 
+  "/my-pwa-apps/prom/icons/icon-512x512.png",
+  "/my-pwa-apps/prom/",
+  "/my-pwa-apps/prom/index.html",
+  "/my-pwa-apps/prom/manifest.json",
+  "/my-pwa-apps/prom/prompts-copy.json",
+  "/my-pwa-apps/prom/offline.html"
 ];
 
 // Install event - cache ALL resources
@@ -133,5 +133,5 @@ function isNavigationRequest(request) {
 }
 
 console.log('[Service Worker] Loaded successfully for Prompt Explorer');
-console.log('[Service Worker] Scope: /prom/');
+console.log('[Service Worker] Scope: /my-pwa-apps/prom/');
 console.log('[Service Worker] Caching 6 files including all your assets');

@@ -618,7 +618,7 @@
     }
   </style>
     <meta name="theme-color" content="#2196f3">
-    <link rel="manifest" href="/agents2frontend/manifest.json">
+    <link rel="manifest" href="/my-pwa-apps/agents2frontend/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Edu App Test">
@@ -1611,7 +1611,7 @@ index 1234567..abcdefg 100644
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 // Use RELATIVE path for service worker (works with multi-app setup)
-                navigator.serviceWorker.register('/agents2frontend/sw.js')
+                navigator.serviceWorker.register('/my-pwa-apps/agents2frontend/sw.js')
                     .then(registration => {
                         console.log('✓ Service Worker registered:', registration.scope);
                         console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
@@ -1686,8 +1686,8 @@ index 1234567..abcdefg 100644
         console.log('⚙️ PWA Configuration:');
         console.log('  - App Name: Edu App Test Client');
         console.log('  - App ID: agents2frontend-id');
-        console.log('  - Start URL: /agents2frontend/');
-        console.log('  - Scope: /agents2frontend/');
+        console.log('  - Start URL: /my-pwa-apps/agents2frontend/');
+        console.log('  - Scope: /my-pwa-apps/agents2frontend/');
         console.log('  - Folder: agents2frontend');
         console.log('  - Files included: 2');
     </script>

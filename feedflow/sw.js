@@ -1,18 +1,18 @@
 const CACHE_NAME = 'feedflow-v9';
-const OFFLINE_URL = '/feedflow/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/feedflow/offline.html';
 // Files to cache immediately on install (app shell)
 const urlsToCache = [
-  "/feedflow/favicon.ico",
-  "/feedflow/icons/icon-72x72.png", 
-  "/feedflow/icons/icon-96x96.png", 
-  "/feedflow/icons/icon-128x128.png", 
-  "/feedflow/icons/icon-144x144.png", 
-  "/feedflow/icons/icon-152x152.png", 
-  "/feedflow/icons/icon-192x192.png", 
-  "/feedflow/icons/icon-384x384.png", 
-  "/feedflow/icons/icon-512x512.png",
-  '/feedflow/',
-  '/feedflow/index.html',
+  "/my-pwa-apps/feedflow/favicon.ico",
+  "/my-pwa-apps/feedflow/icons/icon-72x72.png", 
+  "/my-pwa-apps/feedflow/icons/icon-96x96.png", 
+  "/my-pwa-apps/feedflow/icons/icon-128x128.png", 
+  "/my-pwa-apps/feedflow/icons/icon-144x144.png", 
+  "/my-pwa-apps/feedflow/icons/icon-152x152.png", 
+  "/my-pwa-apps/feedflow/icons/icon-192x192.png", 
+  "/my-pwa-apps/feedflow/icons/icon-384x384.png", 
+  "/my-pwa-apps/feedflow/icons/icon-512x512.png",
+  '/my-pwa-apps/feedflow/',
+  '/my-pwa-apps/feedflow/index.html',
 ];
 
 // ── Install: cache the app shell ─────────────────────────────────────────

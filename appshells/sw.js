@@ -7,21 +7,21 @@
 'use strict';
 
 const CACHE_NAME = 'appshells-v4';
-const OFFLINE_URL = '/appshells/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/appshells/offline.html';
 const urlsToCache = [
-  "/appshells/favicon.ico",
-  "/appshells/icons/icon-72x72.png", 
-  "/appshells/icons/icon-96x96.png", 
-  "/appshells/icons/icon-128x128.png", 
-  "/appshells/icons/icon-144x144.png", 
-  "/appshells/icons/icon-152x152.png", 
-  "/appshells/icons/icon-192x192.png", 
-  "/appshells/icons/icon-384x384.png", 
-  "/appshells/icons/icon-512x512.png",
-  "/appshells/",
-  "/appshells/index.html",
-  "/appshells/manifest.json",
-  "/appshells/offline.html"
+  "/my-pwa-apps/appshells/favicon.ico",
+  "/my-pwa-apps/appshells/icons/icon-72x72.png", 
+  "/my-pwa-apps/appshells/icons/icon-96x96.png", 
+  "/my-pwa-apps/appshells/icons/icon-128x128.png", 
+  "/my-pwa-apps/appshells/icons/icon-144x144.png", 
+  "/my-pwa-apps/appshells/icons/icon-152x152.png", 
+  "/my-pwa-apps/appshells/icons/icon-192x192.png", 
+  "/my-pwa-apps/appshells/icons/icon-384x384.png", 
+  "/my-pwa-apps/appshells/icons/icon-512x512.png",
+  "/my-pwa-apps/appshells/",
+  "/my-pwa-apps/appshells/index.html",
+  "/my-pwa-apps/appshells/manifest.json",
+  "/my-pwa-apps/appshells/offline.html"
 ];
 
 self.addEventListener('install', event => {

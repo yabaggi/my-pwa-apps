@@ -3,33 +3,33 @@
   "name": "PWA Converter - Transform Web Apps into Progressive Web Apps",
   "short_name": "PWA Converte",
   "description": "Convert your web app into a Progressive Web App instantly. Free online PWA converter tool.",
-  "start_url": "/web2pwa/",
-  "scope": "/web2pwa/",
+  "start_url": "/my-pwa-apps/web2pwa/",
+  "scope": "/my-pwa-apps/web2pwa/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#24898c",
   "background_color": "#ffffff",
   "icons": [
     {
-      "src": "/web2pwa/icons/icon-72x72.png",
+      "src": "/my-pwa-apps/web2pwa/icons/icon-72x72.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/web2pwa/icons/icon-192x192.png",
+      "src": "/my-pwa-apps/web2pwa/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/web2pwa/icons/icon-384x384.png",
+      "src": "/my-pwa-apps/web2pwa/icons/icon-384x384.png",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/web2pwa/icons/icon-512x512.png",
+      "src": "/my-pwa-apps/web2pwa/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

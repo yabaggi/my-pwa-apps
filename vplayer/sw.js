@@ -7,18 +7,18 @@
 'use strict';
 
 const CACHE_NAME = 'vplayer-v3';
-const OFFLINE_URL = '/vplayer/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/vplayer/offline.html';
 const urlsToCache = [
-  "/vplayer/favicon.ico",
-  "/vplayer/",
-  "/vplayer/index.html",
-  "/vplayer/manifest.json",
-  "/vplayer/offline.html",
-  "/vplayer/icons/icon-72x72.png",
-  "/vplayer/icons/icon-192x192.png",
-  "/vplayer/icons/icon-384x384.png",
-  "/vplayer/icons/icon-512x512.png",
-  "/vplayer/loadvideos.html"
+  "/my-pwa-apps/vplayer/favicon.ico",
+  "/my-pwa-apps/vplayer/",
+  "/my-pwa-apps/vplayer/index.html",
+  "/my-pwa-apps/vplayer/manifest.json",
+  "/my-pwa-apps/vplayer/offline.html",
+  "/my-pwa-apps/vplayer/icons/icon-72x72.png",
+  "/my-pwa-apps/vplayer/icons/icon-192x192.png",
+  "/my-pwa-apps/vplayer/icons/icon-384x384.png",
+  "/my-pwa-apps/vplayer/icons/icon-512x512.png",
+  "/my-pwa-apps/vplayer/loadvideos.html"
 ];
 
 self.addEventListener('install', event => {
@@ -111,4 +111,4 @@ function isNavigationRequest(request) {
 }
 
 console.log('[Service Worker] Loaded successfully for Video Player App');
-console.log('[Service Worker] Scope: /vplayer/');
+console.log('[Service Worker] Scope: /my-pwa-apps/vplayer/');

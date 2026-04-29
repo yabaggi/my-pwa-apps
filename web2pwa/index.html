@@ -18,7 +18,7 @@
     <!-- Favicon -->
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="/web2pwa/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/my-pwa-apps/web2pwa/icons/icon-192x192.png">
 </head>
 <body>
     <div class="container">
@@ -563,7 +563,7 @@
         // PWA Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/web2pwa/sw.js', { scope: '/web2pwa/' })
+                navigator.serviceWorker.register('/my-pwa-apps/web2pwa/sw.js', { scope: '/my-pwa-apps/web2pwa/' })
                     .then(registration => {
                         console.log('[PWA] Service Worker registered:', registration.scope);
                     })

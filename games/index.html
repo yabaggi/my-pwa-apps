@@ -1023,9 +1023,9 @@
         }
     </style>
     <meta name="theme-color" content="#2196f3">
-    <link rel="manifest" href="/games/manifest.json">
+    <link rel="manifest" href="/my-pwa-apps/games/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="/games/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/my-pwa-apps/games/icons/icon-192x192.png">
 </head>
 <body>
     <!-- Loading Screen -->
@@ -1383,7 +1383,7 @@
                     thumbnail: "https://picsum.photos/seed/apex/300/200.jpg",
                     short_description: "A free-to-play battle royale game.",
                     description: "Apex Legends is a free-to-play battle royale game where legendary competitors battle for glory.",
-                    game_url: "https://www.ea.com/games/apex-legends",
+                    game_url: "https://www.ea.com/my-pwa-apps/games/apex-legends",
                     genre: "Shooter",
                     platform: "PC (Windows)",
                     publisher: "Electronic Arts",
@@ -1871,7 +1871,7 @@
         // PWA Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/games/sw.js', { scope: '/games/' })
+                navigator.serviceWorker.register('/my-pwa-apps/games/sw.js', { scope: '/my-pwa-apps/games/' })
                     .then(registration => {
                         console.log('[PWA] Service Worker registered:', registration.scope);
                     })

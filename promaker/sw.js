@@ -7,25 +7,25 @@
  */
 
 const CACHE_NAME = 'promaker-v4';
-const OFFLINE_URL = '/promaker/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/promaker/offline.html';
 
 const urlsToCache = [
-  "/promaker/favicon.ico",
-  "/promaker/icons/icon-72x72.png", 
-  "/promaker/icons/icon-96x96.png", 
-  "/promaker/icons/icon-128x128.png", 
-  "/promaker/icons/icon-144x144.png", 
-  "/promaker/icons/icon-152x152.png", 
-  "/promaker/icons/icon-192x192.png", 
-  "/promaker/icons/icon-384x384.png", 
-  "/promaker/icons/icon-512x512.png",
-  "/promaker/",
-  "/promaker/index.html",
-  "/promaker/manifest.json",
-  "/promaker/data.json",
-  "/promaker/script.js",
-  "/promaker/style.css",
-  "/promaker/offline.html"
+  "/my-pwa-apps/promaker/favicon.ico",
+  "/my-pwa-apps/promaker/icons/icon-72x72.png", 
+  "/my-pwa-apps/promaker/icons/icon-96x96.png", 
+  "/my-pwa-apps/promaker/icons/icon-128x128.png", 
+  "/my-pwa-apps/promaker/icons/icon-144x144.png", 
+  "/my-pwa-apps/promaker/icons/icon-152x152.png", 
+  "/my-pwa-apps/promaker/icons/icon-192x192.png", 
+  "/my-pwa-apps/promaker/icons/icon-384x384.png", 
+  "/my-pwa-apps/promaker/icons/icon-512x512.png",
+  "/my-pwa-apps/promaker/",
+  "/my-pwa-apps/promaker/index.html",
+  "/my-pwa-apps/promaker/manifest.json",
+  "/my-pwa-apps/promaker/data.json",
+  "/my-pwa-apps/promaker/script.js",
+  "/my-pwa-apps/promaker/style.css",
+  "/my-pwa-apps/promaker/offline.html"
 ];
 
 // Install event - cache ALL resources
@@ -135,5 +135,5 @@ function isNavigationRequest(request) {
 }
 
 console.log('[Service Worker] Loaded successfully for Website Prompt Builder - HTML/CSS/JS');
-console.log('[Service Worker] Scope: /promaker/');
+console.log('[Service Worker] Scope: /my-pwa-apps/promaker/');
 console.log('[Service Worker] Caching 9 files including all your assets');

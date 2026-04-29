@@ -7,20 +7,20 @@
 'use strict';
 
 const CACHE_NAME = 'web2pwa-v3';
-const OFFLINE_URL = '/web2pwa/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/web2pwa/offline.html';
 const urlsToCache = [
-  "/web2pwa/favicon.ico",
-  "/web2pwa/",
-  "/web2pwa/index.html",
-  "/web2pwa/manifest.json",
-  "/web2pwa/offline.html",
-  "/web2pwa/icons/icon-72x72.png",
-  "/web2pwa/icons/icon-192x192.png",
-  "/web2pwa/icons/icon-384x384.png",
-  "/web2pwa/icons/icon-512x512.png",
-  "/web2pwa/script.js",
-  "/web2pwa/styles.css",
-  "/web2pwa/script.js8icons"
+  "/my-pwa-apps/web2pwa/favicon.ico",
+  "/my-pwa-apps/web2pwa/",
+  "/my-pwa-apps/web2pwa/index.html",
+  "/my-pwa-apps/web2pwa/manifest.json",
+  "/my-pwa-apps/web2pwa/offline.html",
+  "/my-pwa-apps/web2pwa/icons/icon-72x72.png",
+  "/my-pwa-apps/web2pwa/icons/icon-192x192.png",
+  "/my-pwa-apps/web2pwa/icons/icon-384x384.png",
+  "/my-pwa-apps/web2pwa/icons/icon-512x512.png",
+  "/my-pwa-apps/web2pwa/script.js",
+  "/my-pwa-apps/web2pwa/styles.css",
+  "/my-pwa-apps/web2pwa/script.js8icons"
 ];
 
 self.addEventListener('install', event => {
@@ -113,4 +113,4 @@ function isNavigationRequest(request) {
 }
 
 console.log('[Service Worker] Loaded successfully for PWA Converter - Transform Web Apps into Progressive Web Apps');
-console.log('[Service Worker] Scope: /web2pwa/');
+console.log('[Service Worker] Scope: /my-pwa-apps/web2pwa/');

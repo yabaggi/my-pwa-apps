@@ -7,29 +7,29 @@
  */
 
 const CACHE_NAME = 'quotes-v4';
-const OFFLINE_URL = '/quotes/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/quotes/offline.html';
 
 const urlsToCache = [
-  "/quotes/favicon.ico",
-  "/quotes/icons/icon-72x72.png", 
-  "/quotes/icons/icon-96x96.png", 
-  "/quotes/icons/icon-128x128.png", 
-  "/quotes/icons/icon-144x144.png", 
-  "/quotes/icons/icon-152x152.png", 
-  "/quotes/icons/icon-192x192.png", 
-  "/quotes/icons/icon-384x384.png", 
-  "/quotes/icons/icon-512x512.png",
-  "/quotes/",
-  "/quotes/index.html",
-  "/quotes/manifest.json",
-  "/quotes/arabic-quotes.json",
-  "/quotes/app.js",
-  "/quotes/top50authors.json",
-  "/quotes/top50categories.json",
-  "/quotes/random_quotes_splits/quotes_1.json",
-  "/quotes/random_quotes_splits/quotes_11.json",
-  "/quotes/random_quotes_splits/manifest.json",
-  "/quotes/offline.html"
+  "/my-pwa-apps/quotes/favicon.ico",
+  "/my-pwa-apps/quotes/icons/icon-72x72.png", 
+  "/my-pwa-apps/quotes/icons/icon-96x96.png", 
+  "/my-pwa-apps/quotes/icons/icon-128x128.png", 
+  "/my-pwa-apps/quotes/icons/icon-144x144.png", 
+  "/my-pwa-apps/quotes/icons/icon-152x152.png", 
+  "/my-pwa-apps/quotes/icons/icon-192x192.png", 
+  "/my-pwa-apps/quotes/icons/icon-384x384.png", 
+  "/my-pwa-apps/quotes/icons/icon-512x512.png",
+  "/my-pwa-apps/quotes/",
+  "/my-pwa-apps/quotes/index.html",
+  "/my-pwa-apps/quotes/manifest.json",
+  "/my-pwa-apps/quotes/arabic-quotes.json",
+  "/my-pwa-apps/quotes/app.js",
+  "/my-pwa-apps/quotes/top50authors.json",
+  "/my-pwa-apps/quotes/top50categories.json",
+  "/my-pwa-apps/quotes/random_quotes_splits/quotes_1.json",
+  "/my-pwa-apps/quotes/random_quotes_splits/quotes_11.json",
+  "/my-pwa-apps/quotes/random_quotes_splits/manifest.json",
+  "/my-pwa-apps/quotes/offline.html"
 ];
 
 // Install event - cache ALL resources
@@ -139,5 +139,5 @@ function isNavigationRequest(request) {
 }
 
 console.log('[Service Worker] Loaded successfully for Quote Finder');
-console.log('[Service Worker] Scope: /quotes/');
+console.log('[Service Worker] Scope: /my-pwa-apps/quotes/');
 console.log('[Service Worker] Caching 14 files including all your assets');

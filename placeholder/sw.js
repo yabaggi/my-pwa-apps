@@ -7,21 +7,21 @@
 'use strict';
 
 const CACHE_NAME = 'placeholder-v4';
-const OFFLINE_URL = '/placeholder/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/placeholder/offline.html';
 const urlsToCache = [
-  "/placeholder/favicon.ico",
-  "/placeholder/icons/icon-72x72.png", 
-  "/placeholder/icons/icon-96x96.png", 
-  "/placeholder/icons/icon-128x128.png", 
-  "/placeholder/icons/icon-144x144.png", 
-  "/placeholder/icons/icon-152x152.png", 
-  "/placeholder/icons/icon-192x192.png", 
-  "/placeholder/icons/icon-384x384.png", 
-  "/placeholder/icons/icon-512x512.png",
-  "/placeholder/",
-  "/placeholder/index.html",
-  "/placeholder/manifest.json",
-  "/placeholder/offline.html"
+  "/my-pwa-apps/placeholder/favicon.ico",
+  "/my-pwa-apps/placeholder/icons/icon-72x72.png", 
+  "/my-pwa-apps/placeholder/icons/icon-96x96.png", 
+  "/my-pwa-apps/placeholder/icons/icon-128x128.png", 
+  "/my-pwa-apps/placeholder/icons/icon-144x144.png", 
+  "/my-pwa-apps/placeholder/icons/icon-152x152.png", 
+  "/my-pwa-apps/placeholder/icons/icon-192x192.png", 
+  "/my-pwa-apps/placeholder/icons/icon-384x384.png", 
+  "/my-pwa-apps/placeholder/icons/icon-512x512.png",
+  "/my-pwa-apps/placeholder/",
+  "/my-pwa-apps/placeholder/index.html",
+  "/my-pwa-apps/placeholder/manifest.json",
+  "/my-pwa-apps/placeholder/offline.html"
 ];
 
 self.addEventListener('install', event => {

@@ -7,24 +7,24 @@
 'use strict';
 
 const CACHE_NAME = 'quransearch-v4';
-const OFFLINE_URL = '/quransearch/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/quransearch/offline.html';
 const urlsToCache = [
-  "/quransearch/favicon.ico",
-  "/quransearch/icons/icon-72x72.png", 
-  "/quransearch/icons/icon-96x96.png", 
-  "/quransearch/icons/icon-128x128.png", 
-  "/quransearch/icons/icon-144x144.png", 
-  "/quransearch/icons/icon-152x152.png", 
-  "/quransearch/icons/icon-192x192.png", 
-  "/quransearch/icons/icon-384x384.png", 
-  "/quransearch/icons/icon-512x512.png",
-  "/quransearch/",
-  "/quransearch/index.html",
-  "/quransearch/manifest.json",
-  "/quransearch/offline.html",
-  "/quransearch/quran.json",
-  "/quransearch/surahs.json",
-  "/quransearch/favicon-32x32.png"
+  "/my-pwa-apps/quransearch/favicon.ico",
+  "/my-pwa-apps/quransearch/icons/icon-72x72.png", 
+  "/my-pwa-apps/quransearch/icons/icon-96x96.png", 
+  "/my-pwa-apps/quransearch/icons/icon-128x128.png", 
+  "/my-pwa-apps/quransearch/icons/icon-144x144.png", 
+  "/my-pwa-apps/quransearch/icons/icon-152x152.png", 
+  "/my-pwa-apps/quransearch/icons/icon-192x192.png", 
+  "/my-pwa-apps/quransearch/icons/icon-384x384.png", 
+  "/my-pwa-apps/quransearch/icons/icon-512x512.png",
+  "/my-pwa-apps/quransearch/",
+  "/my-pwa-apps/quransearch/index.html",
+  "/my-pwa-apps/quransearch/manifest.json",
+  "/my-pwa-apps/quransearch/offline.html",
+  "/my-pwa-apps/quransearch/quran.json",
+  "/my-pwa-apps/quransearch/surahs.json",
+  "/my-pwa-apps/quransearch/favicon-32x32.png"
 ];
 
 self.addEventListener('install', event => {

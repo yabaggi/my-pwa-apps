@@ -7,21 +7,21 @@
 'use strict';
 
 const CACHE_NAME = 'peco-v5';
-const OFFLINE_URL = '/peco/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/peco/offline.html';
 const urlsToCache = [
-  "/peco/favicon.ico",
-  "/peco/icons/icon-72x72.png", 
-  "/peco/icons/icon-96x96.png", 
-  "/peco/icons/icon-128x128.png", 
-  "/peco/icons/icon-144x144.png", 
-  "/peco/icons/icon-152x152.png", 
-  "/peco/icons/icon-192x192.png", 
-  "/peco/icons/icon-384x384.png", 
-  "/peco/icons/icon-512x512.png",
-  "/peco/",
-  "/peco/index.html",
-  "/peco/manifest.json",
-  "/peco/offline.html"
+  "/my-pwa-apps/peco/favicon.ico",
+  "/my-pwa-apps/peco/icons/icon-72x72.png", 
+  "/my-pwa-apps/peco/icons/icon-96x96.png", 
+  "/my-pwa-apps/peco/icons/icon-128x128.png", 
+  "/my-pwa-apps/peco/icons/icon-144x144.png", 
+  "/my-pwa-apps/peco/icons/icon-152x152.png", 
+  "/my-pwa-apps/peco/icons/icon-192x192.png", 
+  "/my-pwa-apps/peco/icons/icon-384x384.png", 
+  "/my-pwa-apps/peco/icons/icon-512x512.png",
+  "/my-pwa-apps/peco/",
+  "/my-pwa-apps/peco/index.html",
+  "/my-pwa-apps/peco/manifest.json",
+  "/my-pwa-apps/peco/offline.html"
 ];
 
 self.addEventListener('install', event => {

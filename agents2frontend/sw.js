@@ -7,23 +7,23 @@
  */
 
 const CACHE_NAME = 'agents2frontend-v4';
-const OFFLINE_URL = '/agents2frontend/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/agents2frontend/offline.html';
 
 const urlsToCache = [
-  "/agents2frontend/favicon.ico",
-  "/agents2frontend/icons/icon-72x72.png", 
-  "/agents2frontend/icons/icon-96x96.png", 
-  "/agents2frontend/icons/icon-128x128.png", 
-  "/agents2frontend/icons/icon-144x144.png", 
-  "/agents2frontend/icons/icon-152x152.png", 
-  "/agents2frontend/icons/icon-192x192.png", 
-  "/agents2frontend/icons/icon-384x384.png", 
-  "/agents2frontend/icons/icon-512x512.png",
-  "/agents2frontend/",
-  "/agents2frontend/index.html",
-  "/agents2frontend/manifest.json",
-  "/agents2frontend/models.json",
-  "/agents2frontend/offline.html"
+  "/my-pwa-apps/agents2frontend/favicon.ico",
+  "/my-pwa-apps/agents2frontend/icons/icon-72x72.png", 
+  "/my-pwa-apps/agents2frontend/icons/icon-96x96.png", 
+  "/my-pwa-apps/agents2frontend/icons/icon-128x128.png", 
+  "/my-pwa-apps/agents2frontend/icons/icon-144x144.png", 
+  "/my-pwa-apps/agents2frontend/icons/icon-152x152.png", 
+  "/my-pwa-apps/agents2frontend/icons/icon-192x192.png", 
+  "/my-pwa-apps/agents2frontend/icons/icon-384x384.png", 
+  "/my-pwa-apps/agents2frontend/icons/icon-512x512.png",
+  "/my-pwa-apps/agents2frontend/",
+  "/my-pwa-apps/agents2frontend/index.html",
+  "/my-pwa-apps/agents2frontend/manifest.json",
+  "/my-pwa-apps/agents2frontend/models.json",
+  "/my-pwa-apps/agents2frontend/offline.html"
 ];
 
 // Install event - cache ALL resources
@@ -133,5 +133,5 @@ function isNavigationRequest(request) {
 }
 
 console.log('[Service Worker] Loaded successfully for Edu App Test Client');
-console.log('[Service Worker] Scope: /agents2frontend/');
+console.log('[Service Worker] Scope: /my-pwa-apps/agents2frontend/');
 console.log('[Service Worker] Caching 6 files including all your assets');

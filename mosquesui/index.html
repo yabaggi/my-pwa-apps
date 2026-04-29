@@ -19,9 +19,9 @@
   
     
     <meta name="theme-color" content="#2196f3">
-    <link rel="manifest" href="/mosquesui/manifest.json">
+    <link rel="manifest" href="/my-pwa-apps/mosquesui/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="/mosquesui/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/my-pwa-apps/mosquesui/icons/icon-192x192.png">
 </head>
 <body>
 
@@ -33,7 +33,7 @@
         // PWA Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/mosquesui/sw.js', { scope: '/mosquesui/' })
+                navigator.serviceWorker.register('/my-pwa-apps/mosquesui/sw.js', { scope: '/my-pwa-apps/mosquesui/' })
                     .then(registration => {
                         console.log('[PWA] Service Worker registered:', registration.scope);
                     })

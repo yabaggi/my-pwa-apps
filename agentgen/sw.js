@@ -7,22 +7,22 @@
 'use strict';
 
 const CACHE_NAME = 'agentgen-v4';
-const OFFLINE_URL = '/agentgen/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/agentgen/offline.html';
 const urlsToCache = [
-  "/agentgen/favicon.ico",
-  "/agentgen/icons/icon-72x72.png", 
-  "/agentgen/icons/icon-96x96.png", 
-  "/agentgen/icons/icon-128x128.png", 
-  "/agentgen/icons/icon-144x144.png", 
-  "/agentgen/icons/icon-152x152.png", 
-  "/agentgen/icons/icon-192x192.png", 
-  "/agentgen/icons/icon-384x384.png", 
-  "/agentgen/icons/icon-512x512.png",
-  "/agentgen/",
-  "/agentgen/index.html",
-  "/agentgen/manifest.json",
-  "/agentgen/offline.html",
-  "/agentgen/note.txt"
+  "/my-pwa-apps/agentgen/favicon.ico",
+  "/my-pwa-apps/agentgen/icons/icon-72x72.png", 
+  "/my-pwa-apps/agentgen/icons/icon-96x96.png", 
+  "/my-pwa-apps/agentgen/icons/icon-128x128.png", 
+  "/my-pwa-apps/agentgen/icons/icon-144x144.png", 
+  "/my-pwa-apps/agentgen/icons/icon-152x152.png", 
+  "/my-pwa-apps/agentgen/icons/icon-192x192.png", 
+  "/my-pwa-apps/agentgen/icons/icon-384x384.png", 
+  "/my-pwa-apps/agentgen/icons/icon-512x512.png",
+  "/my-pwa-apps/agentgen/",
+  "/my-pwa-apps/agentgen/index.html",
+  "/my-pwa-apps/agentgen/manifest.json",
+  "/my-pwa-apps/agentgen/offline.html",
+  "/my-pwa-apps/agentgen/note.txt"
 ];
 
 self.addEventListener('install', event => {

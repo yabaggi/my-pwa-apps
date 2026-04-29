@@ -7,22 +7,22 @@
  */
 
 const CACHE_NAME = 'logo-v5';
-const OFFLINE_URL = '/logo/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/logo/offline.html';
 
 const urlsToCache = [
-  "/logo/favicon.ico",
-  "/logo/",
-  "/logo/index.html",
-  "/logo/manifest.json",
-  "/logo/offline.html",
-  "/logo/icons/icon-72x72.png",
-  "/logo/icons/icon-96x96.png",
-  "/logo/icons/icon-128x128.png",
-  "/logo/icons/icon-144x144.png",
-  "/logo/icons/icon-152x152.png",
-  "/logo/icons/icon-192x192.png",
-  "/logo/icons/icon-384x384.png",
-  "/logo/icons/icon-512x512.png"
+  "/my-pwa-apps/logo/favicon.ico",
+  "/my-pwa-apps/logo/",
+  "/my-pwa-apps/logo/index.html",
+  "/my-pwa-apps/logo/manifest.json",
+  "/my-pwa-apps/logo/offline.html",
+  "/my-pwa-apps/logo/icons/icon-72x72.png",
+  "/my-pwa-apps/logo/icons/icon-96x96.png",
+  "/my-pwa-apps/logo/icons/icon-128x128.png",
+  "/my-pwa-apps/logo/icons/icon-144x144.png",
+  "/my-pwa-apps/logo/icons/icon-152x152.png",
+  "/my-pwa-apps/logo/icons/icon-192x192.png",
+  "/my-pwa-apps/logo/icons/icon-384x384.png",
+  "/my-pwa-apps/logo/icons/icon-512x512.png"
 ];
 
 // Install event - cache ALL resources
@@ -132,5 +132,5 @@ function isNavigationRequest(request) {
 }
 
 console.log('[Service Worker] Loaded successfully for Logo Generator Pro');
-console.log('[Service Worker] Scope: /logo/');
+console.log('[Service Worker] Scope: /my-pwa-apps/logo/');
 console.log('[Service Worker] Caching 5 files including all your assets');

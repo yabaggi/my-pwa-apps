@@ -7,22 +7,22 @@
  */
 
 const CACHE_NAME = 'img2asset-v4';
-const OFFLINE_URL = '/img2asset/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/img2asset/offline.html';
 
 const urlsToCache = [
-  "/img2asset/favicon.ico",
-  "/img2asset/icons/icon-72x72.png", 
-  "/img2asset/icons/icon-96x96.png", 
-  "/img2asset/icons/icon-128x128.png", 
-  "/img2asset/icons/icon-144x144.png", 
-  "/img2asset/icons/icon-152x152.png", 
-  "/img2asset/icons/icon-192x192.png", 
-  "/img2asset/icons/icon-384x384.png", 
-  "/img2asset/icons/icon-512x512.png",
-  "/img2asset/",
-  "/img2asset/index.html",
-  "/img2asset/manifest.json",
-  "/img2asset/offline.html"
+  "/my-pwa-apps/img2asset/favicon.ico",
+  "/my-pwa-apps/img2asset/icons/icon-72x72.png", 
+  "/my-pwa-apps/img2asset/icons/icon-96x96.png", 
+  "/my-pwa-apps/img2asset/icons/icon-128x128.png", 
+  "/my-pwa-apps/img2asset/icons/icon-144x144.png", 
+  "/my-pwa-apps/img2asset/icons/icon-152x152.png", 
+  "/my-pwa-apps/img2asset/icons/icon-192x192.png", 
+  "/my-pwa-apps/img2asset/icons/icon-384x384.png", 
+  "/my-pwa-apps/img2asset/icons/icon-512x512.png",
+  "/my-pwa-apps/img2asset/",
+  "/my-pwa-apps/img2asset/index.html",
+  "/my-pwa-apps/img2asset/manifest.json",
+  "/my-pwa-apps/img2asset/offline.html"
 ];
 
 // Install event - cache ALL resources
@@ -132,5 +132,5 @@ function isNavigationRequest(request) {
 }
 
 console.log('[Service Worker] Loaded successfully for Image to Assets App');
-console.log('[Service Worker] Scope: /img2asset/');
+console.log('[Service Worker] Scope: /my-pwa-apps/img2asset/');
 console.log('[Service Worker] Caching 5 files including all your assets');

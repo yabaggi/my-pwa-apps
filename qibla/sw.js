@@ -7,22 +7,22 @@
 'use strict';
 
 const CACHE_NAME = 'qibla-v4';
-const OFFLINE_URL = '/qibla/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/qibla/offline.html';
 const urlsToCache = [
-  "/qibla/favicon.ico",
-  "/qibla/icons/icon-72x72.png", 
-  "/qibla/icons/icon-96x96.png", 
-  "/qibla/icons/icon-128x128.png", 
-  "/qibla/icons/icon-144x144.png", 
-  "/qibla/icons/icon-152x152.png", 
-  "/qibla/icons/icon-192x192.png", 
-  "/qibla/icons/icon-384x384.png", 
-  "/qibla/icons/icon-512x512.png",
-  "/qibla/",
-  "/qibla/index.html",
-  "/qibla/manifest.json",
-  "/qibla/offline.html",
-  "/qibla/locations.json"
+  "/my-pwa-apps/qibla/favicon.ico",
+  "/my-pwa-apps/qibla/icons/icon-72x72.png", 
+  "/my-pwa-apps/qibla/icons/icon-96x96.png", 
+  "/my-pwa-apps/qibla/icons/icon-128x128.png", 
+  "/my-pwa-apps/qibla/icons/icon-144x144.png", 
+  "/my-pwa-apps/qibla/icons/icon-152x152.png", 
+  "/my-pwa-apps/qibla/icons/icon-192x192.png", 
+  "/my-pwa-apps/qibla/icons/icon-384x384.png", 
+  "/my-pwa-apps/qibla/icons/icon-512x512.png",
+  "/my-pwa-apps/qibla/",
+  "/my-pwa-apps/qibla/index.html",
+  "/my-pwa-apps/qibla/manifest.json",
+  "/my-pwa-apps/qibla/offline.html",
+  "/my-pwa-apps/qibla/locations.json"
 ];
 
 self.addEventListener('install', event => {

@@ -7,19 +7,19 @@
 'use strict';
 
 const CACHE_NAME = 'ltaapp-v1';
-const OFFLINE_URL = '/ltaapp/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/ltaapp/offline.html';
 const urlsToCache = [
-  "/ltaapp/favicon.ico",
-  "/ltaapp/",
-  "/ltaapp/index.html",
-  "/ltaapp/manifest.json",
-  "/ltaapp/offline.html",
-  "/ltaapp/icons/icon-72x72.png",
-  "/ltaapp/icons/icon-192x192.png",
-  "/ltaapp/icons/icon-384x384.png",
-  "/ltaapp/icons/icon-512x512.png",
-  "/ltaapp/README.md",
-  "/ltaapp/index.htmlx"
+  "/my-pwa-apps/ltaapp/favicon.ico",
+  "/my-pwa-apps/ltaapp/",
+  "/my-pwa-apps/ltaapp/index.html",
+  "/my-pwa-apps/ltaapp/manifest.json",
+  "/my-pwa-apps/ltaapp/offline.html",
+  "/my-pwa-apps/ltaapp/icons/icon-72x72.png",
+  "/my-pwa-apps/ltaapp/icons/icon-192x192.png",
+  "/my-pwa-apps/ltaapp/icons/icon-384x384.png",
+  "/my-pwa-apps/ltaapp/icons/icon-512x512.png",
+  "/my-pwa-apps/ltaapp/README.md",
+  "/my-pwa-apps/ltaapp/index.htmlx"
 ];
 
 self.addEventListener('install', event => {
@@ -112,4 +112,4 @@ function isNavigationRequest(request) {
 }
 
 console.log('[Service Worker] Loaded successfully for Letta Agent Manager');
-console.log('[Service Worker] Scope: /ltaapp/');
+console.log('[Service Worker] Scope: /my-pwa-apps/ltaapp/');

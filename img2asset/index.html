@@ -17,7 +17,7 @@
         }
     </style>
     <meta name="theme-color" content="#2196f3">
-    <link rel="manifest" href="/img2asset/manifest.json">
+    <link rel="manifest" href="/my-pwa-apps/img2asset/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Image to Ass">
@@ -32,7 +32,7 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 // Use RELATIVE path for service worker (works with multi-app setup)
-                navigator.serviceWorker.register('/img2asset/sw.js')
+                navigator.serviceWorker.register('/my-pwa-apps/img2asset/sw.js')
                     .then(registration => {
                         console.log('✓ Service Worker registered:', registration.scope);
                         console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
@@ -107,8 +107,8 @@
         console.log('⚙️ PWA Configuration:');
         console.log('  - App Name: Image to Assets App');
         console.log('  - App ID: img2asset-id');
-        console.log('  - Start URL: /img2asset/');
-        console.log('  - Scope: /img2asset/');
+        console.log('  - Start URL: /my-pwa-apps/img2asset/');
+        console.log('  - Scope: /my-pwa-apps/img2asset/');
         console.log('  - Folder: img2asset');
         console.log('  - Files included: 1');
     </script>

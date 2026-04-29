@@ -21,11 +21,11 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Image to Ass">
     <link rel="apple-touch-icon" href="icons/icon-192x192.png">
-    <link rel="manifest" href="/peco/manifest.json">
+    <link rel="manifest" href="/my-pwa-apps/peco/manifest.json">
 </head>
 <body>
     <iframe src="https://peco-app-baggi.netlify.app" allow="geolocation; camera; microphone; display-capture; autoplay; clipboard-write; fullscreen"></iframe>
 
-<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('/peco/sw.js').then(r=>console.log('SW registered:',r)).catch(e=>console.error('SW registration failed:',e))})</script>
+<script>if('serviceWorker' in navigator)window.addEventListener('load',()=>{navigator.serviceWorker.register('/my-pwa-apps/peco/sw.js').then(r=>console.log('SW registered:',r)).catch(e=>console.error('SW registration failed:',e))})</script>
 </body>
 </html>

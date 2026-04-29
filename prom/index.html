@@ -734,7 +734,7 @@
         }
     </style>
     <meta name="theme-color" content="#2196f3">
-    <link rel="manifest" href="/prom/manifest.json">
+    <link rel="manifest" href="/my-pwa-apps/prom/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Prompt Explo">
@@ -1794,7 +1794,7 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 // Use RELATIVE path for service worker (works with multi-app setup)
-                navigator.serviceWorker.register('/prom/sw.js')
+                navigator.serviceWorker.register('/my-pwa-apps/prom/sw.js')
                     .then(registration => {
                         console.log('✓ Service Worker registered:', registration.scope);
                         console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
@@ -1869,8 +1869,8 @@
         console.log('⚙️ PWA Configuration:');
         console.log('  - App Name: Prompt Explorer');
         console.log('  - App ID: prom-id');
-        console.log('  - Start URL: /prom/');
-        console.log('  - Scope: /prom/');
+        console.log('  - Start URL: /my-pwa-apps/prom/');
+        console.log('  - Scope: /my-pwa-apps/prom/');
         console.log('  - Folder: prom');
         console.log('  - Files included: 2');
     </script>

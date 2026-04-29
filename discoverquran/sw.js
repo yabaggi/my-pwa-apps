@@ -7,35 +7,35 @@
  */
 
 const CACHE_NAME = 'discoverquran-v5';
-const OFFLINE_URL = '/discoverquran/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/discoverquran/offline.html';
 
 const urlsToCache = [
-  "/discoverquran/icons/icon-72x72.png", 
-  "/discoverquran/icons/icon-96x96.png", 
-  "/discoverquran/icons/icon-128x128.png", 
-  "/discoverquran/icons/icon-144x144.png", 
-  "/discoverquran/icons/icon-152x152.png", 
-  "/discoverquran/icons/icon-192x192.png", 
-  "/discoverquran/icons/icon-384x384.png", 
-  "/discoverquran/icons/icon-512x512.png",
-  "/discoverquran/",
-  "/discoverquran/index.html",
-  "/discoverquran/manifest.json",
-  "/discoverquran/KpWQhgRnd1.jpg",
-  "/discoverquran/favicon.ico",
-  "/discoverquran/fgYdWjAl.jpg",
-  "/discoverquran/hGfVkpbyda.jpg",
-  "/discoverquran/heroimage.jpg",
-  "/discoverquran/hjKEn76bwsh2.jpg",
-  "/discoverquran/owgj23Ftaym.jpg",
-  "/discoverquran/quran.json",
-  "/discoverquran/search.html",
-  "/discoverquran/tjd_kMdObwsh1.jpg",
-  "/discoverquran/uuVHgrAnd2.jpg",
-  "/discoverquran/surahs.json",
-  "/discoverquran/fgtrMaj.jpg",
-  "/discoverquran/h123maj.jpg",
-  "/discoverquran/offline.html"
+  "/my-pwa-apps/discoverquran/icons/icon-72x72.png", 
+  "/my-pwa-apps/discoverquran/icons/icon-96x96.png", 
+  "/my-pwa-apps/discoverquran/icons/icon-128x128.png", 
+  "/my-pwa-apps/discoverquran/icons/icon-144x144.png", 
+  "/my-pwa-apps/discoverquran/icons/icon-152x152.png", 
+  "/my-pwa-apps/discoverquran/icons/icon-192x192.png", 
+  "/my-pwa-apps/discoverquran/icons/icon-384x384.png", 
+  "/my-pwa-apps/discoverquran/icons/icon-512x512.png",
+  "/my-pwa-apps/discoverquran/",
+  "/my-pwa-apps/discoverquran/index.html",
+  "/my-pwa-apps/discoverquran/manifest.json",
+  "/my-pwa-apps/discoverquran/KpWQhgRnd1.jpg",
+  "/my-pwa-apps/discoverquran/favicon.ico",
+  "/my-pwa-apps/discoverquran/fgYdWjAl.jpg",
+  "/my-pwa-apps/discoverquran/hGfVkpbyda.jpg",
+  "/my-pwa-apps/discoverquran/heroimage.jpg",
+  "/my-pwa-apps/discoverquran/hjKEn76bwsh2.jpg",
+  "/my-pwa-apps/discoverquran/owgj23Ftaym.jpg",
+  "/my-pwa-apps/discoverquran/quran.json",
+  "/my-pwa-apps/discoverquran/search.html",
+  "/my-pwa-apps/discoverquran/tjd_kMdObwsh1.jpg",
+  "/my-pwa-apps/discoverquran/uuVHgrAnd2.jpg",
+  "/my-pwa-apps/discoverquran/surahs.json",
+  "/my-pwa-apps/discoverquran/fgtrMaj.jpg",
+  "/my-pwa-apps/discoverquran/h123maj.jpg",
+  "/my-pwa-apps/discoverquran/offline.html"
 ];
 
 // Install event - cache ALL resources
@@ -145,5 +145,5 @@ function isNavigationRequest(request) {
 }
 
 console.log('[Service Worker] Loaded successfully for مع القرآن الكريم');
-console.log('[Service Worker] Scope: /discoverquran/');
+console.log('[Service Worker] Scope: /my-pwa-apps/discoverquran/');
 console.log('[Service Worker] Caching 23 files including all your assets');

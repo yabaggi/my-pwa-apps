@@ -7,21 +7,21 @@
 'use strict';
 
 const CACHE_NAME = 'lpage-gen-v4';
-const OFFLINE_URL = '/lpage-gen/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/lpage-gen/offline.html';
 const urlsToCache = [
-  "/lpage-gen/favicon.ico",
-  "/lpage-gen/icons/icon-72x72.png", 
-  "/lpage-gen/icons/icon-96x96.png", 
-  "/lpage-gen/icons/icon-128x128.png", 
-  "/lpage-gen/icons/icon-144x144.png", 
-  "/lpage-gen/icons/icon-152x152.png", 
-  "/lpage-gen/icons/icon-192x192.png", 
-  "/lpage-gen/icons/icon-384x384.png", 
-  "/lpage-gen/icons/icon-512x512.png",
-  "/lpage-gen/",
-  "/lpage-gen/index.html",
-  "/lpage-gen/manifest.json",
-  "/lpage-gen/offline.html"
+  "/my-pwa-apps/lpage-gen/favicon.ico",
+  "/my-pwa-apps/lpage-gen/icons/icon-72x72.png", 
+  "/my-pwa-apps/lpage-gen/icons/icon-96x96.png", 
+  "/my-pwa-apps/lpage-gen/icons/icon-128x128.png", 
+  "/my-pwa-apps/lpage-gen/icons/icon-144x144.png", 
+  "/my-pwa-apps/lpage-gen/icons/icon-152x152.png", 
+  "/my-pwa-apps/lpage-gen/icons/icon-192x192.png", 
+  "/my-pwa-apps/lpage-gen/icons/icon-384x384.png", 
+  "/my-pwa-apps/lpage-gen/icons/icon-512x512.png",
+  "/my-pwa-apps/lpage-gen/",
+  "/my-pwa-apps/lpage-gen/index.html",
+  "/my-pwa-apps/lpage-gen/manifest.json",
+  "/my-pwa-apps/lpage-gen/offline.html"
 ];
 
 self.addEventListener('install', event => {

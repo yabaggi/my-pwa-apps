@@ -743,7 +743,7 @@
             font-family: 'Noto Kufi Arabic', sans-serif;
         }
     </style>
-    <link rel="manifest" href="/quotes/manifest.json">
+    <link rel="manifest" href="/my-pwa-apps/quotes/manifest.json">
 </head>
 <body>
     <header class="header">
@@ -888,7 +888,7 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 // Use RELATIVE path for service worker (works with multi-app setup)
-                navigator.serviceWorker.register('/quotes/sw.js')
+                navigator.serviceWorker.register('/my-pwa-apps/quotes/sw.js')
                     .then(registration => {
                         console.log('✓ Service Worker registered:', registration.scope);
                         console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
@@ -963,8 +963,8 @@
         console.log('⚙️ PWA Configuration:');
         console.log('  - App Name: Quote Finder');
         console.log('  - App ID: quotes-id');
-        console.log('  - Start URL: /quotes/');
-        console.log('  - Scope: /quotes/');
+        console.log('  - Start URL: /my-pwa-apps/quotes/');
+        console.log('  - Scope: /my-pwa-apps/quotes/');
         console.log('  - Folder: quotes');
         console.log('  - Files included: 10');
     </script>

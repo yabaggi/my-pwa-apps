@@ -7,21 +7,21 @@
 'use strict';
 
 const CACHE_NAME = 'mosquesui-v3';
-const OFFLINE_URL = '/mosquesui/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/mosquesui/offline.html';
 const urlsToCache = [
-  "/mosquesui/favicon.ico",
-  "/mosquesui/",
-  "/mosquesui/index.html",
-  "/mosquesui/manifest.json",
-  "/mosquesui/offline.html",
-  "/mosquesui/icons/icon-72x72.png",
-  "/mosquesui/icons/icon-192x192.png",
-  "/mosquesui/icons/icon-384x384.png",
-  "/mosquesui/icons/icon-512x512.png",
-  "/mosquesui/icons/icon-96x96.png",
-  "/mosquesui/icons/icon-128x128.png",
-  "/mosquesui/icons/icon-144x144.png",
-  "/mosquesui/icons/icon-152x152.png"
+  "/my-pwa-apps/mosquesui/favicon.ico",
+  "/my-pwa-apps/mosquesui/",
+  "/my-pwa-apps/mosquesui/index.html",
+  "/my-pwa-apps/mosquesui/manifest.json",
+  "/my-pwa-apps/mosquesui/offline.html",
+  "/my-pwa-apps/mosquesui/icons/icon-72x72.png",
+  "/my-pwa-apps/mosquesui/icons/icon-192x192.png",
+  "/my-pwa-apps/mosquesui/icons/icon-384x384.png",
+  "/my-pwa-apps/mosquesui/icons/icon-512x512.png",
+  "/my-pwa-apps/mosquesui/icons/icon-96x96.png",
+  "/my-pwa-apps/mosquesui/icons/icon-128x128.png",
+  "/my-pwa-apps/mosquesui/icons/icon-144x144.png",
+  "/my-pwa-apps/mosquesui/icons/icon-152x152.png"
 ];
 
 self.addEventListener('install', event => {
@@ -114,4 +114,4 @@ function isNavigationRequest(request) {
 }
 
 console.log('[Service Worker] Loaded successfully for Mosques in Oman');
-console.log('[Service Worker] Scope: /mosquesui/');
+console.log('[Service Worker] Scope: /my-pwa-apps/mosquesui/');

@@ -87,9 +87,9 @@
     
     
     <meta name="theme-color" content="#2196f3">
-    <link rel="manifest" href="/ltaapp/manifest.json">
+    <link rel="manifest" href="/my-pwa-apps/ltaapp/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="/ltaapp/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/my-pwa-apps/ltaapp/icons/icon-192x192.png">
 </head>
 <body>
 
@@ -365,7 +365,7 @@
         // PWA Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/ltaapp/sw.js', { scope: '/ltaapp/' })
+                navigator.serviceWorker.register('/my-pwa-apps/ltaapp/sw.js', { scope: '/my-pwa-apps/ltaapp/' })
                     .then(registration => {
                         console.log('[PWA] Service Worker registered:', registration.scope);
                     })

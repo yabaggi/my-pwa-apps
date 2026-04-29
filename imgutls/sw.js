@@ -7,32 +7,32 @@
 'use strict';
 
 const CACHE_NAME = 'imgutls-v4';
-const OFFLINE_URL = '/imgutls/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/imgutls/offline.html';
 const urlsToCache = [
-  "/imgutls/favicon.ico",
-  "/imgutls/icons/icon-72x72.png", 
-  "/imgutls/icons/icon-96x96.png", 
-  "/imgutls/icons/icon-128x128.png", 
-  "/imgutls/icons/icon-144x144.png", 
-  "/imgutls/icons/icon-152x152.png", 
-  "/imgutls/icons/icon-192x192.png", 
-  "/imgutls/icons/icon-384x384.png", 
-  "/imgutls/icons/icon-512x512.png",
-  "/imgutls/",
-  "/imgutls/index.html",
-  "/imgutls/manifest.json",
-  "/imgutls/offline.html",
-  "/imgutls/emoji.html",
-  "/imgutls/script.js",
-  "/imgutls/style.css",
-  "/imgutls/gifgen.html",
-  "/imgutls/imgresize.html",
-  "/imgutls/unicode.html",
-  "/imgutls/unicodedata.json",
-  "/imgutls/merge-script.js",
-  "/imgutls/merge-styles.css",
-  "/imgutls/merge.html",
-  "/imgutls/placeholder.html"
+  "/my-pwa-apps/imgutls/favicon.ico",
+  "/my-pwa-apps/imgutls/icons/icon-72x72.png", 
+  "/my-pwa-apps/imgutls/icons/icon-96x96.png", 
+  "/my-pwa-apps/imgutls/icons/icon-128x128.png", 
+  "/my-pwa-apps/imgutls/icons/icon-144x144.png", 
+  "/my-pwa-apps/imgutls/icons/icon-152x152.png", 
+  "/my-pwa-apps/imgutls/icons/icon-192x192.png", 
+  "/my-pwa-apps/imgutls/icons/icon-384x384.png", 
+  "/my-pwa-apps/imgutls/icons/icon-512x512.png",
+  "/my-pwa-apps/imgutls/",
+  "/my-pwa-apps/imgutls/index.html",
+  "/my-pwa-apps/imgutls/manifest.json",
+  "/my-pwa-apps/imgutls/offline.html",
+  "/my-pwa-apps/imgutls/emoji.html",
+  "/my-pwa-apps/imgutls/script.js",
+  "/my-pwa-apps/imgutls/style.css",
+  "/my-pwa-apps/imgutls/gifgen.html",
+  "/my-pwa-apps/imgutls/imgresize.html",
+  "/my-pwa-apps/imgutls/unicode.html",
+  "/my-pwa-apps/imgutls/unicodedata.json",
+  "/my-pwa-apps/imgutls/merge-script.js",
+  "/my-pwa-apps/imgutls/merge-styles.css",
+  "/my-pwa-apps/imgutls/merge.html",
+  "/my-pwa-apps/imgutls/placeholder.html"
 ];
 
 self.addEventListener('install', event => {

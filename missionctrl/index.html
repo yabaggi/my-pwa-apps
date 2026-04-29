@@ -426,7 +426,7 @@
     }
   </style>
     <meta name="theme-color" content="#ff0000">
-    <link rel="manifest" href="/missionctrl/manifest.json">
+    <link rel="manifest" href="/my-pwa-apps/missionctrl/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="Mission Ctrl">
@@ -1570,7 +1570,7 @@
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 // Use RELATIVE path for service worker (works with multi-app setup)
-                navigator.serviceWorker.register('/missionctrl/sw.js')
+                navigator.serviceWorker.register('/my-pwa-apps/missionctrl/sw.js')
                     .then(registration => {
                         console.log('✓ Service Worker registered:', registration.scope);
                         console.log('✓ Service Worker URL:', registration.active ? registration.active.scriptURL : 'installing...');
@@ -1645,8 +1645,8 @@
         console.log('⚙️ PWA Configuration:');
         console.log('  - App Name: Mission Control');
         console.log('  - App ID: missionctrl-id');
-        console.log('  - Start URL: /missionctrl/');
-        console.log('  - Scope: /missionctrl/');
+        console.log('  - Start URL: /my-pwa-apps/missionctrl/');
+        console.log('  - Scope: /my-pwa-apps/missionctrl/');
         console.log('  - Folder: missionctrl');
         console.log('  - Files included: 2');
     </script>

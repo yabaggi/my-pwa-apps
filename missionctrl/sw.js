@@ -7,23 +7,23 @@
  */
 
 const CACHE_NAME = 'missionctrl-v4';
-const OFFLINE_URL = '/missionctrl/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/missionctrl/offline.html';
 
 const urlsToCache = [
-  "/missionctrl/favicon.ico",
-  "/missionctrl/icons/icon-72x72.png", 
-  "/missionctrl/icons/icon-96x96.png", 
-  "/missionctrl/icons/icon-128x128.png", 
-  "/missionctrl/icons/icon-144x144.png", 
-  "/missionctrl/icons/icon-152x152.png", 
-  "/missionctrl/icons/icon-192x192.png", 
-  "/missionctrl/icons/icon-384x384.png", 
-  "/missionctrl/icons/icon-512x512.png",
-  "/missionctrl/",
-  "/missionctrl/index.html",
-  "/missionctrl/manifest.json",
-  "/missionctrl/appdata.json",
-  "/missionctrl/offline.html"
+  "/my-pwa-apps/missionctrl/favicon.ico",
+  "/my-pwa-apps/missionctrl/icons/icon-72x72.png", 
+  "/my-pwa-apps/missionctrl/icons/icon-96x96.png", 
+  "/my-pwa-apps/missionctrl/icons/icon-128x128.png", 
+  "/my-pwa-apps/missionctrl/icons/icon-144x144.png", 
+  "/my-pwa-apps/missionctrl/icons/icon-152x152.png", 
+  "/my-pwa-apps/missionctrl/icons/icon-192x192.png", 
+  "/my-pwa-apps/missionctrl/icons/icon-384x384.png", 
+  "/my-pwa-apps/missionctrl/icons/icon-512x512.png",
+  "/my-pwa-apps/missionctrl/",
+  "/my-pwa-apps/missionctrl/index.html",
+  "/my-pwa-apps/missionctrl/manifest.json",
+  "/my-pwa-apps/missionctrl/appdata.json",
+  "/my-pwa-apps/missionctrl/offline.html"
 ];
 
 // Install event - cache ALL resources
@@ -133,5 +133,5 @@ function isNavigationRequest(request) {
 }
 
 console.log('[Service Worker] Loaded successfully for Mission Control');
-console.log('[Service Worker] Scope: /missionctrl/');
+console.log('[Service Worker] Scope: /my-pwa-apps/missionctrl/');
 console.log('[Service Worker] Caching 6 files including all your assets');

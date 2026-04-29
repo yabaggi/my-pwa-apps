@@ -665,9 +665,9 @@
         }
     </style>
     <meta name="theme-color" content="#2196f3">
-    <link rel="manifest" href="/vplayer/manifest.json">
+    <link rel="manifest" href="/my-pwa-apps/vplayer/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="/vplayer/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/my-pwa-apps/vplayer/icons/icon-192x192.png">
 </head>
 <body>
     <div class="container">
@@ -1259,7 +1259,7 @@
         // PWA Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/vplayer/sw.js', { scope: '/vplayer/' })
+                navigator.serviceWorker.register('/my-pwa-apps/vplayer/sw.js', { scope: '/my-pwa-apps/vplayer/' })
                     .then(registration => {
                         console.log('[PWA] Service Worker registered:', registration.scope);
                     })

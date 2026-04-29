@@ -7,21 +7,21 @@
 'use strict';
 
 const CACHE_NAME = 'foodorderui-v4';
-const OFFLINE_URL = '/foodorderui/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/foodorderui/offline.html';
 const urlsToCache = [
-  "/foodorderui/favicon.ico",
-  "/foodorderui/icons/icon-72x72.png", 
-  "/foodorderui/icons/icon-96x96.png", 
-  "/foodorderui/icons/icon-128x128.png", 
-  "/foodorderui/icons/icon-144x144.png", 
-  "/foodorderui/icons/icon-152x152.png", 
-  "/foodorderui/icons/icon-192x192.png", 
-  "/foodorderui/icons/icon-384x384.png", 
-  "/foodorderui/icons/icon-512x512.png",
-  "/foodorderui/",
-  "/foodorderui/index.html",
-  "/foodorderui/manifest.json",
-  "/foodorderui/offline.html"
+  "/my-pwa-apps/foodorderui/favicon.ico",
+  "/my-pwa-apps/foodorderui/icons/icon-72x72.png", 
+  "/my-pwa-apps/foodorderui/icons/icon-96x96.png", 
+  "/my-pwa-apps/foodorderui/icons/icon-128x128.png", 
+  "/my-pwa-apps/foodorderui/icons/icon-144x144.png", 
+  "/my-pwa-apps/foodorderui/icons/icon-152x152.png", 
+  "/my-pwa-apps/foodorderui/icons/icon-192x192.png", 
+  "/my-pwa-apps/foodorderui/icons/icon-384x384.png", 
+  "/my-pwa-apps/foodorderui/icons/icon-512x512.png",
+  "/my-pwa-apps/foodorderui/",
+  "/my-pwa-apps/foodorderui/index.html",
+  "/my-pwa-apps/foodorderui/manifest.json",
+  "/my-pwa-apps/foodorderui/offline.html"
 ];
 
 self.addEventListener('install', event => {
