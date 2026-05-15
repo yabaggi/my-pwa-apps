@@ -395,9 +395,9 @@
   .modal-btns .btn { padding: 14px; font-size: 0.9rem; width: 100%; border-radius: 8px; }
 </style>
     <meta name="theme-color" content="#2196f3">
-    <link rel="manifest" href="/craftut/manifest.json">
+    <link rel="manifest" href="/my-pwa-apps/craftut/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="/craftut/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/my-pwa-apps/craftut/icons/icon-192x192.png">
 </head>
 <body>
 
@@ -784,19 +784,29 @@ async function autoAddSnapsForVideo(id, title, skipConfirm = false) {
   showToast(`⚡ Loading snaps...`);
 
   try {
-    const frames = [];
-    let consecutiveFails = 0;
-    // Probe frames (starting from 000, allowing gaps for deleted duplicates)
-    for (let i = 0; i <= 500; i++) {
-      const src = `./snaps/${id}/img${String(i).padStart(3,'0')}.jpg`;
-      const ok  = await imageExists(src);
-      if (ok) {
-        frames.push(src);
-        consecutiveFails = 0;
-      } else {
-        consecutiveFails++;
-        // If we hit 20 missing images in a row, we've likely reached the end
-        if (consecutiveFails > 20) break;
+    const v = allVideos.find(x => x.id === id);
+    let frames = [];
+
+    // 1. If we have the snap list in the manifest, use it for instant loading!
+    if (v && v.snaps && v.snaps.length > 0) {
+      frames = v.snaps.map(f => `./snaps/${id}/${f}`);
+    } else {
+      // 2. Fallback: Parallel Probing (Optimized)
+      const hintCount = (v && v.snap_count) ? v.snap_count : 40;
+      const maxProbe = Math.min(hintCount + 20, 500);
+      const BATCH_SIZE = 25;
+      
+      for (let i = 0; i <= maxProbe; i += BATCH_SIZE) {
+        const batch = [];
+        for (let j = 0; j < BATCH_SIZE && (i + j) <= maxProbe; j++) {
+          const idx = i + j;
+          const src = `./snaps/${id}/img${String(idx).padStart(3, '0')}.jpg`;
+          batch.push(imageExists(src).then(ok => ok ? src : null));
+        }
+        const results = await Promise.all(batch);
+        const found = results.filter(Boolean);
+        frames.push(...found);
+        if (found.length === 0 && i > hintCount) break;
       }
     }
 
@@ -805,13 +815,16 @@ async function autoAddSnapsForVideo(id, title, skipConfirm = false) {
       return;
     }
 
-    // Add all frames as steps
-    for (const src of frames) {
-      await new Promise(res => {
-        imgToDataUrl(src, dataUrl => {
-          addStep(dataUrl, 0, '', true, 'snap');
-          res();
-        });
+    // 3. Parallel Processing to Data URLs
+    const PROCESS_BATCH_SIZE = 10;
+    for (let i = 0; i < frames.length; i += PROCESS_BATCH_SIZE) {
+      const batch = frames.slice(i, i + PROCESS_BATCH_SIZE);
+      const results = await Promise.all(batch.map(src => 
+        new Promise(resolve => imgToDataUrl(src, dataUrl => resolve(dataUrl)))
+      ));
+      
+      results.forEach(dataUrl => {
+        addStep(dataUrl, 0, '', true, 'snap');
       });
     }
 
@@ -1195,7 +1208,7 @@ Url: ${currentVideoUrl}` : '';
 
   const shareText = `☝️ Click above 📄craft-tutorial.html to view a tutorial i have created...
 You can create your own tutorial - for free - using Craft Tutorial Maker:
-🔗 https://yabaggi.github.io/craftut/
+🔗 https://yabaggi.github.io/my-pwa-apps/craftut/
 -------------------
 Note: the tutorial above was base on this video:${vidInfo}
 Title: ${noteTitle}.`; 
@@ -1341,7 +1354,7 @@ document.addEventListener('keydown', e => {
 // ── PWA SUPPORT ───────────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/craftut/sw.js', { scope: '/craftut/' })
+    navigator.serviceWorker.register('/my-pwa-apps/craftut/sw.js', { scope: '/my-pwa-apps/craftut/' })
       .then(reg => console.log('[PWA] Service Worker registered:', reg.scope))
       .catch(err => console.error('[PWA] Service Worker registration failed:', err));
   });

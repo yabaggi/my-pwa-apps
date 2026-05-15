@@ -9,7 +9,31 @@
     "size": "Unknown",
     "downloaded": false,
     "snapped": true,
-    "snap_count": 24
+    "snap_count": 22,
+    "snaps": [
+      "img000.jpg",
+      "img001.jpg",
+      "img002.jpg",
+      "img003.jpg",
+      "img005.jpg",
+      "img006.jpg",
+      "img007.jpg",
+      "img008.jpg",
+      "img009.jpg",
+      "img010.jpg",
+      "img011.jpg",
+      "img012.jpg",
+      "img013.jpg",
+      "img014.jpg",
+      "img015.jpg",
+      "img016.jpg",
+      "img017.jpg",
+      "img018.jpg",
+      "img019.jpg",
+      "img020.jpg",
+      "img021.jpg",
+      "img022.jpg"
+    ]
   },
   {
     "id": "2005150110089019",
@@ -22,7 +46,8 @@
     "downloaded": false,
     "snapped": false,
     "snap_count": 0,
-    "skip_reason": "download_failed_or_limit_exceeded:10MiB"
+    "skip_reason": "download_failed_or_limit_exceeded:10MiB",
+    "snaps": []
   },
   {
     "id": "1504001808047672",
@@ -34,7 +59,29 @@
     "size": "Unknown",
     "downloaded": false,
     "snapped": true,
-    "snap_count": 29
+    "snap_count": 20,
+    "snaps": [
+      "img000.jpg",
+      "img004.jpg",
+      "img005.jpg",
+      "img006.jpg",
+      "img007.jpg",
+      "img008.jpg",
+      "img010.jpg",
+      "img012.jpg",
+      "img013.jpg",
+      "img014.jpg",
+      "img015.jpg",
+      "img016.jpg",
+      "img017.jpg",
+      "img018.jpg",
+      "img019.jpg",
+      "img022.jpg",
+      "img023.jpg",
+      "img024.jpg",
+      "img025.jpg",
+      "img026.jpg"
+    ]
   },
   {
     "id": "1591375285303188",
@@ -46,7 +93,28 @@
     "size": "Unknown",
     "downloaded": false,
     "snapped": true,
-    "snap_count": 24
+    "snap_count": 19,
+    "snaps": [
+      "img001.jpg",
+      "img002.jpg",
+      "img003.jpg",
+      "img004.jpg",
+      "img005.jpg",
+      "img006.jpg",
+      "img007.jpg",
+      "img008.jpg",
+      "img009.jpg",
+      "img010.jpg",
+      "img011.jpg",
+      "img012.jpg",
+      "img013.jpg",
+      "img014.jpg",
+      "img016.jpg",
+      "img017.jpg",
+      "img019.jpg",
+      "img020.jpg",
+      "img021.jpg"
+    ]
   },
   {
     "id": "4410224922555798",
@@ -58,7 +126,26 @@
     "size": "Unknown",
     "downloaded": false,
     "snapped": true,
-    "snap_count": 23
+    "snap_count": 17,
+    "snaps": [
+      "img000.jpg",
+      "img001.jpg",
+      "img002.jpg",
+      "img003.jpg",
+      "img004.jpg",
+      "img005.jpg",
+      "img006.jpg",
+      "img008.jpg",
+      "img009.jpg",
+      "img010.jpg",
+      "img011.jpg",
+      "img012.jpg",
+      "img013.jpg",
+      "img014.jpg",
+      "img015.jpg",
+      "img018.jpg",
+      "img020.jpg"
+    ]
   },
   {
     "id": "1494250275652871",
@@ -70,7 +157,27 @@
     "size": "Unknown",
     "downloaded": false,
     "snapped": true,
-    "snap_count": 18
+    "snap_count": 18,
+    "snaps": [
+      "img000.jpg",
+      "img001.jpg",
+      "img002.jpg",
+      "img003.jpg",
+      "img004.jpg",
+      "img005.jpg",
+      "img006.jpg",
+      "img007.jpg",
+      "img008.jpg",
+      "img009.jpg",
+      "img010.jpg",
+      "img011.jpg",
+      "img012.jpg",
+      "img013.jpg",
+      "img014.jpg",
+      "img015.jpg",
+      "img016.jpg",
+      "img018.jpg"
+    ]
   },
   {
     "id": "1294502002528190",
@@ -83,7 +190,8 @@
     "downloaded": false,
     "snapped": false,
     "snap_count": 0,
-    "skip_reason": "download_failed_or_limit_exceeded:10MiB"
+    "skip_reason": "download_failed_or_limit_exceeded:10MiB",
+    "snaps": []
   },
   {
     "id": "1331784378984926",
@@ -96,7 +204,8 @@
     "downloaded": false,
     "snapped": false,
     "snap_count": 0,
-    "skip_reason": "download_failed_or_limit_exceeded:10MiB"
+    "skip_reason": "download_failed_or_limit_exceeded:10MiB",
+    "snaps": []
   },
   {
     "id": "1863646410889143",
@@ -109,7 +218,8 @@
     "downloaded": false,
     "snapped": false,
     "snap_count": 0,
-    "skip_reason": "download_failed_or_limit_exceeded:10MiB"
+    "skip_reason": "download_failed_or_limit_exceeded:10MiB",
+    "snaps": []
   },
   {
     "id": "891243667292691",
@@ -121,7 +231,20 @@
     "size": "Unknown",
     "downloaded": false,
     "snapped": true,
-    "snap_count": 16
+    "snap_count": 11,
+    "snaps": [
+      "img000.jpg",
+      "img002.jpg",
+      "img003.jpg",
+      "img004.jpg",
+      "img005.jpg",
+      "img006.jpg",
+      "img007.jpg",
+      "img008.jpg",
+      "img010.jpg",
+      "img011.jpg",
+      "img013.jpg"
+    ]
   },
   {
     "id": "1304228305004476",
@@ -133,7 +256,24 @@
     "size": "Unknown",
     "downloaded": false,
     "snapped": true,
-    "snap_count": 18
+    "snap_count": 15,
+    "snaps": [
+      "img000.jpg",
+      "img001.jpg",
+      "img002.jpg",
+      "img003.jpg",
+      "img004.jpg",
+      "img006.jpg",
+      "img007.jpg",
+      "img008.jpg",
+      "img009.jpg",
+      "img010.jpg",
+      "img011.jpg",
+      "img012.jpg",
+      "img013.jpg",
+      "img014.jpg",
+      "img015.jpg"
+    ]
   },
   {
     "id": "1503006031750355",
@@ -146,7 +286,8 @@
     "downloaded": false,
     "snapped": false,
     "snap_count": 0,
-    "skip_reason": "download_failed_or_limit_exceeded:10MiB"
+    "skip_reason": "download_failed_or_limit_exceeded:10MiB",
+    "snaps": []
   },
   {
     "id": "27174234578838681",
@@ -159,7 +300,8 @@
     "downloaded": false,
     "snapped": false,
     "snap_count": 0,
-    "skip_reason": "download_failed_or_limit_exceeded:10MiB"
+    "skip_reason": "download_failed_or_limit_exceeded:10MiB",
+    "snaps": []
   },
   {
     "id": "1548783413258141",
@@ -171,7 +313,37 @@
     "size": "Unknown",
     "downloaded": false,
     "snapped": true,
-    "snap_count": 33
+    "snap_count": 28,
+    "snaps": [
+      "img001.jpg",
+      "img002.jpg",
+      "img003.jpg",
+      "img004.jpg",
+      "img005.jpg",
+      "img006.jpg",
+      "img007.jpg",
+      "img008.jpg",
+      "img009.jpg",
+      "img010.jpg",
+      "img011.jpg",
+      "img012.jpg",
+      "img013.jpg",
+      "img014.jpg",
+      "img015.jpg",
+      "img016.jpg",
+      "img017.jpg",
+      "img018.jpg",
+      "img019.jpg",
+      "img020.jpg",
+      "img021.jpg",
+      "img022.jpg",
+      "img023.jpg",
+      "img024.jpg",
+      "img025.jpg",
+      "img026.jpg",
+      "img029.jpg",
+      "img030.jpg"
+    ]
   },
   {
     "id": "1613559909832295",
@@ -184,7 +356,8 @@
     "downloaded": false,
     "snapped": false,
     "snap_count": 0,
-    "skip_reason": "download_failed_or_limit_exceeded:10MiB"
+    "skip_reason": "download_failed_or_limit_exceeded:10MiB",
+    "snaps": []
   },
   {
     "id": "0ibQNhyPJAU",
@@ -196,7 +369,21 @@
     "size": "2.6MiB",
     "downloaded": false,
     "snapped": true,
-    "snap_count": 24
+    "snap_count": 12,
+    "snaps": [
+      "img003.jpg",
+      "img005.jpg",
+      "img007.jpg",
+      "img008.jpg",
+      "img009.jpg",
+      "img010.jpg",
+      "img011.jpg",
+      "img013.jpg",
+      "img016.jpg",
+      "img018.jpg",
+      "img020.jpg",
+      "img024.jpg"
+    ]
   },
   {
     "id": "BBadLD1-RbI",
@@ -208,7 +395,23 @@
     "size": "3.1MiB",
     "downloaded": false,
     "snapped": true,
-    "snap_count": 39
+    "snap_count": 14,
+    "snaps": [
+      "img001.jpg",
+      "img002.jpg",
+      "img003.jpg",
+      "img004.jpg",
+      "img005.jpg",
+      "img006.jpg",
+      "img009.jpg",
+      "img012.jpg",
+      "img013.jpg",
+      "img021.jpg",
+      "img023.jpg",
+      "img033.jpg",
+      "img035.jpg",
+      "img036.jpg"
+    ]
   },
   {
     "id": "-9l2o0jHw9E",
@@ -220,6 +423,7 @@
     "size": "2.8MiB",
     "downloaded": false,
     "snapped": true,
-    "snap_count": 26
+    "snap_count": 26,
+    "snaps": []
   }
 ]
