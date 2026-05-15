@@ -3,7 +3,7 @@
 A curated collection of **Progressive Web Apps (PWAs)** that work offline, install to your home screen, and provide a native app experience right from your browser.
 
 [![Live Demo](https://img.shields.io/badge/demo-live-success)](https://yabaggi.github.io/my-pwa-apps/)
-[![Apps](https://img.shields.io/badge/apps-8-blue)](#apps)
+[![Apps](https://img.shields.io/badge/apps-24-blue)](#apps)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![PWA](https://img.shields.io/badge/PWA-ready-orange)](https://web.dev/progressive-web-apps/)
 
