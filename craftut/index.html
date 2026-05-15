@@ -362,6 +362,20 @@
     border-radius: 30px; font-size: 0.8rem; font-weight: 700; z-index: 3000;
   }
 
+  /* ── LOADING OVERLAY ──────────────────────────────────── */
+  .loading-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(255,255,255,0.8); z-index: 10000;
+    flex-direction: column; align-items: center; justify-content: center;
+    backdrop-filter: blur(2px);
+  }
+  .loading-overlay.visible { display: flex; }
+  .spinner {
+    width: 40px; height: 40px; border: 4px solid #eee; border-top-color: var(--accent);
+    border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
   /* ── CHOICE MODAL ─────────────────────────────────────── */
   .modal-overlay {
     display: none; position: fixed; inset: 0;
@@ -381,9 +395,9 @@
   .modal-btns .btn { padding: 14px; font-size: 0.9rem; width: 100%; border-radius: 8px; }
 </style>
     <meta name="theme-color" content="#2196f3">
-    <link rel="manifest" href="/my-pwa-apps/craftut/manifest.json">
+    <link rel="manifest" href="/craftut/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="/my-pwa-apps/craftut/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/craftut/icons/icon-192x192.png">
 </head>
 <body>
 
@@ -530,6 +544,13 @@
 <input type="file" id="fileInput" accept="video/*" onchange="loadVideo(this)">
 <canvas id="canvas" style="display:none"></canvas>
 
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="spinner"></div>
+  <div style="font-weight:800; color:var(--primary)">Loading snaps...</div>
+  <div style="font-size:0.8rem; color:var(--text-muted); margin-top:8px">This may take a moment</div>
+</div>
+
 <!-- Choice Modal -->
 <div id="choiceModal" class="modal-overlay">
   <div class="modal-card">
@@ -573,6 +594,7 @@ let autoSnapEvery  = 3;
 let isAutoSnapping = false;
 let dragSrcIdx     = null;
 let draftTimer     = null;
+let isLoadingSnaps = false;
 
 // ── INIT ──────────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
@@ -745,6 +767,8 @@ function switchMode(m) {
 
 // ── SNAPS ─────────────────────────────────────────────────────────────────
 async function autoAddSnapsForVideo(id, title, skipConfirm = false) {
+  if (isLoadingSnaps) return;
+
   if (steps.length > 0 && !skipConfirm) {
     if (!confirm('Clear existing steps and load snaps for this video?')) {
       showView('steps');
@@ -755,42 +779,52 @@ async function autoAddSnapsForVideo(id, title, skipConfirm = false) {
     clearAll(true);
   }
 
+  isLoadingSnaps = true;
+  document.getElementById('loadingOverlay').classList.add('visible');
   showToast(`⚡ Loading snaps...`);
 
-  const frames = [];
-  let consecutiveFails = 0;
-  // Probe frames (starting from 000, allowing gaps for deleted duplicates)
-  for (let i = 0; i <= 500; i++) {
-    const src = `./snaps/${id}/img${String(i).padStart(3,'0')}.jpg`;
-    const ok  = await imageExists(src);
-    if (ok) {
-      frames.push(src);
-      consecutiveFails = 0;
-    } else {
-      consecutiveFails++;
-      // If we hit 20 missing images in a row, we've likely reached the end
-      if (consecutiveFails > 20) break;
+  try {
+    const frames = [];
+    let consecutiveFails = 0;
+    // Probe frames (starting from 000, allowing gaps for deleted duplicates)
+    for (let i = 0; i <= 500; i++) {
+      const src = `./snaps/${id}/img${String(i).padStart(3,'0')}.jpg`;
+      const ok  = await imageExists(src);
+      if (ok) {
+        frames.push(src);
+        consecutiveFails = 0;
+      } else {
+        consecutiveFails++;
+        // If we hit 20 missing images in a row, we've likely reached the end
+        if (consecutiveFails > 20) break;
+      }
     }
-  }
 
-  if (!frames.length) {
-    showToast('❌ No snaps found');
-    return;
-  }
+    if (!frames.length) {
+      showToast('❌ No snaps found');
+      return;
+    }
 
-  // Add all frames as steps
-  for (const src of frames) {
-    await new Promise(res => {
-      imgToDataUrl(src, dataUrl => {
-        addStep(dataUrl, 0, '', true, 'snap');
-        res();
+    // Add all frames as steps
+    for (const src of frames) {
+      await new Promise(res => {
+        imgToDataUrl(src, dataUrl => {
+          addStep(dataUrl, 0, '', true, 'snap');
+          res();
+        });
       });
-    });
-  }
+    }
 
-  saveDraft();
-  showView('steps');
-  showToast(`✅ Added ${frames.length} steps`);
+    saveDraft();
+    showView('steps');
+    showToast(`✅ Added ${frames.length} steps`);
+  } catch (e) {
+    console.error('Failed to load snaps', e);
+    showToast('❌ Error loading snaps');
+  } finally {
+    isLoadingSnaps = false;
+    document.getElementById('loadingOverlay').classList.remove('visible');
+  }
 }
 
 function imageExists(src) {
@@ -1161,7 +1195,7 @@ Url: ${currentVideoUrl}` : '';
 
   const shareText = `☝️ Click above 📄craft-tutorial.html to view a tutorial i have created...
 You can create your own tutorial - for free - using Craft Tutorial Maker:
-🔗 https://yabaggi.github.io/my-pwa-apps/craftut/
+🔗 https://yabaggi.github.io/craftut/
 -------------------
 Note: the tutorial above was base on this video:${vidInfo}
 Title: ${noteTitle}.`; 
@@ -1307,7 +1341,7 @@ document.addEventListener('keydown', e => {
 // ── PWA SUPPORT ───────────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/my-pwa-apps/craftut/sw.js', { scope: '/my-pwa-apps/craftut/' })
+    navigator.serviceWorker.register('/craftut/sw.js', { scope: '/craftut/' })
       .then(reg => console.log('[PWA] Service Worker registered:', reg.scope))
       .catch(err => console.error('[PWA] Service Worker registration failed:', err));
   });
