@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Craft Tutorial Maker</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --primary:   #121212;
+    --surface:   #f8f9fa;
+    --card:      #ffffff;
+    --accent:    #ff4d4d;
+    --secondary: #4caf50;
+    --blue:      #2196f3;
+    --gold:      #ffc107;
+    --text:      #1a1a1a;
+    --text-muted:#666666;
+    --border:    #e0e0e0;
+    --radius:    12px;
+    --shadow:    0 4px 12px rgba(0,0,0,0.08);
+    --lib-w:     300px;
+    --header-h:  56px;
+    --nav-h:     50px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden;
+  }
+
+  /* ── HEADER ───────────────────────────────────────────── */
+  header {
+    height: var(--header-h);
+    padding: 0 16px;
+    display: flex; align-items: center; gap: 12px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 1000;
+  }
+
+  header h1 { font-size: 1rem; font-weight: 800; letter-spacing: -0.01em; color: var(--primary); }
+
+  .badge {
+    background: var(--primary); color: white;
+    font-size: 0.6rem; font-family: 'DM Mono', monospace;
+    padding: 3px 8px; border-radius: 4px; text-transform: uppercase;
+  }
+
+  .hdr-spacer { flex: 1; }
+
+  .draft-pill {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+    color: var(--text-muted); padding: 4px 8px; border-radius: 20px;
+    background: #eee; transition: all 0.3s;
+  }
+  .draft-pill.ok { background: var(--secondary); color: white; }
+
+  /* ── ROOT LAYOUT ──────────────────────────────────────── */
+  .root {
+    display: flex;
+    flex: 1;
+    height: calc(100vh - var(--header-h));
+    position: relative;
+  }
+
+  /* ── BOTTOM NAV (Mobile Only) ─────────────────────────── */
+  .bottom-nav {
+    display: none;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: var(--nav-h);
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    z-index: 1001;
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .nav-item {
+    flex: 1; display: flex; flex-direction: row; gap: 6px;
+    align-items: center; justify-content: center;
+    color: var(--text-muted); cursor: pointer;
+    transition: color 0.2s; border: none; background: transparent;
+  }
+  .nav-item.active { color: var(--accent); }
+  .nav-item span { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; }
+  .nav-icon { font-size: 1.1rem; }
+
+  /* ── LIBRARY ──────────────────────────────────── */
+  .library {
+    width: var(--lib-w);
+    flex-shrink: 0;
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    background: var(--card);
+    transition: transform 0.3s ease;
+    z-index: 900;
+  }
+
+  .lib-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px;
+    background: var(--card);
+  }
+  .lib-top-title { font-size: 0.9rem; font-weight: 800; color: var(--primary); }
+  .lib-count { font-family: 'DM Mono', monospace; font-size: 0.7rem; background: var(--accent); color: white; padding: 2px 8px; border-radius: 10px; }
+
+  .lib-filter {
+    display: flex; gap: 4px; padding: 0 12px 12px; overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .lib-filter::-webkit-scrollbar { display: none; }
+  
+  .flt-btn {
+    padding: 6px 12px; border-radius: 20px;
+    font-family: 'Syne', sans-serif; font-size: 0.7rem; font-weight: 700;
+    border: 1px solid var(--border);
+    background: var(--card); color: var(--text-muted); cursor: pointer;
+    white-space: nowrap; transition: all 0.2s;
+  }
+  .flt-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+  .lib-search { padding: 0 16px 16px; }
+  .lib-search input {
+    width: 100%; font-family: 'DM Mono', monospace; font-size: 0.8rem;
+    border: 1px solid var(--border); background: var(--surface);
+    padding: 10px 14px; border-radius: var(--radius); outline: none; transition: border-color 0.2s;
+  }
+  .lib-search input:focus { border-color: var(--accent); }
+
+  .lib-list { flex: 1; overflow-y: auto; padding: 0 12px; }
+
+  .vid-card {
+    padding: 12px; border-radius: var(--radius);
+    margin-bottom: 8px; cursor: pointer; transition: background 0.2s;
+    background: var(--surface); border: 1px solid transparent;
+  }
+  .vid-card:hover { background: #f0f0f0; }
+  .vid-card.skipped { background: #fff5f5; border-color: #ffe0e0; }
+  .vid-card.skipped:hover { background: #ffeded; }
+  .vid-card.active { background: #fff; border-color: var(--accent); box-shadow: var(--shadow); }
+
+  .vid-card-title {
+    font-size: 0.85rem; font-weight: 700; line-height: 1.4; color: var(--primary);
+    margin-bottom: 8px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  }
+
+  .vid-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+  .vid-badge {
+    font-family: 'DM Mono', monospace; font-size: 0.6rem;
+    padding: 2px 6px; border-radius: 4px; font-weight: 500;
+  }
+  .vid-badge.dur { background: #eee; color: var(--text-muted); }
+  .vid-badge.dl  { background: rgba(76,175,80,0.1); color: var(--secondary); }
+  .vid-badge.snap{ background: rgba(33,150,243,0.1); color: var(--blue); }
+  .vid-badge.skip{ background: rgba(255, 77, 77, 0.1); color: var(--accent); }
+
+  /* ── MAIN AREA ────────────────────────────────────────── */
+  .main { flex: 1; display: flex; overflow: hidden; position: relative; }
+
+  /* ── VIDEO PANEL ──────────────────────────────────────── */
+  .video-panel {
+    flex: 1; border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; overflow: hidden;
+    background: var(--surface);
+  }
+
+  .mode-tabs {
+    display: flex; padding: 8px; gap: 8px; background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+  .mtab {
+    flex: 1; padding: 10px; border-radius: 8px;
+    font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 700;
+    border: none; background: transparent; color: var(--text-muted); cursor: pointer;
+    transition: all 0.2s;
+  }
+  .mtab.active { background: var(--primary); color: white; }
+
+  .drop-zone {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 40px; cursor: pointer; position: relative;
+    background: var(--surface); transition: background 0.3s;
+  }
+  .drop-zone:hover { background: #eee; }
+  .drop-zone.has-video { padding: 0; background: #000; }
+  .drop-zone.drag-over { background: #fff; outline: 2px dashed var(--accent); outline-offset: -12px; }
+
+  .drop-icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.5; }
+  .drop-label { font-size: 1rem; font-weight: 800; color: var(--primary); opacity: 0.7; margin-bottom: 8px; }
+  .drop-sub { font-size: 0.8rem; color: var(--text-muted); text-align: center; max-width: 240px; line-height: 1.5; }
+
+  #videoEl, #embedEl { width: 100%; height: 100%; object-fit: contain; display: none; }
+
+  .vid-name-bar {
+    display: none; padding: 8px 16px; background: rgba(0,0,0,0.8);
+    font-family: 'DM Mono', monospace; font-size: 0.7rem; color: #fff;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+
+  /* ── CONTROLS ─────────────────────────────────────────── */
+  .controls {
+    background: var(--card); padding: 16px;
+    display: flex; flex-direction: column; gap: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .ctrl-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .ctrl-label { font-size: 0.7rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; }
+
+  .scrubber-wrap { display: flex; align-items: center; gap: 12px; }
+  input[type=range] {
+    flex: 1; -webkit-appearance: none; height: 6px; border-radius: 3px;
+    background: #eee; outline: none;
+  }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%;
+    background: var(--accent); border: 3px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.2); cursor: pointer;
+  }
+
+  .time-display { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--text-muted); }
+
+  /* ── BUTTONS ──────────────────────────────────────────── */
+  .btn {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.75rem;
+    padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border);
+    background: var(--card); color: var(--text); cursor: pointer;
+    transition: all 0.2s; white-space: nowrap;
+  }
+  .btn:hover { background: #f0f0f0; }
+  .btn.primary { background: var(--primary); color: white; border-color: var(--primary); }
+  .btn.primary:hover { opacity: 0.9; }
+  .btn.snap {
+    background: var(--accent); color: white; border: none;
+    font-size: 0.9rem; padding: 12px 24px; border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(255, 77, 77, 0.3);
+  }
+  .btn.green { background: var(--secondary); color: white; border-color: var(--secondary); }
+
+  /* Floating Snap Button (Mobile) */
+  .fab-snap {
+    display: none; position: fixed; bottom: 80px; right: 20px;
+    width: 64px; height: 64px; border-radius: 50%;
+    background: var(--accent); color: white;
+    box-shadow: 0 6px 20px rgba(255, 77, 77, 0.4);
+    align-items: center; justify-content: center; font-size: 1.5rem;
+    border: none; z-index: 1002; cursor: pointer;
+  }
+
+  /* ── STEPS PANEL ──────────────────────────────────────── */
+  .steps-panel {
+    width: 340px; flex-shrink: 0;
+    display: flex; flex-direction: column; overflow: hidden;
+    background: var(--card);
+  }
+
+  .steps-hdr {
+    padding: 16px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .steps-title { font-size: 1rem; font-weight: 800; }
+  .step-count { font-family: 'DM Mono', monospace; font-size: 0.7rem; background: #eee; padding: 2px 8px; border-radius: 4px; }
+
+  .tut-title-wrap { padding: 12px 16px; background: var(--surface); }
+  .tut-title-input {
+    width: 100%; font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.9rem;
+    border: none; background: transparent; color: var(--primary); outline: none;
+  }
+
+  .steps-list { flex: 1; overflow-y: auto; padding: 16px; }
+  .step-item {
+    background: var(--card); border-radius: var(--radius);
+    border: 1px solid var(--border); margin-bottom: 16px;
+    overflow: hidden; transition: transform 0.2s;
+  }
+  .step-img-wrap { position: relative; aspect-ratio: 16/9; background: #000; }
+  .step-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
+  
+  .step-num {
+    position: absolute; top: 8px; left: 8px;
+    background: var(--accent); color: white; font-size: 0.6rem;
+    padding: 2px 8px; border-radius: 4px; font-weight: 700;
+  }
+  .step-del {
+    position: absolute; top: 8px; right: 8px;
+    background: rgba(0,0,0,0.5); color: white; border: none;
+    width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
+  }
+
+  .step-note { padding: 12px; }
+  .step-note textarea {
+    width: 100%; font-family: 'Syne', sans-serif; font-size: 0.85rem;
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px;
+    resize: none; min-height: 60px; outline: none;
+  }
+
+  .steps-footer {
+    padding: 16px; border-top: 1px solid var(--border);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  }
+
+  /* ── SNAPS PANEL ──────────────────────────────────────── */
+  .snaps-panel { display: none; flex: 1; flex-direction: column; overflow: hidden; background: var(--surface); }
+  .snaps-panel.visible { display: flex; }
+  .snaps-info { padding: 12px 16px; font-size: 0.75rem; color: var(--blue); font-weight: 700; background: rgba(33,150,243,0.05); }
+  .snaps-grid {
+    flex: 1; overflow-y: auto; display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 12px; padding: 16px;
+  }
+  .snap-thumb {
+    border-radius: 8px; overflow: hidden; position: relative;
+    cursor: pointer; border: 2px solid transparent; transition: all 0.2s;
+  }
+  .snap-thumb.picked { border-color: var(--accent); box-shadow: var(--shadow); }
+  .snap-thumb img { width: 100%; display: block; }
+  .snap-thumb-check {
+    position: absolute; top: 4px; right: 4px; background: var(--accent);
+    color: white; width: 20px; height: 20px; border-radius: 50%;
+    display: none; align-items: center; justify-content: center; font-size: 0.7rem;
+  }
+  .snap-thumb.picked .snap-thumb-check { display: flex; }
+
+  /* ── MOBILE ADAPTATION ────────────────────────────────── */
+  @media (max-width: 768px) {
+    .bottom-nav { display: flex; }
+    .library {
+      position: absolute; inset: 0; width: 100%; transform: translateX(-100%);
+      height: calc(100vh - var(--header-h) - var(--nav-h));
+    }
+    .library.open { transform: translateX(0); }
+    .steps-panel {
+      position: absolute; inset: 0; width: 100%; transform: translateX(100%);
+      height: calc(100vh - var(--header-h) - var(--nav-h));
+    }
+    .steps-panel.open { transform: translateX(0); }
+    
+    .video-panel { border-right: none; }
+    .video-panel.hidden { display: none; }
+    
+    .fab-snap { display: flex; }
+    .btn.snap { display: none; } /* Use FAB on mobile */
+    
+    .controls { padding-bottom: calc(var(--nav-h) + 16px); }
+    .mode-tabs { overflow-x: auto; }
+  }
+
+  /* Toast & Flash */
+  .flash { position: fixed; inset: 0; background: #fff; z-index: 2000; animation: flashAnim 0.3s forwards; pointer-events: none; }
+  @keyframes flashAnim { 0% { opacity: 0.8; } 100% { opacity: 0; } }
+  .toast {
+    position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+    background: var(--primary); color: #fff; padding: 12px 24px;
+    border-radius: 30px; font-size: 0.8rem; font-weight: 700; z-index: 3000;
+  }
+
+  /* ── CHOICE MODAL ─────────────────────────────────────── */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7); z-index: 10000;
+    align-items: center; justify-content: center; padding: 20px;
+    backdrop-filter: blur(4px);
+  }
+  .modal-overlay.visible { display: flex; }
+  .modal-card {
+    background: var(--card); padding: 24px; border-radius: var(--radius);
+    max-width: 400px; width: 100%; box-shadow: var(--shadow);
+    animation: modalPop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  @keyframes modalPop { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  .modal-msg { margin-bottom: 24px; font-size: 1rem; font-weight: 700; color: var(--primary); text-align: center; line-height: 1.4; }
+  .modal-btns { display: flex; flex-direction: column; gap: 12px; }
+  .modal-btns .btn { padding: 14px; font-size: 0.9rem; width: 100%; border-radius: 8px; }
+</style>
+    <meta name="theme-color" content="#2196f3">
+    <link rel="manifest" href="/my-pwa-apps/craftut/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="/my-pwa-apps/craftut/icons/icon-192x192.png">
+</head>
+<body>
+
+<header>
+  <h1>✂️ Craft Tutorial Maker</h1>
+  <div class="badge">REEL → STEPS</div>
+  <div class="hdr-spacer"></div>
+  <div class="draft-pill" id="draftPill">no draft</div>
+</header>
+
+<div class="root">
+
+  <!-- LIBRARY SIDEBAR -->
+  <aside class="library" id="library">
+    <div class="lib-top">
+      <span class="lib-top-title">📼 Library</span>
+      <span class="lib-count" id="libCount">—</span>
+    </div>
+
+    <div class="lib-filter">
+        
+      <button class="flt-btn active"        data-filter="all"     onclick="setFilter('all',this)">All</button>
+      
+      <button class="flt-btn"        data-filter="snapped" onclick="setFilter('snapped',this)">📷 Snapped</button>
+      
+      <button class="flt-btn" data-filter="dl"      onclick="setFilter('dl',this)">⬇ Downloaded</button>
+      
+      <button class="flt-btn"        data-filter="skipped" onclick="setFilter('skipped',this)">🚫 Skipped</button>
+      
+      <button class="flt-btn"        data-filter="pending" onclick="setFilter('pending',this)">⏳ Pending</button>
+    </div>
+
+    <div class="lib-search">
+      <input type="text" placeholder="Search titles…" oninput="filterLib(this.value)">
+    </div>
+
+    <div class="lib-list" id="libList">
+      <div class="lib-loading"><div class="spinner"></div>Loading...</div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- VIDEO PANEL -->
+    <div class="video-panel" id="videoPanel">
+
+      <div class="mode-tabs">
+        <button class="mtab active" id="tabManual" onclick="switchMode('manual')">📹 Editor</button>
+      </div>
+
+      <!-- MANUAL MODE -->
+      <div id="manualArea" style="flex:1;display:flex;flex-direction:column;overflow:hidden;">
+        <div class="drop-zone" id="dropZone">
+          <div class="drop-icon">📹</div>
+          <div class="drop-label">Drop video here</div>
+          <div class="drop-sub">
+            Pick from library or drop <code>dl-{id}.mp4</code>
+          </div>
+          <video id="videoEl" preload="metadata" playsinline webkit-playsinline></video>
+          <iframe id="embedEl" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <div class="vid-name-bar" id="vidNameBar"></div>
+
+        <div class="controls">
+          <div class="scrubber-wrap">
+            <input type="range" id="scrubber" value="0" min="0" step="0.001"
+              oninput="scrub(this.value)" onchange="scrub(this.value)">
+            <div class="time-display" id="timeDisplay">0:00 / 0:00</div>
+          </div>
+          <div class="ctrl-row">
+            <button class="btn primary" id="btnPlay" onclick="togglePlay()">▶ Play</button>
+            <button class="btn" onclick="stepFrame(-1)">⏮</button>
+            <button class="btn" onclick="stepFrame(1)">⏭</button>
+            <button class="btn snap" onclick="takeScreenshot()">📸 Snap Frame</button>
+            <!--
+            <button class="btn" onclick="newVideo()">⏏x New</button>-->
+          </div>
+          <div class="ctrl-row">
+            <span class="ctrl-label">Speed:</span>
+            <button class="btn" onclick="setSpeed(0.1)">0.1×</button>
+            <button class="btn" onclick="setSpeed(0.5)">0.5×</button>
+            <button class="btn" onclick="setSpeed(1)">1×</button>
+            <div class="speed-label" id="speedLabel" style="font-family:'DM Mono';font-size:0.7rem">1×</div>
+            <button class="btn" id="btnAuto" onclick="toggleAutoSnap()">⚡ Auto</button>
+            <div class="auto-ind" id="autoInd"><div class="dot"></div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- STEPS PANEL ☑  --> 
+    <div class="steps-panel" id="stepsPanel">
+      <div class="steps-hdr">
+        <div class="steps-title">Tutorial Steps</div>
+        <div class="step-count" id="stepCount">0 steps</div>
+      </div>
+
+      <div class="tut-title-wrap">
+        <input class="tut-title-input" id="tutTitle" type="text"
+          placeholder="Tutorial title…" oninput="saveDraft()">
+      </div>
+
+      <div class="steps-list" id="stepsList">
+        <div class="empty-steps" id="emptyMsg">
+          <div style="font-size:2rem;margin-bottom:12px">📸</div>
+          <div>Snap frames or<br>pick from snaps</div>
+        </div>
+      </div>
+
+      <div class="steps-footer">
+        <button class="btn green"   onclick="shareTutorial()">🔗 Share</button>
+        <button class="btn"         onclick="exportHTML()">⬇ HTML</button>
+        <button class="btn"         onclick="exportJSON()">⬇ JSON</button>
+        <button class="btn"         onclick="clearAll()" style="color:var(--accent)">🗑 Clear</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<nav class="bottom-nav">
+    
+  <button class="nav-item" id="navEditor" onclick="showView('editor')">
+    <div class="nav-icon">📹</div>
+    <span>Editor</span>
+  </button>
+  
+  <button class="nav-item active" id="navLibrary" onclick="showView('library')">
+    <div class="nav-icon">📚</div>
+    <span>Library</span>
+  </button>
+  
+  <button class="nav-item" id="navSteps" onclick="showView('steps')">
+    <div class="nav-icon">📋</div>
+    <span>Steps</span>
+  </button>
+  
+</nav>
+
+<button class="fab-snap" id="fabSnap" onclick="takeScreenshot()">📸</button>
+
+<input type="file" id="fileInput" accept="video/*" onchange="loadVideo(this)">
+<canvas id="canvas" style="display:none"></canvas>
+
+<!-- Choice Modal -->
+<div id="choiceModal" class="modal-overlay">
+  <div class="modal-card">
+    <p id="choiceMsg" class="modal-msg"></p>
+    <div class="modal-btns">
+      <button id="choiceBtn1" class="btn primary">Load Snaps</button>
+      <button id="choiceBtn2" class="btn">Play Video</button>
+      <button id="choiceBtnCancel" class="btn" style="border:none; color:var(--text-muted); background:transparent;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DOM ───────────────────────────────────────────────────────────────────
+const video       = document.getElementById('videoEl');
+const embed       = document.getElementById('embedEl');
+const dropZone    = document.getElementById('dropZone');
+const scrubber    = document.getElementById('scrubber');
+const timeDisplay = document.getElementById('timeDisplay');
+const stepsList   = document.getElementById('stepsList');
+const emptyMsg    = document.getElementById('emptyMsg');
+const stepCount   = document.getElementById('stepCount');
+const btnPlay     = document.getElementById('btnPlay');
+const canvas      = document.getElementById('canvas');
+const ctx         = canvas.getContext('2d');
+const draftPill   = document.getElementById('draftPill');
+const vidNameBar  = document.getElementById('vidNameBar');
+const libList     = document.getElementById('libList');
+const libCount    = document.getElementById('libCount');
+
+// ── STATE ─────────────────────────────────────────────────────────────────
+let steps          = [];
+let allVideos      = [];
+let filteredVideos = [];
+let activeFilter   = 'all';
+let activeVideoId  = null;
+let currentVideoUrl = '';
+let mode           = 'manual';   // 'manual'
+let autoSnapInt    = null;
+let autoSnapEvery  = 3;
+let isAutoSnapping = false;
+let dragSrcIdx     = null;
+let draftTimer     = null;
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  loadLibrary();
+  restoreDraft();
+  // Ensure we start in the editor view
+  showView('library');
+});
+
+// ── MOBILE NAVIGATION ─────────────────────────────────────────────────────
+function showView(view) {
+  const library    = document.getElementById('library');
+  const videoPanel = document.getElementById('videoPanel');
+  const stepsPanel = document.getElementById('stepsPanel');
+  const fabSnap    = document.getElementById('fabSnap');
+  
+  library.classList.remove('open');
+  videoPanel.classList.remove('hidden');
+  stepsPanel.classList.remove('open');
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  
+  if (view === 'library') {
+    library.classList.add('open');
+    videoPanel.classList.add('hidden');
+    document.getElementById('navLibrary').classList.add('active');
+    fabSnap.style.display = 'none';
+  } else if (view === 'steps') {
+    stepsPanel.classList.add('open');
+    videoPanel.classList.add('hidden');
+    document.getElementById('navSteps').classList.add('active');
+    fabSnap.style.display = 'none';
+  } else {
+    document.getElementById('navEditor').classList.add('active');
+    updateFabVisibility();
+  }
+}
+
+function updateFabVisibility() {
+  const fabSnap = document.getElementById('fabSnap');
+  const videoPanel = document.getElementById('videoPanel');
+  const isHidden = videoPanel.classList.contains('hidden');
+  fabSnap.style.display = (mode === 'manual' && video.src && !isHidden) ? 'flex' : 'none';
+}
+
+// ── LIBRARY ───────────────────────────────────────────────────────────────
+async function loadLibrary() {
+  try {
+    const res = await fetch('./videos.json');
+    if (!res.ok) throw new Error(`HTTP ${res.status} — is videos.json in the same folder?`);
+    const data = await res.json();
+    allVideos = Array.isArray(data) ? data : [];
+    libCount.textContent = allVideos.length;
+    applyFilter();
+  } catch(e) {
+    libList.innerHTML = `<div class="lib-empty">⚠️ ${e.message}</div>`;
+  }
+}
+
+function toggleLib() {
+  // Backwards compatibility if needed, but showView('library') is preferred
+  showView('library');
+}
+
+function setFilter(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.flt-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilter();
+}
+
+function filterLib(q) {
+  applyFilter(q);
+}
+
+function applyFilter(q='') {
+  const query = (q || document.querySelector('.lib-search input')?.value || '').toLowerCase();
+  filteredVideos = allVideos.filter(v => {
+    const title = (v.title || '').toLowerCase();
+    const matchQ = !query || title.includes(query) || (v.id||'').toLowerCase().includes(query);
+    const matchF = activeFilter === 'all'     ? true
+                 : activeFilter === 'snapped' ? v.snapped === true
+                 : activeFilter === 'dl'      ? v.downloaded === true
+                 : activeFilter === 'skipped' ? !!v.skip_reason
+                 : /* pending */                (v.downloaded !== true && !v.skip_reason);
+    return matchQ && matchF;
+  });
+  renderLib();
+}
+
+function renderLib() {
+  if (!filteredVideos.length) {
+    libList.innerHTML = '<div class="lib-empty">No videos match</div>';
+    return;
+  }
+  libList.innerHTML = filteredVideos.map(v => {
+    const dl   = v.downloaded === true;
+    const snap = v.snapped    === true;
+    const skip = v.skip_reason;
+    const isActive = v.id === activeVideoId;
+    
+    return `
+    <div class="vid-card ${isActive ? 'active' : ''} ${skip ? 'skipped' : ''}"
+         data-id="${v.id}" onclick="selectVideo('${v.id}')">
+      <div class="vid-card-title">${esc(v.title || v.id)}</div>
+      <div class="vid-meta">
+        ${v.duration ? `<span class="vid-badge dur">⏱ ${v.duration}</span>` : ''}
+        <span class="vid-badge ${dl ? 'dl' : 'nodl'}">${dl ? '✓ dl' : '⬇ not dl'}</span>
+        ${snap ? `<span class="vid-badge snap">📷 snapped</span>` : ''}
+        ${skip ? `<span class="vid-badge skip" title="${esc(skip)}">🚫 ${esc(skip)}</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function selectVideo(id) {
+  activeVideoId = id;
+  const v = allVideos.find(x => x.id === id);
+  if (!v) return;
+
+  currentVideoUrl = v.url || '';
+  saveDraft();
+
+  // Highlight card
+  document.querySelectorAll('.vid-card').forEach(c => c.classList.remove('active'));
+  const card = libList.querySelector(`[data-id="${id}"]`);
+  if (card) card.classList.add('active');
+
+  // Set tutorial title if empty
+  const titleEl = document.getElementById('tutTitle');
+  if (!titleEl.value && v.title) titleEl.value = v.title;
+
+  if (v.snapped) {
+    const msg = steps.length > 0 
+      ? 'Clear existing steps and load snaps for this video?' 
+      : 'This video has snaps. What would you like to do?';
+      
+    showChoiceModal(msg, 'Load Snaps', () => {
+      autoAddSnapsForVideo(v.id, v.title, true);
+    }, 'Play Video', () => {
+      loadVideoResources(v);
+      if (window.innerWidth <= 768) showView('editor');
+    });
+  } else {
+    loadVideoResources(v);
+    // On mobile, switch to editor view after selection
+    if (window.innerWidth <= 768) showView('editor');
+  }
+}
+function extractYoutubeId(url) {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+  const match = url.match(regExp);
+  return (match && match[2].length === 11) ? match[2] : null;
+}
+
+function setControlsEnabled(enabled) {
+  document.querySelectorAll('.controls .btn, .controls input').forEach(el => {
+    // Keep 'New' button always enabled
+    if (el.textContent.includes('New')) return;
+    el.disabled = !enabled;
+  });
+}
+
+// ── MODE SWITCHING ─────────────────────────────────────────────────────────
+function switchMode(m) {
+  mode = m;
+  document.getElementById('manualArea').style.display = m === 'manual' ? 'flex' : 'none';
+  document.getElementById('tabManual').classList.toggle('active', m === 'manual');
+  updateFabVisibility();
+}
+
+// ── SNAPS ─────────────────────────────────────────────────────────────────
+async function autoAddSnapsForVideo(id, title, skipConfirm = false) {
+  if (steps.length > 0 && !skipConfirm) {
+    if (!confirm('Clear existing steps and load snaps for this video?')) {
+      showView('steps');
+      return;
+    }
+    clearAll(true);
+  } else if (steps.length > 0 && skipConfirm) {
+    clearAll(true);
+  }
+
+  showToast(`⚡ Loading snaps...`);
+
+  const frames = [];
+  let consecutiveFails = 0;
+  // Probe frames (starting from 000, allowing gaps for deleted duplicates)
+  for (let i = 0; i <= 500; i++) {
+    const src = `./snaps/${id}/img${String(i).padStart(3,'0')}.jpg`;
+    const ok  = await imageExists(src);
+    if (ok) {
+      frames.push(src);
+      consecutiveFails = 0;
+    } else {
+      consecutiveFails++;
+      // If we hit 20 missing images in a row, we've likely reached the end
+      if (consecutiveFails > 20) break;
+    }
+  }
+
+  if (!frames.length) {
+    showToast('❌ No snaps found');
+    return;
+  }
+
+  // Add all frames as steps
+  for (const src of frames) {
+    await new Promise(res => {
+      imgToDataUrl(src, dataUrl => {
+        addStep(dataUrl, 0, '', true, 'snap');
+        res();
+      });
+    });
+  }
+
+  saveDraft();
+  showView('steps');
+  showToast(`✅ Added ${frames.length} steps`);
+}
+
+function imageExists(src) {
+  return new Promise(res => {
+    const img = new Image();
+    img.onload  = () => res(true);
+    img.onerror = () => res(false);
+    img.src = src;
+  });
+}
+
+function imgToDataUrl(src, cb) {
+  const img = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload = () => {
+    const c = document.createElement('canvas');
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    c.getContext('2d').drawImage(img, 0, 0);
+    cb(c.toDataURL('image/jpeg', 0.88));
+  };
+  img.onerror = () => cb(src);
+  img.src = src;
+}
+
+// ── VIDEO / LOCAL FILE ─────────────────────────────────────────────────────
+async function loadFromPath(path, name) {
+  switchMode('manual');
+  embed.src = '';
+  embed.style.display = 'none';
+  video.style.display = 'block';
+
+  // Use Blob URLs for local files to enable reliable seeking offline
+  // specifically on servers that don't support HTTP Range requests.
+  try {
+    const res = await fetch(path);
+    if (res.ok) {
+      const blob = await res.blob();
+      video.src = URL.createObjectURL(blob);
+    } else {
+      video.src = path;
+    }
+  } catch (e) {
+    console.warn('Blob load failed, using direct path', e);
+    video.src = path;
+  }
+  
+  video.load();
+  
+  video.onloadedmetadata = () => {
+    scrubber.max = video.duration || 0;
+    updateTime();
+    video.play().then(() => {
+      btnPlay.textContent = '⏸ Pause';
+    }).catch(e => {
+      btnPlay.textContent = '▶ Play';
+    });
+  };
+  
+  dropZone.classList.add('has-video');
+  vidNameBar.style.display = 'block';
+  vidNameBar.textContent   = '📹 ' + name;
+  setControlsEnabled(true);
+  updateFabVisibility();
+}
+
+function loadEmbed(url, name) {
+  switchMode('manual');
+  video.pause();
+  video.src = '';
+  video.style.display = 'none';
+  embed.style.display = 'block';
+
+  currentVideoUrl = url;
+  saveDraft();
+
+  let embedUrl = '';
+  if (url.includes('youtube.com') || url.includes('youtu.be')) {
+    const id = extractYoutubeId(url);
+    if (id) embedUrl = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0`;
+  } else if (url.includes('facebook.com')) {
+    // Share URLs like facebook.com/share/r/ID fail in iframes.
+    // We use the numerical ID (activeVideoId) to build a stable video.php URL.
+    const fbId = activeVideoId; 
+    const stableUrl = `https://www.facebook.com/video.php?v=${fbId}`;
+    embedUrl = `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(stableUrl)}&show_text=0&autoplay=true&mute=0`;
+  }
+
+  if (embedUrl) {
+    embed.src = embedUrl;
+    // Add modern iframe permissions for FB/YT
+    embed.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share');
+    embed.setAttribute('allowfullscreen', 'true');
+    
+    dropZone.classList.add('has-video');
+    vidNameBar.style.display = 'block';
+    vidNameBar.textContent   = '🌐 ' + name;
+    setControlsEnabled(false);
+    showToast('Embed loaded — snapping disabled');
+  } else {
+    window.open(url, '_blank');
+  }
+  updateFabVisibility();
+}
+
+dropZone.addEventListener('click', e => {
+  if (dropZone.classList.contains('has-video') && e.target !== dropZone) return;
+  document.getElementById('fileInput').click();
+});
+dropZone.addEventListener('dragover',  e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault(); dropZone.classList.remove('drag-over');
+  const file = e.dataTransfer.files[0];
+  if (file && file.type.startsWith('video/')) loadFile(file);
+});
+
+function loadVideo(input) { if (input.files[0]) loadFile(input.files[0]); }
+
+function loadFile(file) {
+  switchMode('manual');
+  currentVideoUrl = ''; // Clear for local files
+  saveDraft();
+  loadFromPath(URL.createObjectURL(file), file.name);
+  const titleEl = document.getElementById('tutTitle');
+  if (!titleEl.value) titleEl.value = file.name.replace(/\.[^.]+$/, '').replace(/[-_]+/g,' ');
+}
+
+function newVideo() {
+  if (!confirm('Load a new video? Steps are kept.')) return;
+  video.src = '';
+  video.style.display = 'none';
+  embed.src = '';
+  embed.style.display = 'none';
+  dropZone.classList.remove('has-video');
+  vidNameBar.style.display = 'none';
+  btnPlay.textContent = '▶ Play';
+  scrubber.value = 0; updateTime();
+  setControlsEnabled(true);
+  document.getElementById('fileInput').value = '';
+  document.getElementById('fileInput').click();
+  updateFabVisibility();
+}
+
+// ── VIDEO CONTROLS ─────────────────────────────────────────────────────────
+video.addEventListener('timeupdate', () => { scrubber.value = video.currentTime; updateTime(); });
+video.addEventListener('ended',      () => { btnPlay.textContent = '▶ Play'; if (isAutoSnapping) stopAutoSnap(); });
+
+function togglePlay() {
+  if (!video.src) return;
+  if (video.paused) { video.play();  btnPlay.textContent = '⏸ Pause'; }
+  else              { video.pause(); btnPlay.textContent = '▶ Play';  }
+}
+function setSpeed(s) { video.playbackRate = s; document.getElementById('speedLabel').textContent = s+'×'; }
+function scrub(v) { video.currentTime = parseFloat(v); updateTime(); }
+function updateTime() { timeDisplay.textContent = `${fmt(video.currentTime||0)} / ${fmt(video.duration||0)}`; }
+function stepFrame(dir) {
+  if (embed.style.display === 'block' || !video.src) return;
+  
+  video.pause(); 
+  btnPlay.textContent = '▶ Play';
+  
+  // Use 0.1s (100ms) for frame stepping.
+  const step = 0.1;
+  // Browser automatically clamps currentTime within [0, duration]
+  video.currentTime += (dir * step);
+  updateTime();
+}
+function fmt(s) { return `${Math.floor(s/60)}:${String(Math.floor(s%60)).padStart(2,'0')}`; }
+
+// ── SCREENSHOT ─────────────────────────────────────────────────────────────
+function takeScreenshot() {
+  if (embed.style.display === 'block') {
+    alert('Cannot snap from embedded video.');
+    return;
+  }
+  if (!video.src) { alert('Load a video first!'); return; }
+  canvas.width  = video.videoWidth  || 640;
+  canvas.height = video.videoHeight || 360;
+  ctx.drawImage(video, 0, 0);
+  const f = document.createElement('div'); f.className = 'flash';
+  document.body.appendChild(f); setTimeout(() => f.remove(), 300);
+  addStep(canvas.toDataURL('image/jpeg', 0.88), video.currentTime, '', false, 'manual');
+  saveDraft();
+}
+
+// ── AUTO SNAP ─────────────────────────────────────────────────────────────
+function toggleAutoSnap() { isAutoSnapping ? stopAutoSnap() : startAutoSnap(); }
+
+function startAutoSnap() {
+  const s = prompt('Auto snap every how many seconds?', autoSnapEvery);
+  if (!s) return;
+  autoSnapEvery = parseFloat(s) || 3;
+  if (!video.src) { alert('Load a video first!'); return; }
+  
+  // 1. Clear previous steps automatically
+  clearAll(true);
+
+  // 2. Start from beginning
+  video.pause(); // Ensure we're paused while seeking
+  video.currentTime = 0;
+
+  // 3. Wait for seek to complete to ensure first frame is captured correctly
+  const onSeeked = () => {
+    video.removeEventListener('seeked', onSeeked);
+    
+    // Take first snap immediately after seek
+    takeScreenshot();
+    
+    video.play(); 
+    btnPlay.textContent = '⏸ Pause';
+    isAutoSnapping = true;
+    document.getElementById('btnAuto').classList.add('active');
+    document.getElementById('autoInd').classList.add('on');
+
+    autoSnapInt = setInterval(() => {
+      if (video.ended || video.paused) { stopAutoSnap(); return; }
+      takeScreenshot();
+    }, autoSnapEvery * 1000);
+  };
+
+  // If already at 0, seeked might not fire, so check or force it
+  if (video.currentTime === 0 && !video.seeking) {
+    onSeeked();
+  } else {
+    video.addEventListener('seeked', onSeeked);
+  }
+}
+
+function stopAutoSnap() {
+  const wasSnapping = isAutoSnapping;
+  clearInterval(autoSnapInt); 
+  isAutoSnapping = false;
+  document.getElementById('btnAuto').classList.remove('active');
+  document.getElementById('autoInd').classList.remove('on');
+  
+  // Take last snap if we were auto-snapping and video ended
+  if (wasSnapping && video.ended) {
+    takeScreenshot();
+  }
+}
+
+// ── STEPS ─────────────────────────────────────────────────────────────────
+function addStep(dataUrl, ts, note='', silent=false, source='manual') {
+  const id = Date.now() + Math.random();
+  steps.push({ id, dataUrl, ts, note, source });
+  emptyMsg.style.display = 'none';
+
+  const n    = steps.length;
+  const item = document.createElement('div');
+  item.className = 'step-item';
+  item.id        = `step-${id}`;
+  item.draggable = true;
+
+  item.innerHTML = `
+    <div class="step-img-wrap">
+      <img src="${dataUrl}" loading="lazy" alt="Step ${n}">
+      <div class="step-num">Step ${n}</div>
+      <button class="step-del" title="Delete">✕</button>
+    </div>
+    <div class="step-note">
+      <textarea placeholder="Describe this step…" rows="2">${note}</textarea>
+    </div>`;
+
+  item.querySelector('.step-del').addEventListener('click', () => deleteStep(id));
+  item.querySelector('textarea').addEventListener('input', e => {
+    const s = steps.find(x => x.id === id); if (s) s.note = e.target.value; saveDraft();
+  });
+
+  // drag reorder
+  item.addEventListener('dragstart', e => {
+    dragSrcIdx = allItems().indexOf(item); item.classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  item.addEventListener('dragend', () => {
+    item.classList.remove('dragging');
+    allItems().forEach(el => el.classList.remove('drop-above','drop-below'));
+  });
+  item.addEventListener('dragover', e => {
+    e.preventDefault();
+    const t = allItems().indexOf(item);
+    if (t < dragSrcIdx) item.classList.add('drop-above');
+    else if (t > dragSrcIdx) item.classList.add('drop-below');
+  });
+  item.addEventListener('drop', e => {
+    e.preventDefault();
+    const t = allItems().indexOf(item);
+    if (dragSrcIdx === null || dragSrcIdx === t) return;
+    const els = allItems();
+    if (t < dragSrcIdx) item.before(els[dragSrcIdx]);
+    else                item.after(els[dragSrcIdx]);
+    steps = allItems().map(el => steps.find(s => `step-${s.id}` === el.id)).filter(Boolean);
+    renumber(); saveDraft(); dragSrcIdx = null;
+  });
+
+  stepsList.appendChild(item);
+  if (!silent) stepsList.scrollTop = stepsList.scrollHeight;
+  stepCount.textContent = `${steps.length} step${steps.length!==1?'s':''}`;
+}
+
+function allItems()      { return [...stepsList.querySelectorAll('.step-item')]; }
+function deleteStep(id)  {
+  steps = steps.filter(s => s.id !== id);
+  document.getElementById(`step-${id}`)?.remove();
+  renumber();
+  stepCount.textContent = `${steps.length} step${steps.length!==1?'s':''}`;
+  if (!steps.length) emptyMsg.style.display = '';
+  saveDraft();
+}
+function renumber() { stepsList.querySelectorAll('.step-num').forEach((el,i) => el.textContent = `Step ${i+1}`); }
+
+function clearAll(silent = false) {
+  if (!steps.length) return;
+  if (!silent && !confirm('Clear all steps?')) return;
+  steps = []; stepsList.innerHTML = ''; stepsList.appendChild(emptyMsg);
+  emptyMsg.style.display = ''; stepCount.textContent = '0 steps';
+  localStorage.removeItem('craftDraft'); draftPill.textContent = 'no draft';
+}
+
+// ── DRAFT ─────────────────────────────────────────────────────────────────
+function saveDraft() {
+  clearTimeout(draftTimer);
+  draftTimer = setTimeout(() => {
+    try {
+      localStorage.setItem('craftDraft', JSON.stringify({
+        title: document.getElementById('tutTitle').value,
+        videoUrl: currentVideoUrl,
+        steps: steps.map(s => ({ dataUrl: s.dataUrl, ts: s.ts, note: s.note, source: s.source }))
+      }));
+      draftPill.textContent = `saved ${new Date().toLocaleTimeString()}`;
+      draftPill.classList.add('ok');
+      setTimeout(() => draftPill.classList.remove('ok'), 2000);
+    } catch(e) { draftPill.textContent = 'storage full'; }
+  }, 900);
+}
+
+function restoreDraft() {
+  try {
+    const raw = localStorage.getItem('craftDraft');
+    if (!raw) return;
+    const d = JSON.parse(raw);
+    if (d.title) document.getElementById('tutTitle').value = d.title;
+    if (d.videoUrl) currentVideoUrl = d.videoUrl;
+    if (d.steps?.length) {
+      d.steps.forEach(s => addStep(s.dataUrl, s.ts||0, s.note||'', true, s.source||'manual'));
+      draftPill.textContent = `draft · ${d.steps.length} steps`;
+    }
+  } catch(e) { /* ignore */ }
+}
+
+// ── SHARE ─────────────────────────────────────────────────────────────────
+
+  async function shareTutorial() {
+  if (!steps.length) {
+    alert('No steps yet!');
+    return;
+  } 
+
+  const html = buildHtml();
+  const title = document.getElementById('tutTitle').value || 'Craft Tutorial'; 
+
+  const cleanedTitle = title.includes('-')
+    ? title.split('-').slice(1).join('-').trim()
+    : title.trim(); 
+
+  const vidInfo = currentVideoUrl ? `
+Url: ${currentVideoUrl}` : '';
+  const noteTitle = cleanedTitle || title; 
+
+  const shareText = `☝️ Click above 📄craft-tutorial.html to view a tutorial i have created...
+You can create your own tutorial - for free - using Craft Tutorial Maker:
+🔗 https://yabaggi.github.io/my-pwa-apps/craftut/
+-------------------
+Note: the tutorial above was base on this video:${vidInfo}
+Title: ${noteTitle}.`; 
+
+  // Copy to clipboard as fallback for caption
+  try {
+    await navigator.clipboard.writeText(shareText);
+    showToast('📋 Caption copied to clipboard!');
+  } catch(e) { console.warn('Clipboard copy failed', e); }
+
+  const blob  = new Blob([html], { type: 'text/html' });
+  const file  = new File([blob], 'craft-tutorial.html', { type: 'text/html' });
+  
+  if (navigator.canShare?.({ files: [file] })) {
+    try { 
+      await navigator.share({ title, text: shareText, files: [file] }); 
+      return; 
+    } catch(e) { 
+      if (e.name==='AbortError') return; 
+    }
+  }
+  
+  if (navigator.share) {
+    try { 
+      await navigator.share({ title, text: shareText, url: location.href }); 
+      return; 
+    } catch(e) {}
+  }
+  
+  exportHTML();
+  showToast('📥 Downloaded — share the HTML file');
+}
+
+// ── EXPORT ─────────────────────────────────────────────────────────────────
+function exportHTML() {
+  if (!steps.length) { alert('No steps yet!'); return; }
+  dlFile('craft-tutorial.html', buildHtml(), 'text/html');
+}
+
+function exportJSON() {
+  if (!steps.length) { alert('No steps yet!'); return; }
+  dlFile('craft-tutorial.json',
+    JSON.stringify(steps.map((s,i) => ({ step:i+1, timestamp:s.ts, source:s.source, note:s.note, image:s.dataUrl })), null, 2),
+    'application/json');
+}
+
+function buildHtml() {
+  const title = (document.getElementById('tutTitle').value || 'Craft Tutorial').replace(/</g,'&lt;');
+  const date  = new Date().toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});
+  const body  = steps.map((s,i) => `
+  <div class="step">
+    <div class="step-hdr">
+      <span class="num">${i+1}</span>
+      ${s.source==='snap'
+        ? `<span class="src">📷 frame</span>`
+        : `<span class="src">🎬 ${fmt(s.ts)}</span>`}
+    </div>
+    <img src="${s.dataUrl}" alt="Step ${i+1}">
+    ${s.note ? `<p class="note">${s.note.replace(/</g,'&lt;')}</p>` : '<p class="note muted">No description</p>'}
+  </div>`).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${title}</title>
+<style>
+  body{font-family:system-ui,sans-serif;max-width:700px;margin:0 auto;padding:24px 16px;background:#fafaf8;color:#1a1a1a}
+  h1{font-size:1.5rem;font-weight:800;margin-bottom:6px}
+  .meta{font-size:.76rem;color:#999;margin-bottom:28px;display:flex;gap:12px;flex-wrap:wrap}
+  .step{margin-bottom:24px;border:1px solid #e0ddd5;border-radius:8px;overflow:hidden;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+  .step-hdr{display:flex;align-items:center;gap:10px;padding:8px 12px;background:#1a1a1a;color:#fff}
+  .num{background:#c84b31;color:#fff;font-size:.68rem;font-weight:700;padding:2px 9px;border-radius:2px}
+  .src{font-size:.66rem;font-family:monospace;opacity:.45;margin-left:auto}
+  .step img{width:100%;display:block}
+  .note{padding:10px 13px;font-size:.88rem;line-height:1.55;margin:0;border-top:1px solid #f0ede5}
+  .muted{color:#ccc;font-style:italic}
+  @media print{.step{break-inside:avoid}}
+</style></head>
+<body>
+<h1>✂️ ${title}</h1>
+<div class="meta"><span>📋 ${steps.length} steps</span><span>📅 ${date}</span><span>🛠 Craft Tutorial Maker</span></div>
+${body}</body></html>`;
+}
+
+function dlFile(name, content, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content],{type}));
+  a.download = name; a.click();
+}
+
+// ── UTILS ─────────────────────────────────────────────────────────────────
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg) {
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  const t = document.createElement('div'); t.className='toast'; t.textContent=msg;
+  document.body.appendChild(t); setTimeout(()=>t.remove(), 2700);
+}
+
+function showChoiceModal(msg, btn1Text, btn1Cb, btn2Text, btn2Cb) {
+  const modal = document.getElementById('choiceModal');
+  const msgEl = document.getElementById('choiceMsg');
+  const b1    = document.getElementById('choiceBtn1');
+  const b2    = document.getElementById('choiceBtn2');
+  const bc    = document.getElementById('choiceBtnCancel');
+
+  msgEl.textContent = msg;
+  b1.textContent    = btn1Text;
+  b2.textContent    = btn2Text;
+
+  const close = () => modal.classList.remove('visible');
+
+  b1.onclick = () => { close(); btn1Cb(); };
+  b2.onclick = () => { close(); btn2Cb(); };
+  bc.onclick = () => { close(); };
+
+  modal.classList.add('visible');
+}
+
+function loadVideoResources(v) {
+  if (v.downloaded) {
+    const filePath = `./dl-${v.id}.mp4`;
+    loadFromPath(filePath, v.title || v.id);
+  } else if (v.url) {
+    loadEmbed(v.url, v.title || v.id);
+  }
+}
+
+// ── KEYBOARD ──────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (['TEXTAREA','INPUT'].includes(e.target.tagName)) return;
+  const R = [0.1,0.25,0.5,1,1.5,2];
+  if (e.key===' ')         { e.preventDefault(); if(mode==='manual') togglePlay(); }
+  if (e.key==='s'||e.key==='S') { if(mode==='manual') takeScreenshot(); }
+  if (e.key==='ArrowLeft')  { if(mode==='manual') stepFrame(-1); }
+  if (e.key==='ArrowRight') { if(mode==='manual') stepFrame(1); }
+  if (e.key==='ArrowUp')   { e.preventDefault(); if(mode==='manual'){const i=R.indexOf(video.playbackRate);setSpeed(R[Math.min(i+1,R.length-1)]);} }
+  if (e.key==='ArrowDown') { e.preventDefault(); if(mode==='manual'){const i=R.indexOf(video.playbackRate);setSpeed(R[Math.max(i-1,0)]);} }
+});
+
+// ── PWA SUPPORT ───────────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/my-pwa-apps/craftut/sw.js', { scope: '/my-pwa-apps/craftut/' })
+      .then(reg => console.log('[PWA] Service Worker registered:', reg.scope))
+      .catch(err => console.error('[PWA] Service Worker registration failed:', err));
+  });
+}
+
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  console.log('[PWA] App can be installed');
+});
+
+async function installPWA() {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log('[PWA] Install prompt outcome:', outcome);
+  deferredPrompt = null;
+}
+
+window.addEventListener('appinstalled', () => {
+  console.log('[PWA] App installed successfully');
+  deferredPrompt = null;
+});
+</script>
+</body>
+</html>
+
+

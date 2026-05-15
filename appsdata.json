@@ -1,5 +1,18 @@
 [
  {
+    "href": "craftut/",
+    "category": "Others",
+    "category-ar": "",
+    "keywords": "Nn",
+    "keywords-ar": "",
+    "icon": "✂️",
+    "name": "Craft tutorial maker",
+    "name-ar": "اصنعها بنفسك خطوة خطوة",
+    "description": "✂️ Craft Tutorial Maker. Craft Tutorial Maker is a specialized Progressive Web App (PWA) designed to convert videos and reels into beautiful, step-by-step tutorials. Capture key moments, add descriptions, and export your creations as standalone HTML or JSON files.",
+    "description-ar": "✂️ كيف تصنعها بنفسك خطوة خطوة. Craft Tutorial Maker هو تطبيق ويب تقدمي متخصص (PWA) مصمم لتحويل مقاطع الفيديو والبكرات إلى دروس جميلة خطوة بخطوة. التقط اللحظات الرئيسية، وأضف الأوصاف، وقم بتصدير إبداعاتك كملفات HTML أو JSON مستقلة.",
+    "badges": []
+  },
+ {
     "href": "feedflow/",
     "category": "Others",
     "category-ar": "",
@@ -12,9 +25,7 @@
     "description-ar": "قارئ RSS سريع ومميز بالكامل تم بناؤه كتطبيق من صفحة واحدة، تم نشره على Netlify مع وظيفة الواجهة الخلفية بدون خادم. يدعم خلاصات Reddit، وأي مصدر RSS / Atom، والوصول دون اتصال بالإنترنت، وتركيب PWA، والتخصيص الغني.",
     "badges": []
   },
-  
-  
-  {
+    {
     "href": "peco/",
     "category": "Others",
     "category-ar": "",

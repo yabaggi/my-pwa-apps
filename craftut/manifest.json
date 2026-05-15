@@ -1,0 +1,42 @@
+{
+  "id": "craftut-id",
+  "name": "Craft Tutorial Maker",
+  "short_name": "Craft Tutori",
+  "description": "",
+  "start_url": "/my-pwa-apps/craftut/",
+  "scope": "/my-pwa-apps/craftut/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#2196f3",
+  "background_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/my-pwa-apps/craftut/icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/my-pwa-apps/craftut/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/my-pwa-apps/craftut/icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/my-pwa-apps/craftut/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": [
+    "utilities",
+    "productivity"
+  ]
+}
