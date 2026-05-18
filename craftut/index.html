@@ -301,11 +301,33 @@
     border: 1px solid var(--border); border-radius: 8px; padding: 8px;
     resize: none; min-height: 60px; outline: none;
   }
-
+<!--
   .steps-footer {
     padding: 16px; border-top: 1px solid var(--border);
     display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
   }
+  
+  
+  -->
+  
+  
+  
+  .steps-footer {
+  padding: 16px; 
+  border-top: 1px solid var(--border);
+  display: grid; 
+  grid-template-columns: 1fr 1fr 1fr; /* 1. Changed to 3 equal columns */
+  gap: 8px;
+}
+
+/* 2. Target the last button to stretch it */
+.steps-footer button:last-child {
+  grid-column: span 3;
+}
+
+  
+  
+  
 
   /* ── SNAPS PANEL ──────────────────────────────────────── */
   .snaps-panel { display: none; flex: 1; flex-direction: column; overflow: hidden; background: var(--surface); }
@@ -1246,7 +1268,7 @@ Url: ${currentVideoUrl}` : '';
 
   const shareText = `☝️ Click above 📄craft-tutorial.html to view a tutorial i have created...
 You can create your own tutorial - for free - using Craft Tutorial Maker:
-🔗 https://yabaggi.github.io/craftut/
+🔗 https://yabaggi.github.io/my-pwa-apps/craftut/
 -------------------
 Note: the tutorial above was base on this video:${vidInfo}
 Title: ${noteTitle}.`; 
@@ -1483,5 +1505,6 @@ window.addEventListener('appinstalled', () => {
 </script>
 </body>
 </html>
+
 
 
