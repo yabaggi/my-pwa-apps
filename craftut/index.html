@@ -393,6 +393,36 @@
   .modal-msg { margin-bottom: 24px; font-size: 1rem; font-weight: 700; color: var(--primary); text-align: center; line-height: 1.4; }
   .modal-btns { display: flex; flex-direction: column; gap: 12px; }
   .modal-btns .btn { padding: 14px; font-size: 0.9rem; width: 100%; border-radius: 8px; }
+
+  /* ── PREVIEW MODAL ─────────────────────────────────────── */
+  .preview-overlay {
+    display: none; position: fixed; inset: 0;
+    background: #000; z-index: 11000;
+    flex-direction: column;
+  }
+  .preview-overlay.visible { display: flex; }
+  .preview-content {
+    flex: 1; width: 100%;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .preview-img { width: 100%; height: 100%; object-fit: contain; }
+  .preview-controls {
+    padding: 20px; display: flex; align-items: center; justify-content: center; gap: 30px;
+    background: #111; border-top: 1px solid #222;
+    padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  }
+  .preview-close {
+    position: absolute; top: 20px; right: 20px; z-index: 11001;
+    background: rgba(255,255,255,0.2); color: #fff; border: none;
+    width: 40px; height: 40px; border-radius: 50%; font-size: 1.2rem; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; backdrop-filter: blur(4px);
+  }
+  .preview-step-num {
+    position: absolute; bottom: 10px; right: 10px;
+    background: rgba(0,0,0,0.6); color: rgba(255,255,255,0.8); padding: 4px 10px; border-radius: 4px;
+    font-family: 'DM Mono', monospace; font-size: 0.65rem;
+  }
 </style>
     <meta name="theme-color" content="#2196f3">
     <link rel="manifest" href="/my-pwa-apps/craftut/manifest.json">
@@ -511,8 +541,8 @@
 
       <div class="steps-footer">
         <button class="btn green"   onclick="shareTutorial()">🔗 Share</button>
-        <button class="btn"         onclick="exportHTML()">⬇ HTML</button>
-        <button class="btn"         onclick="exportJSON()">⬇ JSON</button>
+        <button class="btn"         onclick="playCurrentVideo()">▶ Play</button>
+        <button class="btn"         onclick="showPreview()">🎞 Preview</button>
         <button class="btn"         onclick="clearAll()" style="color:var(--accent)">🗑 Clear</button>
       </div>
     </div>
@@ -559,6 +589,22 @@
       <button id="choiceBtn1" class="btn primary">Load Snaps</button>
       <button id="choiceBtn2" class="btn">Play Video</button>
       <button id="choiceBtnCancel" class="btn" style="border:none; color:var(--text-muted); background:transparent;">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Preview Modal -->
+<div id="previewModal" class="preview-overlay">
+  <button class="preview-close" onclick="closePreview()">✕</button>
+  <div class="preview-content">
+    <img id="previewImg" class="preview-img" src="" alt="Preview">
+    <div id="previewStepNum" class="preview-step-num">Step 0/0</div>
+  </div>
+  <div class="preview-controls">
+    <button class="btn" id="btnPreviewPlay" onclick="togglePreviewPlay()" style="min-width:90px">⏸ Pause</button>
+    <div style="display:flex; flex-direction:column; gap:4px">
+      <span style="font-size:0.6rem; font-weight:800; text-transform:uppercase; opacity:0.8; letter-spacing:0.05em">Speed</span>
+      <input type="range" id="previewSpeed" min="50" max="800" step="10" value="200" style="width:120px; height:4px">
     </div>
   </div>
 </div>
@@ -727,16 +773,8 @@ function selectVideo(id) {
   if (!titleEl.value && v.title) titleEl.value = v.title;
 
   if (v.snapped) {
-    const msg = steps.length > 0 
-      ? 'Clear existing steps and load snaps for this video?' 
-      : 'This video has snaps. What would you like to do?';
-      
-    showChoiceModal(msg, 'Load Snaps', () => {
-      autoAddSnapsForVideo(v.id, v.title, true);
-    }, 'Play Video', () => {
-      loadVideoResources(v);
-      if (window.innerWidth <= 768) showView('editor');
-    });
+    // Clear and load snaps immediately
+    autoAddSnapsForVideo(v.id, v.title, true);
   } else {
     loadVideoResources(v);
     // On mobile, switch to editor view after selection
@@ -1208,7 +1246,7 @@ Url: ${currentVideoUrl}` : '';
 
   const shareText = `☝️ Click above 📄craft-tutorial.html to view a tutorial i have created...
 You can create your own tutorial - for free - using Craft Tutorial Maker:
-🔗 https://yabaggi.github.io/my-pwa-apps/craftut/
+🔗 https://yabaggi.github.io/craftut/
 -------------------
 Note: the tutorial above was base on this video:${vidInfo}
 Title: ${noteTitle}.`; 
@@ -1337,6 +1375,69 @@ function loadVideoResources(v) {
   } else if (v.url) {
     loadEmbed(v.url, v.title || v.id);
   }
+}
+
+function playCurrentVideo() {
+  const v = allVideos.find(x => x.id === activeVideoId);
+  if (!v) {
+    showToast('Select a video first');
+    return;
+  }
+  loadVideoResources(v);
+  showView('editor');
+}
+
+// ── PREVIEW ANIMATION ─────────────────────────────────────────────────────
+let previewInt = null;
+let previewIdx = 0;
+let isPreviewPlaying = false;
+
+function showPreview() {
+  if (steps.length < 2) {
+    showToast('Need at least 2 steps for animation');
+    return;
+  }
+  previewIdx = 0;
+  const modal = document.getElementById('previewModal');
+  modal.classList.add('visible');
+  startPreview();
+}
+
+function startPreview() {
+  isPreviewPlaying = true;
+  document.getElementById('btnPreviewPlay').textContent = '⏸ Pause';
+  runPreviewLoop();
+}
+
+function stopPreview() {
+  isPreviewPlaying = false;
+  document.getElementById('btnPreviewPlay').textContent = '▶ Play';
+  clearTimeout(previewInt);
+}
+
+function togglePreviewPlay() {
+  isPreviewPlaying ? stopPreview() : startPreview();
+}
+
+function runPreviewLoop() {
+  if (!isPreviewPlaying) return;
+  
+  const img = document.getElementById('previewImg');
+  const num = document.getElementById('previewStepNum');
+  const speed = document.getElementById('previewSpeed').value;
+  
+  if (steps[previewIdx]) {
+    img.src = steps[previewIdx].dataUrl;
+    num.textContent = `Step ${previewIdx + 1} / ${steps.length}`;
+  }
+  
+  previewIdx = (previewIdx + 1) % steps.length;
+  previewInt = setTimeout(runPreviewLoop, speed);
+}
+
+function closePreview() {
+  stopPreview();
+  document.getElementById('previewModal').classList.remove('visible');
 }
 
 // ── KEYBOARD ──────────────────────────────────────────────────────────────
