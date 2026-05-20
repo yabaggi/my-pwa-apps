@@ -33,7 +33,8 @@
       "img020.jpg",
       "img021.jpg",
       "img022.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "2005150110089019",
@@ -47,7 +48,8 @@
     "snapped": false,
     "snap_count": 0,
     "skip_reason": "download_failed_or_limit_exceeded:10MiB",
-    "snaps": []
+    "snaps": [],
+    "category": "Craft"
   },
   {
     "id": "1504001808047672",
@@ -81,7 +83,8 @@
       "img024.jpg",
       "img025.jpg",
       "img026.jpg"
-    ]
+    ],
+    "category": "Art"
   },
   {
     "id": "1591375285303188",
@@ -114,7 +117,8 @@
       "img019.jpg",
       "img020.jpg",
       "img021.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "4410224922555798",
@@ -145,7 +149,8 @@
       "img015.jpg",
       "img018.jpg",
       "img020.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "1494250275652871",
@@ -177,7 +182,8 @@
       "img015.jpg",
       "img016.jpg",
       "img018.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "1294502002528190",
@@ -191,7 +197,8 @@
     "snapped": false,
     "snap_count": 0,
     "skip_reason": "download_failed_or_limit_exceeded:10MiB",
-    "snaps": []
+    "snaps": [],
+    "category": "Craft"
   },
   {
     "id": "1331784378984926",
@@ -205,7 +212,8 @@
     "snapped": false,
     "snap_count": 0,
     "skip_reason": "download_failed_or_limit_exceeded:10MiB",
-    "snaps": []
+    "snaps": [],
+    "category": "Craft"
   },
   {
     "id": "1863646410889143",
@@ -219,7 +227,8 @@
     "snapped": false,
     "snap_count": 0,
     "skip_reason": "download_failed_or_limit_exceeded:10MiB",
-    "snaps": []
+    "snaps": [],
+    "category": "Craft"
   },
   {
     "id": "891243667292691",
@@ -244,7 +253,8 @@
       "img010.jpg",
       "img011.jpg",
       "img013.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "1304228305004476",
@@ -273,7 +283,8 @@
       "img013.jpg",
       "img014.jpg",
       "img015.jpg"
-    ]
+    ],
+    "category": "Recipes"
   },
   {
     "id": "1503006031750355",
@@ -287,7 +298,8 @@
     "snapped": false,
     "snap_count": 0,
     "skip_reason": "download_failed_or_limit_exceeded:10MiB",
-    "snaps": []
+    "snaps": [],
+    "category": "DIY"
   },
   {
     "id": "27174234578838681",
@@ -301,7 +313,8 @@
     "snapped": false,
     "snap_count": 0,
     "skip_reason": "download_failed_or_limit_exceeded:10MiB",
-    "snaps": []
+    "snaps": [],
+    "category": "Craft"
   },
   {
     "id": "1548783413258141",
@@ -340,7 +353,8 @@
       "img023.jpg",
       "img025.jpg",
       "img029.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "1613559909832295",
@@ -354,7 +368,8 @@
     "snapped": false,
     "snap_count": 0,
     "skip_reason": "download_failed_or_limit_exceeded:10MiB",
-    "snaps": []
+    "snaps": [],
+    "category": "Art"
   },
   {
     "id": "0ibQNhyPJAU",
@@ -380,7 +395,8 @@
       "img018.jpg",
       "img020.jpg",
       "img024.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "BBadLD1-RbI",
@@ -408,7 +424,8 @@
       "img033.jpg",
       "img035.jpg",
       "img036.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "966303875812817",
@@ -438,7 +455,8 @@
       "img020.jpg",
       "img021.jpg",
       "img023.jpg"
-    ]
+    ],
+    "category": "Art"
   },
   {
     "id": "1852446128782388",
@@ -478,7 +496,8 @@
       "img037.jpg",
       "img038.jpg",
       "img040.jpg"
-    ]
+    ],
+    "category": "Art"
   },
   {
     "id": "2058120998383452",
@@ -508,7 +527,8 @@
       "img015.jpg",
       "img017.jpg",
       "img020.jpg"
-    ]
+    ],
+    "category": "Art"
   },
   {
     "id": "1333788105264775",
@@ -535,7 +555,8 @@
       "img010.jpg",
       "img011.jpg",
       "img013.jpg"
-    ]
+    ],
+    "category": "Art"
   },
   {
     "id": "1281056920877117",
@@ -549,7 +570,8 @@
     "snapped": false,
     "snap_count": 0,
     "skip_reason": "download_failed_or_limit_exceeded:10MiB",
-    "snaps": []
+    "snaps": [],
+    "category": "DIY"
   },
   {
     "id": "2034902064075285",
@@ -580,7 +602,8 @@
       "img021.jpg",
       "img023.jpg",
       "img024.jpg"
-    ]
+    ],
+    "category": "DIY"
   },
   {
     "id": "1711006090070080",
@@ -611,7 +634,8 @@
       "img025.jpg",
       "img026.jpg",
       "img027.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "2109598506483942",
@@ -647,7 +671,8 @@
       "img025.jpg",
       "img027.jpg",
       "img028.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "1831546920847428",
@@ -682,7 +707,8 @@
       "img025.jpg",
       "img026.jpg",
       "img028.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "1500429221462271",
@@ -717,7 +743,8 @@
       "img024.jpg",
       "img025.jpg",
       "img029.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "1759844948724211",
@@ -753,7 +780,8 @@
       "img023.jpg",
       "img025.jpg",
       "img027.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "4445448505734389",
@@ -791,7 +819,8 @@
       "img025.jpg",
       "img026.jpg",
       "img027.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "1538587764354875",
@@ -824,7 +853,8 @@
       "img025.jpg",
       "img028.jpg",
       "img031.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "2341712549650997",
@@ -853,7 +883,8 @@
       "img023.jpg",
       "img024.jpg",
       "img028.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "1263016069325309",
@@ -887,7 +918,8 @@
       "img026.jpg",
       "img028.jpg",
       "img029.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "1513766810395182",
@@ -925,7 +957,8 @@
       "img021.jpg",
       "img022.jpg",
       "img024.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "VkKHSWINhmM",
@@ -940,7 +973,8 @@
     "snap_count": 0,
     "available": true,
     "snaps": [],
-    "skip_reason": "size:208MiB>10MiB"
+    "skip_reason": "size:208MiB>10MiB",
+    "category": "Craft"
   },
   {
     "id": "9a5ntYUYC9I",
@@ -955,7 +989,8 @@
     "snap_count": 0,
     "available": true,
     "snaps": [],
-    "skip_reason": "size:46MiB>10MiB"
+    "skip_reason": "size:46MiB>10MiB",
+    "category": "Art"
   },
   {
     "id": "4PIjy516KmM",
@@ -970,7 +1005,8 @@
     "snap_count": 0,
     "available": true,
     "snaps": [],
-    "skip_reason": "size:91MiB>10MiB"
+    "skip_reason": "size:91MiB>10MiB",
+    "category": "Craft"
   },
   {
     "id": "E84XAOUab4M",
@@ -985,7 +1021,8 @@
     "snap_count": 0,
     "available": false,
     "skip_reason": "unavailable: no duration (private, deleted, or geo-blocked)",
-    "snaps": []
+    "snaps": [],
+    "category": "Craft"
   },
   {
     "id": "chSGX6BZtxg",
@@ -1027,7 +1064,8 @@
       "img026.jpg",
       "img027.jpg",
       "img028.jpg"
-    ]
+    ],
+    "category": "Art"
   },
   {
     "id": "uvt6ibBL5Cg",
@@ -1042,7 +1080,8 @@
     "snap_count": 0,
     "available": true,
     "snaps": [],
-    "skip_reason": "size:315MiB>10MiB"
+    "skip_reason": "size:315MiB>10MiB",
+    "category": "Craft"
   },
   {
     "id": "b7eWJjPbi2g",
@@ -1067,7 +1106,8 @@
       "img007.jpg",
       "img008.jpg",
       "img009.jpg"
-    ]
+    ],
+    "category": "DIY"
   },
   {
     "id": "S4vha8Ob4WQ",
@@ -1082,7 +1122,8 @@
     "snap_count": 0,
     "available": true,
     "snaps": [],
-    "skip_reason": "size:102MiB>10MiB"
+    "skip_reason": "size:102MiB>10MiB",
+    "category": "DIY"
   },
   {
     "id": "wcKX-lu1Vlw",
@@ -1097,7 +1138,8 @@
     "snap_count": 0,
     "available": false,
     "skip_reason": "unavailable: no duration (private, deleted, or geo-blocked)",
-    "snaps": []
+    "snaps": [],
+    "category": "Craft"
   },
   {
     "id": "G0I2V9-blTU",
@@ -1112,7 +1154,8 @@
     "snap_count": 0,
     "available": true,
     "snaps": [],
-    "skip_reason": "size:24MiB>10MiB"
+    "skip_reason": "size:24MiB>10MiB",
+    "category": "DIY"
   },
   {
     "id": "s0x38sFbZCM",
@@ -1127,7 +1170,8 @@
     "snap_count": 0,
     "available": true,
     "snaps": [],
-    "skip_reason": "size:509MiB>10MiB"
+    "skip_reason": "size:509MiB>10MiB",
+    "category": "Art"
   },
   {
     "id": "911755478409807",
@@ -1168,7 +1212,8 @@
       "img024.jpg",
       "img025.jpg",
       "img027.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "p6KzmzQgIG0",
@@ -1204,7 +1249,8 @@
       "img026.jpg",
       "img027.jpg",
       "img028.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "967411586271943",
@@ -1236,7 +1282,8 @@
       "img022.jpg",
       "img024.jpg",
       "img028.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "1341568511139607",
@@ -1256,7 +1303,8 @@
       "img003.jpg",
       "img004.jpg",
       "img006.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "1610516993791622",
@@ -1277,7 +1325,8 @@
       "img004.jpg",
       "img005.jpg",
       "img007.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "1302206817973351",
@@ -1305,7 +1354,8 @@
       "img011.jpg",
       "img012.jpg",
       "img013.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "1349763270303868",
@@ -1329,7 +1379,8 @@
       "img007.jpg",
       "img008.jpg",
       "img009.jpg"
-    ]
+    ],
+    "category": "DIY"
   },
   {
     "id": "savf2XPHEn8",
@@ -1354,7 +1405,8 @@
       "img008.jpg",
       "img009.jpg",
       "img011.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "984799330918544",
@@ -1379,7 +1431,8 @@
       "img008.jpg",
       "img009.jpg",
       "img011.jpg"
-    ]
+    ],
+    "category": "Craft"
   },
   {
     "id": "1923734154798318",
@@ -1404,6 +1457,278 @@
       "img008.jpg",
       "img009.jpg",
       "img011.jpg"
-    ]
+    ],
+    "category": "Craft"
+  },
+  {
+    "id": "955825594005692",
+    "url": "https://www.facebook.com/share/r/1HxPVVxm5y/",
+    "title": "FACEBOOK-149K views · 3.1K reactions ",
+    "duration": " Transform your space with this sustainable DIY paper bag planter! In this quick tutorial, learn how to upcycle a simple brown bag into high-end, textured home decor using just plaster and a few household items. This eco-friendly DIY project is perfect for adding a modern, organic touch to your indoor garden. Whether you’re a fan of minimalist styling or searching for affordable apartment decor ideas, this \"trash to treasure\" craft is a game-changer for 2026. What you’ll need: Paper bag Plaster/Cement Plastic cup (for the core) Your favorite indoor plant (like a Pothos!) Love this look? Like, share, and comment \"DIY\" for more upcycling tips! #DIYHomeDecor #UpcycledPlanter #SustainableLiving #IndoorJungle #BudgetDecor #HomeHacks #TexturedArt #PlantParent #EcoFriendlyDIY #ModernHome ",
+    "resolution": " AI Design Universe",
+    "format": "23",
+    "size": "Unknown",
+    "downloaded": false,
+    "snapped": true,
+    "snap_count": 10,
+    "snaps": [
+      "img000.jpg",
+      "img001.jpg",
+      "img002.jpg",
+      "img003.jpg",
+      "img004.jpg",
+      "img005.jpg",
+      "img006.jpg",
+      "img007.jpg",
+      "img008.jpg",
+      "img010.jpg"
+    ],
+    "category": "DIY"
+  },
+  {
+    "id": "1702785017563106",
+    "url": "https://www.facebook.com/share/v/1FXTjYkQYH/",
+    "title": "FACEBOOK-49K views · 830 reactions ",
+    "duration": " Outstanding Flower Pots From Cardboard And Cement. ",
+    "resolution": " Chennai Express",
+    "format": "3:54",
+    "size": "Unknown",
+    "downloaded": false,
+    "snapped": true,
+    "snap_count": 80,
+    "snaps": [
+      "img000.jpg",
+      "img001.jpg",
+      "img002.jpg",
+      "img003.jpg",
+      "img004.jpg",
+      "img005.jpg",
+      "img006.jpg",
+      "img007.jpg",
+      "img008.jpg",
+      "img009.jpg",
+      "img010.jpg",
+      "img011.jpg",
+      "img012.jpg",
+      "img013.jpg",
+      "img014.jpg",
+      "img015.jpg",
+      "img016.jpg",
+      "img017.jpg",
+      "img018.jpg",
+      "img019.jpg",
+      "img020.jpg",
+      "img021.jpg",
+      "img022.jpg",
+      "img023.jpg",
+      "img024.jpg",
+      "img025.jpg",
+      "img026.jpg",
+      "img027.jpg",
+      "img028.jpg",
+      "img029.jpg",
+      "img030.jpg",
+      "img031.jpg",
+      "img032.jpg",
+      "img033.jpg",
+      "img034.jpg",
+      "img035.jpg",
+      "img036.jpg",
+      "img037.jpg",
+      "img038.jpg",
+      "img039.jpg",
+      "img040.jpg",
+      "img041.jpg",
+      "img042.jpg",
+      "img043.jpg",
+      "img044.jpg",
+      "img045.jpg",
+      "img046.jpg",
+      "img047.jpg",
+      "img048.jpg",
+      "img049.jpg",
+      "img050.jpg",
+      "img051.jpg",
+      "img052.jpg",
+      "img053.jpg",
+      "img054.jpg",
+      "img055.jpg",
+      "img056.jpg",
+      "img057.jpg",
+      "img058.jpg",
+      "img059.jpg",
+      "img060.jpg",
+      "img061.jpg",
+      "img062.jpg",
+      "img063.jpg",
+      "img064.jpg",
+      "img065.jpg",
+      "img066.jpg",
+      "img067.jpg",
+      "img068.jpg",
+      "img069.jpg",
+      "img070.jpg",
+      "img071.jpg",
+      "img072.jpg",
+      "img073.jpg",
+      "img074.jpg",
+      "img075.jpg",
+      "img076.jpg",
+      "img077.jpg",
+      "img078.jpg",
+      "img080.jpg"
+    ],
+    "category": "DIY"
+  },
+  {
+    "id": "1278841157670296",
+    "url": "https://www.facebook.com/share/v/1ahYtzHoRs/",
+    "title": "FACEBOOK-41K views · 699 reactions ",
+    "duration": " Tự làm chậu xi măng đẹp như shop bán 😍#diy #chauximang #viral #fyp #decor #handmade #trending #xuhuong ",
+    "resolution": " Hạt Giống Xanh",
+    "format": "1:38",
+    "size": "Unknown",
+    "downloaded": false,
+    "snapped": true,
+    "snap_count": 35,
+    "snaps": [
+      "img000.jpg",
+      "img001.jpg",
+      "img002.jpg",
+      "img003.jpg",
+      "img004.jpg",
+      "img005.jpg",
+      "img006.jpg",
+      "img007.jpg",
+      "img008.jpg",
+      "img009.jpg",
+      "img010.jpg",
+      "img011.jpg",
+      "img012.jpg",
+      "img013.jpg",
+      "img014.jpg",
+      "img015.jpg",
+      "img016.jpg",
+      "img017.jpg",
+      "img018.jpg",
+      "img019.jpg",
+      "img020.jpg",
+      "img021.jpg",
+      "img022.jpg",
+      "img023.jpg",
+      "img024.jpg",
+      "img025.jpg",
+      "img026.jpg",
+      "img027.jpg",
+      "img028.jpg",
+      "img029.jpg",
+      "img030.jpg",
+      "img031.jpg",
+      "img032.jpg",
+      "img033.jpg",
+      "img035.jpg"
+    ],
+    "category": "Craft"
+  },
+  {
+    "id": "1670691134081716",
+    "url": "https://www.facebook.com/share/v/15nvprzTqgT/",
+    "title": "FACEBOOK-129K views · 1.2K reactions ",
+    "duration": " Building a wood stove with cement and plastic pots. 💡😱🥰 ",
+    "resolution": " Stones",
+    "format": "28",
+    "size": "Unknown",
+    "downloaded": false,
+    "snapped": true,
+    "snap_count": 12,
+    "snaps": [
+      "img000.jpg",
+      "img001.jpg",
+      "img002.jpg",
+      "img003.jpg",
+      "img004.jpg",
+      "img005.jpg",
+      "img006.jpg",
+      "img007.jpg",
+      "img008.jpg",
+      "img009.jpg",
+      "img010.jpg",
+      "img012.jpg"
+    ],
+    "category": "DIY"
+  },
+  {
+    "id": "1775740469795630",
+    "url": "https://www.facebook.com/share/v/1bZam1pZmt/",
+    "title": "FACEBOOK-🔧",
+    "duration": "1:41",
+    "resolution": "1080x1920",
+    "format": "mp4",
+    "size": "Unknown",
+    "downloaded": false,
+    "snapped": true,
+    "snap_count": 36,
+    "snaps": [
+      "img000.jpg",
+      "img001.jpg",
+      "img002.jpg",
+      "img003.jpg",
+      "img004.jpg",
+      "img005.jpg",
+      "img006.jpg",
+      "img007.jpg",
+      "img008.jpg",
+      "img009.jpg",
+      "img010.jpg",
+      "img011.jpg",
+      "img012.jpg",
+      "img013.jpg",
+      "img014.jpg",
+      "img015.jpg",
+      "img016.jpg",
+      "img017.jpg",
+      "img018.jpg",
+      "img019.jpg",
+      "img020.jpg",
+      "img021.jpg",
+      "img022.jpg",
+      "img023.jpg",
+      "img024.jpg",
+      "img025.jpg",
+      "img026.jpg",
+      "img027.jpg",
+      "img028.jpg",
+      "img029.jpg",
+      "img030.jpg",
+      "img031.jpg",
+      "img032.jpg",
+      "img033.jpg",
+      "img034.jpg",
+      "img036.jpg"
+    ],
+    "category": "DIY"
+  },
+  {
+    "id": "780992514590228",
+    "url": "https://www.facebook.com/share/r/1GtN6V7aD3/",
+    "title": "FACEBOOK-Canasta de cartón",
+    "duration": "17",
+    "resolution": "720x1280",
+    "format": "mp4",
+    "size": "Unknown",
+    "downloaded": false,
+    "snapped": true,
+    "snap_count": 8,
+    "snaps": [
+      "img000.jpg",
+      "img001.jpg",
+      "img002.jpg",
+      "img003.jpg",
+      "img004.jpg",
+      "img005.jpg",
+      "img006.jpg",
+      "img008.jpg"
+    ],
+    "category": "Craft"
   }
 ]

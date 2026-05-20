@@ -486,6 +486,15 @@
       <input type="text" placeholder="Search titles…" oninput="filterLib(this.value)">
     </div>
 
+    <div class="lib-filter cat-filter" style="padding-top:0; border-bottom: 1px solid var(--border); padding-bottom:12px; margin-bottom:8px">
+      <button class="flt-btn active" onclick="setCategory('All',this)">All</button>
+      <button class="flt-btn" onclick="setCategory('Craft',this)">Craft</button>
+      <button class="flt-btn" onclick="setCategory('Art',this)">Art</button>
+      <button class="flt-btn" onclick="setCategory('DIY',this)">DIY</button>
+      <button class="flt-btn" onclick="setCategory('Recipes',this)">Recipes</button>
+      <button class="flt-btn" onclick="setCategory('Others',this)">Others</button>
+    </div>
+
     <div class="lib-list" id="libList">
       <div class="lib-loading"><div class="spinner"></div>Loading...</div>
     </div>
@@ -654,6 +663,7 @@ let steps          = [];
 let allVideos      = [];
 let filteredVideos = [];
 let activeFilter   = 'all';
+let activeCategory = 'All';
 let activeVideoId  = null;
 let currentVideoUrl = '';
 let mode           = 'manual';   // 'manual'
@@ -668,7 +678,7 @@ let isLoadingSnaps = false;
 window.addEventListener('DOMContentLoaded', () => {
   loadLibrary();
   restoreDraft();
-  // Ensure we start in the editor view
+  // Ensure we start in the library view
   showView('library');
 });
 
@@ -728,7 +738,14 @@ function toggleLib() {
 
 function setFilter(f, btn) {
   activeFilter = f;
-  document.querySelectorAll('.flt-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.lib-filter:not(.cat-filter) .flt-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  applyFilter();
+}
+
+function setCategory(c, btn) {
+  activeCategory = c;
+  document.querySelectorAll('.cat-filter .flt-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   applyFilter();
 }
@@ -747,7 +764,10 @@ function applyFilter(q='') {
                  : activeFilter === 'dl'      ? v.downloaded === true
                  : activeFilter === 'skipped' ? !!v.skip_reason
                  : /* pending */                (v.downloaded !== true && !v.skip_reason);
-    return matchQ && matchF;
+    
+    const matchC = activeCategory === 'All' ? true : v.category === activeCategory;
+    
+    return matchQ && matchF && matchC;
   });
   renderLib();
 }
@@ -768,6 +788,7 @@ function renderLib() {
          data-id="${v.id}" onclick="selectVideo('${v.id}')">
       <div class="vid-card-title">${esc(v.title || v.id)}</div>
       <div class="vid-meta">
+        ${v.category ? `<span class="vid-badge dur" style="background:var(--blue); color:white">${esc(v.category)}</span>` : ''}
         ${v.duration ? `<span class="vid-badge dur">⏱ ${v.duration}</span>` : ''}
         <span class="vid-badge ${dl ? 'dl' : 'nodl'}">${dl ? '✓ dl' : '⬇ not dl'}</span>
         ${snap ? `<span class="vid-badge snap">📷 snapped</span>` : ''}
