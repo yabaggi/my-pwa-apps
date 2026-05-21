@@ -19,7 +19,7 @@ if [ -f ".env" ]; then
 fi
 
 # Configuration Defaults
-INTERVAL="${INTERVAL:-3}"
+INTERVAL="${INTERVAL:-2}"
 REMOVE_AFTER_SNAP=true
 
 # --- Helper: Confirmation Prompt ---
@@ -35,6 +35,7 @@ confirm() {
 # --- Function: Add Video (Metadata) ---
 fn_add() {
     local URL="$1"
+    local CATEGORY="${2:-Others}"
     
     if [[ ! "$URL" =~ ^https?:// ]]; then
         echo "Skipping invalid URL: $URL"
@@ -83,7 +84,8 @@ fn_add() {
         --arg res "$RESOLUTION" \
         --arg fmt "$EXT" \
         --arg size "$HUMAN_SIZE" \
-        '{id: $id, url: $url, title: $title, duration: $dur, resolution: $res, format: $fmt, size: $size, downloaded: false, snapped: false, snap_count: 0}')
+        --arg cat "$CATEGORY" \
+        '{id: $id, url: $url, title: $title, duration: $dur, resolution: $res, format: $fmt, size: $size, downloaded: false, snapped: false, snap_count: 0, category: $cat}')
 
     # Append to file
     if [ ! -f "$FILE" ] || [ ! -s "$FILE" ]; then
@@ -92,7 +94,7 @@ fn_add() {
         jq ". += [$ROW]" "$FILE" > temp.json && mv temp.json "$FILE"
     fi
 
-    echo "Added: $TITLE ($DURATION, $HUMAN_SIZE) [ID: $ID]"
+    echo "Added: $TITLE ($DURATION, $HUMAN_SIZE) [ID: $ID] [Category: $CATEGORY]"
     return 0
 }
 
@@ -250,7 +252,8 @@ EOF
 # --- Main URL Processing Logic ---
 process_url() {
     local URL="$1"
-    echo ">>> Processing: $URL"
+    local CATEGORY="$2"
+    echo ">>> Processing: $URL [$CATEGORY]"
 
     # 1. Check if URL already exists
     if [ -f "$FILE" ]; then
@@ -262,7 +265,7 @@ process_url() {
     fi
 
     # 2. Add video metadata
-    if ! fn_add "$URL"; then
+    if ! fn_add "$URL" "$CATEGORY"; then
         # Check if it was added anyway (might fail if ID existed but URL was new)
         if ! jq -e ".[] | select(.url == \"$URL\")" "$FILE" > /dev/null; then
             echo "Error: Failed to add video $URL"
@@ -313,10 +316,30 @@ if [ -f "$INPUT" ]; then
     while IFS= read -r line <&3 || [ -n "$line" ]; do
         line=$(echo "$line" | xargs)
         [[ -z "$line" || "$line" =~ ^# ]] && continue
-        process_url "$line"
+        
+        # Split line into category and URL
+        read -r cat url <<< "$line"
+        if [[ "$cat" =~ ^https?:// ]]; then
+            # Old format: just URL
+            process_url "$cat" "Others"
+        elif [[ "$url" =~ ^https?:// ]]; then
+            # New format: Category URL
+            process_url "$url" "$cat"
+        else
+            # Try to process the whole line as URL if no space was found or URL invalid
+            process_url "$line" "Others"
+        fi
     done 3< "$INPUT"
 else
-    process_url "$INPUT"
+    # Check if single input is "Category URL" or just "URL"
+    read -r cat url <<< "$INPUT"
+    if [[ "$cat" =~ ^https?:// ]]; then
+        process_url "$cat" "Others"
+    elif [[ "$url" =~ ^https?:// ]]; then
+        process_url "$url" "$cat"
+    else
+        process_url "$INPUT" "Others"
+    fi
 fi
 
 echo "Batch process complete."
