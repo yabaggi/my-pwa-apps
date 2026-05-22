@@ -1,18 +1,5 @@
 [
  {
-    "href": "devacad/",
-    "category": "Others",
-    "category-ar": "",
-    "keywords": "Nn",
-    "keywords-ar": "",
-    "icon": "📱",
-    "name": "Mobi...Dev",
-    "name-ar": "برمجة من الموبايل",
-    "description": "📱 Termux Dev Academy **Build real web apps from your Android phone. No laptop. No excuses. Just Termux.**A complete interactive curriculum for non-developers who want to build and deploy SPAs, PWAs, and full-stack apps — straight from Android using Termux, Node.js, GitHub, Netlify, and Cloudflare.",
- "description-ar":"أكاديمية Termux Dev قم ببناء تطبيقات ويب حقيقية من هاتف Android الخاص بك. لا كمبيوتر محمول. لا أعذار. فقط Termux. منهج تفاعلي كامل لغير المطورين الذين يرغبون في إنشاء ونشر SPAs و PWAs وتطبيقات كاملة المكدس - مباشرة من Android باستخدام Termux و Node.js و GitHub و Netlify و Cloudflare.",
-    "badges": []
-  },
- {
     "href": "craftut/",
     "category": "Others",
     "category-ar": "",
@@ -359,4 +346,3 @@
     "badges": []
   }
 ]
-
