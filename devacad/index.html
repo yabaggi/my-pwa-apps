@@ -49,44 +49,166 @@
   nav {
     position: sticky;
     top: 0;
-    z-index: 100;
-    background: rgba(10,10,15,0.9);
+    z-index: 200;
+    background: rgba(10,10,15,0.95);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
-    padding: 0 20px;
+    padding: 0 16px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 56px;
+    height: 52px;
   }
 
   .nav-logo {
     font-family: 'Space Mono', monospace;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--accent);
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
+    flex-shrink: 0;
   }
 
   .nav-logo span { color: var(--muted); }
 
-  .nav-links {
+  /* Hamburger button — shown on mobile */
+  .nav-hamburger {
     display: flex;
-    gap: 4px;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  .nav-links a {
+  .nav-hamburger:hover { background: rgba(255,255,255,0.06); }
+
+  .nav-hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--text);
+    border-radius: 2px;
+    transition: all 0.3s;
+  }
+
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Mobile dropdown menu */
+  .nav-menu {
+    position: fixed;
+    top: 52px;
+    left: 0;
+    right: 0;
+    background: rgba(10,10,15,0.98);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 10px 12px 16px;
+    gap: 4px;
+    transform: translateY(-110%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 199;
+  }
+
+  .nav-menu.open { transform: translateY(0); }
+
+  .nav-menu a {
     color: var(--muted);
     text-decoration: none;
-    font-size: 0.75rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 11px 14px;
+    border-radius: 10px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .nav-menu a:hover, .nav-menu a:active {
+    color: var(--accent);
+    background: rgba(0,229,160,0.08);
+  }
+
+  .nav-menu-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 6px 0;
+  }
+
+  .nav-menu-qs {
+    background: rgba(0,229,160,0.1);
+    border: 1px solid rgba(0,229,160,0.3);
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 11px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    width: 100%;
+  }
+
+  .nav-menu-qs:hover { background: rgba(0,229,160,0.18); }
+
+  /* Desktop nav — hidden on mobile, shown on wide screens */
+  .nav-links-desktop {
+    display: none;
+    gap: 4px;
+    align-items: center;
+  }
+
+  .nav-links-desktop a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     padding: 6px 10px;
     border-radius: 6px;
     transition: all 0.2s;
+    white-space: nowrap;
   }
 
-  .nav-links a:hover { color: var(--accent); background: rgba(0,229,160,0.08); }
+  .nav-links-desktop a:hover { color: var(--accent); background: rgba(0,229,160,0.08); }
+
+  .nav-links-desktop .nav-qs-btn {
+    background: rgba(0,229,160,0.12);
+    border: 1px solid rgba(0,229,160,0.35);
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    padding: 6px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .nav-links-desktop .nav-qs-btn:hover { background: rgba(0,229,160,0.22); }
+
+  @media (min-width: 640px) {
+    .nav-hamburger { display: none; }
+    .nav-links-desktop { display: flex; }
+    .nav-menu { display: none !important; }
+  }
 
   /* ===== HERO ===== */
   .hero {
@@ -931,6 +1053,273 @@
     color: var(--accent);
   }
 
+  /* ===== QUICKSTART MODAL ===== */
+  .qs-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(6px);
+    z-index: 500;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .qs-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .qs-drawer {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 720px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .qs-overlay.open .qs-drawer {
+    transform: translateY(0);
+  }
+
+  .qs-drawer-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px 14px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .qs-drawer-title {
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .qs-drawer-title span {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent);
+    background: rgba(0,229,160,0.1);
+    border: 1px solid rgba(0,229,160,0.25);
+    padding: 3px 10px;
+    border-radius: 100px;
+    letter-spacing: 0.08em;
+  }
+
+  .qs-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .qs-copy-all {
+    background: var(--accent);
+    color: #000;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 7px 14px;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .qs-copy-all:hover { transform: scale(1.04); box-shadow: 0 4px 14px rgba(0,229,160,0.3); }
+
+  .qs-close {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+  }
+
+  .qs-close:hover { color: var(--text); border-color: var(--text); }
+
+  .qs-body {
+    overflow-y: auto;
+    padding: 22px 22px 40px;
+    flex: 1;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .qs-section {
+    margin-bottom: 28px;
+  }
+
+  .qs-part {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--accent2);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .qs-part:first-child { border-top: none; padding-top: 0; }
+
+  .qs-part::after { content:''; flex:1; height:1px; background:var(--border); }
+
+  .qs-step {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 18px;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+
+  .qs-step:hover { border-color: rgba(0,229,160,0.25); }
+
+  .qs-step-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+
+  .qs-step-body {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .qs-step-body strong { color: var(--text); }
+
+  .qs-step-body ol, .qs-step-body ul {
+    padding-left: 18px;
+    margin: 6px 0;
+  }
+
+  .qs-step-body li { margin-bottom: 4px; }
+
+  .qs-cmd {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--code-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--accent);
+  }
+
+  .qs-cmd-text { flex: 1; }
+
+  .qs-cmd-copy {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.9rem;
+    padding: 4px 6px;
+    border-radius: 5px;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .qs-cmd-copy:hover { color: var(--accent); background: rgba(0,229,160,0.1); }
+
+  .qs-note {
+    background: rgba(255,107,53,0.07);
+    border-left: 3px solid var(--accent2);
+    border-radius: 0 8px 8px 0;
+    padding: 10px 14px;
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.6;
+    margin: 10px 0;
+  }
+
+  .qs-note strong { color: var(--accent2); }
+
+  .qs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 0.8rem;
+  }
+
+  .qs-table th {
+    text-align: left;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding: 6px 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .qs-table td {
+    padding: 7px 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: var(--text);
+    vertical-align: top;
+  }
+
+  .qs-table td:first-child {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  .qs-projects {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .qs-project-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.82rem;
+    color: var(--muted);
+    padding: 6px 10px;
+    background: var(--code-bg);
+    border-radius: 7px;
+  }
+
+  .qs-project-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--accent3);
+    width: 18px;
+    flex-shrink: 0;
+  }
+
   /* ===== FOOTER ===== */
   footer {
     border-top: 1px solid var(--border);
@@ -1256,7 +1645,7 @@
     color: #000;
   }
 </style>
-    <meta name="theme-color" content="#2976e3">
+    <meta name="theme-color" content="#424047">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="apple-touch-icon" href="/my-pwa-apps/devacad/icons/icon-192x192.png">
 </head>
@@ -1265,14 +1654,35 @@
 <!-- NAV -->
 <nav>
   <div class="nav-logo">termux<span>/</span>dev<span>/</span>academy</div>
-  <div class="nav-links">
+
+  <!-- Desktop links (hidden on mobile) -->
+  <div class="nav-links-desktop">
     <a href="#curriculum">Phases</a>
     <a href="#guide">Guide</a>
     <a href="#ai-build">AI Build</a>
     <a href="#projects">Projects</a>
     <a href="#ai-helper">AI Help</a>
+    <button class="nav-qs-btn" onclick="openQS()">📖 Quickstart</button>
   </div>
+
+  <!-- Hamburger (shown on mobile) -->
+  <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 </nav>
+
+<!-- Mobile dropdown menu -->
+<div class="nav-menu" id="nav-menu">
+  <a href="#curriculum" onclick="closeMenu()">📚 Phases</a>
+  <a href="#guide" onclick="closeMenu()">🗺 Interactive Guide</a>
+  <a href="#ai-build" onclick="closeMenu()">🤖 AI Build</a>
+  <a href="#projects" onclick="closeMenu()">🗂 Projects</a>
+  <a href="#ai-helper" onclick="closeMenu()">💬 AI Help</a>
+  <div class="nav-menu-divider"></div>
+  <button class="nav-menu-qs" onclick="closeMenu();openQS()">📖 Quickstart Guide</button>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -2810,6 +3220,473 @@ function toggleTestItem(el) {
   check.textContent = el.classList.contains('checked') ? '✓' : '';
 }
 </script>
+<!-- QUICKSTART MODAL -->
+<div class="qs-overlay" id="qs-overlay" onclick="handleQSClick(event)">
+  <div class="qs-drawer" id="qs-drawer">
+
+    <div class="qs-drawer-header">
+      <div class="qs-drawer-title">
+        📖 Android Dev with Termux
+        <span>QUICKSTART GUIDE</span>
+      </div>
+      <div class="qs-header-actions">
+        <button class="qs-copy-all" onclick="copyFullGuide()">⎘ COPY ALL</button>
+        <button class="qs-close" onclick="closeQS()">✕</button>
+      </div>
+    </div>
+
+    <div class="qs-body">
+
+      <div class="qs-step" style="background:rgba(0,229,160,0.05);border-color:rgba(0,229,160,0.2);margin-bottom:20px;">
+        <div class="qs-step-body" style="color:var(--text);font-size:0.88rem;line-height:1.7;">
+          You do not need a powerful computer to start learning development. Your Android phone or tablet is enough for many real projects — writing code, running servers, using Git, building websites and PWAs, and deploying apps online.
+        </div>
+      </div>
+
+      <!-- PART 1 -->
+      <div class="qs-part">Part 1 — Install F-Droid</div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Step 1 — Enable Unknown Sources</div>
+        <div class="qs-step-body">
+          <ol>
+            <li>Open <strong>Settings</strong></li>
+            <li>Go to <strong>Apps → Special App Access → Install Unknown Apps</strong></li>
+            <li>Select your browser or file manager</li>
+            <li>Enable <strong>Allow from this source</strong></li>
+          </ol>
+          <div class="qs-note"><strong>Note:</strong> Menu names may differ slightly depending on your phone brand.</div>
+        </div>
+      </div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Step 2 — Download F-Droid</div>
+        <div class="qs-step-body">
+          <ol>
+            <li>Open your browser and go to <strong>f-droid.org</strong></li>
+            <li>Tap <strong>Download F-Droid</strong></li>
+            <li>Open the downloaded .apk and tap <strong>Install</strong></li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- PART 2 -->
+      <div class="qs-part">Part 2 — Install Termux</div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Step 3 — Install Termux from F-Droid</div>
+        <div class="qs-step-body">
+          <div class="qs-note"><strong>⚠️ Do NOT install Termux from Google Play</strong> — that version is outdated. Always use F-Droid.</div>
+          <ol>
+            <li>Open F-Droid and wait for repositories to update</li>
+            <li>Tap Search and type <strong>Termux</strong></li>
+            <li>Select <strong>Termux (Terminal emulator with packages)</strong></li>
+            <li>Tap <strong>Install</strong> and confirm</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- PART 3 -->
+      <div class="qs-part">Part 3 — First Time Setup</div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Step 4 — Select Package Mirrors</div>
+        <div class="qs-step-body">
+          Launch Termux from your app drawer, then run:
+          <div class="qs-cmd"><span class="qs-cmd-text">termux-change-repo</span><button class="qs-cmd-copy" onclick="copyText('termux-change-repo')">⎘</button></div>
+          Choose a nearby mirror and press Enter. Good mirrors improve download speed.
+        </div>
+      </div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Step 5 — Update Packages</div>
+        <div class="qs-step-body">
+          <div class="qs-cmd"><span class="qs-cmd-text">pkg update && pkg upgrade</span><button class="qs-cmd-copy" onclick="copyText('pkg update && pkg upgrade')">⎘</button></div>
+          This updates the Linux environment and all installed packages.
+        </div>
+      </div>
+
+      <!-- PART 4 -->
+      <div class="qs-part">Part 4 — Install Development Tools</div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Step 6 — Install Essential Packages</div>
+        <div class="qs-step-body">
+          <div class="qs-cmd"><span class="qs-cmd-text">pkg install nodejs git nano python</span><button class="qs-cmd-copy" onclick="copyText('pkg install nodejs git nano python')">⎘</button></div>
+          <table class="qs-table">
+            <tr><th>Tool</th><th>Purpose</th></tr>
+            <tr><td>nodejs</td><td>Run JavaScript apps and install npm packages</td></tr>
+            <tr><td>git</td><td>Version control — save and sync your code</td></tr>
+            <tr><td>nano</td><td>Simple text editor inside the terminal</td></tr>
+            <tr><td>python</td><td>Python programming and running scripts</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Step 7 — Optional Useful Tools</div>
+        <div class="qs-step-body">
+          <div class="qs-cmd"><span class="qs-cmd-text">pkg install wget curl unzip zip openssh</span><button class="qs-cmd-copy" onclick="copyText('pkg install wget curl unzip zip openssh')">⎘</button></div>
+          Useful for downloads, API calls, SSH access, and working with archives.
+        </div>
+      </div>
+
+      <!-- PART 5 -->
+      <div class="qs-part">Part 5 — Storage Access</div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Step 8 — Access Internal Storage</div>
+        <div class="qs-step-body">
+          <div class="qs-cmd"><span class="qs-cmd-text">termux-setup-storage</span><button class="qs-cmd-copy" onclick="copyText('termux-setup-storage')">⎘</button></div>
+          Tap <strong>Allow</strong> when prompted. This gives Termux access to your Downloads, Pictures, and Documents folders.
+          <div class="qs-cmd"><span class="qs-cmd-text">~/storage</span><button class="qs-cmd-copy" onclick="copyText('~/storage')">⎘</button></div>
+          This shortcut inside Termux points to your Android storage.
+        </div>
+      </div>
+
+      <!-- PART 6 -->
+      <div class="qs-part">Part 6 — Basic Linux Commands</div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Navigation & Files</div>
+        <div class="qs-step-body">
+          <div class="qs-cmd"><span class="qs-cmd-text">pwd</span><button class="qs-cmd-copy" onclick="copyText('pwd')">⎘</button></div>
+          <div class="qs-cmd"><span class="qs-cmd-text">ls</span><button class="qs-cmd-copy" onclick="copyText('ls')">⎘</button></div>
+          <div class="qs-cmd"><span class="qs-cmd-text">cd foldername</span><button class="qs-cmd-copy" onclick="copyText('cd foldername')">⎘</button></div>
+          <div class="qs-cmd"><span class="qs-cmd-text">mkdir myapps</span><button class="qs-cmd-copy" onclick="copyText('mkdir myapps')">⎘</button></div>
+          <div class="qs-cmd"><span class="qs-cmd-text">nano app.js</span><button class="qs-cmd-copy" onclick="copyText('nano app.js')">⎘</button></div>
+          In nano: <strong>Ctrl+O</strong> to save, <strong>Ctrl+X</strong> to exit.
+        </div>
+      </div>
+
+      <!-- PART 7 -->
+      <div class="qs-part">Part 7 — GitHub Setup</div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Step 9 — Configure Git</div>
+        <div class="qs-step-body">
+          <div class="qs-cmd"><span class="qs-cmd-text">git config --global user.name "Your Name"</span><button class="qs-cmd-copy" onclick="copyText('git config --global user.name \"Your Name\"')">⎘</button></div>
+          <div class="qs-cmd"><span class="qs-cmd-text">git config --global user.email "you@email.com"</span><button class="qs-cmd-copy" onclick="copyText('git config --global user.email \"you@email.com\"')">⎘</button></div>
+        </div>
+      </div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Step 10 — Generate & Add SSH Key</div>
+        <div class="qs-step-body">
+          <div class="qs-cmd"><span class="qs-cmd-text">ssh-keygen -t ed25519</span><button class="qs-cmd-copy" onclick="copyText('ssh-keygen -t ed25519')">⎘</button></div>
+          Press Enter through all prompts. Then copy your public key:
+          <div class="qs-cmd"><span class="qs-cmd-text">cat ~/.ssh/id_ed25519.pub</span><button class="qs-cmd-copy" onclick="copyText('cat ~/.ssh/id_ed25519.pub')">⎘</button></div>
+          Go to <strong>github.com → Settings → SSH Keys → New SSH Key</strong>, paste the output, and save. Then test:
+          <div class="qs-cmd"><span class="qs-cmd-text">ssh -T git@github.com</span><button class="qs-cmd-copy" onclick="copyText('ssh -T git@github.com')">⎘</button></div>
+          You should see: <em style="color:var(--accent)">Hi username! You've successfully authenticated.</em>
+        </div>
+      </div>
+
+      <!-- PART 8 -->
+      <div class="qs-part">Part 8 — Netlify & Cloudflare</div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Step 11 — Install Netlify CLI</div>
+        <div class="qs-step-body">
+          <div class="qs-cmd"><span class="qs-cmd-text">npm i -g netlify-cli</span><button class="qs-cmd-copy" onclick="copyText('npm i -g netlify-cli')">⎘</button></div>
+          Create a free account at <strong>netlify.com</strong>, then run <code>netlify login</code> to connect.
+        </div>
+      </div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Step 12 — Install Wrangler (Cloudflare)</div>
+        <div class="qs-step-body">
+          <div class="qs-cmd"><span class="qs-cmd-text">npm i -g wrangler@2.21.3</span><button class="qs-cmd-copy" onclick="copyText('npm i -g wrangler@2.21.3')">⎘</button></div>
+          <div class="qs-note"><strong>Important:</strong> Use version 2.21.3 specifically — it is the stable version for Termux on Android. Newer versions may not work.</div>
+          Create a free account at <strong>cloudflare.com</strong>, then run <code>wrangler login</code>.
+        </div>
+      </div>
+
+      <!-- PART 9 -->
+      <div class="qs-part">Part 9 — Your First Project</div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Step 13 — Clone & Run a Real App</div>
+        <div class="qs-step-body">
+          <div class="qs-cmd"><span class="qs-cmd-text">mkdir myapps && cd myapps</span><button class="qs-cmd-copy" onclick="copyText('mkdir myapps && cd myapps')">⎘</button></div>
+          <div class="qs-cmd"><span class="qs-cmd-text">git clone https://github.com/yabaggi/my-pwa-apps.git</span><button class="qs-cmd-copy" onclick="copyText('git clone https://github.com/yabaggi/my-pwa-apps.git')">⎘</button></div>
+          <div class="qs-cmd"><span class="qs-cmd-text">cd my-pwa-apps/peco</span><button class="qs-cmd-copy" onclick="copyText('cd my-pwa-apps/peco')">⎘</button></div>
+          Start a local server:
+          <div class="qs-cmd"><span class="qs-cmd-text">python -m http.server 8000</span><button class="qs-cmd-copy" onclick="copyText('python -m http.server 8000')">⎘</button></div>
+          Open Chrome → <strong>http://localhost:8000</strong> — your app is running locally.
+        </div>
+      </div>
+
+      <!-- PART 10 -->
+      <div class="qs-part">Part 10 — Common Problems</div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Package install fails</div>
+        <div class="qs-step-body">
+          <div class="qs-cmd"><span class="qs-cmd-text">pkg update && pkg upgrade</span><button class="qs-cmd-copy" onclick="copyText('pkg update && pkg upgrade')">⎘</button></div>
+          Then retry the install command.
+        </div>
+      </div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Permission denied errors</div>
+        <div class="qs-step-body">
+          <div class="qs-cmd"><span class="qs-cmd-text">termux-setup-storage</span><button class="qs-cmd-copy" onclick="copyText('termux-setup-storage')">⎘</button></div>
+        </div>
+      </div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Port already in use</div>
+        <div class="qs-step-body">
+          Use a different port number:
+          <div class="qs-cmd"><span class="qs-cmd-text">python -m http.server 3000</span><button class="qs-cmd-copy" onclick="copyText('python -m http.server 3000')">⎘</button></div>
+        </div>
+      </div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Keyboard shortcuts not working</div>
+        <div class="qs-step-body">
+          <div class="qs-cmd"><span class="qs-cmd-text">nano ~/.termux/termux.properties</span><button class="qs-cmd-copy" onclick="copyText('nano ~/.termux/termux.properties')">⎘</button></div>
+          Add this line:
+          <div class="qs-cmd"><span class="qs-cmd-text">extra-keys = [['ESC','CTRL','ALT','TAB']]</span><button class="qs-cmd-copy" onclick="copyText(\"extra-keys = [['ESC','CTRL','ALT','TAB']]\")">⎘</button></div>
+          Then reload:
+          <div class="qs-cmd"><span class="qs-cmd-text">termux-reload-settings</span><button class="qs-cmd-copy" onclick="copyText('termux-reload-settings')">⎘</button></div>
+        </div>
+      </div>
+
+      <!-- PART 11 -->
+      <div class="qs-part">Part 11 — Recommended Learning Projects</div>
+
+      <div class="qs-step">
+        <div class="qs-step-title">Start Small — Build These in Order</div>
+        <div class="qs-step-body">
+          <div class="qs-projects">
+            <div class="qs-project-item"><span class="qs-project-num">01</span>Notes app</div>
+            <div class="qs-project-item"><span class="qs-project-num">02</span>Todo / checklist app</div>
+            <div class="qs-project-item"><span class="qs-project-num">03</span>Weather app (using a public API)</div>
+            <div class="qs-project-item"><span class="qs-project-num">04</span>Calculator</div>
+            <div class="qs-project-item"><span class="qs-project-num">05</span>Simple REST API with Express</div>
+            <div class="qs-project-item"><span class="qs-project-num">06</span>PWA — installable on home screen</div>
+            <div class="qs-project-item"><span class="qs-project-num">07</span>File manager or photo gallery</div>
+            <div class="qs-project-item"><span class="qs-project-num">08</span>Chat app with a backend</div>
+            <div class="qs-project-item"><span class="qs-project-num">09</span>AI assistant using Claude or GPT</div>
+            <div class="qs-project-item"><span class="qs-project-num">10</span>Portfolio website</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="qs-step" style="background:rgba(0,229,160,0.05);border-color:rgba(0,229,160,0.2);">
+        <div class="qs-step-title" style="color:var(--accent);">Final Tips</div>
+        <div class="qs-step-body">
+          <ul>
+            <li>Use Git often — commit every time something works</li>
+            <li>Keep backups on GitHub — your phone can break</li>
+            <li>Learn Linux commands gradually, not all at once</li>
+            <li>Build small projects consistently — one per week</li>
+            <li><strong style="color:var(--text);">Your Android device is enough for many real projects</strong></li>
+          </ul>
+        </div>
+      </div>
+
+    </div><!-- end qs-body -->
+  </div><!-- end qs-drawer -->
+</div><!-- end qs-overlay -->
+
+<script>
+// ===== HAMBURGER MENU =====
+function toggleMenu() {
+  const menu = document.getElementById('nav-menu');
+  const btn = document.getElementById('hamburger');
+  menu.classList.toggle('open');
+  btn.classList.toggle('open');
+}
+
+function closeMenu() {
+  document.getElementById('nav-menu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+// Close menu when clicking outside
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('nav-menu');
+  const btn = document.getElementById('hamburger');
+  if (menu.classList.contains('open') &&
+      !menu.contains(e.target) &&
+      !btn.contains(e.target)) {
+    closeMenu();
+  }
+});
+
+// ===== QUICKSTART MODAL =====
+function openQS() {
+  document.getElementById('qs-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeQS() {
+  document.getElementById('qs-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleQSClick(e) {
+  if (e.target === document.getElementById('qs-overlay')) closeQS();
+}
+
+function copyFullGuide() {
+  const guide = `ANDROID DEVELOPMENT WITH TERMUX — QUICKSTART GUIDE
+
+WHY USE TERMUX?
+Termux turns your Android device into a Linux-like development environment.
+You can: write code, run servers, use Git and GitHub, build websites and PWAs,
+run Node.js and Python, use SSH, and deploy apps online.
+
+REQUIREMENTS
+• Android phone or tablet
+• Internet connection
+• About 2 GB free storage
+• A keyboard is optional but recommended
+
+───
+
+PART 1 — INSTALL F-DROID
+
+Step 1 — Enable Unknown Sources
+Settings → Apps → Special App Access → Install Unknown Apps
+Select your browser → Enable "Allow from this source"
+
+Step 2 — Download F-Droid
+Open browser → go to f-droid.org → Download F-Droid → Install the .apk
+
+───
+
+PART 2 — INSTALL TERMUX
+
+Step 3 — Install Termux from F-Droid (NOT Google Play — that version is outdated)
+Open F-Droid → Search "Termux" → Select Termux (Terminal emulator with packages) → Install
+
+───
+
+PART 3 — FIRST TIME SETUP
+
+Step 4 — Select Package Mirrors
+termux-change-repo
+(Choose a nearby mirror, press Enter)
+
+Step 5 — Update Packages
+pkg update && pkg upgrade
+
+───
+
+PART 4 — INSTALL DEVELOPMENT TOOLS
+
+Step 6 — Install Essential Packages
+pkg install nodejs git nano python
+
+Step 7 — Optional Tools
+pkg install wget curl unzip zip openssh
+
+───
+
+PART 5 — STORAGE ACCESS
+
+Step 8 — Access Internal Storage
+termux-setup-storage
+(Tap Allow)
+Shortcut: ~/storage
+
+───
+
+PART 6 — BASIC LINUX COMMANDS
+
+pwd                    (where am I?)
+ls                     (list files)
+cd foldername          (enter folder)
+mkdir myapps           (create folder)
+nano app.js            (edit file — Ctrl+O save, Ctrl+X exit)
+
+───
+
+PART 7 — GITHUB SETUP
+
+Step 9 — Configure Git
+git config --global user.name "Your Name"
+git config --global user.email "you@email.com"
+
+Step 10 — Generate SSH Key
+ssh-keygen -t ed25519
+cat ~/.ssh/id_ed25519.pub
+(Copy output → github.com → Settings → SSH Keys → New SSH Key → Paste → Save)
+
+Step 11 — Test Connection
+ssh -T git@github.com
+
+───
+
+PART 8 — NETLIFY & CLOUDFLARE
+
+Step 12 — Install Netlify CLI
+npm i -g netlify-cli
+(Create account at netlify.com, then: netlify login)
+
+Step 13 — Install Wrangler (Cloudflare) — use v2.21.3 for Termux
+npm i -g wrangler@2.21.3
+(Create account at cloudflare.com, then: wrangler login)
+
+───
+
+PART 9 — YOUR FIRST PROJECT
+
+mkdir myapps && cd myapps
+git clone https://github.com/yabaggi/my-pwa-apps.git
+cd my-pwa-apps/peco
+python -m http.server 8000
+Open Chrome → http://localhost:8000
+
+───
+
+PART 10 — COMMON PROBLEMS
+
+Package install fails:
+pkg update && pkg upgrade
+
+Permission denied:
+termux-setup-storage
+
+Port in use:
+python -m http.server 3000
+
+Keyboard shortcuts not working:
+nano ~/.termux/termux.properties
+Add: extra-keys = [['ESC','CTRL','ALT','TAB']]
+termux-reload-settings
+
+───
+
+RECOMMENDED PROJECTS (in order)
+01. Notes app
+02. Todo / checklist app
+03. Weather app (public API)
+04. Calculator
+05. Simple REST API with Express
+06. PWA — installable on home screen
+07. File manager or photo gallery
+08. Chat app with a backend
+09. AI assistant using Claude or GPT
+10. Portfolio website
+
+───
+
+FINAL TIPS
+• Use Git often — commit every time something works
+• Keep backups on GitHub
+• Learn Linux commands gradually
+• Build small projects consistently
+• Your Android device is enough for many real projects`;
+
+  navigator.clipboard.writeText(guide).then(() => showToast('Full guide copied!'));
+}
+</script>
+
 
     <script>
         // PWA Service Worker Registration

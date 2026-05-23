@@ -7,18 +7,18 @@
 'use strict';
 
 const CACHE_NAME = 'devacad-v1';
-const OFFLINE_URL = '/my-pwa-apps/devacad/offline.html';
+const OFFLINE_URL = '/my-pwa-apps/my-pwa-apps/devacad/offline.html';
 const urlsToCache = [
-  "/my-pwa-apps/devacad/favicon.ico",
-  "/my-pwa-apps/devacad/",
-  "/my-pwa-apps/devacad/index.html",
-  "/my-pwa-apps/devacad/manifest.json",
-  "/my-pwa-apps/devacad/offline.html",
-  "/my-pwa-apps/devacad/icons/icon-72x72.png",
-  "/my-pwa-apps/devacad/icons/icon-192x192.png",
-  "/my-pwa-apps/devacad/icons/icon-384x384.png",
-  "/my-pwa-apps/devacad/icons/icon-512x512.png",
-  "/my-pwa-apps/devacad/README.md"
+  "/my-pwa-apps/my-pwa-apps/devacad/favicon.ico",
+  "/my-pwa-apps/my-pwa-apps/devacad/",
+  "/my-pwa-apps/my-pwa-apps/devacad/index.html",
+  "/my-pwa-apps/my-pwa-apps/devacad/manifest.json",
+  "/my-pwa-apps/my-pwa-apps/devacad/offline.html",
+  "/my-pwa-apps/my-pwa-apps/devacad/icons/icon-72x72.png",
+  "/my-pwa-apps/my-pwa-apps/devacad/icons/icon-192x192.png",
+  "/my-pwa-apps/my-pwa-apps/devacad/icons/icon-384x384.png",
+  "/my-pwa-apps/my-pwa-apps/devacad/icons/icon-512x512.png",
+  "/my-pwa-apps/my-pwa-apps/devacad/README.md"
 ];
 
 self.addEventListener('install', event => {
@@ -111,4 +111,4 @@ function isNavigationRequest(request) {
 }
 
 console.log('[Service Worker] Loaded successfully for Termux Dev Academy — Build Apps from Your Phone');
-console.log('[Service Worker] Scope: /my-pwa-apps/devacad/');
+console.log('[Service Worker] Scope: /my-pwa-apps/my-pwa-apps/devacad/');
