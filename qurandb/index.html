@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بحث التشابه القرآني</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:       #1a1208;
+    --parchment: #f5efdf;
+    --cream:     #ede4cc;
+    --gold:      #b5892a;
+    --gold-lt:   #d4a93e;
+    --gold-dim:  #7a5c18;
+    --rust:      #7c3318;
+    --teal:      #1d5c52;
+    --teal-lt:   #2a7a6d;
+    --shadow:    rgba(26,18,8,0.18);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { font-size: 16px; }
+  body {
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    background: var(--parchment);
+    color: var(--ink);
+    min-height: 100vh;
+    direction: rtl;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(181,137,42,0.06) 0%, transparent 50%),
+      radial-gradient(circle at 85% 75%, rgba(29,92,82,0.06) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23b5892a' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+  .app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 1rem 4rem; }
+
+  /* ── Header ── */
+  header {
+    text-align: center;
+    padding: 3rem 1rem 2rem;
+    border-bottom: 1px solid rgba(181,137,42,0.3);
+    margin-bottom: 2.5rem;
+  }
+  .header-ornament { font-size: 1.4rem; color: var(--gold); letter-spacing: 0.5em; margin-bottom: 0.75rem; opacity: 0.7; }
+  h1 { font-family: 'Amiri', serif; font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight: 700; color: var(--ink); line-height: 1.2; margin-bottom: 0.4rem; }
+  .subtitle { font-size: 0.85rem; color: var(--gold-dim); letter-spacing: 0.05em; direction: ltr; }
+
+  /* ── DB Status ── */
+  .db-status { display:flex; align-items:center; gap:0.6rem; padding:0.75rem 1rem; border-radius:8px; font-size:0.82rem; margin-bottom:1.5rem; border:1px solid transparent; transition:all 0.3s; }
+  .db-status.loading { background:rgba(181,137,42,0.08); border-color:rgba(181,137,42,0.2); color:var(--gold-dim); }
+  .db-status.ready   { background:rgba(29,92,82,0.08);  border-color:rgba(29,92,82,0.2);  color:var(--teal); }
+  .db-status.error   { background:rgba(124,51,24,0.08); border-color:rgba(124,51,24,0.2); color:var(--rust); }
+  .db-status .dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  .db-status.loading .dot { background:var(--gold); animation:pulse 1s infinite; }
+  .db-status.ready   .dot { background:var(--teal); }
+  .db-status.error   .dot { background:var(--rust); }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+  /* ── File Upload ── */
+  .file-upload-area { border:2px dashed rgba(181,137,42,0.35); border-radius:12px; padding:2rem; text-align:center; cursor:pointer; transition:all 0.2s; margin-bottom:1.5rem; background:rgba(181,137,42,0.03); }
+  .file-upload-area:hover { border-color:var(--gold); background:rgba(181,137,42,0.06); }
+  .file-upload-area .upload-icon { font-size:2rem; margin-bottom:0.5rem; }
+  .file-upload-area p { font-size:0.88rem; color:var(--gold-dim); line-height:1.5; }
+  .file-upload-area strong { color:var(--ink); }
+  #fileInput { display:none; }
+
+  /* ── Top-level nav tabs ── */
+  .nav-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 0;
+    border-bottom: 2px solid rgba(181,137,42,0.2);
+  }
+  .nav-tab {
+    flex: 1;
+    padding: 0.7rem 0.5rem;
+    border: none;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    background: transparent;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--gold-dim);
+    cursor: pointer;
+    transition: all 0.2s;
+    direction: rtl;
+    text-align: center;
+  }
+  .nav-tab.active { color: var(--ink); border-bottom-color: var(--gold); font-weight: 600; }
+  .nav-tab:hover:not(.active) { color: var(--ink); background: rgba(181,137,42,0.05); }
+
+  /* ── Search Card ── */
+  .search-card {
+    background: rgba(255,252,242,0.85);
+    border: 1px solid rgba(181,137,42,0.25);
+    border-top: none;
+    border-radius: 0 0 16px 16px;
+    padding: 1.75rem 2rem 2rem;
+    box-shadow: 0 4px 24px var(--shadow), 0 1px 0 rgba(255,255,255,0.8) inset;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(4px);
+  }
+
+  /* inner sub-tabs (for search panel) */
+  .mode-tabs { display:flex; gap:0.5rem; margin-bottom:1.5rem; background:var(--cream); padding:4px; border-radius:10px; }
+  .mode-tab { flex:1; padding:0.55rem 1rem; border:none; background:transparent; border-radius:7px; font-family:'IBM Plex Sans Arabic',sans-serif; font-size:0.82rem; font-weight:500; color:var(--gold-dim); cursor:pointer; transition:all 0.2s; direction:rtl; }
+  .mode-tab.active { background:#fff; color:var(--ink); box-shadow:0 1px 6px var(--shadow); }
+
+  .input-group { margin-bottom:1.2rem; }
+  label { display:block; font-size:0.78rem; font-weight:600; color:var(--gold-dim); margin-bottom:0.4rem; text-transform:uppercase; letter-spacing:0.08em; direction:rtl; }
+  input[type="text"], input[type="number"], select {
+    width:100%; padding:0.75rem 1rem; border:1.5px solid rgba(181,137,42,0.3); border-radius:10px;
+    background:#fff; font-family:'IBM Plex Sans Arabic',sans-serif; font-size:1rem; color:var(--ink);
+    direction:rtl; outline:none; transition:border-color 0.2s, box-shadow 0.2s; -webkit-appearance:none;
+  }
+  input:focus, select:focus { border-color:var(--gold); box-shadow:0 0 0 3px rgba(181,137,42,0.12); }
+  .arabic-input { font-family:'Amiri',serif; font-size:1.25rem; }
+  .row { display:flex; gap:1rem; }
+  .row .input-group { flex:1; }
+
+  .slider-wrap { display:flex; align-items:center; gap:0.75rem; }
+  input[type="range"] { flex:1; -webkit-appearance:none; height:4px; background:linear-gradient(to left,var(--gold),var(--cream)); border-radius:2px; outline:none; border:none; box-shadow:none; padding:0; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; width:18px; height:18px; border-radius:50%; background:var(--gold); cursor:pointer; box-shadow:0 1px 4px var(--shadow); }
+  .slider-val { font-size:0.85rem; font-weight:600; color:var(--gold); min-width:2.5rem; text-align:center; direction:ltr; }
+
+  .search-btn { width:100%; padding:0.85rem; background:linear-gradient(135deg,var(--gold) 0%,var(--gold-lt) 100%); color:#fff; border:none; border-radius:10px; font-family:'IBM Plex Sans Arabic',sans-serif; font-size:1rem; font-weight:600; cursor:pointer; transition:opacity 0.2s,transform 0.15s; box-shadow:0 2px 10px rgba(181,137,42,0.35); margin-top:0.5rem; }
+  .search-btn:hover { opacity:0.92; transform:translateY(-1px); }
+  .search-btn:active { transform:translateY(0); }
+  .search-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+  /* ── N-gram Panel ── */
+  .ngram-card {
+    background: rgba(255,252,242,0.85);
+    border: 1px solid rgba(181,137,42,0.25);
+    border-top: none;
+    border-radius: 0 0 16px 16px;
+    padding: 1.75rem 2rem;
+    box-shadow: 0 4px 24px var(--shadow);
+    margin-bottom: 2rem;
+    backdrop-filter: blur(4px);
+  }
+  .ngram-controls {
+    display: flex;
+    align-items: flex-end;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .ngram-controls .input-group { flex: 1; min-width: 130px; margin-bottom: 0; }
+  .ngram-run-btn {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(135deg, var(--teal) 0%, var(--teal-lt) 100%);
+    color: #fff; border: none; border-radius: 10px;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 0.9rem; font-weight: 600; cursor: pointer;
+    transition: opacity 0.2s, transform 0.15s;
+    box-shadow: 0 2px 10px rgba(29,92,82,0.3);
+    white-space: nowrap;
+    flex-shrink: 0;
+    align-self: flex-end;
+  }
+  .ngram-run-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+  .ngram-run-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* ngram results layout: patterns list + ayah detail */
+  .ngram-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    align-items: start;
+  }
+  @media (max-width: 640px) { .ngram-layout { grid-template-columns: 1fr; } }
+
+  .patterns-panel {
+    background: var(--cream);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .patterns-panel-header {
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--gold-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    border-bottom: 1px solid rgba(181,137,42,0.2);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .pattern-list {
+    max-height: 480px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--gold) transparent;
+  }
+  .pattern-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.65rem 1rem;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(181,137,42,0.1);
+    transition: background 0.15s;
+    gap: 0.5rem;
+  }
+  .pattern-item:hover { background: rgba(181,137,42,0.08); }
+  .pattern-item.active { background: rgba(181,137,42,0.15); }
+  .pattern-text {
+    font-family: 'Amiri', serif;
+    font-size: 1rem;
+    color: var(--ink);
+    direction: rtl;
+    text-align: right;
+    flex: 1;
+    line-height: 1.5;
+  }
+  .pattern-count {
+    flex-shrink: 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: var(--gold);
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 20px;
+    direction: ltr;
+    min-width: 28px;
+    text-align: center;
+  }
+
+  /* ayah detail panel (right side) */
+  .ayah-detail-panel {
+    background: #fffcf0;
+    border: 1px solid rgba(181,137,42,0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    min-height: 200px;
+  }
+  .ayah-detail-header {
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--teal);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    border-bottom: 1px solid rgba(29,92,82,0.15);
+    background: rgba(29,92,82,0.04);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .ayah-detail-list {
+    max-height: 480px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--teal) transparent;
+  }
+  .ayah-detail-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 180px;
+    color: #bbb;
+    font-size: 0.88rem;
+    direction: rtl;
+  }
+  .ngram-ayah-card {
+    padding: 0.9rem 1rem;
+    border-bottom: 1px solid rgba(181,137,42,0.1);
+    animation: fadeUp 0.25s ease both;
+  }
+  .ngram-ayah-card:last-child { border-bottom: none; }
+  .ngram-ayah-meta {
+    display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap; margin-bottom: 0.5rem;
+  }
+
+  /* position toggle buttons */
+  .pos-btn-group { display: flex; gap: 0.4rem; }
+  .pos-btn {
+    flex: 1;
+    padding: 0.55rem 0.5rem;
+    border: 1.5px solid rgba(181,137,42,0.3);
+    border-radius: 8px;
+    background: #fff;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--gold-dim);
+    cursor: pointer;
+    transition: all 0.18s;
+    text-align: center;
+    direction: rtl;
+  }
+  .pos-btn:hover { border-color: var(--gold); color: var(--ink); }
+  .pos-btn.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: #fff;
+    font-weight: 600;
+  }
+
+  /* hint box */
+  .feature-hint {
+    background: rgba(29,92,82,0.05);
+    border: 1px solid rgba(29,92,82,0.18);
+    border-radius: 10px;
+    padding: 0.85rem 1.1rem;
+    margin-bottom: 1.4rem;
+    direction: rtl;
+  }
+  .feature-hint p {
+    font-size: 0.82rem;
+    color: var(--teal);
+    line-height: 1.8;
+    margin: 0;
+  }
+  .feature-hint strong { color: var(--ink); font-weight: 600; }
+
+  /* export button */
+  .export-btn {
+    font-size: 0.72rem; padding: 3px 10px; border-radius: 20px;
+    border: 1px solid rgba(181,137,42,0.4); background: transparent;
+    color: var(--gold-dim); cursor: pointer; font-family: inherit;
+    transition: all 0.15s;
+  }
+  .export-btn:hover { background: var(--gold); color: #fff; border-color: var(--gold); }
+
+  /* ── Spinner ── */
+  .spinner { display:none; text-align:center; padding:2.5rem; color:var(--gold-dim); font-size:0.88rem; }
+  .spinner.show { display:block; }
+  .spin-ring { display:inline-block; width:32px; height:32px; border:3px solid var(--cream); border-top-color:var(--gold); border-radius:50%; animation:spin 0.8s linear infinite; margin-bottom:0.75rem; }
+  @keyframes spin { to { transform:rotate(360deg); } }
+
+  /* ── Results ── */
+  .results-header { display:flex; align-items:baseline; justify-content:space-between; margin-bottom:1rem; padding-bottom:0.5rem; border-bottom:1px solid rgba(181,137,42,0.2); }
+  .results-header h2 { font-family:'Amiri',serif; font-size:1.1rem; color:var(--ink); }
+  .results-count { font-size:0.78rem; color:var(--gold-dim); direction:ltr; }
+
+  .ayah-card { background:rgba(255,252,242,0.9); border:1px solid rgba(181,137,42,0.18); border-radius:12px; padding:1.25rem 1.5rem; margin-bottom:0.75rem; transition:box-shadow 0.2s,border-color 0.2s; position:relative; animation:fadeUp 0.3s ease both; }
+  .ayah-card:hover { box-shadow:0 4px 16px var(--shadow); border-color:rgba(181,137,42,0.35); }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+  .ayah-card.target-card { border-color:rgba(29,92,82,0.4); background:rgba(29,92,82,0.04); }
+  .target-badge { display:inline-block; font-size:0.65rem; font-weight:600; background:var(--teal); color:#fff; padding:2px 8px; border-radius:20px; margin-bottom:0.6rem; direction:rtl; }
+
+  .score-bar-wrap { position:absolute; top:0; right:0; width:4px; height:100%; border-radius:0 12px 12px 0; overflow:hidden; }
+  .score-bar { width:100%; background:var(--gold); }
+
+  .ayah-meta { display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:0.7rem; }
+  .ref-badge { font-size:0.72rem; font-weight:600; background:var(--cream); color:var(--gold-dim); padding:3px 10px; border-radius:20px; direction:ltr; }
+  .surah-name { font-size:0.82rem; color:var(--ink); font-weight:500; }
+  .juz-info { font-size:0.72rem; color:#999; margin-right:auto; direction:ltr; }
+  .score-badge { font-size:0.7rem; font-weight:700; padding:3px 10px; border-radius:20px; direction:ltr; }
+  .score-badge.high   { background:rgba(29,92,82,0.12);  color:var(--teal); }
+  .score-badge.medium { background:rgba(181,137,42,0.12); color:var(--gold-dim); }
+  .score-badge.low    { background:rgba(124,51,24,0.08);  color:var(--rust); }
+
+  .ayah-text { font-family:'Amiri Quran','Amiri',serif; font-size:clamp(1.1rem,3vw,1.45rem); line-height:2; color:var(--ink); direction:rtl; text-align:right; }
+  .highlight { background:rgba(181,137,42,0.22); border-radius:3px; padding:0 2px; }
+  .no-results { text-align:center; padding:3rem 1rem; color:var(--gold-dim); font-family:'Amiri',serif; font-size:1.1rem; }
+
+  @media (max-width:600px) {
+    .search-card, .ngram-card { padding:1.25rem; }
+    .row { flex-direction:column; gap:0; }
+    header { padding:2rem 1rem 1.5rem; }
+    .ngram-controls { flex-direction:column; }
+    .ngram-run-btn { width:100%; }
+  }
+</style>
+    <meta name="theme-color" content="#2196f3">
+    <link rel="manifest" href="/my-pwa-apps/qurandb/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="/my-pwa-apps/qurandb/icons/icon-192x192.png">
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <div class="header-ornament">❧ ✦ ❧</div>
+    <h1>بحث التشابه القرآني</h1>
+    <div class="subtitle">
+        
+        متشابهات الآيات: للإجابة علي اسئله علي شاكلة.....
+- في كم موضع ورد ( رَبُّ ٱلْعَرْشِ ٱلْعَظِيمِ )
+-قَالُواْ ٱتَّخَذَ ٱللَّهُ وَلَدٗاۗ ...موضع وحيد فى يونس آية 68
+نعم أم لا ؟؟؟
+- كم مرة وردت ( ٱللَّهُ لَآ إِلَٰهَ إِلَّا هُوَ )
+- ما هي الآيات التي ورد فيها "وإذا تتلى عليهم ءاياتنا بينات" 
+        </div>
+  </header>
+
+  <div id="dbStatus" class="db-status loading">
+    <div class="dot"></div>
+    <span id="dbStatusText">جارٍ تحميل qurandb.json...</span>
+  </div>
+
+  <!-- shown only if auto-fetch fails -->
+  <div class="file-upload-area" id="uploadArea" style="display:none" onclick="document.getElementById('fileInput').click()">
+    <div class="upload-icon">📂</div>
+    <p>
+      <strong>تعذّر تحميل الملف تلقائياً</strong><br>
+      ضع <code>qurandb.json</code> في نفس مجلد الصفحة وافتح عبر خادم (<code>python3 -m http.server</code>)،<br>
+      أو اضغط هنا لاختيار الملف يدوياً.
+    </p>
+    <input type="file" id="fileInput" accept=".json">
+  </div>
+
+  <!-- ── Top nav tabs ── -->
+  <div class="nav-tabs">
+    <button class="nav-tab active" data-nav="patterns" onclick="switchNav('patterns')">📊 الأنماط المتكررة</button>
+    <button class="nav-tab" data-nav="search" onclick="switchNav('search')">🔍 البحث</button>
+  </div>
+
+  <!-- ══════════════════════ SEARCH PANEL ══════════════════════ -->
+  <div id="nav-search" style="display:none">
+    <div class="search-card">
+      <div class="mode-tabs">
+        <button class="mode-tab active" data-mode="similarity" onclick="setMode('similarity')">🔍 تشابه الآيات</button>
+        <button class="mode-tab" data-mode="phrase" onclick="setMode('phrase')">🔎 بحث بالعبارة</button>
+        <button class="mode-tab" data-mode="ref" onclick="setMode('ref')">📖 بحث برقم الآية</button>
+      </div>
+
+      <div id="mode-similarity">
+        <div class="input-group">
+          <label>أدخل نص الآية للبحث عن المشابه</label>
+          <input type="text" id="simText" class="arabic-input" placeholder="مثال: سبح باسم ربك الأعلى" dir="rtl">
+        </div>
+        <div class="input-group">
+          <label>أو أدخل رقم الآية (سورة:آية)</label>
+          <input type="text" id="simRef" placeholder="مثال: 55:13  أو  1:1" dir="ltr" style="text-align:left;direction:ltr;font-size:0.95rem;">
+        </div>
+        <div class="input-group">
+          <label>نسبة التشابه الدنيا — <span id="thresholdLabel">0.70</span></label>
+          <div class="slider-wrap">
+            <input type="range" id="threshold" min="0.3" max="1.0" step="0.05" value="0.70"
+              oninput="document.getElementById('thresholdLabel').textContent=parseFloat(this.value).toFixed(2);document.getElementById('thresholdVal').textContent=parseFloat(this.value).toFixed(2)">
+            <span class="slider-val" id="thresholdVal">0.70</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="mode-phrase" style="display:none">
+        <div class="input-group">
+          <label>ابحث عن عبارة في القرآن الكريم</label>
+          <input type="text" id="phraseText" class="arabic-input" placeholder="مثال: واذا تتلي عليهم" dir="rtl">
+        </div>
+      </div>
+
+      <div id="mode-ref" style="display:none">
+        <div class="row">
+          <div class="input-group">
+            <label>السورة</label>
+            <select id="refSurah" style="direction:rtl;" onchange="updateAyahMax()">
+              <option value="">— اختر السورة —</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>رقم الآية</label>
+            <input type="number" id="refAyah" placeholder="1-..." min="1" dir="ltr" style="direction:ltr;text-align:center;">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>نسبة التشابه الدنيا — <span id="thresholdLabel2">0.70</span></label>
+          <div class="slider-wrap">
+            <input type="range" id="threshold2" min="0.3" max="1.0" step="0.05" value="0.70"
+              oninput="document.getElementById('thresholdLabel2').textContent=parseFloat(this.value).toFixed(2);document.getElementById('thresholdVal2').textContent=parseFloat(this.value).toFixed(2)">
+            <span class="slider-val" id="thresholdVal2">0.70</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="search-btn" id="searchBtn" onclick="doSearch()" disabled>ابدأ البحث</button>
+    </div>
+
+    <div class="spinner" id="spinner">
+      <div class="spin-ring"></div>
+      <div>جارٍ البحث في المصحف الشريف...</div>
+    </div>
+    <div id="results"></div>
+  </div>
+
+  <!-- ══════════════════════ PATTERNS PANEL ══════════════════════ -->
+  <div id="nav-patterns">
+    <div class="ngram-card">
+
+      <!-- Hint -->
+      <div class="feature-hint">
+        <p>
+          🔍 <strong>كيفية الاستخدام:</strong> اختر عدد الكلمات وموضع العبارة ثم اضغط <strong>تحليل الأنماط</strong>.<br>
+          📋 تظهر على اليسار قائمة بالعبارات المتكررة في القرآن مرتّبةً من الأكثر تكراراً.<br>
+          👆 اضغط على أي عبارة لعرض جميع الآيات التي تحتوي عليها مع تمييز النص.<br>
+          📋 اضغط <strong>نسخ</strong> لنسخ الآيات كنص منسّق جاهز للصق في أي مكان.
+        </p>
+      </div>
+
+      <div class="ngram-controls">
+        <div class="input-group">
+          <label>عدد الكلمات</label>
+          <input type="number" id="ngN" value="5" min="1" max="10" dir="ltr" style="direction:ltr;text-align:center;">
+        </div>
+        <div class="input-group" style="flex:2;">
+          <label>موضع العبارة</label>
+          <div class="pos-btn-group">
+              
+            <button class="pos-btn active" data-pos="first"  onclick="setPosBtn(this)">بداية الآية</button>
+            
+            <button class="pos-btn" data-pos="middle" onclick="setPosBtn(this)">وسط الآية</button>
+            <button class="pos-btn" data-pos="last"   onclick="setPosBtn(this)">آخر الآية</button>
+          </div>
+        </div>
+        <button class="ngram-run-btn" id="ngRunBtn" onclick="runNgramAnalysis()" disabled>
+          تحليل الأنماط
+        </button>
+      </div>
+
+      <div class="spinner" id="ngSpinner">
+        <div class="spin-ring"></div>
+        <div id="ngSpinnerText">جارٍ تحليل الأنماط...</div>
+      </div>
+
+      <div class="ngram-layout" id="ngramLayout" style="display:none">
+        <!-- Left: pattern list -->
+        <div class="patterns-panel">
+          <div class="patterns-panel-header">
+            <span id="patternListTitle">الأنماط المتكررة</span>
+          </div>
+          <div class="pattern-list" id="patternList"></div>
+        </div>
+        <!-- Right: ayah detail -->
+        <div class="ayah-detail-panel">
+          <div class="ayah-detail-header">
+            <span id="detailTitle">اختر نمطاً لعرض الآيات</span>
+            <span style="display:flex;align-items:center;gap:0.5rem;">
+              <span id="detailCount" style="font-size:0.72rem;color:var(--gold-dim);direction:ltr;"></span>
+              <button class="export-btn" id="copyAyahsBtn" onclick="copyAyahsAsText()" style="display:none">نسخ</button>
+            </span>
+          </div>
+          <div class="ayah-detail-list" id="ayahDetailList">
+            <div class="ayah-detail-empty">← اختر نمطاً من القائمة</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.app -->
+
+<script>
+// ════════════════════════════════════════════════════════════
+//  State
+// ════════════════════════════════════════════════════════════
+let DB = null;
+let allAyahs = [];      // { id, surahNum, surahAr, surahEn, num, juz, page, raw, norm }
+let currentMode = 'similarity';
+let currentNav  = 'patterns';
+let ngramResults = [];
+let activePatternIndex = -1;
+let surahsData = [];    // [{ number, name, englishName, numberOfAyahs }]
+
+// ════════════════════════════════════════════════════════════
+//  File loading — auto-fetch first, manual picker as fallback
+// ════════════════════════════════════════════════════════════
+const fileInput = document.getElementById('fileInput');
+const uploadArea = document.getElementById('uploadArea');
+
+fileInput.addEventListener('change', e => loadFromFile(e.target.files[0]));
+uploadArea.addEventListener('dragover', e => { e.preventDefault(); uploadArea.style.borderColor='var(--gold)'; });
+uploadArea.addEventListener('dragleave', () => { uploadArea.style.borderColor=''; });
+uploadArea.addEventListener('drop', e => { e.preventDefault(); uploadArea.style.borderColor=''; loadFromFile(e.dataTransfer.files[0]); });
+
+// ── IndexedDB cache ──────────────────────────────────────────
+// On first load: fetch qurandb.json (~3 MB) and store it in IDB.
+// On every subsequent visit: read from IDB instantly (~50 ms, no network).
+// Cache is keyed by ETag/Last-Modified so it auto-refreshes when you
+// deploy a new version of qurandb.json.
+const IDB_NAME    = 'qurandb-cache';
+const IDB_STORE   = 'files';
+const IDB_KEY     = 'qurandb';
+const IDB_META_KEY = 'qurandb-meta'; // stores { etag, lastModified }
+
+function openIDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(IDB_NAME, 1);
+    req.onupgradeneeded = e => e.target.result.createObjectStore(IDB_STORE);
+    req.onsuccess = e => resolve(e.target.result);
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+function idbGet(db, key) {
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(IDB_STORE, 'readonly');
+    const req = tx.objectStore(IDB_STORE).get(key);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+function idbPut(db, key, value) {
+  return new Promise((resolve, reject) => {
+    const tx  = db.transaction(IDB_STORE, 'readwrite');
+    const req = tx.objectStore(IDB_STORE).put(value, key);
+    req.onsuccess = () => resolve();
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+// ── Auto-load on page load ───────────────────────────────────
+async function autoLoad() {
+  if (location.protocol === 'file:') {
+    showPicker('افتح الملف عبر خادم للتحميل التلقائي، أو اختره يدوياً');
+    return;
+  }
+
+  setStatus('loading', 'جارٍ التحقق من الذاكرة المؤقتة…');
+
+  let db;
+  try { db = await openIDB(); } catch(e) { db = null; }
+
+  // 1. Check if we have a cached copy
+  let cached = null, cachedMeta = null;
+  if (db) {
+    try {
+      cached     = await idbGet(db, IDB_KEY);
+      cachedMeta = await idbGet(db, IDB_META_KEY);
+    } catch(e) { /* ignore */ }
+  }
+
+  // 2. HEAD request to check freshness (cheap — no body downloaded)
+  let serverEtag = null, serverLM = null;
+  try {
+    const head = await fetch('./qurandb.json', { method: 'HEAD' });
+    if (head.ok) {
+      serverEtag = head.headers.get('etag');
+      serverLM   = head.headers.get('last-modified');
+    }
+  } catch(e) { /* offline or no HEAD support */ }
+
+  const cacheValid = cached && cachedMeta && (
+    (serverEtag && serverEtag === cachedMeta.etag) ||
+    (serverLM   && serverLM   === cachedMeta.lastModified) ||
+    (!serverEtag && !serverLM)   // server sends no validators → trust cache
+  );
+
+  if (cacheValid) {
+    // Serve from IDB — no network fetch needed
+    setStatus('loading', 'جارٍ التحميل من الذاكرة المؤقتة…');
+    try {
+      ingestDB(cached, 'qurandb.json', '⚡ بحث في');
+      return;
+    } catch(e) { /* corrupt cache — fall through to fresh fetch */ }
+  }
+
+  // 3. Full fetch (first visit, or file changed)
+  setStatus('loading', 'جارٍ تحميل qurandb.json…');
+  try {
+    const res = await fetch('./qurandb.json');
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+    // Capture validators before consuming body
+    const etag         = res.headers.get('etag');
+    const lastModified = res.headers.get('last-modified');
+
+    const json = await res.json();
+
+    // Store in IDB for next visit
+    if (db) {
+      try {
+        await idbPut(db, IDB_KEY,      json);
+        await idbPut(db, IDB_META_KEY, { etag, lastModified });
+      } catch(e) { /* IDB full or blocked — not fatal */ }
+    }
+
+    ingestDB(json, 'qurandb.json', '✓ تم التحميل ');
+  } catch (err) {
+    if (cached) {
+      // Network failed but we have a stale cache — use it with a warning
+      setStatus('loading', '⚠ تعذّر التحقق من التحديثات — جارٍ استخدام النسخة المحفوظة');
+      try { ingestDB(cached, 'qurandb.json', '⚠ نسخة محفوظة'); return; } catch(e) {}
+    }
+    showPicker(`تعذّر التحميل (${err.message}) — اختر الملف يدوياً`);
+  }
+}
+
+function showPicker(hint) {
+  setStatus('error', hint);
+  uploadArea.style.display = 'block';
+}
+
+// ── Manual file picker ───────────────────────────────────────
+function loadFromFile(file) {
+  if (!file) return;
+  setStatus('loading', `جارٍ قراءة ${file.name}…`);
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      ingestDB(JSON.parse(e.target.result), file.name, '✓ تم التحميل');
+    } catch(err) {
+      setStatus('error', 'خطأ في قراءة الملف — تأكد أنه qurandb.json صحيح');
+    }
+  };
+  reader.readAsText(file, 'utf-8');
+}
+
+// ── Shared ingestion ─────────────────────────────────────────
+function ingestDB(data, filename, statusPrefix = '✓') {
+  DB = data;
+  buildIndex();
+  setStatus('ready', `${statusPrefix} — ${allAyahs.length.toLocaleString('ar')} آية من ${DB.surahs.length} سورة`);
+  document.getElementById('searchBtn').disabled = false;
+  document.getElementById('ngRunBtn').disabled  = false;
+  uploadArea.style.display = 'none';
+}
+
+// ── Surahs dropdown ──────────────────────────────────────────
+async function loadSurahs() {
+  if (location.protocol === 'file:') return; // skip on file://
+  try {
+    const res = await fetch('./surahs.json');
+    if (!res.ok) return;
+    surahsData = await res.json();
+    populateSurahDropdown();
+  } catch(e) { /* not fatal — ayah number input still works */ }
+}
+
+function populateSurahDropdown() {
+  const sel = document.getElementById('refSurah');
+  sel.innerHTML = '<option value="">— اختر السورة —</option>';
+  for (const s of surahsData) {
+    const opt = document.createElement('option');
+    opt.value = s.number;
+    opt.textContent = `${s.number}. ${s.name} — ${s.englishName}`;
+    opt.dataset.max = s.numberOfAyahs;
+    sel.appendChild(opt);
+  }
+}
+
+function updateAyahMax() {
+  const sel = document.getElementById('refSurah');
+  const ayahInput = document.getElementById('refAyah');
+  const chosen = sel.options[sel.selectedIndex];
+  if (chosen && chosen.dataset.max) {
+    const max = parseInt(chosen.dataset.max);
+    ayahInput.max = max;
+    ayahInput.placeholder = `1 – ${max}`;
+    // clamp existing value if out of range
+    if (ayahInput.value && parseInt(ayahInput.value) > max) ayahInput.value = max;
+  } else {
+    ayahInput.max = '';
+    ayahInput.placeholder = '1-...';
+  }
+}
+
+function buildIndex() {
+  allAyahs = [];
+  for (const s of DB.surahs) {
+    for (const a of s.ayahs) {
+      allAyahs.push({
+        id: a.id,
+        surahNum: s.number,
+        surahAr: s.name_arabic,
+        surahEn: s.name_english,
+        num: a.numberInSurah,
+        juz: a.juz,
+        page: a.page,
+        raw: a.text_raw,
+        norm: a.text_normalized
+      });
+    }
+  }
+}
+
+function setStatus(cls, msg) {
+  const el = document.getElementById('dbStatus');
+  el.className = 'db-status ' + cls;
+  document.getElementById('dbStatusText').textContent = msg;
+}
+
+// ════════════════════════════════════════════════════════════
+//  Nav switching (Search / Patterns)
+// ════════════════════════════════════════════════════════════
+function switchNav(nav) {
+  currentNav = nav;
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.toggle('active', t.dataset.nav === nav));
+  document.getElementById('nav-search').style.display   = nav === 'search'   ? 'block' : 'none';
+  document.getElementById('nav-patterns').style.display = nav === 'patterns' ? 'block' : 'none';
+}
+
+// ════════════════════════════════════════════════════════════
+//  Search mode switching
+// ════════════════════════════════════════════════════════════
+function setMode(m) {
+  currentMode = m;
+  document.querySelectorAll('.mode-tab').forEach(t => t.classList.toggle('active', t.dataset.mode === m));
+  ['similarity','phrase','ref'].forEach(id => {
+    document.getElementById('mode-'+id).style.display = (id===m) ? 'block' : 'none';
+  });
+  document.getElementById('results').innerHTML = '';
+}
+
+// ════════════════════════════════════════════════════════════
+//  Text normalisation
+// ════════════════════════════════════════════════════════════
+function normalize(text) {
+  text = text.replace(/[\u0621\u0622\u0623\u0625\u0671]/g, '\u0627');
+  text = text.replace(/ى/g, 'ي');
+  text = text.replace(/ة/g, 'ه');
+  text = text.replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED]/g, '');
+  text = text.replace(/[\u06E2\u06E3\u06E4\u06E7\u06E8\u06EA-\u06ED]/g, '');
+  text = text.replace(/\s+/g, ' ').trim();
+  return text;
+}
+
+// ════════════════════════════════════════════════════════════
+//  Similarity (LCS ratio — mirrors Python SequenceMatcher)
+// ════════════════════════════════════════════════════════════
+function similarity(a, b) {
+  if (!a || !b) return 0;
+  if (a === b) return 1;
+  const la = a.length, lb = b.length;
+  if (Math.min(la,lb)/Math.max(la,lb) < 0.3) return 0;
+  const maxLen = 300;
+  const aa = la > maxLen ? a.slice(0,maxLen) : a;
+  const bb = lb > maxLen ? b.slice(0,maxLen) : b;
+  const lcs = lcsLength(aa, bb);
+  return (2 * lcs) / (aa.length + bb.length);
+}
+function lcsLength(a, b) {
+  const la = a.length, lb = b.length;
+  let prev = new Uint16Array(lb+1);
+  for (let i = 1; i <= la; i++) {
+    const curr = new Uint16Array(lb+1);
+    for (let j = 1; j <= lb; j++) {
+      curr[j] = a[i-1] === b[j-1] ? prev[j-1]+1 : Math.max(curr[j-1], prev[j]);
+    }
+    prev = curr;
+  }
+  return prev[lb];
+}
+
+// ════════════════════════════════════════════════════════════
+//  Search dispatch
+// ════════════════════════════════════════════════════════════
+function doSearch() {
+  if (!DB) return;
+  document.getElementById('results').innerHTML = '';
+  const spinner = document.getElementById('spinner');
+  spinner.classList.add('show');
+  setTimeout(() => {
+    try {
+      if (currentMode === 'phrase') searchPhrase();
+      else if (currentMode === 'similarity') searchSimilarity();
+      else if (currentMode === 'ref') searchByRef();
+    } finally { spinner.classList.remove('show'); }
+  }, 30);
+}
+
+function searchPhrase() {
+  const raw = document.getElementById('phraseText').value.trim();
+  if (!raw) { showError('الرجاء إدخال عبارة للبحث'); return; }
+  const query = normalize(raw);
+  const matches = allAyahs.filter(a => a.norm.includes(query));
+  renderResults(matches, null, 'phrase', query);
+}
+
+function searchSimilarity() {
+  const textInput = document.getElementById('simText').value.trim();
+  const refInput  = document.getElementById('simRef').value.trim();
+  const thresh    = parseFloat(document.getElementById('threshold').value);
+  let targetNorm = '', targetInfo = null, excludeId = null;
+
+  if (refInput) {
+    const parts = refInput.split(':');
+    if (parts.length === 2) {
+      const sn = parseInt(parts[0]), an = parseInt(parts[1]);
+      const found = allAyahs.find(a => a.surahNum === sn && a.num === an);
+      if (!found) { showError(`الآية ${refInput} غير موجودة`); return; }
+      targetNorm = found.norm; targetInfo = found; excludeId = found.id;
+    }
+  } else if (textInput) {
+    targetNorm = normalize(textInput);
+    targetInfo = { raw:textInput, surahEn:'نص مُدخل', surahAr:'', num:0, surahNum:0, juz:'-', page:'-' };
+  } else { showError('الرجاء إدخال نص أو مرجع آية'); return; }
+
+  const results = [];
+  for (const a of allAyahs) {
+    if (a.id === excludeId) continue;
+    const sc = similarity(targetNorm, a.norm);
+    if (sc >= thresh) results.push({ ...a, score: sc });
+  }
+  results.sort((x,y) => y.score - x.score);
+  renderResults(results, targetInfo, 'similarity');
+}
+
+function searchByRef() {
+  const sn = parseInt(document.getElementById('refSurah').value);
+  const an = parseInt(document.getElementById('refAyah').value);
+  const thresh = parseFloat(document.getElementById('threshold2').value);
+  if (!sn || !an) { showError('الرجاء إدخال رقم السورة والآية'); return; }
+  const found = allAyahs.find(a => a.surahNum === sn && a.num === an);
+  if (!found) { showError(`لم يُعثر على الآية ${sn}:${an}`); return; }
+  const results = [];
+  for (const a of allAyahs) {
+    if (a.id === found.id) continue;
+    const sc = similarity(found.norm, a.norm);
+    if (sc >= thresh) results.push({ ...a, score: sc });
+  }
+  results.sort((x,y) => y.score - x.score);
+  renderResults(results, found, 'ref');
+}
+
+// ── Position toggle buttons ──────────────────────────────────
+function setPosBtn(btn) {
+  document.querySelectorAll('.pos-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function getSelectedPos() {
+  const active = document.querySelector('.pos-btn.active');
+  return active ? active.dataset.pos : 'first';
+}
+
+// ════════════════════════════════════════════════════════════
+//  N-gram / Pattern Analysis  (mirrors counter.py exactly)
+// ════════════════════════════════════════════════════════════
+function getNgram(words, n, position) {
+  if (words.length < n) return null;
+  if (position === 'first')  return [words.slice(0, n).join(' ')];
+  if (position === 'last')   return [words.slice(-n).join(' ')];
+  if (position === 'middle') {
+    const result = [];
+    for (let i = 0; i <= words.length - n; i++) {
+      result.push(words.slice(i, i+n).join(' '));
+    }
+    return result;
+  }
+  return null;
+}
+
+function runNgramAnalysis() {
+  if (!DB) return;
+  const position = getSelectedPos();
+  const n        = parseInt(document.getElementById('ngN').value) || 3;
+  const minCount = 2;
+
+  document.getElementById('ngramLayout').style.display = 'none';
+  const spinner = document.getElementById('ngSpinner');
+  spinner.classList.add('show');
+  document.getElementById('ngSpinnerText').textContent = 'جارٍ تحليل الأنماط...';
+
+  setTimeout(() => {
+    try {
+      const counts = new Map();
+      for (const a of allAyahs) {
+        const words = a.norm.split(' ').filter(Boolean);
+        const ngrams = getNgram(words, n, position);
+        if (!ngrams) continue;
+        for (const phrase of ngrams) {
+          counts.set(phrase, (counts.get(phrase) || 0) + 1);
+        }
+      }
+
+      // Filter by minCount, sort descending
+      ngramResults = [];
+      for (const [text, cnt] of counts) {
+        if (cnt >= minCount) ngramResults.push({ text, cnt });
+      }
+      ngramResults.sort((a,b) => b.cnt - a.cnt);
+
+      renderPatternList(ngramResults, position, n);
+    } finally {
+      spinner.classList.remove('show');
+      document.getElementById('ngramLayout').style.display = 'grid';
+    }
+  }, 40);
+}
+
+function renderPatternList(patterns, position, n) {
+  activePatternIndex = -1;
+  const posLabel = { first:'أول الآية', last:'آخر الآية', middle:'أي موضع' };
+  document.getElementById('patternListTitle').textContent =
+    `${patterns.length.toLocaleString('ar')} نمط — ${n} كلمات — ${posLabel[position]}`;
+
+  const list = document.getElementById('patternList');
+  list.innerHTML = '';
+
+  if (patterns.length === 0) {
+    list.innerHTML = '<div class="ayah-detail-empty">لا توجد أنماط بهذه المعايير</div>';
+    return;
+  }
+
+  patterns.forEach((p, idx) => {
+    const item = document.createElement('div');
+    item.className = 'pattern-item';
+    item.dataset.idx = idx;
+    item.innerHTML = `
+      <span class="pattern-text">${p.text}</span>
+      <span class="pattern-count">${p.cnt}</span>`;
+    item.addEventListener('click', () => selectPattern(idx));
+    list.appendChild(item);
+  });
+
+  // Reset detail panel
+  document.getElementById('detailTitle').textContent = 'اختر نمطاً لعرض الآيات';
+  document.getElementById('detailCount').textContent = '';
+  document.getElementById('ayahDetailList').innerHTML =
+    '<div class="ayah-detail-empty">← اختر نمطاً من القائمة</div>';
+}
+
+function selectPattern(idx) {
+  activePatternIndex = idx;
+  const pattern = ngramResults[idx];
+
+  // Highlight active item
+  document.querySelectorAll('.pattern-item').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
+
+  // Find all ayahs containing this pattern (exact match on norm)
+  const matches = allAyahs.filter(a => a.norm.includes(pattern.text));
+
+  document.getElementById('detailTitle').textContent = pattern.text;
+  document.getElementById('detailCount').textContent = `${matches.length} آية`;
+  document.getElementById('copyAyahsBtn').style.display = 'inline-block';
+
+  const detailList = document.getElementById('ayahDetailList');
+  detailList.innerHTML = '';
+
+  matches.forEach((a, i) => {
+    const card = document.createElement('div');
+    card.className = 'ngram-ayah-card';
+    card.style.animationDelay = `${Math.min(i*20,400)}ms`;
+
+    const highlighted = highlightPhrase(a.raw, pattern.text);
+    card.innerHTML = `
+      <div class="ngram-ayah-meta">
+        <span class="ref-badge">${a.surahNum}:${a.num}</span>
+        <span class="surah-name" style="font-size:0.78rem;">${a.surahAr} — ${a.surahEn}</span>
+        <span class="juz-info">جزء ${a.juz} • ص ${a.page}</span>
+      </div>
+      <div class="ayah-text" style="font-size:clamp(0.95rem,2.5vw,1.2rem);">${highlighted}</div>`;
+    detailList.appendChild(card);
+  });
+
+  // On narrow screens the detail panel is below the pattern list —
+  // scroll it into view so the user doesn't have to hunt for results.
+  const detailPanel = document.getElementById('ayahDetailList').closest('.ayah-detail-panel');
+  detailPanel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function copyAyahsAsText() {
+  if (activePatternIndex < 0) return;
+  const pattern = ngramResults[activePatternIndex];
+  const matches = allAyahs.filter(a => a.norm.includes(pattern.text));
+
+  // Build formatted plain text
+  const lines = [];
+  lines.push(`النمط: ${pattern.text}`);
+  lines.push(`التكرار: ${matches.length} آية`);
+  lines.push('─'.repeat(40));
+  for (const a of matches) {
+    lines.push(`${a.surahAr} — ${a.surahEn} (${a.surahNum}:${a.num}) | جزء ${a.juz} • ص ${a.page}`);
+    lines.push(a.raw);
+    lines.push('');
+  }
+
+  const text = lines.join('\n');
+
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById('copyAyahsBtn');
+    const orig = btn.textContent;
+    btn.textContent = '✓ تم النسخ';
+    btn.style.background = 'var(--teal)';
+    btn.style.color = '#fff';
+    btn.style.borderColor = 'var(--teal)';
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.style.background = '';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 2000);
+  }).catch(() => {
+    // Fallback: open in a new window the user can copy manually
+    const win = window.open('', '_blank');
+    win.document.write(`<pre dir="rtl" style="font-family:serif;font-size:1.1rem;padding:1rem;white-space:pre-wrap;">${text.replace(/</g,'&lt;')}</pre>`);
+    win.document.close();
+  });
+}
+
+// ════════════════════════════════════════════════════════════
+//  Render search results
+// ════════════════════════════════════════════════════════════
+function renderResults(items, target, mode, phraseQuery) {
+  const container = document.getElementById('results');
+  const header = document.createElement('div');
+  header.className = 'results-header';
+  const modeLabel = mode === 'phrase' ? 'بحث عبارة' : 'بحث تشابه';
+  header.innerHTML = `<h2>${modeLabel}</h2><span class="results-count">${items.length} نتيجة</span>`;
+  container.appendChild(header);
+
+  if (target && mode !== 'phrase') container.appendChild(makeCard(target, null, true, null));
+
+  if (items.length === 0) {
+    const div = document.createElement('div');
+    div.className = 'no-results';
+    div.innerHTML = mode === 'phrase'
+      ? 'لم تُوجد آيات تحتوي هذه العبارة'
+      : 'لم تُوجد آيات بهذه النسبة من التشابه — حاول تخفيض العتبة';
+    container.appendChild(div);
+    return;
+  }
+  items.forEach((item, i) => {
+    const card = makeCard(item, item.score ?? null, false, phraseQuery);
+    card.style.animationDelay = `${Math.min(i*30,600)}ms`;
+    container.appendChild(card);
+  });
+}
+
+function makeCard(ayah, score, isTarget, phraseQuery) {
+  const card = document.createElement('div');
+  card.className = 'ayah-card' + (isTarget ? ' target-card' : '');
+
+  if (score !== null) {
+    const barWrap = document.createElement('div');
+    barWrap.className = 'score-bar-wrap';
+    const bar = document.createElement('div');
+    bar.className = 'score-bar';
+    bar.style.height = (score * 100) + '%';
+    barWrap.appendChild(bar);
+    card.appendChild(barWrap);
+  }
+
+  let html = '';
+  if (isTarget) html += `<div class="target-badge">الآية المرجعية</div>`;
+  html += `<div class="ayah-meta">`;
+  if (ayah.surahNum) html += `<span class="ref-badge">${ayah.surahNum}:${ayah.num}</span>`;
+  html += `<span class="surah-name">${ayah.surahAr||''} ${ayah.surahEn ? '— '+ayah.surahEn : ''}</span>`;
+  if (ayah.juz) html += `<span class="juz-info">جزء ${ayah.juz} • ص ${ayah.page}</span>`;
+  if (score !== null) {
+    const cls = score>=0.85?'high':score>=0.65?'medium':'low';
+    html += `<span class="score-badge ${cls}">${(score*100).toFixed(1)}%</span>`;
+  }
+  html += `</div>`;
+  let displayText = ayah.raw || ayah.norm;
+  if (phraseQuery) displayText = highlightPhrase(displayText, phraseQuery);
+  html += `<div class="ayah-text">${displayText}</div>`;
+  card.innerHTML += html;
+  return card;
+}
+
+function highlightPhrase(rawText, normQuery) {
+  const words = normQuery.split(' ').filter(w => w.length >= 2);
+  let result = rawText;
+  for (const w of words) {
+    try {
+      const pattern = w.split('').map(c => c.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '[\u064B-\u065F\u0670]*').join('');
+      const re = new RegExp(pattern, 'g');
+      result = result.replace(re, m => `<span class="highlight">${m}</span>`);
+    } catch(e) { /* skip */ }
+  }
+  return result;
+}
+
+function showError(msg) {
+  document.getElementById('results').innerHTML = `<div class="no-results">${msg}</div>`;
+}
+
+// Enter to search
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && DB) {
+    if (currentNav === 'search') doSearch();
+    else runNgramAnalysis();
+  }
+});
+
+// ── Boot ─────────────────────────────────────────────────────
+autoLoad();
+loadSurahs();
+</script>
+
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/qurandb/sw.js', { scope: '/qurandb/' })
+                    .then(registration => {
+                        console.log('[PWA] Service Worker registered:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('[PWA] Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('[PWA] App can be installed');
+        });
+
+        // Call this function from a custom install button in your UI
+        async function installPWA() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log('[PWA] Install prompt outcome:', outcome);
+            deferredPrompt = null;
+        }
+
+        window.addEventListener('appinstalled', () => {
+            console.log('[PWA] App installed successfully');
+            deferredPrompt = null;
+        });
+    </script>
+</body>
+</html>
+

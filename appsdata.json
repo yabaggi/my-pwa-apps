@@ -12,7 +12,20 @@
  "description-ar":"أكاديمية Termux Dev قم ببناء تطبيقات ويب حقيقية من هاتف Android الخاص بك. لا كمبيوتر محمول. لا أعذار. فقط Termux. منهج تفاعلي كامل لغير المطورين الذين يرغبون في إنشاء ونشر SPAs و PWAs وتطبيقات كاملة المكدس - مباشرة من Android باستخدام Termux و Node.js و GitHub و Netlify و Cloudflare.",
     "badges": []
   },
- {
+  {
+  "href": "qurandb/",
+"category": "Others",
+"category-ar": "",
+"keywords": "Nn",
+"keywords-ar": "",
+"icon": "📜",
+"name": "Quranic Similarity Search",
+"name-ar": "البحث عن التشابه القرآني",
+"description": "Quranic Similarity Search A fully client-side web app for exploring textual similarity and repeated patterns in the Holy Quran.",
+"description-ar":"البحث عن التشابه القرآني تطبيق ويب لاستكشاف التشابه النصي والأنماط المتكررة في ,"القرآن الكريم.
+"badges": []
+},
+  {
     "href": "craftut/",
     "category": "Others",
     "category-ar": "",
@@ -359,4 +372,5 @@
     "badges": []
   }
 ]
+
 

@@ -1645,7 +1645,7 @@
     color: #000;
   }
 </style>
-    <meta name="theme-color" content="#424047">
+    <meta name="theme-color" content="#331616">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="apple-touch-icon" href="/my-pwa-apps/devacad/icons/icon-192x192.png">
 </head>
@@ -2068,42 +2068,59 @@ self.addEventListener('fetch', e => {
     <div class="phase-body">
       <div class="phase-goal">🎯 Goal: Make something feel genuinely intelligent. Call an AI API server-side (keeping keys safe) and show the result in your app.</div>
       <ul class="steps-list" id="steps-4">
-        <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Get an AI API key.</strong> Go to console.anthropic.com → sign up → API Keys → Create Key. Copy and save the key somewhere safe — you only see it once. Never share it or put it in your HTML file.</span></li>
-        <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Ask AI to generate a Netlify serverless function.</strong> Tell it: "I want a Netlify function at netlify/functions/ai.js that receives a prompt, calls the Anthropic API with my key from process.env.ANTHROPIC_API_KEY, and returns the reply as JSON." Copy the function code it gives you.</span></li>
-        <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Create the function file.</strong> In your project, run <code>mkdir -p netlify/functions</code> then <code>nano netlify/functions/ai.js</code> and paste the code. This folder structure is what Netlify expects.</span></li>
-        <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Add your API key to Netlify</strong> (NOT to your code). Run <code>netlify env:set ANTHROPIC_API_KEY your-key-here</code> — replace with your actual key. This keeps it secret on Netlify's servers.</span></li>
+        <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Get a free Gemini API key.</strong> Go to <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent)">aistudio.google.com/apikey</a> → sign in with Google → Create API Key. No credit card needed. Copy the key.</span></li>
+        <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Ask AI to generate a Netlify serverless function.</strong> Tell it: "I want a Netlify function at netlify/functions/ai.js that receives a prompt, calls the Google Gemini API with my key from process.env.GEMINI_API_KEY, and returns the reply as JSON."</span></li>
+        <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Create the function file.</strong> In your project, run <code>mkdir -p netlify/functions</code> then <code>nano netlify/functions/ai.js</code> and paste the code from the block below.</span></li>
+        <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Add your API key to Netlify</strong> (NOT to your code). Run <code>netlify env:set GEMINI_API_KEY your-key-here</code> — replace with your actual key. This keeps it secret on Netlify's servers.</span></li>
         <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Update your index.html.</strong> Ask AI to add a text input and button to your app that sends a message to <code>/.netlify/functions/ai</code> and shows the reply. Paste the updated code into your file.</span></li>
         <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Deploy and test.</strong> Run <code>netlify deploy --prod --dir .</code> — you must deploy to Netlify (not just local server) for the function to work. Open your live URL, type something, and see the AI respond.</span></li>
       </ul>
       <div class="code-block">
-        <div class="code-header"><span class="code-lang">js — netlify/functions/ai.js</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <div class="code-header"><span class="code-lang">js — netlify/functions/ai.js (Gemini)</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
         <pre>export async function handler(event) {
+  // Handle CORS preflight
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: { 'Access-Control-Allow-Origin': '*',
+                 'Access-Control-Allow-Headers': 'Content-Type' },
+      body: ''
+    };
+  }
+
   const { prompt } = JSON.parse(event.body);
+  const key = process.env.GEMINI_API_KEY;
 
   const response = await fetch(
-    'https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY,
-      'anthropic-version': '2023-06-01'
-    },
-    body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
-      max_tokens: 512,
-      messages: [{ role: 'user', content: prompt }]
-    })
-  });
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${key}`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ role: 'user', parts: [{ text: prompt }] }],
+        generationConfig: { maxOutputTokens: 512 }
+      })
+    }
+  );
 
   const data = await response.json();
+  const reply = data.candidates?.[0]?.content?.parts?.[0]?.text
+    || 'No response.';
+
   return {
     statusCode: 200,
     headers: { 'Access-Control-Allow-Origin': '*' },
-    body: JSON.stringify({
-      reply: data.content[0].text
-    })
+    body: JSON.stringify({ reply })
   };
 }</pre>
+      </div>
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">bash — set your free Gemini key on Netlify</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
+        <pre># Get your free key at: https://aistudio.google.com/apikey
+# No credit card required
+
+netlify env:set GEMINI_API_KEY your-key-here
+netlify deploy --prod --dir .</pre>
       </div>
       <div class="tip-box"><strong>📌 Project ideas:</strong> AI-powered note summarizer, a smart Arabic↔English translator, or a plant care assistant that identifies problems from descriptions.</div>
     </div>
@@ -2976,10 +2993,11 @@ ip addr | grep 'inet ' | grep -v 127</pre>
       <div class="ai-icon">✦</div>
       <div>
         <div class="ai-title">Ask the Dev Assistant</div>
-        <div class="ai-subtitle">Get help with Termux, Netlify, Workers, Git, PWA, or anything in the curriculum</div>
+        <div class="ai-subtitle">Powered by Google Gemini · Get help with Termux, Netlify, Workers, Git, PWA, or anything in the curriculum</div>
       </div>
     </div>
     <div class="ai-body">
+
       <div class="quick-prompts">
         <span class="quick-prompt" onclick="setPrompt('Why is my service worker not updating on Android Chrome?')">SW not updating?</span>
         <span class="quick-prompt" onclick="setPrompt('How do I fix CORS errors in my Netlify serverless function?')">Fix CORS errors</span>
@@ -3135,6 +3153,7 @@ Key things to know:
 - Service worker cache-busting: bump CACHE_NAME in sw.js + serve sw.js with no-cache headers via netlify.toml
 - API keys must NEVER go in client JS — use Netlify Functions or Cloudflare Workers
 - For Cloudflare Workers, images/files are stored as D1 BLOBs (no R2 for beginners)
+- For AI features, use Google Gemini API (free tier at aistudio.google.com) not Anthropic
 
 Keep answers short, practical, and include runnable code when helpful. Use code blocks. Be encouraging.`;
 
@@ -3163,26 +3182,28 @@ async function sendMessage() {
   messagesEl.scrollTop = messagesEl.scrollHeight;
 
   try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
+    const PROXY = 'https://ai-proxy.yabaggi.workers.dev';
+
+    const res = await fetch(PROXY, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: msg }]
-      })
+      body: JSON.stringify({ prompt: msg })
     });
 
     const data = await res.json();
-    const reply = data.content?.[0]?.text || 'No response received.';
 
-    thinkEl.className = 'ai-msg assistant';
-    thinkEl.innerHTML = formatReply(reply);
+    if (!res.ok || data.error) {
+      thinkEl.className = 'ai-msg assistant';
+      thinkEl.textContent = '⚠️ ' + (data.error || 'Something went wrong. Try again.');
+    } else {
+      const reply = data.reply || 'No response received.';
+      thinkEl.className = 'ai-msg assistant';
+      thinkEl.innerHTML = formatReply(reply);
+    }
 
   } catch (err) {
     thinkEl.className = 'ai-msg assistant';
-    thinkEl.textContent = 'Could not reach the AI. Check your connection and try again.';
+    thinkEl.textContent = 'Could not reach the AI. Check your internet connection and try again.';
   }
 
   btn.disabled = false;
