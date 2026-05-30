@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Termux Dev Academy — Build Apps from Your Phone</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="icon" href="data:,">
 <style>
   :root {
@@ -57,6 +57,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 10px;
     height: 52px;
   }
 
@@ -1320,6 +1321,223 @@
     flex-shrink: 0;
   }
 
+  /* ===== ARABIC / RTL ===== */
+  html[lang="ar"] body {
+    font-family: 'Cairo', sans-serif;
+    direction: rtl;
+    text-align: right;
+  }
+
+  html[lang="ar"] .nav-logo {
+    font-family: 'Cairo', sans-serif;
+    letter-spacing: 0;
+  }
+
+  html[lang="ar"] nav {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .nav-links-desktop {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .nav-menu a,
+  html[lang="ar"] .nav-menu-qs {
+    text-align: right;
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .section-label {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .section-label::after {
+    display: none;
+  }
+
+  html[lang="ar"] .section-label::before {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  html[lang="ar"] .phase-header {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .phase-meta {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .phase-goal {
+    border-left: none;
+    border-right: 3px solid var(--accent);
+    border-radius: 8px 0 0 8px;
+  }
+
+  html[lang="ar"] .steps-list li {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .steps-list li span {
+    text-align: right;
+  }
+
+  html[lang="ar"] .tip-box {
+    border-left: none;
+    border-right: 3px solid var(--accent2);
+    border-radius: 8px 0 0 8px;
+  }
+
+  html[lang="ar"] .code-block pre,
+  html[lang="ar"] .cmd-code,
+  html[lang="ar"] .qs-cmd,
+  html[lang="ar"] code {
+    direction: ltr;
+    text-align: left;
+    font-family: 'Space Mono', monospace;
+  }
+
+  html[lang="ar"] .code-header {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .flow-step {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .flow-step-content {
+    text-align: right;
+  }
+
+  html[lang="ar"] .aibuild-intro {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .prompt-card-header {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .prompt-card-label {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .prompt-text {
+    direction: rtl;
+    text-align: right;
+  }
+
+  html[lang="ar"] .guide-tabs {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .cmd-item {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .cmd-text {
+    text-align: right;
+  }
+
+  html[lang="ar"] .transfer-card {
+    text-align: right;
+  }
+
+  html[lang="ar"] .transfer-steps-mini {
+    text-align: right;
+  }
+
+  html[lang="ar"] .test-item {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .ai-header {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .quick-prompts {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .progress-bar-outer {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .phase-dots {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .project-card {
+    text-align: right;
+  }
+
+  html[lang="ar"] .hero-tools {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .hero h1 {
+    font-family: 'Cairo', sans-serif;
+  }
+
+  html[lang="ar"] .hero-sub {
+    font-family: 'Cairo', sans-serif;
+  }
+
+  html[lang="ar"] .flow-steps::before {
+    left: auto;
+    right: 19px;
+  }
+
+  html[lang="ar"] .qs-drawer-header {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .qs-header-actions {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .qs-part {
+    flex-direction: row-reverse;
+  }
+
+  html[lang="ar"] .qs-part::after {
+    display: none;
+  }
+
+  html[lang="ar"] .qs-part::before {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  html[lang="ar"] .qs-step-body ol,
+  html[lang="ar"] .qs-step-body ul {
+    padding-left: 0;
+    padding-right: 18px;
+  }
+
+  /* Lang toggle button */
+  .lang-toggle {
+    background: rgba(124,92,252,0.12);
+    border: 1px solid rgba(124,92,252,0.35);
+    color: var(--accent3);
+    font-family: 'Cairo', 'Space Mono', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+    letter-spacing: 0;
+  }
+
+  .lang-toggle:hover {
+    background: rgba(124,92,252,0.22);
+  }
+
   /* ===== FOOTER ===== */
   footer {
     border-top: 1px solid var(--border);
@@ -1645,9 +1863,6 @@
     color: #000;
   }
 </style>
-    <meta name="theme-color" content="#331616">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="/my-pwa-apps/devacad/icons/icon-192x192.png">
 </head>
 <body>
 
@@ -1655,14 +1870,17 @@
 <nav>
   <div class="nav-logo">termux<span>/</span>dev<span>/</span>academy</div>
 
+  <!-- Lang toggle — always visible, between logo and hamburger -->
+  <button class="lang-toggle" id="lang-btn" onclick="toggleLang()">عربي</button>
+
   <!-- Desktop links (hidden on mobile) -->
   <div class="nav-links-desktop">
-    <a href="#curriculum">Phases</a>
-    <a href="#guide">Guide</a>
-    <a href="#ai-build">AI Build</a>
-    <a href="#projects">Projects</a>
-    <a href="#ai-helper">AI Help</a>
-    <button class="nav-qs-btn" onclick="openQS()">📖 Quickstart</button>
+    <a href="#curriculum" data-en="Phases" data-ar="المراحل">Phases</a>
+    <a href="#guide" data-en="Guide" data-ar="الدليل">Guide</a>
+    <a href="#ai-build" data-en="AI Build" data-ar="البناء بالذكاء">AI Build</a>
+    <a href="#projects" data-en="Projects" data-ar="المشاريع">Projects</a>
+    <a href="#ai-helper" data-en="AI Help" data-ar="مساعد الذكاء">AI Help</a>
+    <button class="nav-qs-btn" onclick="openQS()" data-en="📖 Quickstart" data-ar="📖 البداية السريعة">📖 Quickstart</button>
   </div>
 
   <!-- Hamburger (shown on mobile) -->
@@ -1675,25 +1893,25 @@
 
 <!-- Mobile dropdown menu -->
 <div class="nav-menu" id="nav-menu">
-  <a href="#curriculum" onclick="closeMenu()">📚 Phases</a>
-  <a href="#guide" onclick="closeMenu()">🗺 Interactive Guide</a>
-  <a href="#ai-build" onclick="closeMenu()">🤖 AI Build</a>
-  <a href="#projects" onclick="closeMenu()">🗂 Projects</a>
-  <a href="#ai-helper" onclick="closeMenu()">💬 AI Help</a>
+  <a href="#curriculum" onclick="closeMenu()" data-en="📚 Phases" data-ar="📚 المراحل">📚 Phases</a>
+  <a href="#guide" onclick="closeMenu()" data-en="🗺 Interactive Guide" data-ar="🗺 الدليل التفاعلي">🗺 Interactive Guide</a>
+  <a href="#ai-build" onclick="closeMenu()" data-en="🤖 AI Build" data-ar="🤖 البناء بالذكاء">🤖 AI Build</a>
+  <a href="#projects" onclick="closeMenu()" data-en="🗂 Projects" data-ar="🗂 المشاريع">🗂 Projects</a>
+  <a href="#ai-helper" onclick="closeMenu()" data-en="💬 AI Help" data-ar="💬 مساعد الذكاء">💬 AI Help</a>
   <div class="nav-menu-divider"></div>
-  <button class="nav-menu-qs" onclick="closeMenu();openQS()">📖 Quickstart Guide</button>
+  <button class="nav-menu-qs" onclick="closeMenu();openQS()" data-en="📖 Quickstart Guide" data-ar="📖 دليل البداية السريعة">📖 Quickstart Guide</button>
 </div>
 
 <!-- HERO -->
 <section class="hero">
   <div class="hero-glow"></div>
-  <div class="hero-badge">📱 Android-First Web Development</div>
+  <div class="hero-badge" data-en="📱 Android-First Web Development" data-ar="📱 تطوير تطبيقات أندرويد أولاً">📱 Android-First Web Development</div>
   <h1>
     Build Real Apps<br>
-    <em>From Your Phone</em>
-    <span class="line2">No laptop. No excuses. Just Termux.</span>
+    <em data-en="From Your Phone" data-ar="من هاتفك">From Your Phone</em>
+    <span class="line2" data-en="No laptop. No excuses. Just Termux." data-ar="بدون لابتوب. بدون أعذار. فقط Termux.">No laptop. No excuses. Just Termux.</span>
   </h1>
-  <p class="hero-sub">
+  <p class="hero-sub" data-en="A complete hands-on curriculum for building and deploying SPAs, PWAs, and full-stack apps — straight from Android using Termux, Node, GitHub, Netlify, and Cloudflare." data-ar="منهج عملي متكامل لبناء ونشر تطبيقات الويب — مباشرةً من هاتف أندرويد باستخدام Termux وNode وGitHub وNetlify وCloudflare.">
     A complete hands-on curriculum for building and deploying SPAs, PWAs, and full-stack apps — straight from Android using Termux, Node, GitHub, Netlify, and Cloudflare.
   </p>
   <div class="hero-tools">
@@ -1707,14 +1925,14 @@
     <span class="tool-tag">PWA</span>
   </div>
   <div class="hero-cta">
-    <a href="#curriculum" class="btn-primary">START LEARNING →</a>
-    <a href="#guide" class="btn-outline">INTERACTIVE GUIDE</a>
+    <a href="#curriculum" class="btn-primary" data-en="START LEARNING →" data-ar="ابدأ التعلم ←">START LEARNING →</a>
+    <a href="#guide" class="btn-outline" data-en="INTERACTIVE GUIDE" data-ar="الدليل التفاعلي">INTERACTIVE GUIDE</a>
   </div>
 </section>
 
 <!-- PROGRESS TRACKER -->
 <section class="tracker-section">
-  <div class="section-label">Your Progress</div>
+  <div class="section-label" data-en="Your Progress" data-ar="تقدمك">Your Progress</div>
   <div class="progress-bar-outer">
     <div style="flex:1">
       <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
@@ -1738,16 +1956,16 @@
 
 <!-- CURRICULUM -->
 <section class="curriculum" id="curriculum">
-  <div class="section-label">Curriculum — 6 Phases</div>
+  <div class="section-label" data-en="Curriculum — 6 Phases" data-ar="المنهج — ٦ مراحل">Curriculum — 6 Phases</div>
 
   <!-- Phase 0 -->
   <div class="phase-card" id="phase-0">
     <div class="phase-header" onclick="togglePhase(0)">
       <div class="phase-num">00</div>
       <div class="phase-info">
-        <div class="phase-title">Environment Setup</div>
+        <div class="phase-title" data-en="Environment Setup" data-ar="إعداد البيئة">Environment Setup</div>
         <div class="phase-meta">
-          <span class="phase-sessions">1 session · 1–2 hrs</span>
+          <span class="phase-sessions" data-en="1 session · 1–2 hrs" data-ar="جلسة واحدة · ١–٢ ساعة">1 session · 1–2 hrs</span>
           <div class="phase-tags">
             <span class="ptag ptag-green">Termux</span>
             <span class="ptag ptag-green">GitHub</span>
@@ -1757,7 +1975,7 @@
       <div class="phase-chevron">▾</div>
     </div>
     <div class="phase-body">
-      <div class="phase-goal">🎯 Goal: Everyone has a working dev environment on their Android phone with Node, Git, and a live GitHub account before the session ends.</div>
+      <div class="phase-goal" data-en="🎯 Goal: Everyone has a working dev environment on their Android phone with Node, Git, and a live GitHub account before the session ends." data-ar="🎯 الهدف: أن يمتلك كل مشارك بيئة تطوير تعمل على هاتف أندرويد مع Node وGit وحساب GitHub نشط قبل نهاية الجلسة.">🎯 Goal: Everyone has a working dev environment on their Android phone with Node, Git, and a live GitHub account before the session ends.</div>
       <ul class="steps-list" id="steps-0">
         <li onclick="toggleStep(this)" style="align-items:flex-start;flex-direction:column;gap:12px;">
           <div style="display:flex;align-items:flex-start;gap:12px;width:100%;">
@@ -1833,9 +2051,9 @@ ssh -T <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="
     <div class="phase-header" onclick="togglePhase(1)">
       <div class="phase-num">01</div>
       <div class="phase-info">
-        <div class="phase-title">Your First SPA</div>
+        <div class="phase-title" data-en="Your First SPA" data-ar="أول تطبيق SPA">Your First SPA</div>
         <div class="phase-meta">
-          <span class="phase-sessions">2–3 sessions · 4–6 hrs</span>
+          <span class="phase-sessions" data-en="2–3 sessions · 4–6 hrs" data-ar="٢–٣ جلسات · ٤–٦ ساعات">2–3 sessions · 4–6 hrs</span>
           <div class="phase-tags">
             <span class="ptag ptag-green">HTML/CSS/JS</span>
             <span class="ptag ptag-orange">Netlify</span>
@@ -1845,7 +2063,7 @@ ssh -T <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="
       <div class="phase-chevron">▾</div>
     </div>
     <div class="phase-body">
-      <div class="phase-goal">🎯 Goal: Build a working single-page app and deploy it live to Netlify. Friends share the link with someone before the session ends.</div>
+      <div class="phase-goal" data-en="🎯 Goal: Build a working single-page app and deploy it live to Netlify. Friends share the link with someone before the session ends." data-ar="🎯 الهدف: بناء تطبيق ويب أحادي الصفحة ونشره على Netlify. يشارك كل مشارك الرابط مع شخص قبل نهاية الجلسة.">🎯 Goal: Build a working single-page app and deploy it live to Netlify. Friends share the link with someone before the session ends.</div>
       <ul class="steps-list" id="steps-1">
         <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Ask AI to build your app.</strong> Go to claude.ai or chatgpt.com. Use the prompt template from the "Build with AI" section below — describe a simple checklist app. Copy the full code it gives you.</span></li>
         <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Create your project folder in Termux.</strong> Run <code>mkdir ~/myapp && cd ~/myapp</code> — this makes a folder called myapp and moves you into it. All your app files live here.</span></li>
@@ -1895,9 +2113,9 @@ netlify deploy --prod --dir .
     <div class="phase-header" onclick="togglePhase(2)">
       <div class="phase-num">02</div>
       <div class="phase-info">
-        <div class="phase-title">Turn It Into a PWA</div>
+        <div class="phase-title" data-en="Turn It Into a PWA" data-ar="تحويله إلى PWA">Turn It Into a PWA</div>
         <div class="phase-meta">
-          <span class="phase-sessions">1–2 sessions · 2–4 hrs</span>
+          <span class="phase-sessions" data-en="1–2 sessions · 2–4 hrs" data-ar="١–٢ جلسة · ٢–٤ ساعات">1–2 sessions · 2–4 hrs</span>
           <div class="phase-tags">
             <span class="ptag ptag-green">PWA</span>
             <span class="ptag ptag-green">Service Worker</span>
@@ -1908,7 +2126,7 @@ netlify deploy --prod --dir .
       <div class="phase-chevron">▾</div>
     </div>
     <div class="phase-body">
-      <div class="phase-goal">🎯 Goal: Add installability + offline support. Install the app to your home screen from the browser. That moment is magical.</div>
+      <div class="phase-goal" data-en="🎯 Goal: Add installability + offline support. Install the app to your home screen from the browser. That moment is magical." data-ar="🎯 الهدف: إضافة دعم التثبيت والعمل بدون إنترنت. تثبيت التطبيق على الشاشة الرئيسية من المتصفح. تلك اللحظة ستكون رائعة.">🎯 Goal: Add installability + offline support. Install the app to your home screen from the browser. That moment is magical.</div>
 
       <div style="background:rgba(0,229,160,0.07);border:1px solid rgba(0,229,160,0.35);border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;gap:14px;align-items:flex-start;">
         <div style="font-size:1.6rem;flex-shrink:0;">⚡</div>
@@ -1985,9 +2203,9 @@ self.addEventListener('fetch', e => {
     <div class="phase-header" onclick="togglePhase(3)">
       <div class="phase-num">03</div>
       <div class="phase-info">
-        <div class="phase-title">Backend with Cloudflare Workers + D1</div>
+        <div class="phase-title" data-en="Backend with Cloudflare Workers + D1" data-ar="الخادم مع Cloudflare Workers و D1">Backend with Cloudflare Workers + D1</div>
         <div class="phase-meta">
-          <span class="phase-sessions">2–3 sessions · 5–8 hrs</span>
+          <span class="phase-sessions" data-en="2–3 sessions · 5–8 hrs" data-ar="٢–٣ جلسات · ٥–٨ ساعات">2–3 sessions · 5–8 hrs</span>
           <div class="phase-tags">
             <span class="ptag ptag-orange">Workers</span>
             <span class="ptag ptag-orange">D1</span>
@@ -1998,7 +2216,7 @@ self.addEventListener('fetch', e => {
       <div class="phase-chevron">▾</div>
     </div>
     <div class="phase-body">
-      <div class="phase-goal">🎯 Goal: Persist real data server-side and share it across devices. Build a shared app the whole group can use.</div>
+      <div class="phase-goal" data-en="🎯 Goal: Persist real data server-side and share it across devices. Build a shared app the whole group can use." data-ar="🎯 الهدف: حفظ البيانات الحقيقية على الخادم ومشاركتها عبر الأجهزة. بناء تطبيق مشترك يستخدمه الجميع.">🎯 Goal: Persist real data server-side and share it across devices. Build a shared app the whole group can use.</div>
       <ul class="steps-list" id="steps-3">
         <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Install Wrangler</strong> (Cloudflare's tool). Run <code>npm i -g wrangler@2.21.3</code> in Termux. This is the specific version that works on Android — don't use a newer one.</span></li>
         <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Log into Cloudflare.</strong> Run <code>wrangler login</code> — it opens a browser link. Tap it, log into your Cloudflare account, and tap Authorize. You'll see "Successfully logged in" in Termux.</span></li>
@@ -2054,9 +2272,9 @@ self.addEventListener('fetch', e => {
     <div class="phase-header" onclick="togglePhase(4)">
       <div class="phase-num">04</div>
       <div class="phase-info">
-        <div class="phase-title">Add AI Features</div>
+        <div class="phase-title" data-en="Add AI Features" data-ar="إضافة ميزات الذكاء الاصطناعي">Add AI Features</div>
         <div class="phase-meta">
-          <span class="phase-sessions">1–2 sessions · 3–5 hrs</span>
+          <span class="phase-sessions" data-en="1–2 sessions · 3–5 hrs" data-ar="١–٢ جلسة · ٣–٥ ساعات">1–2 sessions · 3–5 hrs</span>
           <div class="phase-tags">
             <span class="ptag ptag-purple">AI API</span>
             <span class="ptag ptag-green">Netlify Functions</span>
@@ -2066,7 +2284,7 @@ self.addEventListener('fetch', e => {
       <div class="phase-chevron">▾</div>
     </div>
     <div class="phase-body">
-      <div class="phase-goal">🎯 Goal: Make something feel genuinely intelligent. Call an AI API server-side (keeping keys safe) and show the result in your app.</div>
+      <div class="phase-goal" data-en="🎯 Goal: Make something feel genuinely intelligent. Call an AI API server-side (keeping keys safe) and show the result in your app." data-ar="🎯 الهدف: إضافة ذكاء حقيقي للتطبيق. استدعاء واجهة برمجة الذكاء الاصطناعي من الخادم (للحفاظ على سرية المفاتيح) وعرض النتائج في تطبيقك.">🎯 Goal: Make something feel genuinely intelligent. Call an AI API server-side (keeping keys safe) and show the result in your app.</div>
       <ul class="steps-list" id="steps-4">
         <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Get a free Gemini API key.</strong> Go to <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--accent)">aistudio.google.com/apikey</a> → sign in with Google → Create API Key. No credit card needed. Copy the key.</span></li>
         <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Ask AI to generate a Netlify serverless function.</strong> Tell it: "I want a Netlify function at netlify/functions/ai.js that receives a prompt, calls the Google Gemini API with my key from process.env.GEMINI_API_KEY, and returns the reply as JSON."</span></li>
@@ -2131,9 +2349,9 @@ netlify deploy --prod --dir .</pre>
     <div class="phase-header" onclick="togglePhase(5)">
       <div class="phase-num">05</div>
       <div class="phase-info">
-        <div class="phase-title">Git Workflow + Auto Deploy</div>
+        <div class="phase-title" data-en="Git Workflow + Auto Deploy" data-ar="سير عمل Git + النشر التلقائي">Git Workflow + Auto Deploy</div>
         <div class="phase-meta">
-          <span class="phase-sessions">Ongoing</span>
+          <span class="phase-sessions" data-en="Ongoing" data-ar="مستمر">Ongoing</span>
           <div class="phase-tags">
             <span class="ptag ptag-green">GitHub</span>
             <span class="ptag ptag-orange">Netlify</span>
@@ -2144,7 +2362,7 @@ netlify deploy --prod --dir .</pre>
       <div class="phase-chevron">▾</div>
     </div>
     <div class="phase-body">
-      <div class="phase-goal">🎯 Goal: Push code → site updates automatically. No more manual deploys. This is the workflow used by professionals.</div>
+      <div class="phase-goal" data-en="🎯 Goal: Push code → site updates automatically. No more manual deploys. This is the workflow used by professionals." data-ar="🎯 الهدف: ادفع الكود ← يتحدث الموقع تلقائياً. لا مزيد من النشر اليدوي. هذا هو سير عمل المحترفين.">🎯 Goal: Push code → site updates automatically. No more manual deploys. This is the workflow used by professionals.</div>
       <ul class="steps-list" id="steps-5">
         <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Connect your GitHub repo to Netlify.</strong> Go to netlify.com → Add new site → Import from Git → GitHub. Select your repo. Set the publish directory to <code>.</code> (just a dot — means the root folder). Click Deploy.</span></li>
         <li onclick="toggleStep(this)"><div class="step-check"></div><span><strong>Make a small change to test auto-deploy.</strong> Open your index.html in nano, change the app title or any text, save it. Then run <code>git add . && git commit -m "test auto deploy" && git push</code>.</span></li>
@@ -2176,14 +2394,14 @@ git log --oneline -5</pre>
 
 <!-- INTERACTIVE GUIDE -->
 <section class="guide-section" id="guide">
-  <div class="section-label">Interactive Setup Guide</div>
+  <div class="section-label" data-en="Interactive Setup Guide" data-ar="الدليل التفاعلي للإعداد">Interactive Setup Guide</div>
   <div class="guide-container">
     <div class="guide-tabs">
-      <div class="guide-tab active" onclick="switchTab(0)">📦 Termux Setup</div>
-      <div class="guide-tab" onclick="switchTab(1)">🐙 GitHub SSH</div>
-      <div class="guide-tab" onclick="switchTab(2)">🚀 First Deploy</div>
-      <div class="guide-tab" onclick="switchTab(3)">☁️ Workers</div>
-      <div class="guide-tab" onclick="switchTab(4)">🔑 Secrets</div>
+      <div class="guide-tab active" onclick="switchTab(0)" data-en="📦 Termux Setup" data-ar="📦 إعداد Termux">📦 Termux Setup</div>
+      <div class="guide-tab" onclick="switchTab(1)" data-en="🐙 GitHub SSH" data-ar="🐙 GitHub SSH">🐙 GitHub SSH</div>
+      <div class="guide-tab" onclick="switchTab(2)" data-en="🚀 First Deploy" data-ar="🚀 أول نشر">🚀 First Deploy</div>
+      <div class="guide-tab" onclick="switchTab(3)" data-en="☁️ Workers" data-ar="☁️ Workers">☁️ Workers</div>
+      <div class="guide-tab" onclick="switchTab(4)" data-en="🔑 Secrets" data-ar="🔑 الأسرار">🔑 Secrets</div>
     </div>
 
     <!-- Tab 0: Termux -->
@@ -2418,13 +2636,13 @@ git log --oneline -5</pre>
 
 <!-- PROJECTS LADDER -->
 <section class="projects-section" id="projects">
-  <div class="section-label">Project Ladder</div>
+  <div class="section-label" data-en="Project Ladder" data-ar="سلّم المشاريع">Project Ladder</div>
   <p style="color:var(--muted);font-size:0.88rem;line-height:1.7;margin-bottom:24px;">Each card below is a <strong style="color:var(--text);">real working app</strong> you can open and try right now. These are your build targets — start from the top and work your way down. Tap <strong style="color:var(--accent);">Live Demo</strong> to see the finished product before you build it.</p>
   <div class="projects-grid">
 
     <div class="project-card p0">
       <div class="project-level">PHASE 1 — Beginner</div>
-      <div class="project-name">📋 Daily Checklist</div>
+      <div class="project-name" data-en="📋 Daily Checklist" data-ar="📋 قائمة المهام اليومية">📋 Daily Checklist</div>
       <div class="project-desc">Your very first app. Add tasks, check them off, data saves automatically. Teaches the single-file SPA pattern and localStorage — the foundation everything else is built on.</div>
       <div class="project-stack" style="margin-bottom:14px;">
         <span class="stack-tag">HTML</span>
@@ -2438,7 +2656,7 @@ git log --oneline -5</pre>
 
     <div class="project-card p1">
       <div class="project-level">PHASE 2 — Beginner+</div>
-      <div class="project-name">📸 PECO — Event Docs</div>
+      <div class="project-name" data-en="📸 PECO — Event Docs" data-ar="📸 PECO — توثيق الفعاليات">📸 PECO — Event Docs</div>
       <div class="project-desc">Take photos at an event, add captions, share as a report. Uses your phone camera, compresses images in the browser, and works offline as an installed PWA. No server needed.</div>
       <div class="project-stack" style="margin-bottom:14px;">
         <span class="stack-tag">Canvas API</span>
@@ -2453,7 +2671,7 @@ git log --oneline -5</pre>
 
     <div class="project-card p2">
       <div class="project-level">PHASE 2-3 — Intermediate</div>
-      <div class="project-name">📰 FeedFlow — RSS Reader</div>
+      <div class="project-name" data-en="📰 FeedFlow — RSS Reader" data-ar="📰 FeedFlow — قارئ RSS">📰 FeedFlow — RSS Reader</div>
       <div class="project-desc">Subscribe to any RSS/Atom feed and read it in a clean mobile UI. Teaches how to fetch external data through a serverless proxy to avoid CORS issues — a pattern used in almost every real app.</div>
       <div class="project-stack" style="margin-bottom:14px;">
         <span class="stack-tag">Netlify Fn</span>
@@ -2468,7 +2686,7 @@ git log --oneline -5</pre>
 
     <div class="project-card p2">
       <div class="project-level">PHASE 3 — Intermediate</div>
-      <div class="project-name">🍔 Food Order App</div>
+      <div class="project-name" data-en="🍔 Food Order App" data-ar="🍔 تطبيق طلب الطعام">🍔 Food Order App</div>
       <div class="project-desc">A full food ordering system — browse a menu, add to cart, place an order. Real Cloudflare Workers backend with a D1 database storing menu items and orders. Great first backend project.</div>
       <div class="project-stack" style="margin-bottom:14px;">
         <span class="stack-tag">Workers</span>
@@ -2483,7 +2701,7 @@ git log --oneline -5</pre>
 
     <div class="project-card p2">
       <div class="project-level">PHASE 3 — Intermediate</div>
-      <div class="project-name">🔧 FieldOps</div>
+      <div class="project-name" data-en="🔧 FieldOps" data-ar="🔧 FieldOps">🔧 FieldOps</div>
       <div class="project-desc">Mobile field inspection app — log jobs, take photos, stamp GPS location, record voice notes. Real D1 backend means data is shared across all devices. Shows what a professional mobile PWA looks like.</div>
       <div class="project-stack" style="margin-bottom:14px;">
         <span class="stack-tag">Workers</span>
@@ -2499,7 +2717,7 @@ git log --oneline -5</pre>
 
     <div class="project-card p3">
       <div class="project-level">PHASE 4 — Advanced</div>
-      <div class="project-name">🤖 AI Agent Generator</div>
+      <div class="project-name" data-en="🤖 AI Agent Generator" data-ar="🤖 منشئ وكلاء الذكاء الاصطناعي">🤖 AI Agent Generator</div>
       <div class="project-desc">Build and configure custom AI agents without writing code. Shows how to integrate AI APIs safely through a serverless layer, keeping keys off the client. A real-world AI-powered tool.</div>
       <div class="project-stack" style="margin-bottom:14px;">
         <span class="stack-tag">AI API</span>
@@ -2513,7 +2731,7 @@ git log --oneline -5</pre>
 
     <div class="project-card p4">
       <div class="project-level">PHASE 3-4 — Advanced</div>
-      <div class="project-name">💊 PharmaCare</div>
+      <div class="project-name" data-en="💊 PharmaCare" data-ar="💊 PharmaCare">💊 PharmaCare</div>
       <div class="project-desc">Multi-role platform for pharmacist consultations — patients, pharmacists, and admins each see a different interface. Bilingual EN/AR with RTL layout. The most complete example of a full-stack Workers + D1 app.</div>
       <div class="project-stack" style="margin-bottom:14px;">
         <span class="stack-tag">Workers</span>
@@ -2541,58 +2759,58 @@ git log --oneline -5</pre>
 
 <!-- AI BUILD SECTION -->
 <section class="aibuild-section" id="ai-build">
-  <div class="section-label">Build with AI — No Coding Experience Needed</div>
+  <div class="section-label" data-en="Build with AI — No Coding Experience Needed" data-ar="البناء بالذكاء الاصطناعي — لا خبرة برمجية مطلوبة">Build with AI — No Coding Experience Needed</div>
 
   <div class="aibuild-intro">
     <div class="aibuild-intro-icon">🤖</div>
     <div>
-      <h3>You don't write code — you describe what you want</h3>
-      <p>This section is for non-developers. You will use AI tools (Claude, ChatGPT, Gemini) to generate all the code. Your job is to describe your app clearly, copy the output into Termux, test it, and tell the AI what to fix. That's it. This is a real workflow used by thousands of builders today.</p>
+      <h3 data-en="You don't write code — you describe what you want" data-ar="لا تكتب كوداً — بل تصف ما تريد">You don't write code — you describe what you want</h3>
+      <p data-en="This section is for non-developers. You will use AI tools (Claude, ChatGPT, Gemini) to generate all the code. Your job is to describe your app clearly, copy the output into Termux, test it, and tell the AI what to fix. That's it. This is a real workflow used by thousands of builders today." data-ar="هذا القسم للمبتدئين وغير المطورين. ستستخدم أدوات الذكاء الاصطناعي (Claude أو ChatGPT أو Gemini) لتوليد الكود. مهمتك هي وصف تطبيقك بوضوح، ونسخ الناتج إلى Termux، واختباره، وإخبار الذكاء الاصطناعي بما يحتاج إصلاحاً. هذا كل شيء.">This section is for non-developers. You will use AI tools (Claude, ChatGPT, Gemini) to generate all the code. Your job is to describe your app clearly, copy the output into Termux, test it, and tell the AI what to fix. That's it. This is a real workflow used by thousands of builders today.</p>
     </div>
   </div>
 
   <!-- THE WORKFLOW -->
-  <div class="section-label" style="margin-bottom:20px;">The 6-Step Build Loop</div>
+  <div class="section-label" style="margin-bottom:20px;" data-en="The 6-Step Build Loop" data-ar="حلقة البناء — ٦ خطوات">The 6-Step Build Loop</div>
   <div class="flow-steps">
     <div class="flow-step">
       <div class="flow-step-num">1</div>
       <div class="flow-step-content">
-        <div class="flow-step-title">📝 Describe your app to AI</div>
+        <div class="flow-step-title" data-en="📝 Describe your app to AI" data-ar="📝 صف تطبيقك للذكاء الاصطناعي">📝 Describe your app to AI</div>
         <div class="flow-step-desc">Write a clear initial prompt explaining what you want to build. Include: what it does, who uses it, what data it stores, what it looks like. The more detail, the better the first result.</div>
       </div>
     </div>
     <div class="flow-step">
       <div class="flow-step-num">2</div>
       <div class="flow-step-content">
-        <div class="flow-step-title">📋 Copy the code from AI</div>
+        <div class="flow-step-title" data-en="📋 Copy the code from AI" data-ar="📋 انسخ الكود من الذكاء الاصطناعي">📋 Copy the code from AI</div>
         <div class="flow-step-desc">The AI gives you one or more files. Copy the code — long-press and select all in the AI chat, or use the copy button. You only need the content inside the code block (between the ``` marks).</div>
       </div>
     </div>
     <div class="flow-step">
       <div class="flow-step-num">3</div>
       <div class="flow-step-content">
-        <div class="flow-step-title">📂 Paste it into Termux</div>
+        <div class="flow-step-title" data-en="📂 Paste it into Termux" data-ar="📂 الصقه في Termux">📂 Paste it into Termux</div>
         <div class="flow-step-desc">Create a folder for your project, open the file in nano, paste the code, and save. Or use the clipboard method to write the file directly. Exact commands are in the "Move Code to Termux" section below.</div>
       </div>
     </div>
     <div class="flow-step">
       <div class="flow-step-num">4</div>
       <div class="flow-step-content">
-        <div class="flow-step-title">🧪 Test it in your browser</div>
+        <div class="flow-step-title" data-en="🧪 Test it in your browser" data-ar="🧪 اختبره في متصفحك">🧪 Test it in your browser</div>
         <div class="flow-step-desc">Open the file in Chrome on your Android device. Check every button, every input, every feature. On Android, open Chrome and go to the file path, or use a local server. Note exactly what's broken or missing.</div>
       </div>
     </div>
     <div class="flow-step">
       <div class="flow-step-num">5</div>
       <div class="flow-step-content">
-        <div class="flow-step-title">🔁 Tell AI what to fix</div>
+        <div class="flow-step-title" data-en="🔁 Tell AI what to fix" data-ar="🔁 أخبر الذكاء الاصطناعي بما يحتاج إصلاحاً">🔁 Tell AI what to fix</div>
         <div class="flow-step-desc">Go back to the AI chat. Describe what's wrong specifically. Paste any error messages exactly. The AI will give you an updated file or just the changed part. Replace and test again.</div>
       </div>
     </div>
     <div class="flow-step">
       <div class="flow-step-num">6</div>
       <div class="flow-step-content">
-        <div class="flow-step-title">🚀 Deploy when happy</div>
+        <div class="flow-step-title" data-en="🚀 Deploy when happy" data-ar="🚀 انشر حين تكون راضياً">🚀 Deploy when happy</div>
         <div class="flow-step-desc">When the app works the way you want, push it to GitHub and deploy to Netlify. Share the live link. Repeat the loop for new features.</div>
       </div>
     </div>
@@ -2600,7 +2818,7 @@ git log --oneline -5</pre>
 
   <!-- INITIAL PROMPTS -->
   <div class="prompt-section">
-    <div class="prompt-section-title">Initial Prompts — Starting a New App</div>
+    <div class="prompt-section-title" data-en="Initial Prompts — Starting a New App" data-ar="المطالبات الأولية — بدء تطبيق جديد">Initial Prompts — Starting a New App</div>
 
     <div class="prompt-card" id="pc-0">
       <div class="prompt-card-header" onclick="togglePromptCard('pc-0')">
@@ -2727,7 +2945,7 @@ Technical requirements:
 
   <!-- FOLLOWUP PROMPTS -->
   <div class="prompt-section">
-    <div class="prompt-section-title">Follow-up Prompts — Improving Your App</div>
+    <div class="prompt-section-title" data-en="Follow-up Prompts — Improving Your App" data-ar="مطالبات المتابعة — تحسين تطبيقك">Follow-up Prompts — Improving Your App</div>
 
     <div class="prompt-card" id="pc-4">
       <div class="prompt-card-header" onclick="togglePromptCard('pc-4')">
@@ -2832,12 +3050,12 @@ My current code section causing the issue: [PASTE JUST THE RELEVANT PART]</div>
   </div>
 
   <!-- MOVE CODE TO TERMUX -->
-  <div class="section-label" style="margin-bottom:20px;">Moving Code from AI to Termux</div>
+  <div class="section-label" style="margin-bottom:20px;" data-en="Moving Code from AI to Termux" data-ar="نقل الكود من الذكاء الاصطناعي إلى Termux">Moving Code from AI to Termux</div>
 
   <div class="transfer-grid">
     <div class="transfer-card">
-      <div class="transfer-method">Method 1 — Best</div>
-      <div class="transfer-title">📋 Nano + Paste</div>
+      <div class="transfer-method" data-en="Method 1 — Best" data-ar="الطريقة ١ — الأفضل">Method 1 — Best</div>
+      <div class="transfer-title" data-en="📋 Nano + Paste" data-ar="📋 Nano + لصق">📋 Nano + Paste</div>
       <div class="transfer-desc">Open the file in nano, clear it, paste your copied code. Works for any file size.</div>
       <div class="transfer-steps-mini">
         <div class="tsm"><strong>1.</strong> Copy code from AI chat</div>
@@ -2848,8 +3066,8 @@ My current code section causing the issue: [PASTE JUST THE RELEVANT PART]</div>
       </div>
     </div>
     <div class="transfer-card">
-      <div class="transfer-method">Method 2 — Fast</div>
-      <div class="transfer-title">📱 Termux Clipboard</div>
+      <div class="transfer-method" data-en="Method 2 — Fast" data-ar="الطريقة ٢ — الأسرع">Method 2 — Fast</div>
+      <div class="transfer-title" data-en="📱 Termux Clipboard" data-ar="📱 حافظة Termux">📱 Termux Clipboard</div>
       <div class="transfer-desc">Use termux-clipboard-get to write whatever is in your clipboard directly to a file.</div>
       <div class="transfer-steps-mini">
         <div class="tsm"><strong>1.</strong> Copy code from AI chat</div>
@@ -2860,8 +3078,8 @@ My current code section causing the issue: [PASTE JUST THE RELEVANT PART]</div>
       </div>
     </div>
     <div class="transfer-card">
-      <div class="transfer-method">Method 3 — Large Files</div>
-      <div class="transfer-title">📁 Files App + Termux</div>
+      <div class="transfer-method" data-en="Method 3 — Large Files" data-ar="الطريقة ٣ — ملفات كبيرة">Method 3 — Large Files</div>
+      <div class="transfer-title" data-en="📁 Files App + Termux" data-ar="📁 تطبيق الملفات + Termux">📁 Files App + Termux</div>
       <div class="transfer-desc">Save the code as a .txt or .html file using your Android Files app, then move it.</div>
       <div class="transfer-steps-mini">
         <div class="tsm"><strong>1.</strong> In AI chat → copy → open Notes app</div>
@@ -2871,8 +3089,8 @@ My current code section causing the issue: [PASTE JUST THE RELEVANT PART]</div>
       </div>
     </div>
     <div class="transfer-card">
-      <div class="transfer-method">Method 4 — Multiple Files</div>
-      <div class="transfer-title">🌐 GitHub Gist</div>
+      <div class="transfer-method" data-en="Method 4 — Multiple Files" data-ar="الطريقة ٤ — ملفات متعددة">Method 4 — Multiple Files</div>
+      <div class="transfer-title" data-en="🌐 GitHub Gist" data-ar="🌐 GitHub Gist">🌐 GitHub Gist</div>
       <div class="transfer-desc">Paste code into a GitHub Gist, then clone or curl it into Termux. Good for multi-file projects.</div>
       <div class="transfer-steps-mini">
         <div class="tsm"><strong>1.</strong> Go to gist.github.com</div>
@@ -2885,7 +3103,7 @@ My current code section causing the issue: [PASTE JUST THE RELEVANT PART]</div>
 
   <!-- PROJECT FOLDER COMMANDS -->
   <div class="prompt-section">
-    <div class="prompt-section-title">Setting Up Your Project Folder</div>
+    <div class="prompt-section-title" data-en="Setting Up Your Project Folder" data-ar="إعداد مجلد مشروعك">Setting Up Your Project Folder</div>
     <div class="code-block">
       <div class="code-header"><span class="code-lang">bash — create and manage project</span><button class="copy-btn" onclick="copyCode(this)">copy</button></div>
       <pre># Create a folder for your project
@@ -2916,11 +3134,11 @@ pwd</pre>
   </div>
 
   <!-- TEST CHECKLIST -->
-  <div class="section-label" style="margin-bottom:20px;">Testing Your App — What to Check</div>
+  <div class="section-label" style="margin-bottom:20px;" data-en="Testing Your App — What to Check" data-ar="اختبار تطبيقك — ما الذي تتحقق منه">Testing Your App — What to Check</div>
 
   <div class="test-grid">
     <div class="test-card">
-      <div class="test-card-title">🔍 Basic Testing</div>
+      <div class="test-card-title" data-en="🔍 Basic Testing" data-ar="🔍 الاختبار الأساسي">🔍 Basic Testing</div>
       <div class="test-items">
         <div class="test-item" onclick="toggleTestItem(this)"><div class="test-check"></div>App loads without a blank screen</div>
         <div class="test-item" onclick="toggleTestItem(this)"><div class="test-check"></div>All buttons respond to tap</div>
@@ -2930,7 +3148,7 @@ pwd</pre>
       </div>
     </div>
     <div class="test-card">
-      <div class="test-card-title">📱 Android-Specific</div>
+      <div class="test-card-title" data-en="📱 Android-Specific" data-ar="📱 خاص بأندرويد">📱 Android-Specific</div>
       <div class="test-items">
         <div class="test-item" onclick="toggleTestItem(this)"><div class="test-check"></div>Keyboard doesn't hide content</div>
         <div class="test-item" onclick="toggleTestItem(this)"><div class="test-check"></div>Nothing overflows off-screen sideways</div>
@@ -2940,7 +3158,7 @@ pwd</pre>
       </div>
     </div>
     <div class="test-card">
-      <div class="test-card-title">🌐 After Deployment</div>
+      <div class="test-card-title" data-en="🌐 After Deployment" data-ar="🌐 بعد النشر">🌐 After Deployment</div>
       <div class="test-items">
         <div class="test-item" onclick="toggleTestItem(this)"><div class="test-check"></div>Live URL opens correctly</div>
         <div class="test-item" onclick="toggleTestItem(this)"><div class="test-check"></div>App works the same as local test</div>
@@ -2950,7 +3168,7 @@ pwd</pre>
       </div>
     </div>
     <div class="test-card">
-      <div class="test-card-title">🐛 How to See Errors</div>
+      <div class="test-card-title" data-en="🐛 How to See Errors" data-ar="🐛 كيف ترى الأخطاء">🐛 How to See Errors</div>
       <div class="test-items">
         <div class="test-item" onclick="toggleTestItem(this)"><div class="test-check"></div>Open Chrome → 3-dot menu → More tools</div>
         <div class="test-item" onclick="toggleTestItem(this)"><div class="test-check"></div>Tap Developer Tools → Console tab</div>
@@ -2987,13 +3205,13 @@ ip addr | grep 'inet ' | grep -v 127</pre>
 
 <!-- AI HELPER -->
 <section class="ai-section" id="ai-helper">
-  <div class="section-label">AI Learning Assistant</div>
+  <div class="section-label" data-en="AI Learning Assistant" data-ar="مساعد التعلم بالذكاء الاصطناعي">AI Learning Assistant</div>
   <div class="ai-container">
     <div class="ai-header">
       <div class="ai-icon">✦</div>
       <div>
-        <div class="ai-title">Ask the Dev Assistant</div>
-        <div class="ai-subtitle">Powered by Google Gemini · Get help with Termux, Netlify, Workers, Git, PWA, or anything in the curriculum</div>
+        <div class="ai-title" data-en="Ask the Dev Assistant" data-ar="اسأل مساعد التطوير">Ask the Dev Assistant</div>
+        <div class="ai-subtitle" data-en="Powered by Google Gemini · Get help with Termux, Netlify, Workers, Git, PWA, or anything in the curriculum" data-ar="مدعوم بـ Google Gemini · احصل على مساعدة في Termux وNetlify وWorkers وGit وPWA وأي شيء في المنهج">Powered by Google Gemini · Get help with Termux, Netlify, Workers, Git, PWA, or anything in the curriculum</div>
       </div>
     </div>
     <div class="ai-body">
@@ -3017,7 +3235,7 @@ ip addr | grep 'inet ' | grep -v 127</pre>
 
 <!-- FOOTER -->
 <footer>
-  <p>Termux Dev Academy · Built for Android developers · No laptop required</p>
+  <p data-en="Termux Dev Academy · Built for Android developers · No laptop required" data-ar="Termux Dev Academy · مبني لمطوري أندرويد · لا يحتاج لابتوب">Termux Dev Academy · Built for Android developers · No laptop required</p>
   <p style="margin-top:8px;">Deploy everything to <a href="https://netlify.com">Netlify</a> · <a href="https://workers.cloudflare.com">Cloudflare Workers</a> · <a href="https://github.com">GitHub</a></p>
 </footer>
 
@@ -3514,6 +3732,46 @@ function toggleTestItem(el) {
 </div><!-- end qs-overlay -->
 
 <script>
+// ===== LANGUAGE TOGGLE =====
+let currentLang = localStorage.getItem('tda-lang') || 'en';
+
+function applyLang(lang) {
+  currentLang = lang;
+  localStorage.setItem('tda-lang', lang);
+  document.documentElement.lang = lang;
+
+  // Swap all data-en/data-ar text nodes
+  document.querySelectorAll('[data-en]').forEach(el => {
+    el.textContent = el.getAttribute('data-' + lang) || el.getAttribute('data-en');
+  });
+
+  // Update both toggle buttons
+  const label = lang === 'ar' ? 'English' : 'عربي';
+  const btn = document.getElementById('lang-btn');
+  if (btn) btn.textContent = label;
+
+  // Swap ai-input placeholder
+  const aiInput = document.getElementById('ai-input');
+  if (aiInput) {
+    aiInput.placeholder = lang === 'ar'
+      ? 'اسأل أي شيء عن المنهج…'
+      : 'Ask anything about the curriculum…';
+    aiInput.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  }
+
+  // Swap progress label
+  updateProgress();
+}
+
+function toggleLang() {
+  applyLang(currentLang === 'en' ? 'ar' : 'en');
+}
+
+// Apply saved language on load (after DOM ready)
+document.addEventListener('DOMContentLoaded', () => {
+  if (currentLang === 'ar') applyLang('ar');
+});
+
 // ===== HAMBURGER MENU =====
 function toggleMenu() {
   const menu = document.getElementById('nav-menu');
@@ -3708,43 +3966,6 @@ FINAL TIPS
 }
 </script>
 
-
-    <script>
-        // PWA Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/my-pwa-apps/devacad/sw.js', { scope: '/my-pwa-apps/devacad/' })
-                    .then(registration => {
-                        console.log('[PWA] Service Worker registered:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.error('[PWA] Service Worker registration failed:', error);
-                    });
-            });
-        }
-
-        // PWA Install Prompt
-        let deferredPrompt;
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            console.log('[PWA] App can be installed');
-        });
-
-        // Call this function from a custom install button in your UI
-        async function installPWA() {
-            if (!deferredPrompt) return;
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            console.log('[PWA] Install prompt outcome:', outcome);
-            deferredPrompt = null;
-        }
-
-        window.addEventListener('appinstalled', () => {
-            console.log('[PWA] App installed successfully');
-            deferredPrompt = null;
-        });
-    </script>
 </body>
 </html>
 
