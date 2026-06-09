@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Craft Tutorial Maker</title>
+
+<!-- Google tag (gtag.js) -->
+<script async
+src="https://www.googletagmanager.com/gtag/js?id=G-C3T5T6FMPP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-C3T5T6FMPP');
+</script>
+
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap');
 
@@ -486,14 +498,12 @@
       <input type="text" placeholder="Search titles…" oninput="filterLib(this.value)">
     </div>
 
-    <div class="lib-filter cat-filter" id="catFilter" style="padding-top:0; border-bottom: 1px solid var(--border); padding-bottom:12px; margin-bottom:8px">
+    <div class="lib-filter cat-filter" style="padding-top:0; border-bottom: 1px solid var(--border); padding-bottom:12px; margin-bottom:8px">
       <button class="flt-btn active" onclick="setCategory('All',this)">All</button>
       <button class="flt-btn" onclick="setCategory('Craft',this)">Craft</button>
       <button class="flt-btn" onclick="setCategory('Art',this)">Art</button>
       <button class="flt-btn" onclick="setCategory('DIY',this)">DIY</button>
       <button class="flt-btn" onclick="setCategory('Recipes',this)">Recipes</button>
-      <button class="flt-btn" onclick="setCategory('Drawing',this)">Drawing</button>
-      <button class="flt-btn" onclick="setCategory('Funny',this)">Funny</button>
       <button class="flt-btn" onclick="setCategory('Others',this)">Others</button>
     </div>
 
@@ -727,22 +737,10 @@ async function loadLibrary() {
     const data = await res.json();
     allVideos = Array.isArray(data) ? data : [];
     libCount.textContent = allVideos.length;
-    renderCategories();
     applyFilter();
   } catch(e) {
     libList.innerHTML = `<div class="lib-empty">⚠️ ${e.message}</div>`;
   }
-}
-
-const DEFAULT_CATEGORIES = ['Craft', 'Art', 'DIY', 'Recipes', 'Drawing', 'Funny', 'Others'];
-function renderCategories() {
-  const container = document.getElementById('catFilter');
-  if (!container) return;
-  const foundCategories = [...new Set(allVideos.map(v => v.category).filter(Boolean))];
-  const allCats = ['All', ...new Set([...DEFAULT_CATEGORIES, ...foundCategories])];
-  container.innerHTML = allCats.map(c => `
-    <button class="flt-btn ${activeCategory === c ? 'active' : ''}" onclick="setCategory('${c}',this)">${c}</button>
-  `).join('');
 }
 
 function toggleLib() {
@@ -1538,7 +1536,7 @@ window.addEventListener('appinstalled', () => {
   deferredPrompt = null;
 });
 </script>
-<script src="marked.min.js"></script><script src="help-system.js"></script></body>
+</body>
 </html>
 
 
