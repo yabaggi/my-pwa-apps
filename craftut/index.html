@@ -680,12 +680,29 @@ let isLoadingSnaps = false;
 window.addEventListener('DOMContentLoaded', () => {
   loadLibrary();
   restoreDraft();
-  // Ensure we start in the library view
-  showView('library');
+  // Initialize history state
+  history.replaceState({view: 'library'}, '', '');
+  showView('library', false);
+});
+
+window.addEventListener('popstate', (e) => {
+  const state = e.state;
+  if (!state) return;
+  
+  // Close preview if we moved away from it
+  if (state.view !== 'preview') {
+    closePreview(true);
+  }
+  
+  if (state.view === 'preview') {
+    showPreview(false);
+  } else if (state.view) {
+    showView(state.view, false);
+  }
 });
 
 // ── MOBILE NAVIGATION ─────────────────────────────────────────────────────
-function showView(view) {
+function showView(view, push = true) {
   const library    = document.getElementById('library');
   const videoPanel = document.getElementById('videoPanel');
   const stepsPanel = document.getElementById('stepsPanel');
@@ -709,6 +726,10 @@ function showView(view) {
   } else {
     document.getElementById('navEditor').classList.add('active');
     updateFabVisibility();
+  }
+
+  if (push && (!history.state || history.state.view !== view)) {
+    history.pushState({view}, '', '');
   }
 }
 
@@ -772,7 +793,9 @@ function applyFilter(q='') {
   const query = (q || document.querySelector('.lib-search input')?.value || '').toLowerCase();
   filteredVideos = allVideos.filter(v => {
     const title = (v.title || '').toLowerCase();
-    const matchQ = !query || title.includes(query) || (v.id||'').toLowerCase().includes(query);
+    const matchQ = !query || title.includes(query) || 
+                   (v.id||'').toLowerCase().includes(query) || 
+                   (v.duration||'').toLowerCase().includes(query);
     const matchF = activeFilter === 'all'     ? true
                  : activeFilter === 'snapped' ? v.snapped === true
                  : activeFilter === 'dl'      ? v.downloaded === true
@@ -1449,7 +1472,7 @@ let previewInt = null;
 let previewIdx = 0;
 let isPreviewPlaying = false;
 
-function showPreview() {
+function showPreview(push = true) {
   if (steps.length < 2) {
     showToast('Need at least 2 steps for animation');
     return;
@@ -1458,6 +1481,9 @@ function showPreview() {
   const modal = document.getElementById('previewModal');
   modal.classList.add('visible');
   startPreview();
+  if (push) {
+    history.pushState({view: 'preview'}, '', '');
+  }
 }
 
 function startPreview() {
@@ -1492,9 +1518,12 @@ function runPreviewLoop() {
   previewInt = setTimeout(runPreviewLoop, speed);
 }
 
-function closePreview() {
+function closePreview(pop = false) {
   stopPreview();
   document.getElementById('previewModal').classList.remove('visible');
+  if (!pop && history.state && history.state.view === 'preview') {
+    history.back();
+  }
 }
 
 // ── KEYBOARD ──────────────────────────────────────────────────────────────
