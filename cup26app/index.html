@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>World Cup 2026 Explorer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <div class="header-top">
+            <h1>World Cup 2026</h1>
+            <div id="lang-switcher">
+                <button onclick="changeLang('en')" id="btn-en">EN</button>
+                <button onclick="changeLang('ar')" id="btn-ar">عربي</button>
+            </div>
+        </div>
+        <div id="search-container">
+            <input type="text" id="global-search">
+        </div>
+    </header>
+
+    <main id="app">
+        <div id="loading">...</div>
+    </main>
+
+    <nav class="bottom-nav">
+        <a href="#/" class="nav-item">
+            <span class="icon">🏠</span>
+            <span class="label" id="label-home"></span>
+        </a>
+        <a href="#/schedule" class="nav-item">
+            <span class="icon">📅</span>
+            <span class="label" id="label-schedule"></span>
+        </a>
+        <a href="#/groups" class="nav-item">
+            <span class="icon">📊</span>
+            <span class="label" id="label-groups"></span>
+        </a>
+        <a href="#/scorers" class="nav-item">
+            <span class="icon">⚽</span>
+            <span class="label" id="label-scorers"></span>
+        </a>
+        <a href="#/teams" class="nav-item">
+            <span class="icon">🌍</span>
+            <span class="label" id="label-teams"></span>
+        </a>
+        <a href="#/stadiums" class="nav-item">
+            <span class="icon">🏟️</span>
+            <span class="label" id="label-stadiums"></span>
+        </a>
+    </nav>
+
+    <script src="scripts/data.js" type="module"></script>
+    <script src="scripts/router.js" type="module"></script>
+    <script src="scripts/app.js" type="module"></script>
+</body>
+</html>
+

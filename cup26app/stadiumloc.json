@@ -1,0 +1,98 @@
+[
+  {
+    "stadium": "BC Place",
+    "coords": "49°16'36\"N 123°6'43\"W",
+    "imageurl": "https://example.combc_place.jpg",
+    "imgfile": "bc_place.jpg"
+  },
+  {
+    "stadium": "Lumen Field",
+    "coords": "47°35'43\"N 122°19'54\"W",
+    "imageurl": "https://example.comlumen_field.jpg",
+    "imgfile": "lumen_field.jpg"
+  },
+  {
+    "stadium": "Levi's Stadium",
+    "coords": "37.403°N 121.970°W",
+    "imageurl": "https://example.comlevi's_stadium.jpg",
+    "imgfile": "levis_stadium.jpg"
+  },
+  {
+    "stadium": "SoFi Stadium",
+    "coords": "33.953°N 118.339°W",
+    "imageurl": "https://example.comsofi_stadium.jpg",
+    "imgfile": "sofi_stadium.jpg"
+  },
+  {
+    "stadium": "Estadio Akron",
+    "coords": "20°40'54\"N 103°27'46\"W",
+    "imageurl": "https://example.comestadio_akron.jpg",
+    "imgfile": "estadio_akron.jpg"
+  },
+  {
+    "stadium": "Estadio Azteca",
+    "coords": "19°18'11\"N 99°09'02\"W",
+    "imageurl": "https://example.comestadio_azteca.jpg",
+    "imgfile": "estadio_azteca.jpg"
+  },
+  {
+    "stadium": "Estadio BBVA",
+    "coords": "25°40'9\"N 100°14'40\"W",
+    "imageurl": "https://example.comestadio_bbva.jpg",
+    "imgfile": "estadio_bbva.jpg"
+  },
+  {
+    "stadium": "NRG Stadium",
+    "coords": "29°41'5\"N 95°24'39\"W",
+    "imageurl": "https://example.comnrg_stadium.jpg",
+    "imgfile": "nrg_stadium.jpg"
+  },
+  {
+    "stadium": "AT&T Stadium",
+    "coords": "32°44'52\"N 97°5'34\"W",
+    "imageurl": "https://example.comat&t_stadium.jpg",
+    "imgfile": "atandt_stadium.jpg"
+  },
+  {
+    "stadium": "Arrowhead Stadium",
+    "coords": "39°2'56\"N 94°29'2\"W",
+    "imageurl": "https://example.comarrowhead_stadium.jpg",
+    "imgfile": "arrowhead_stadium.jpg"
+  },
+  {
+    "stadium": "Mercedes-Benz Stadium",
+    "coords": "33°45'20\"N 84°24'00\"W",
+    "imageurl": "https://example.commercedes-benz_stadium.jpg",
+    "imgfile": "mercedes-benz_stadium.jpg"
+  },
+  {
+    "stadium": "Hard Rock Stadium",
+    "coords": "25°57'29\"N 80°14'20\"W",
+    "imageurl": "https://example.comhard_rock_stadium.jpg",
+    "imgfile": "hard_rock_stadium.jpg"
+  },
+  {
+    "stadium": "BMO Field",
+    "coords": "43°38'0\"N 79°25'07\"W",
+    "imageurl": "https://example.combmo_field.jpg",
+    "imgfile": "bmo_field.jpg"
+  },
+  {
+    "stadium": "Gillette Stadium",
+    "coords": "42.091°N 71.264°W",
+    "imageurl": "https://example.comgillette_stadium.jpg",
+    "imgfile": "gillette_stadium.jpg"
+  },
+  {
+    "stadium": "Lincoln Financial Field",
+    "coords": "39°54'3\"N 75°10'3\"W",
+    "imageurl": "https://example.comlincoln_financial_field.jpg",
+    "imgfile": "lincoln_financial_field.jpg"
+  },
+  {
+    "stadium": "MetLife Stadium",
+    "coords": "40°48'48.7\"N 74°4'27.7\"W",
+    "imageurl": "https://example.commetlife_stadium.jpg",
+    "imgfile": "metlife_stadium.jpg"
+  }
+]
