@@ -27,12 +27,12 @@ const routes = {
     '/schedule': () => {
         const fullHash  = window.location.hash.slice(1);
         const urlParams = new URLSearchParams(fullHash.includes('?') ? fullHash.split('?')[1] : '');
-        const filter    = urlParams.get('filter') || 'all';
+        const filter    = urlParams.get('filter') || 'completed';
 
         let filteredMatches = store.main.matches;
-        if (filter === 'played') {
+        if (filter === 'completed') {
             filteredMatches = filteredMatches.filter(m => !!m.score);
-        } else if (filter === 'coming') {
+        } else if (filter === 'upcoming') {
             filteredMatches = filteredMatches.filter(m => !m.score);
         }
 
@@ -45,12 +45,10 @@ const routes = {
 
         const filterBar = `
             <div class="filter-bar">
-                <button class="btn-filter ${filter === 'all' ? 'active' : ''}" 
-                        onclick="location.hash='#/schedule?filter=all'">${t('filter_all')}</button>
-                <button class="btn-filter ${filter === 'played' ? 'active' : ''}" 
-                        onclick="location.hash='#/schedule?filter=played'">${t('filter_played')}</button>
-                <button class="btn-filter ${filter === 'coming' ? 'active' : ''}" 
-                        onclick="location.hash='#/schedule?filter=coming'">${t('filter_coming')}</button>
+                <button class="btn-filter ${filter === 'completed' ? 'active' : ''}" 
+                        onclick="location.hash='#/schedule?filter=completed'">${t('filter_completed')}</button>
+                <button class="btn-filter ${filter === 'upcoming' ? 'active' : ''}" 
+                        onclick="location.hash='#/schedule?filter=upcoming'">${t('filter_upcoming')}</button>
             </div>
         `;
 

@@ -32,9 +32,8 @@
     "scorers_goal": "goal",
     "scorers_in": "in",
     "scorers_matches": "matches",
-    "filter_all": "All",
-    "filter_played": "Results",
-    "filter_coming": "Fixtures"
+    "filter_completed": "Completed",
+    "filter_upcoming": "Upcoming"
   },
   "ar": {
     "home": "الرئيسية",
@@ -69,9 +68,8 @@
     "scorers_goal": "هدف",
     "scorers_in": "في",
     "scorers_matches": "مباريات",
-    "filter_all": "الكل",
-    "filter_played": "النتائج",
-    "filter_coming": "المباريات القادمة",
+    "filter_completed": "المكتملة",
+    "filter_upcoming": "القادمة",
     "pos": "المركز",
     "player": "اللاعب",
     "club": "النادي"
@@ -95,4 +93,3 @@
     "Matchday 1": "الجولة الأولى"
   }
 }
-
