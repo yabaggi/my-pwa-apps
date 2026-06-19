@@ -467,9 +467,9 @@
   }
 </style>
     <meta name="theme-color" content="#2196f3">
-    <link rel="manifest" href="/my-pwa-apps/craftut/manifest.json">
+    <link rel="manifest" href="/craftut/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="/my-pwa-apps/craftut/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/craftut/icons/icon-192x192.png">
 </head>
 <body>
 
@@ -509,7 +509,7 @@
     <div class="lib-filter cat-filter" id="catFilter" style="padding-top:0; border-bottom: 1px solid var(--border); padding-bottom:12px; margin-bottom:8px">
       <button class="flt-btn active" onclick="setCategory('All',this)">All</button>
       <button class="flt-btn" onclick="setCategory('Cement',this)">Cement</button>
-      <button class="flt-btn" onclick="setCategory('Art',this)">Art</button>
+      <button class="flt-btn" onclick="setCategory('Art',this)">Gypsum</button>
       <button class="flt-btn" onclick="setCategory('Paper',this)">Paper</button>
       <button class="flt-btn" onclick="setCategory('Recipes',this)">Recipes</button>
       <button class="flt-btn" onclick="setCategory('Drawing',this)">Drawing</button>
@@ -775,7 +775,7 @@ async function loadLibrary() {
   }
 }
 
-const DEFAULT_CATEGORIES = ['Cement', 'Art', 'Paper', 'Recipes', 'Drawing', 'Funny', 'Others'];
+const DEFAULT_CATEGORIES = ['Cement', 'Gypsum', 'Paper', 'Recipes', 'Drawing', 'Funny', 'Others'];
 function renderCategories() {
   const container = document.getElementById('catFilter');
   if (!container) return;
@@ -1354,7 +1354,7 @@ Url: ${currentVideoUrl}` : '';
 
   const shareText = `☝️ Click above 📄craft-tutorial.html to view a tutorial i have created...
 You can create your own tutorial - for free - using Craft Tutorial Maker:
-🔗 https://yabaggi.github.io/my-pwa-apps/craftut/
+🔗 https://yabaggi.github.io/craftut/
 -------------------
 Note: the tutorial above was base on this video:${vidInfo}
 Title: ${noteTitle}.`; 
@@ -1569,7 +1569,7 @@ document.addEventListener('keydown', e => {
 // ── PWA SUPPORT ───────────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/my-pwa-apps/craftut/sw.js', { scope: '/my-pwa-apps/craftut/' })
+    navigator.serviceWorker.register('/craftut/sw.js', { scope: '/craftut/' })
       .then(reg => console.log('[PWA] Service Worker registered:', reg.scope))
       .catch(err => console.error('[PWA] Service Worker registration failed:', err));
   });
