@@ -1,0 +1,51 @@
+{
+  "routes": [
+
+{
+  "id": "route-6",
+  "number": "6",
+  "name_en": "Burj Al Sahwa Bus Station  to Seeb Park",
+  "name_ar": "من محطة حافلات برج الصحوة الى منتزه السيب",
+  "origin_en": "Burj Al Sahwa Bus Station",            "origin_ar": "محطة حافلات برج الصحوة",
+  "destination_en": "Seeb Park",                       "destination_ar": "منتزة السيب",                     "color": "#0A5F6E",
+  "data_file": "data/muntazahseeb-sahwa.json",
+  "weekday_first": "06:00",
+  "weekday_last": "19:20",
+  "weekend_first": "07:00",
+  "weekend_last": "19:40",
+  "weekday_trips": 26,
+  "weekend_trips": 27
+},
+
+
+
+{                                                      "id": "route-rawi-wadiadi",                          "number": "3",                                       "name_en": "Ruwi to Wadi Adei",                      "name_ar": "من روي الى وادي عدي",                    "origin_en": "Ruwi Bus station",                     "origin_ar": "محطة حافلات روي",                      "destination_en": "Masjid Wadi Adai",                "destination_ar": "مسجد وادي عدي",                   "color": "#0A5F6E",                                  "data_file": "data/rawi-wadiadi.json",               "weekday_first": "06:55",                            "weekday_last": "20:00",                             "weekend_first": "07:05",                            "weekend_last": "20:25",                             "weekday_trips": 26,                                 "weekend_trips": 26                                },
+{                                                      "id": "route-rawi-wadikabir-msjdjalala",             "number": "2",                                       "name_en": "al wadi kabir to Ruwi",                  "name_ar": "من الوادي الكبير الى روي",               "origin_en": "Wadi Kabir - Masjid Al Jalalah",       "origin_ar": "الوادي الكبير - مسجد الجلالة",         "destination_en": "Ruwi Bus Station",                "destination_ar": "محطة حافلات روي",                 "color": "#0A5F6E",                                  "data_file": "data/rawi-wadikabir-msjdjalala.json",  "weekday_first": "07:10",                            "weekday_last": "19:46",                             "weekend_first": "07:21",                            "weekend_last": "19:58",                             "weekday_trips": 26,                                 "weekend_trips": 26},                                                    {                                                      "id": "route-rawi-mabaila",                          "number": "1",                                       "name_en": "Al Mabelah Bus Station  - Ruwi Bus Station",                                                  "name_ar": "من المعبيلة الى روي",                    "origin_en": "Al Mabelah Bus Station",               "origin_ar": "محطة حافلات المعبيلة",                 "destination_en": "Ruwi Bus Station",                "destination_ar": "محطة حافلات روي",                 "color": "#0A5F6E",                                  "data_file": "data/rawi-mabaila.json",               "weekday_first": "13:36",                            "weekday_last": "21:10",                             "weekend_first": "06:32",                            "weekend_last": "19:44",                             "weekday_trips": 13,                                 "weekend_trips": 18                                },
+                                                     {                                                      "id": "route-mabaila-matar-rawi",                    "number": "A1",                                       "name_en": "Al Mabelah Bus Station – Ruwi Bus Station",                                                   "name_ar": "محطة حافلات المعبيلة – محطة حافلات روي",                                                      "origin_en": "Al Mabelah Bus Station",               "origin_ar": "محطة حافلات المعبيلة",                 "destination_en": "Ruwi Bus Station",                "destination_ar": "محطة حافلات روي",                 "color": "#008800",                                  "data_file": "data/mabaila-matar-rawi.json",         "weekday_first": "05:27",                            "weekday_last": "21:57",                             "weekend_first": "06:14",                            "weekend_last": "21:49",                             "weekday_trips": 24,                                 "weekend_trips": 27 },
+{
+  "id": "route-burjsahwa-khwair",
+  "number": "8",
+  "name_en": "Burj Alsahwa - Al khwair",                      "name_ar": "برج الصحوه - الخوير مسجد الرضوان",                       "origin_en": "Burj Al Sahwa Bus Station",            "origin_ar": "محطة حافلات برج الصحوة",               "destination_en": "Al Khuwair - Opposite Masjid Al Ridwan",                                               "destination_ar": "الخوير - مقابل مسجد الرضوان",     "color": "#800000",                                  "data_file": "data/burjsahwa-khwair.json",           "weekday_first": "06:30",                            "weekday_last": "17:30",                             "weekend_first": "07:00",                            "weekend_last": "16:57",                             "weekday_trips": 22,                                 "weekend_trips": 22                                },
+
+
+    {
+      "id": "route-12",
+      "number": "12",
+      "name_en": "Azaiba – Bousher – Al Khuwair",
+      "name_ar": "العذيبة – بوشر – الخوير",
+      "origin_en": "Al Azaiba Bus Station",
+      "origin_ar": "محطة حافلات العذيبة",
+      "destination_en": "Said Bin Taimur Mosque",
+      "destination_ar": "جامع السلطان سعيد بن تيمور",
+      "color": "#0A5F6E",
+      "data_file": "data/azaiba-bousher.json",
+      "weekday_first": "06:00",
+      "weekday_last": "19:40",
+      "weekend_first": "07:00",
+      "weekend_last": "20:36",
+      "weekday_trips": 26,
+      "weekend_trips": 28
+    }
+  ]
+}
+

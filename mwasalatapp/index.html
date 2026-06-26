@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<meta name="theme-color" content="#0A5F6E">
+<title>مواصلات - جداول الحافلات</title>
+<style>
+:root{
+  --teal:#0A5F6E;--teal2:#127A8C;--teal3:#073F4A;
+  --sand:#F5EDD6;--amber:#E8A020;--amberd:#C4870F;
+  --text:#1A2030;--muted:#5A6070;--border:#E0D8C4;
+  --route-color:#0A5F6E;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Segoe UI Arabic',Tahoma,system-ui,sans-serif;
+     background:var(--sand);color:var(--text);min-height:100vh;overscroll-behavior:none}
+
+/* ── MENU ─────────────────────────────────────────── */
+.menu-overlay{position:fixed;inset:0;z-index:200;display:flex;pointer-events:none}
+.menu-overlay.open{pointer-events:all}
+.menu-backdrop{position:absolute;inset:0;background:rgba(0,0,0,0);transition:background .28s}
+.menu-overlay.open .menu-backdrop{background:rgba(0,0,0,.45)}
+.menu-drawer{
+  position:absolute;top:0;width:82vw;max-width:340px;background:#fff;height:100%;
+  display:flex;flex-direction:column;
+  transition:transform .28s cubic-bezier(.4,0,.2,1);
+}
+/* LTR: drawer anchored to left, slides in from left */
+html[dir="ltr"] .menu-drawer{
+  left:0;
+  transform:translateX(-100%);
+  box-shadow:4px 0 24px rgba(0,0,0,.18);
+}
+html[dir="ltr"] .menu-overlay.open .menu-drawer{transform:translateX(0)}
+/* RTL: drawer anchored to right, slides in from right */
+html[dir="rtl"] .menu-drawer{
+  right:0;
+  transform:translateX(100%);
+  box-shadow:-4px 0 24px rgba(0,0,0,.18);
+}
+html[dir="rtl"] .menu-overlay.open .menu-drawer{transform:translateX(0)}
+
+.menu-head{background:var(--teal);color:#fff;padding:18px 16px 14px;
+  display:flex;align-items:flex-end;justify-content:space-between}
+.menu-head-title{display:flex;flex-direction:column;gap:3px}
+.menu-head-title h2{font-size:1.05rem;font-weight:800}
+.menu-head-title p{font-size:.72rem;opacity:.65}
+.menu-close{background:rgba(255,255,255,.15);border:none;color:#fff;
+  width:34px;height:34px;border-radius:50%;font-size:1.1rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.menu-close:active{background:rgba(255,255,255,.25)}
+.menu-section-label{font-size:.65rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.8px;color:var(--muted);padding:14px 16px 6px}
+.route-item{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;
+  border-bottom:1px solid var(--border);transition:background .15s;
+  -webkit-tap-highlight-color:transparent}
+.route-item:active{background:#F0EDE6}
+.route-item.active{background:#EDF6F8}
+.route-num{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:.9rem;font-weight:800;color:#fff;flex-shrink:0}
+.route-info{flex:1;min-width:0}
+.route-name{font-size:.82rem;font-weight:600;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.route-name-sub{font-size:.73rem;color:var(--muted);margin-top:1px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.route-meta{font-size:.65rem;color:var(--muted);margin-top:2px}
+.route-arrow{color:var(--muted);font-size:.9rem;flex-shrink:0}
+.route-item.active .route-arrow{color:var(--teal)}
+.menu-footer{margin-top:auto;padding:14px 16px;border-top:1px solid var(--border);
+  font-size:.68rem;color:var(--muted);text-align:center;line-height:1.5}
+
+/* ── HEADER ───────────────────────────────────────── */
+.hdr{background:var(--route-color,var(--teal));color:#fff;position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 12px rgba(0,0,0,.28);transition:background .3s}
+.hdr-top{display:flex;align-items:center;gap:8px;padding:12px 14px 8px}
+.hbtn{background:rgba(255,255,255,.15);border:none;color:#fff;width:34px;height:34px;
+  border-radius:8px;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+.hbtn:active{background:rgba(255,255,255,.25)}
+/* lang toggle — pill style */
+.lang-btn{background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.35);
+  color:#fff;padding:4px 9px;border-radius:20px;font-size:.72rem;font-weight:700;
+  cursor:pointer;flex-shrink:0;letter-spacing:.5px;transition:background .15s}
+.lang-btn:active{background:rgba(255,255,255,.3)}
+.rbadge{background:var(--amber);color:var(--teal3);font-size:1rem;font-weight:800;
+  padding:4px 10px;border-radius:6px;flex-shrink:0}
+.htitle{flex:1;min-width:0}
+.htitle h1{font-size:.88rem;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.htitle p{font-size:.66rem;opacity:.6;margin-top:1px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.clock{font-size:.8rem;font-weight:700;background:rgba(255,255,255,.13);
+  padding:5px 8px;border-radius:6px;font-variant-numeric:tabular-nums;flex-shrink:0}
+/* ── DIRECTION TOGGLE ─────────────────── */
+.dir-wrap{
+  padding:8px 14px 10px;
+  background:rgba(0,0,0,.15);
+  border-top:1px solid rgba(255,255,255,.08);
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.dir-wrap::-webkit-scrollbar{display:none}
+.dir-toggle{
+  display:inline-flex;
+  min-width:100%;
+  border-radius:10px;
+  overflow:hidden;
+  border:1.5px solid rgba(255,255,255,.3);
+}
+.dir-btn{
+  flex:1;
+  min-width:max-content;
+  padding:8px 14px;
+  background:transparent;border:none;
+  color:rgba(255,255,255,.45);
+  font-size:.72rem;font-weight:600;cursor:pointer;
+  transition:all .2s;line-height:1.35;text-align:center;
+  -webkit-tap-highlight-color:transparent;
+}
+.dir-btn+.dir-btn{border-inline-start:1.5px solid rgba(255,255,255,.3)}
+.dir-btn.on{background:rgba(255,255,255,.2);color:#fff}
+.dir-sub{font-size:.56rem;opacity:.65;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:1px}
+.dir-main{font-size:.78rem;font-weight:700;display:block;white-space:nowrap;}
+/* ── STATE SCREENS ────────────────────────────────── */
+.state-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:60px 24px;gap:14px;color:var(--muted);text-align:center}
+.state-screen .big{font-size:2.8rem}
+.state-screen p{font-size:.85rem;line-height:1.6}
+.retry-btn{margin-top:8px;padding:9px 20px;background:var(--teal);color:#fff;
+  border:none;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer}
+.spinner{width:36px;height:36px;border:3px solid var(--border);
+  border-top-color:var(--teal);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── SCHEDULE BAR ─────────────────────────────────── */
+.sbar{padding:10px 14px 6px;display:flex;gap:8px;align-items:center}
+.slab{font-size:.68rem;font-weight:700;color:var(--muted);text-transform:uppercase;
+  letter-spacing:.5px;margin-inline-end:2px;white-space:nowrap}
+.sbtn{flex:1;padding:6px 4px;border:2px solid var(--border);background:#fff;
+  border-radius:8px;font-size:.72rem;font-weight:600;color:var(--muted);
+  cursor:pointer;transition:all .2s;text-align:center}
+.sbtn.on{border-color:var(--route-color,var(--teal));
+         background:var(--route-color,var(--teal));color:#fff}
+
+/* ── NEXT BUS ─────────────────────────────────────── */
+.nbb{margin:0 14px 10px;background:var(--route-color,var(--teal));color:#fff;
+  border-radius:12px;padding:12px 14px;display:flex;align-items:center;gap:10px;
+  box-shadow:0 3px 12px rgba(0,0,0,.15);transition:background .3s}
+.nbi{font-size:1.7rem;flex-shrink:0}
+.nbo{flex:1;min-width:0}
+.nbl{font-size:.65rem;opacity:.68;text-transform:uppercase;letter-spacing:.5px;font-weight:600}
+.nbt{font-size:1.5rem;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1;letter-spacing:-.5px}
+.nbs{font-size:.7rem;opacity:.72;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nbcd{background:var(--amber);color:var(--teal3);border-radius:10px;
+  padding:7px 11px;text-align:center;flex-shrink:0;min-width:60px}
+.cdn{font-size:1.35rem;font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
+.cdu{font-size:.6rem;font-weight:700;opacity:.72;text-transform:uppercase}
+.nbb.urgent .nbcd{background:#FF4444;color:#fff;animation:pulse 1s infinite}
+.nbb.noservice{background:#4A4A55}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+
+/* ── STOP SELECT ──────────────────────────────────── */
+.ssel{margin:0 14px 10px}
+.ssel select{width:100%;padding:10px 12px;border:2px solid var(--border);
+  background:#fff;border-radius:10px;font-size:.82rem;color:var(--text);
+  appearance:none;-webkit-appearance:none;font-weight:500;
+  /* arrow positioned based on dir */
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%235A6070' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;}
+html[dir="ltr"] .ssel select{padding-right:32px;background-position:right 10px center}
+html[dir="rtl"] .ssel select{padding-left:32px;background-position:left 10px center}
+.ssel select:focus{outline:none;border-color:var(--route-color,var(--teal))}
+
+/* ── TRIPS GRID ───────────────────────────────────── */
+.slabel{font-size:.67rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.6px;color:var(--muted);padding:0 14px;margin-bottom:7px}
+.tgrid{padding:0 14px 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.chip{background:#fff;border:2px solid var(--border);border-radius:10px;
+  padding:9px 5px;text-align:center;position:relative;transition:all .15s}
+.chip.past{opacity:.35;background:#F0EDE6}
+.chip.next{border-color:var(--amber);background:#FFF8EC;box-shadow:0 2px 8px rgba(232,160,32,.18)}
+.chip.next::before{content:attr(data-next-label);position:absolute;top:-8px;left:50%;
+  transform:translateX(-50%);background:var(--amber);color:var(--teal3);
+  font-size:.5rem;font-weight:800;padding:2px 5px;border-radius:4px;white-space:nowrap}
+.chip-t{font-size:1rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--text)}
+.chip.past .chip-t{color:var(--muted)}
+.chip.next .chip-t{color:var(--amberd)}
+.chip-n{font-size:.58rem;color:var(--muted);margin-top:2px;font-weight:500}
+
+/* ── ROUTE PAGE ───────────────────────────────────── */
+.tpills{padding:8px 14px 10px;display:flex;gap:7px;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tpills::-webkit-scrollbar{display:none}
+.pill{flex-shrink:0;padding:5px 12px;border:2px solid var(--border);border-radius:20px;
+  font-size:.72rem;font-weight:600;background:#fff;color:var(--muted);
+  cursor:pointer;white-space:nowrap;font-variant-numeric:tabular-nums;transition:all .15s}
+.pill.on{background:var(--route-color,var(--teal));border-color:var(--route-color,var(--teal));color:#fff}
+.pill.nxt{border-color:var(--amber);color:var(--amberd)}
+.pill.nxt.on{background:var(--amber);border-color:var(--amber);color:var(--teal3)}
+.rlist{padding:0 14px 80px}
+.srow{display:flex;align-items:stretch}
+.stl{display:flex;flex-direction:column;align-items:center;width:28px;flex-shrink:0;padding-top:12px}
+.sdot{width:10px;height:10px;border-radius:50%;background:var(--route-color,var(--teal));
+  border:2px solid #fff;box-shadow:0 0 0 2px var(--route-color,var(--teal));flex-shrink:0}
+.sdot.term{width:13px;height:13px;box-shadow:0 0 0 2px var(--amber);background:var(--amber)}
+.sline{width:2px;flex:1;min-height:14px;
+  background:linear-gradient(to bottom,var(--route-color,var(--teal)),rgba(10,95,110,.15));margin:2px 0}
+.scard{flex:1;background:#fff;border-radius:10px;margin:5px 0 5px 8px;
+  padding:9px 11px;border:1.5px solid var(--border);min-width:0}
+.scard.term{border-color:var(--amber);background:#FFFBF0}
+/* stop name — primary/secondary swap with lang */
+.sname-primary{font-size:.8rem;font-weight:600;line-height:1.3}
+.sname-secondary{font-size:.75rem;color:var(--muted);margin-top:2px;line-height:1.3}
+html[dir="rtl"] .sname-secondary{text-align:left;direction:ltr}
+html[dir="ltr"] .sname-secondary{text-align:right;direction:rtl}
+.st{margin-top:5px;font-size:.98rem;font-weight:700;
+  color:var(--route-color,var(--teal));font-variant-numeric:tabular-nums}
+
+/* ── INFO PAGE ────────────────────────────────────── */
+.infopage{padding:8px 14px 80px}
+.icard{background:#fff;border-radius:12px;padding:14px;
+  border:1.5px solid var(--border);margin-bottom:10px}
+.icard h3{font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.4px;
+  color:var(--route-color,var(--teal));margin-bottom:9px;display:flex;align-items:center;gap:5px}
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.si{background:var(--sand);border-radius:8px;padding:9px 11px}
+.sl{font-size:.62rem;color:var(--muted);font-weight:600;text-transform:uppercase;
+  letter-spacing:.4px;margin-bottom:2px}
+.sv{font-size:.9rem;font-weight:700;color:var(--text);font-variant-numeric:tabular-nums}
+.dbadge{display:inline-flex;align-items:center;gap:4px;background:var(--route-color,var(--teal));
+  color:#fff;font-size:.68rem;font-weight:700;padding:3px 8px;border-radius:5px;margin-bottom:8px}
+
+/* ── BOTTOM NAV ───────────────────────────────────── */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1.5px solid var(--border);
+  display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.nb{flex:1;padding:9px 4px;border:none;background:none;cursor:pointer;display:flex;
+  flex-direction:column;align-items:center;gap:3px;color:var(--muted);
+  font-size:.6rem;font-weight:600;transition:color .15s}
+.nb.on{color:var(--route-color,var(--teal))}
+.ni{font-size:1.25rem;line-height:1}
+
+/* ── PAGES ────────────────────────────────────────── */
+.pg{display:none}.pg.on{display:block}
+.pscroll{padding-bottom:68px}
+</style>
+    <link rel="manifest" href="/my-pwa-apps/mwasalatapp/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="/my-pwa-apps/mwasalatapp/icons/icon-192x192.png">
+</head>
+<body>
+
+<!-- ══ MENU ══════════════════════════════════════════ -->
+<div class="menu-overlay" id="menuOverlay">
+  <div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
+  <div class="menu-drawer">
+    <div class="menu-head">
+      <div class="menu-head-title">
+        <h2>🚌 <span data-i18n="appName"></span></h2>
+        <p data-i18n="appSub"></p>
+      </div>
+      <button class="menu-close" onclick="closeMenu()">✕</button>
+    </div>
+    <div class="menu-section-label" data-i18n="availableRoutes"></div>
+    <div id="routeList" style="overflow-y:auto;flex:1">
+      <div class="state-screen"><div class="spinner"></div></div>
+    </div>
+    <div class="menu-footer" data-i18n="menuFooter"></div>
+  </div>
+</div>
+
+<!-- ══ HEADER ════════════════════════════════════════ -->
+<header class="hdr" id="hdr">
+  <div class="hdr-top">
+    <button class="hbtn" onclick="openMenu()" aria-label="Menu">☰</button>
+    <div class="rbadge" id="rbadge">--</div>
+    <div class="htitle">
+      <h1 id="routeTitle" data-i18n="selectRoute"></h1>
+      <p id="routeSubtitle"></p>
+    </div>
+    <div class="clock" id="clk">--:--</div>
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()">EN</button>
+  </div>
+  <div class="dir-wrap" id="tabsBar" style="display:none">
+    <div class="dir-toggle">
+      <button class="dir-btn on" id="tab-out" onclick="setTab('outbound')">
+        <span class="dir-sub" data-i18n="tripFrom"></span>
+        <span class="dir-main" id="tab-out-name">…</span>
+      </button>
+      <button class="dir-btn" id="tab-in" onclick="setTab('inbound')">
+        <span class="dir-sub" data-i18n="tripFrom"></span>
+        <span class="dir-main" id="tab-in-name">…</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ══ WELCOME ═══════════════════════════════════════ -->
+<div id="pg-welcome" class="pg on">
+  <div class="state-screen" style="min-height:70vh">
+    <div class="big">🚌</div>
+    <p><strong data-i18n="appName"></strong><br>
+    <span data-i18n="welcomeHint"></span></p>
+  </div>
+</div>
+
+<!-- ══ LOADING ═══════════════════════════════════════ -->
+<div id="pg-loading" class="pg">
+  <div class="state-screen" style="min-height:70vh">
+    <div class="spinner"></div>
+    <p data-i18n="loading"></p>
+  </div>
+</div>
+
+<!-- ══ ERROR ═════════════════════════════════════════ -->
+<div id="pg-error" class="pg">
+  <div class="state-screen" style="min-height:70vh">
+    <div class="big">⚠️</div>
+    <p id="errMsg"></p>
+    <button class="retry-btn" onclick="retryLoad()" data-i18n="retry"></button>
+  </div>
+</div>
+
+<!-- ══ TIMES PAGE ════════════════════════════════════ -->
+<div id="pg-times" class="pg pscroll">
+  <div class="sbar">
+    <span class="slab" data-i18n="schedule"></span>
+    <button class="sbtn on" id="sw"  onclick="setSched('weekday')" data-i18n="weekdays"></button>
+    <button class="sbtn"    id="se"  onclick="setSched('weekend')" data-i18n="weekends"></button>
+  </div>
+  <div id="nbb" class="nbb">
+    <div class="nbi">🚌</div>
+    <div class="nbo">
+      <div class="nbl" data-i18n="nextDeparture"></div>
+      <div class="nbt" id="nbt">--:--</div>
+      <div class="nbs" id="nbs"></div>
+    </div>
+    <div class="nbcd"><div class="cdn" id="cdn">--</div><div class="cdu" data-i18n="min"></div></div>
+  </div>
+  <div class="ssel"><select id="stopsel" onchange="onStop()"></select></div>
+  <div class="slabel" id="slabel"></div>
+  <div class="tgrid" id="tgrid"></div>
+</div>
+
+<!-- ══ ROUTE PAGE ════════════════════════════════════ -->
+<div id="pg-route" class="pg pscroll">
+  <div class="sbar">
+    <span class="slab" data-i18n="schedule"></span>
+    <button class="sbtn on" id="sw2" onclick="setSched2('weekday')" data-i18n="weekdays"></button>
+    <button class="sbtn"    id="se2" onclick="setSched2('weekend')" data-i18n="weekends"></button>
+  </div>
+  <div class="tpills" id="pills"></div>
+  <div class="rlist"  id="rlist"></div>
+</div>
+
+<!-- ══ INFO PAGE ═════════════════════════════════════ -->
+<div id="pg-info" class="pg pscroll">
+  <div class="infopage" id="infoContent"></div>
+</div>
+
+<!-- ══ BOTTOM NAV ════════════════════════════════════ -->
+<nav class="bnav" id="bnav" style="display:none">
+  <button class="nb on" id="nv-times" onclick="setPage('times')">
+    <span class="ni">🕐</span><span data-i18n="navTimes"></span>
+  </button>
+  <button class="nb" id="nv-route" onclick="setPage('route')">
+    <span class="ni">🗺️</span><span data-i18n="navRoute"></span>
+  </button>
+  <button class="nb" id="nv-info"  onclick="setPage('info')">
+    <span class="ni">ℹ️</span><span data-i18n="navInfo"></span>
+  </button>
+</nav>
+
+<script>
+// ══════════════════════════════════════════════════════
+// TRANSLATIONS
+// ══════════════════════════════════════════════════════
+const T = {
+  ar: {
+    appName:        'مواصلات',
+    appSub:         'شبكة حافلات مسقط',
+    availableRoutes:'الخطوط المتاحة',
+    menuFooter:     'أضف خطوطاً بتعديل routes.json',
+    selectRoute:    'خط السير',
+    welcomeHint:    'اضغط ☰ لاختيار خط وعرض مواعيد الرحلات',
+    loading:        'جارٍ تحميل البيانات…',
+    retry:          'إعادة المحاولة',
+    schedule:       'الجدول',
+    weekdays:       'الأحد – الخميس',
+    weekends:       'الجمعة – السبت',
+    nextDeparture:  'الرحلة القادمة',
+    min:            'دقيقة',
+    noMoreBuses:    'لا مزيد من الحافلات',
+    serviceEnded:   'انتهت الخدمة اليوم',
+    switchSched:    'اختر جدول اليوم',
+    at:             'من',
+    outbound:       '▶ ذهاب',
+    inbound:        '◀ إياب',
+    navTimes:       'المواعيد',
+    navRoute:       'الخط',
+    navInfo:        'معلومات',
+    tripLabel:      'رحلة',
+    nextLabel:      'القادمة',
+    stops:          'محطة',
+    trips:          'رحلة',
+    firstBus:       'أول حافلة',
+    lastBus:        'آخر حافلة',
+    weekdayHead:    'أيام العمل',
+    weekdaySpan:    '(الأحد – الخميس)',
+    weekendHead:    'عطلة نهاية الأسبوع',
+    weekendSpan:    '(الجمعة – السبت والإجازات)',
+    terminusHead:   '📍 محطات النهاية',
+    origin:         'المحطة الأولى',
+    destination:    'المحطة الأخيرة',
+    aboutRoute:     'عن الخط',
+    operator:       'المشغّل: مواصلات — الناقل الوطني لسلطنة عُمان',
+    journeyAbout:   'مدة الرحلة حوالي',
+    journeyMin:     'دقيقة',
+    now:            'الآن',
+    tripFrom:       'رحلة من',
+    routeTrips:     'رحلة يومياً',
+    hols:           'والإجازات',
+  },
+  en: {
+    appName:        'Mwasalat',
+    appSub:         'Muscat Bus Network',
+    availableRoutes:'Available Routes',
+    menuFooter:     'Add routes by editing routes.json',
+    selectRoute:    'Select a route to begin',
+    welcomeHint:    'Tap ☰ to choose a route and view live departure times.',
+    loading:        'Loading route data…',
+    retry:          'Try Again',
+    schedule:       'Schedule',
+    weekdays:       'Sun – Thu',
+    weekends:       'Fri – Sat',
+    nextDeparture:  'Next Departure',
+    min:            'min',
+    noMoreBuses:    'No more buses',
+    serviceEnded:   'Service ended for today',
+    switchSched:    "Switch to today's schedule",
+    at:             'at',
+    outbound:       '▶ Outbound',
+    inbound:        '◀ Inbound',
+    navTimes:       'Times',
+    navRoute:       'Route',
+    navInfo:        'Info',
+    tripLabel:      'Trip',
+    nextLabel:      'NEXT',
+    stops:          'stops',
+    trips:          'trips',
+    firstBus:       'First Bus',
+    lastBus:        'Last Bus',
+    weekdayHead:    'Weekday',
+    weekdaySpan:    '(Sun – Thu)',
+    weekendHead:    'Weekend',
+    weekendSpan:    '(Fri – Sat & Hols)',
+    terminusHead:   '📍 Terminus Stops',
+    origin:         'Origin',
+    destination:    'Destination',
+    aboutRoute:     'About Route',
+    operator:       "Operated by Mwasalat, Oman's national transport operator.",
+    journeyAbout:   'Journey approx.',
+    journeyMin:     'min end-to-end',
+    now:            'NOW',
+    tripFrom:       'Trip from',
+    routeTrips:     'trips daily',
+    hols:           '& Hols',
+  }
+};
+
+// ══════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════
+let lang = localStorage.getItem('mw_lang') || 'ar';
+let routesMeta = [];
+let currentRoute = null;
+let timetable = null;
+let tab = 'outbound', sched = 'weekday', stopIdx = 0, page = 'welcome', tripIdx = 0;
+
+// ══════════════════════════════════════════════════════
+// i18n
+// ══════════════════════════════════════════════════════
+function t(key) { return T[lang][key] || T['en'][key] || key; }
+
+function applyLang() {
+  const isAr = lang === 'ar';
+  document.documentElement.lang = lang;
+  document.documentElement.dir  = isAr ? 'rtl' : 'ltr';
+  document.title = t('appName') + ' - ' + t('appSub');
+  document.getElementById('langBtn').textContent = isAr ? 'EN' : 'عر';
+  // Stamp all static data-i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = t(el.dataset.i18n);
+  });
+  // Re-render dynamic content that contains translated strings
+  if (timetable) {
+    buildStopSelect();
+    renderGrid();
+    refreshBanner();
+    if (page === 'route') { buildPills(); renderRoute(); }
+    if (page === 'info')  renderInfo();
+  }
+  if (routesMeta.length) renderRouteList();
+  // Welcome page subtitle (has no route yet)
+  if (!currentRoute) {
+    document.getElementById('routeTitle').textContent = t('selectRoute');
+  }
+  localStorage.setItem('mw_lang', lang);
+}
+
+function toggleLang() {
+  lang = lang === 'ar' ? 'en' : 'ar';
+  applyLang();
+  updateTabLabels();
+}
+
+// Convenience: return stop name in current lang
+function stopName(s) { return lang === 'ar' && s.ar ? s.ar : s.en; }
+function stopNameSub(s) { return lang === 'ar' ? s.en : s.ar; }
+// Route field in current lang
+function rf(r, field) { return lang === 'ar' ? (r[field+'_ar'] || r[field+'_en']) : r[field+'_en']; }
+
+// ══════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════
+const t2m = t => { const [h,m] = t.split(':').map(Number); return h*60+m; };
+const nowMins = () => { const n = new Date(); return n.getHours()*60+n.getMinutes(); };
+const stops = () => timetable[tab][sched];
+const isToday = s => { const d = new Date().getDay(); return s==='weekday'?(d>=0&&d<=4):(d===5||d===6); };
+
+function nextTripIdx() {
+  if (!timetable || !isToday(sched)) return -1;
+  const times = stops()[stopIdx]?.times || [], n = nowMins();
+  for (let i = 0; i < times.length; i++) if (t2m(times[i]) > n) return i;
+  return -1;
+}
+function setRouteColor(c) { document.documentElement.style.setProperty('--route-color', c); }
+
+// ══════════════════════════════════════════════════════
+// CLOCK
+// ══════════════════════════════════════════════════════
+function tickClock() {
+  const n = new Date();
+  document.getElementById('clk').textContent =
+    String(n.getHours()).padStart(2,'0') + ':' + String(n.getMinutes()).padStart(2,'0');
+}
+setInterval(tickClock, 1000); tickClock();
+
+// ══════════════════════════════════════════════════════
+// MENU
+// ══════════════════════════════════════════════════════
+function openMenu()  { document.getElementById('menuOverlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeMenu() { document.getElementById('menuOverlay').classList.remove('open'); document.body.style.overflow=''; }
+
+// ══════════════════════════════════════════════════════
+// LOAD ROUTES
+// ══════════════════════════════════════════════════════
+async function loadRoutesMeta() {
+  try {
+    const r = await fetch('routes.json');
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const data = await r.json();
+    routesMeta = data.routes || [];
+    renderRouteList();
+  } catch(e) {
+    document.getElementById('routeList').innerHTML =
+      `<div class="state-screen"><div class="big">⚠️</div><p>${e.message}</p></div>`;
+  }
+}
+
+function renderRouteList() {
+  const el = document.getElementById('routeList');
+  if (!routesMeta.length) {
+    el.innerHTML = `<div class="state-screen"><p>${t('availableRoutes')}: 0</p></div>`;
+    return;
+  }
+  // Natural sort: pure numbers first (numerically), then alphanumeric codes (A1, B2…)
+  const sorted = [...routesMeta].sort((a, b) => {
+    const na = a.number, nb = b.number;
+    const aNum = /^\d+$/.test(na), bNum = /^\d+$/.test(nb);
+    if (aNum && bNum) return parseInt(na) - parseInt(nb);   // 2 < 10
+    if (aNum) return -1;                                     // numbers before codes
+    if (bNum) return  1;
+    return na.localeCompare(nb, 'en', {numeric: true});      // A1 < A2 < B1
+  });
+  el.innerHTML = sorted.map(r => `
+    <div class="route-item${currentRoute?.id===r.id?' active':''}" onclick="selectRoute('${r.id}')">
+      <div class="route-num" style="background:${r.color}">${r.number}</div>
+      <div class="route-info">
+        <div class="route-name">${rf(r,'name')}</div>
+        <div class="route-name-sub">${lang==='ar' ? r.name_en : r.name_ar}</div>
+        <div class="route-meta">${r.weekday_trips} ${t('trips')} · ${rf(r,'origin')} ↔ ${rf(r,'destination')}</div>
+      </div>
+      <div class="route-arrow">›</div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// SELECT ROUTE
+// ══════════════════════════════════════════════════════
+async function selectRoute(id) {
+  closeMenu();
+  if (currentRoute?.id === id) return;
+  const meta = routesMeta.find(r => r.id === id);
+  if (!meta) return;
+  currentRoute = meta;
+  setRouteColor(meta.color);
+  document.getElementById('rbadge').textContent = meta.number;
+  document.getElementById('routeTitle').textContent = rf(meta,'name');
+  document.getElementById('routeSubtitle').textContent = rf(meta,'origin') + ' → ' + rf(meta,'destination');
+  tab='outbound'; sched=autoSched(); stopIdx=0; tripIdx=0;
+  syncSchedButtons();
+  showPage('loading');
+  document.getElementById('tabsBar').style.display = 'none';
+  document.getElementById('bnav').style.display = 'none';
+  timetable = null;
+  renderRouteList();
+  try {
+    const res = await fetch(meta.data_file);
+    if (!res.ok) throw new Error(`${t('loading')} (HTTP ${res.status})`);
+    const raw = await res.json();
+    timetable = parseRouteJson(raw);
+    document.getElementById('tabsBar').style.display = 'flex';
+    document.getElementById('bnav').style.display = 'flex';
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    updateTabLabels();
+    buildStopSelect(); renderGrid(); refreshBanner();
+    showPage('times'); setPage('times');
+  } catch(e) {
+    document.getElementById('errMsg').textContent = e.message;
+    showPage('error');
+  }
+}
+
+function autoSched() { const d=new Date().getDay(); return (d===5||d===6)?'weekend':'weekday'; }
+function syncSchedButtons() {
+  ['sw','sw2'].forEach(id => document.getElementById(id)?.classList.toggle('on', sched==='weekday'));
+  ['se','se2'].forEach(id => document.getElementById(id)?.classList.toggle('on', sched==='weekend'));
+}
+
+// ══════════════════════════════════════════════════════
+// PARSE JSON
+// ══════════════════════════════════════════════════════
+function parseRouteJson(raw) {
+  const key0 = Object.keys(raw[0])[0];
+  const COLS = Array.from({length:28}, (_,i) => `Unnamed: ${i+2}`);
+
+  // Valid trip cell: has time data (not null, not '-', not text notes)
+  const TIME_RE = /^\d{2}:\d{2}/;
+  const GAP = new Set(['-', '–', '—', 'x', 'X', '*']);
+  function isTime(v) { return v != null && TIME_RE.test(String(v).trim()); }
+
+  function extractSection(start, end) {
+    const result = [];
+    for (let i=start; i<end && i<raw.length; i++) {
+      const row=raw[i], v=String(row[key0]||'').trim();
+      const times=COLS.filter(c=>isTime(row[c])).map(c=>String(row[c]).slice(0,5));
+      if (!times.length||v==='Stops') continue;
+      result.push({en:v, ar:String(row['Unnamed: 1']||'').trim(), times});
+    }
+    return result;
+  }
+
+  // Extract direction labels from header rows
+  // Direction rows always contain "From … To …" in English
+  function extractDirections(raw, key0) {
+    const DIR_RE = /[Ff]rom\s+.+\s+[Tt]o\s+/;
+    const dirRows = raw.filter(row => {
+      const v = String(row[key0]||'').trim();
+      const hasTimes = COLS.some(c => row[c] != null);
+      return !hasTimes && DIR_RE.test(v);
+    });
+    // First direction row = outbound, second = inbound
+    function parse(text) {
+      // English: "From X To Y  [Arabic]"
+      const enM = text.match(/[Ff]rom\s+(.+?)\s+[Tt]o\s+(.+?)(?:\s{2,}|من|$)/);
+      // Arabic: "من X الى/إلى Y"
+      const arM = text.match(/من\s+(.+?)\s+(?:الى|إلى|الي)\s+([\u0600-\u06FF][^a-zA-Z\n]+)/);
+      return {
+        origin_en: enM ? enM[1].replace(/\s*-\s*$/, '').trim() : '',
+        dest_en:   enM ? enM[2].replace(/\s*-\s*$/, '').trim() : '',
+        origin_ar: arM ? arM[1].replace(/\s*-\s*$/, '').trim() : '',
+        dest_ar:   arM ? arM[2].replace(/\s*-\s*$/, '').trim() : '',
+      };
+    }
+    return {
+      outbound: dirRows[0] ? parse(String(dirRows[0][key0]||'')) : null,
+      inbound:  dirRows[1] ? parse(String(dirRows[1][key0]||'')) : null,
+    };
+  }
+
+  const b = findBlocks(raw, key0, COLS);
+  const sections = {
+    outbound:{weekday:extractSection(b[0].s,b[0].e), weekend:extractSection(b[2].s,b[2].e)},
+    inbound: {weekday:extractSection(b[1].s,b[1].e), weekend:extractSection(b[3].s,b[3].e)}
+  };
+
+  // Build direction labels: prefer data from header rows, fall back to first/last stop names
+  const dirs = extractDirections(raw, key0);
+  const ob_wd = sections.outbound.weekday, ib_wd = sections.inbound.weekday;
+  sections.directions = {
+    outbound: {
+      en: dirs.outbound?.origin_en || ob_wd[0]?.en || '',
+      ar: dirs.outbound?.origin_ar || ob_wd[0]?.ar || '',
+      dest_en: dirs.outbound?.dest_en || ob_wd[ob_wd.length-1]?.en || '',
+      dest_ar: dirs.outbound?.dest_ar || ob_wd[ob_wd.length-1]?.ar || '',
+    },
+    inbound: {
+      en: dirs.inbound?.origin_en || ib_wd[0]?.en || '',
+      ar: dirs.inbound?.origin_ar || ib_wd[0]?.ar || '',
+      dest_en: dirs.inbound?.dest_en || ib_wd[ib_wd.length-1]?.en || '',
+      dest_ar: dirs.inbound?.dest_ar || ib_wd[ib_wd.length-1]?.ar || '',
+    }
+  };
+
+  return sections;
+}
+
+// Update direction toggle labels from the actual first/last stop names in each block
+function updateTabLabels() {
+  if (!timetable) return;
+  const ob = timetable.outbound.weekday;
+  const ib = timetable.inbound.weekday;
+  if (!ob?.length || !ib?.length) return;
+
+  // Outbound: travels FROM ob[0] TO ob[last]
+  // Inbound:  travels FROM ib[0] TO ib[last]
+  // These are the real terminus names directly from the stop data — no parsing needed
+  const obFrom = lang === 'ar' ? (ob[0].ar || ob[0].en) : ob[0].en;
+  const ibFrom = lang === 'ar' ? (ib[0].ar || ib[0].en) : ib[0].en;
+
+  document.getElementById('tab-out-name').textContent = obFrom;
+  document.getElementById('tab-in-name').textContent  = ibFrom;
+}
+function findBlocks(raw, key0, COLS) {
+  const stopRows=[], seen=[];
+  for (let i=0;i<raw.length;i++){
+    const v=String(raw[i][key0]||'').trim();
+    if (COLS.some(c=>raw[i][c])&&v!=='Stops') stopRows.push(i);
+  }
+  const blocks=[];
+  let start=0;
+  for (let k=1;k<=stopRows.length;k++){
+    if (k===stopRows.length||stopRows[k]-stopRows[k-1]>2){
+      blocks.push({s:stopRows[start],e:stopRows[k-1]+1});
+      start=k;
+    }
+  }
+  if (blocks.length>=4) return blocks;
+  // fallback
+  const q=Math.floor(raw.length/4);
+  return [{s:3,e:q},{s:q+2,e:q*2},{s:q*2+2,e:q*3},{s:q*3+2,e:raw.length}];
+}
+function retryLoad(){ if(currentRoute) selectRoute(currentRoute.id); }
+
+// ══════════════════════════════════════════════════════
+// NEXT BUS BANNER
+// ══════════════════════════════════════════════════════
+function refreshBanner() {
+  if (!timetable) return;
+  const banner=document.getElementById('nbb');
+  const bt=document.getElementById('nbt'), bs=document.getElementById('nbs'), cn=document.getElementById('cdn');
+  if (!isToday(sched)){
+    banner.className='nbb noservice';
+    bt.textContent='--:--'; bs.textContent=t('switchSched'); cn.textContent='--'; return;
+  }
+  const ni=nextTripIdx(), st=stops();
+  if (ni<0){
+    banner.className='nbb noservice';
+    bt.textContent=t('noMoreBuses'); bs.textContent=t('serviceEnded'); cn.textContent='--'; return;
+  }
+  const time=st[stopIdx].times[ni], diff=t2m(time)-nowMins();
+  bt.textContent=time;
+  bs.textContent=t('at')+' '+stopName(st[stopIdx]);
+  cn.textContent=diff<=0?t('now'):diff;
+  banner.className='nbb'+(diff<=5?' urgent':'');
+}
+setInterval(refreshBanner,30000);
+
+// ══════════════════════════════════════════════════════
+// STOP SELECT
+// ══════════════════════════════════════════════════════
+function buildStopSelect() {
+  const sel=document.getElementById('stopsel');
+  sel.innerHTML='';
+  stops().forEach((s,i)=>{
+    const o=document.createElement('option');
+    o.value=i;
+    const term=i===0||i===stops().length-1;
+    o.textContent=(term?'🔴':'🔵')+' '+stopName(s);
+    if(i===stopIdx) o.selected=true;
+    sel.appendChild(o);
+  });
+}
+function onStop(){ stopIdx=parseInt(document.getElementById('stopsel').value); renderGrid(); refreshBanner(); }
+
+// ══════════════════════════════════════════════════════
+// TRIPS GRID
+// ══════════════════════════════════════════════════════
+function renderGrid() {
+  if (!timetable) return;
+  const st=stops(), times=st[stopIdx]?.times||[], ni=isToday(sched)?nextTripIdx():-2;
+  const schedLabel=sched==='weekday'?t('weekdays'):t('weekends')+' '+t('hols');
+  document.getElementById('slabel').textContent=`${schedLabel} · ${times.length} ${t('trips')}`;
+  document.getElementById('tgrid').innerHTML=times.map((time,i)=>{
+    let cls='chip';
+    if(ni>=0&&t2m(time)<t2m(times[ni])) cls+=' past';
+    else if(i===ni) cls+=' next';
+    return `<div class="${cls}" data-next-label="${t('nextLabel')}">
+      <div class="chip-t">${time}</div>
+      <div class="chip-n">${t('tripLabel')} ${i+1}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════════════
+// ROUTE PAGE
+// ══════════════════════════════════════════════════════
+function buildPills() {
+  if (!timetable) return;
+  const st=stops(), n=nowMins();
+  const ni=isToday(sched)?(()=>{
+    const t0=st[0].times;
+    for(let i=0;i<t0.length;i++) if(t2m(t0[i])>n) return i;
+    return -1;
+  })():-1;
+  document.getElementById('pills').innerHTML=st[0].times.map((time,i)=>{
+    const isN=i===ni;
+    return `<button class="pill${isN?' nxt':''}${i===tripIdx?' on':''}" onclick="selTrip(${i})">${time}${isN?' ▲':''}</button>`;
+  }).join('');
+}
+function selTrip(i){ tripIdx=i; buildPills(); renderRoute(); }
+function renderRoute() {
+  if (!timetable) return;
+  const st=stops();
+  document.getElementById('rlist').innerHTML=st.map((s,i)=>{
+    const term=i===0||i===st.length-1;
+    return `<div class="srow">
+      <div class="stl">
+        <div class="sdot${term?' term':''}"></div>
+        ${i<st.length-1?'<div class="sline"></div>':''}
+      </div>
+      <div class="scard${term?' term':''}">
+        <div class="sname-primary">${stopName(s)}</div>
+        <div class="sname-secondary">${stopNameSub(s)}</div>
+        <div class="st">${s.times[tripIdx]||'--:--'}</div>
+      </div>
+    </div>`;
+  }).join('');
+  if (isToday(sched)){
+    const n=nowMins(), cards=document.querySelectorAll('.srow');
+    for(let i=0;i<st.length;i++){
+      if(st[i].times[tripIdx]&&t2m(st[i].times[tripIdx])>n){
+        setTimeout(()=>cards[i]?.scrollIntoView({behavior:'smooth',block:'center'}),100); break;
+      }
+    }
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// INFO PAGE
+// ══════════════════════════════════════════════════════
+function renderInfo() {
+  if (!timetable||!currentRoute) return;
+  const r=currentRoute;
+  const wd=timetable[tab].weekday, we=timetable[tab].weekend;
+  const dirLabel=tab==='outbound'
+    ? rf(r,'origin')+' → '+rf(r,'destination')
+    : rf(r,'destination')+' → '+rf(r,'origin');
+  document.getElementById('infoContent').innerHTML=`
+    <div class="dbadge">${tab==='outbound'?'▶':'◀'} ${dirLabel}</div>
+    <div class="icard">
+      <h3>⏱ ${t('weekdayHead')} <span style="font-weight:400;opacity:.6;font-size:.68rem">${t('weekdaySpan')}</span></h3>
+      <div class="sgrid">
+        <div class="si"><div class="sl">${t('firstBus')}</div><div class="sv">${wd[0].times[0]}</div></div>
+        <div class="si"><div class="sl">${t('lastBus')}</div><div class="sv">${wd[0].times[wd[0].times.length-1]}</div></div>
+        <div class="si"><div class="sl">${t('trips')}</div><div class="sv">${wd[0].times.length}</div></div>
+        <div class="si"><div class="sl">${t('stops')}</div><div class="sv">${wd.length}</div></div>
+      </div>
+    </div>
+    <div class="icard">
+      <h3>⏱ ${t('weekendHead')} <span style="font-weight:400;opacity:.6;font-size:.68rem">${t('weekendSpan')}</span></h3>
+      <div class="sgrid">
+        <div class="si"><div class="sl">${t('firstBus')}</div><div class="sv">${we[0].times[0]}</div></div>
+        <div class="si"><div class="sl">${t('lastBus')}</div><div class="sv">${we[0].times[we[0].times.length-1]}</div></div>
+        <div class="si"><div class="sl">${t('trips')}</div><div class="sv">${we[0].times.length}</div></div>
+        <div class="si"><div class="sl">${t('stops')}</div><div class="sv">${we.length}</div></div>
+      </div>
+    </div>
+    <div class="icard">
+      <h3>${t('terminusHead')}</h3>
+      <div style="margin-bottom:10px">
+        <div class="sl" style="margin-bottom:3px">${t('origin')}</div>
+        <div style="font-weight:600;font-size:.85rem">${stopName(wd[0])}</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:2px">${stopNameSub(wd[0])}</div>
+      </div>
+      <div>
+        <div class="sl" style="margin-bottom:3px">${t('destination')}</div>
+        <div style="font-weight:600;font-size:.85rem">${stopName(wd[wd.length-1])}</div>
+        <div style="font-size:.78rem;color:var(--muted);margin-top:2px">${stopNameSub(wd[wd.length-1])}</div>
+      </div>
+    </div>
+    <div class="icard">
+      <h3>🚍 ${t('aboutRoute')} ${r.number}</h3>
+      <div style="font-size:.8rem;color:var(--muted);line-height:1.7">
+        ${t('operator')}<br>
+        <strong style="color:var(--text)">${rf(r,'name')}</strong><br>
+        <span style="color:var(--text);font-size:.75rem">${lang==='ar'?r.name_en:r.name_ar}</span>
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════════
+function showPage(p){
+  document.querySelectorAll('.pg').forEach(el=>el.classList.remove('on'));
+  document.getElementById('pg-'+p).classList.add('on');
+}
+function setPage(p){
+  page=p; showPage(p);
+  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('nv-'+p).classList.add('on');
+  if(p==='route'){tripIdx=Math.max(0,nextTripIdx());buildPills();renderRoute();}
+  if(p==='info') renderInfo();
+}
+function setTab(t){
+  tab=t; stopIdx=0;
+  document.getElementById('tab-out').classList.toggle('on',t==='outbound');
+  document.getElementById('tab-in').classList.toggle('on',t==='inbound');
+  buildStopSelect();renderGrid();refreshBanner();
+  if(page==='route'){tripIdx=Math.max(0,nextTripIdx());buildPills();renderRoute();}
+  if(page==='info') renderInfo();
+}
+// keep alias for any legacy references
+const setDirection = setTab;
+function setSched(s){
+  sched=s; stopIdx=0;
+  document.getElementById('sw').classList.toggle('on',s==='weekday');
+  document.getElementById('se').classList.toggle('on',s==='weekend');
+  buildStopSelect();renderGrid();refreshBanner();
+}
+function setSched2(s){
+  sched=s;
+  document.getElementById('sw2').classList.toggle('on',s==='weekday');
+  document.getElementById('se2').classList.toggle('on',s==='weekend');
+  tripIdx=Math.max(0,nextTripIdx());buildPills();renderRoute();
+}
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+sched=autoSched();
+syncSchedButtons();
+applyLang();        // sets dir/lang on <html>, stamps all data-i18n elements
+loadRoutesMeta();
+</script>
+
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/my-pwa-apps/mwasalatapp/sw.js', { scope: '/my-pwa-apps/mwasalatapp/' })
+                    .then(registration => {
+                        console.log('[PWA] Service Worker registered:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('[PWA] Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('[PWA] App can be installed');
+        });
+
+        // Call this function from a custom install button in your UI
+        async function installPWA() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log('[PWA] Install prompt outcome:', outcome);
+            deferredPrompt = null;
+        }
+
+        window.addEventListener('appinstalled', () => {
+            console.log('[PWA] App installed successfully');
+            deferredPrompt = null;
+        });
+    </script>
+</body>
+</html>

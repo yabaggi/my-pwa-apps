@@ -13,6 +13,22 @@
     "description-ar": "World Cup Explorer",
     "badges": []
   },
+  
+  
+  
+    {
+    "href": "mwasalatapp/",
+    "category": "Others",
+    "category-ar": "",
+    "keywords": "Nn",
+    "keywords-ar": "",
+    "icon": "🚌",
+    "name": "Mwasalat",
+    "name-ar": "مواصلات مسقط ",
+    "description": "Mwasalat Muscat internal routes",
+    "description-ar": "مواصلات مسقط الخطوط الداخلية",
+    "badges": []
+  },
 
 
  {
@@ -388,6 +404,4 @@
     "badges": []
   }
 ]
-
-
 
