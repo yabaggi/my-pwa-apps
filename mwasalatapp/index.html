@@ -659,10 +659,46 @@ async function loadRoutesMeta() {
     const data = await r.json();
     routesMeta = data.routes || [];
     renderRouteList();
+    autoOpenOnStart();
   } catch(e) {
     document.getElementById('routeList').innerHTML =
-      `<div class="state-screen"><div class="big">⚠️</div><p>${e.message}</p></div>`;
+      `<div class="state-screen"><div class="big">&#x26A0;&#xFE0F;</div><p>${e.message}</p></div>`;
   }
+}
+
+async function autoOpenOnStart() {
+  if (!routesMeta.length) return;
+
+  // 1. Try the most recent favourite whose route still exists in routes.json
+  const favs = loadFavs();
+  const fav  = favs.find(f => routesMeta.some(r => r.id === f.routeId));
+
+  if (fav) {
+    await selectRoute(fav.routeId);
+    // selectRoute resets tab/stopIdx -- restore from favourite
+    if (timetable) {
+      tab     = fav.direction;
+      stopIdx = fav.stopIdx;
+      sched   = autoSched();
+      syncSchedButtons();
+      document.getElementById('tab-out').classList.toggle('on', tab === 'outbound');
+      document.getElementById('tab-in').classList.toggle('on', tab === 'inbound');
+      buildStopSelect();
+      renderGrid();
+      refreshBanner();
+      updateFavBtn();
+    }
+    return;
+  }
+
+  // 2. No favourites -- open the first route in sorted order
+  const sorted = [...routesMeta].sort((a, b) => {
+    const aNum = /^\d+$/.test(a.number), bNum = /^\d+$/.test(b.number);
+    if (aNum && bNum) return parseInt(a.number) - parseInt(b.number);
+    if (aNum) return -1; if (bNum) return 1;
+    return a.number.localeCompare(b.number, 'en', {numeric: true});
+  });
+  selectRoute(sorted[0].id);
 }
 
 function renderRouteList() {
