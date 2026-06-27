@@ -122,6 +122,68 @@ html[dir="rtl"] .menu-overlay.open .menu-drawer{transform:translateX(0)}
 .dir-btn.on{background:rgba(255,255,255,.2);color:#fff}
 .dir-sub{font-size:.56rem;opacity:.65;text-transform:uppercase;letter-spacing:.4px;display:block;margin-bottom:1px}
 .dir-main{font-size:.78rem;font-weight:700;display:block;white-space:nowrap;}
+
+/* ── FAVOURITES ───────────────────────────────────── */
+.fav-btn{
+  background:#fff;
+  border:2px solid var(--border);
+  border-radius:10px;
+  cursor:pointer;
+  font-size:1.25rem;line-height:1;
+  width:44px;height:44px;padding:0;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--muted);
+  flex-shrink:0;
+  transition:color .2s,border-color .2s,background .2s,transform .15s;
+  -webkit-tap-highlight-color:transparent;
+}
+.fav-btn.saved{
+  color:var(--amber);
+  border-color:var(--amber);
+  background:#FFF8EC;
+}
+.fav-btn:active{transform:scale(.9)}
+
+.fav-page{padding:10px 14px 80px}
+.fav-empty{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:60px 24px;gap:12px;
+  color:var(--muted);text-align:center;min-height:55vh;
+}
+.fav-empty .big{font-size:2.5rem}
+.fav-empty p{font-size:.82rem;line-height:1.6}
+
+.fav-card{
+  background:#fff;border-radius:12px;
+  border:1.5px solid var(--border);
+  margin-bottom:10px;overflow:hidden;
+  display:flex;align-items:stretch;
+}
+.fav-card-color{width:5px;flex-shrink:0;background:var(--route-color,var(--teal))}
+.fav-card-body{flex:1;min-width:0;padding:11px 12px;cursor:pointer}
+.fav-card-body:active{background:#F5F5F5}
+.fav-route-num{
+  display:inline-block;background:var(--route-color,var(--teal));
+  color:#fff;font-size:.65rem;font-weight:800;
+  padding:2px 7px;border-radius:5px;margin-bottom:5px;
+}
+.fav-journey{font-size:.85rem;font-weight:700;color:var(--text);line-height:1.3;margin-bottom:3px}
+.fav-journey-sub{font-size:.72rem;color:var(--muted);margin-bottom:6px;line-height:1.3}
+.fav-next{
+  display:flex;align-items:center;gap:8px;
+  background:var(--sand);border-radius:7px;padding:6px 9px;
+}
+.fav-next-time{font-size:1rem;font-weight:800;font-variant-numeric:tabular-nums;color:var(--teal)}
+.fav-next-diff{font-size:.7rem;color:var(--muted);font-weight:500}
+.fav-next-nosvc{font-size:.72rem;color:var(--muted);font-style:italic}
+.fav-del{
+  flex-shrink:0;background:none;border:none;cursor:pointer;
+  color:#CCC;font-size:1.1rem;padding:0 12px;
+  display:flex;align-items:center;
+  -webkit-tap-highlight-color:transparent;
+  transition:color .15s;
+}
+.fav-del:active{color:var(--red,#c0392b)}
 /* ── STATE SCREENS ────────────────────────────────── */
 .state-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;
   padding:60px 24px;gap:14px;color:var(--muted);text-align:center}
@@ -337,7 +399,10 @@ html[dir="ltr"] .sname-secondary{text-align:right;direction:rtl}
     </div>
     <div class="nbcd"><div class="cdn" id="cdn">--</div><div class="cdu" data-i18n="min"></div></div>
   </div>
-  <div class="ssel"><select id="stopsel" onchange="onStop()"></select></div>
+  <div class="ssel" style="display:flex;gap:8px;align-items:center">
+    <select id="stopsel" onchange="onStop()" style="flex:1"></select>
+    <button class="fav-btn" id="favBtn" onclick="toggleFav()" title="Favourite">☆</button>
+  </div>
   <div class="slabel" id="slabel"></div>
   <div class="tgrid" id="tgrid"></div>
 </div>
@@ -358,6 +423,12 @@ html[dir="ltr"] .sname-secondary{text-align:right;direction:rtl}
   <div class="infopage" id="infoContent"></div>
 </div>
 
+
+<!-- ══ FAVOURITES PAGE ═══════════════════════════════ -->
+<div id="pg-favs" class="pg pscroll">
+  <div class="fav-page" id="favPage"></div>
+</div>
+
 <!-- ══ BOTTOM NAV ════════════════════════════════════ -->
 <nav class="bnav" id="bnav" style="display:none">
   <button class="nb on" id="nv-times" onclick="setPage('times')">
@@ -365,6 +436,9 @@ html[dir="ltr"] .sname-secondary{text-align:right;direction:rtl}
   </button>
   <button class="nb" id="nv-route" onclick="setPage('route')">
     <span class="ni">🗺️</span><span data-i18n="navRoute"></span>
+  </button>
+  <button class="nb" id="nv-favs" onclick="setPage('favs')">
+    <span class="ni">★</span><span data-i18n="navFavs"></span>
   </button>
   <button class="nb" id="nv-info"  onclick="setPage('info')">
     <span class="ni">ℹ️</span><span data-i18n="navInfo"></span>
@@ -418,6 +492,17 @@ const T = {
     journeyMin:     'دقيقة',
     now:            'الآن',
     tripFrom:       'رحلة من',
+    navFavs:        'المفضلة',
+    favEmpty:       'لا توجد رحلات مفضلة بعد',
+    favHint:        'اضغط ☆ بجانب اختيار المحطة لحفظ رحلة',
+    favFrom:        'من',
+    favTo:          'إلى',
+    favNoService:   'لا خدمة اليوم',
+    favNoMore:      'انتهت الرحلات اليوم',
+    favIn:          'بعد',
+    favMins:        'د',
+    favNow:         'الآن',
+    favLoading:     'جارٍ التحميل…',
     routeTrips:     'رحلة يومياً',
     hols:           'والإجازات',
   },
@@ -463,6 +548,17 @@ const T = {
     journeyMin:     'min end-to-end',
     now:            'NOW',
     tripFrom:       'Trip from',
+    navFavs:        'Favourites',
+    favEmpty:       'No favourite trips yet',
+    favHint:        'Tap ☆ next to the stop selector to save a trip',
+    favFrom:        'From',
+    favTo:          'to',
+    favNoService:   'No service today',
+    favNoMore:      'No more buses today',
+    favIn:          'in',
+    favMins:        'min',
+    favNow:         'Departing now',
+    favLoading:     'Loading…',
     routeTrips:     'trips daily',
     hols:           '& Hols',
   }
@@ -499,6 +595,7 @@ function applyLang() {
     refreshBanner();
     if (page === 'route') { buildPills(); renderRoute(); }
     if (page === 'info')  renderInfo();
+    if (page === 'favs')  renderFavs();
   }
   if (routesMeta.length) renderRouteList();
   // Welcome page subtitle (has no route yet)
@@ -624,7 +721,7 @@ async function selectRoute(id) {
     document.getElementById('bnav').style.display = 'flex';
     document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
     updateTabLabels();
-    buildStopSelect(); renderGrid(); refreshBanner();
+    buildStopSelect(); renderGrid(); refreshBanner(); updateFavBtn();
     showPage('times'); setPage('times');
   } catch(e) {
     document.getElementById('errMsg').textContent = e.message;
@@ -792,7 +889,7 @@ function buildStopSelect() {
     sel.appendChild(o);
   });
 }
-function onStop(){ stopIdx=parseInt(document.getElementById('stopsel').value); renderGrid(); refreshBanner(); }
+function onStop(){ stopIdx=parseInt(document.getElementById('stopsel').value); renderGrid(); refreshBanner(); updateFavBtn(); }
 
 // ══════════════════════════════════════════════════════
 // TRIPS GRID
@@ -910,6 +1007,251 @@ function renderInfo() {
     </div>`;
 }
 
+
+// ══════════════════════════════════════════════════════
+// FAVOURITES
+// ══════════════════════════════════════════════════════
+const FAV_KEY = 'mw_favourites';
+
+function loadFavs() {
+  try { return JSON.parse(localStorage.getItem(FAV_KEY)) || []; }
+  catch { return []; }
+}
+function saveFavs(favs) {
+  localStorage.setItem(FAV_KEY, JSON.stringify(favs));
+}
+
+function currentFavId() {
+  // Unique key: routeId + direction + stopIdx
+  if (!currentRoute || !timetable) return null;
+  return `${currentRoute.id}__${tab}__${stopIdx}`;
+}
+
+function isFavourite() {
+  const id = currentFavId();
+  return id && loadFavs().some(f => f.id === id);
+}
+
+function updateFavBtn() {
+  const btn = document.getElementById('favBtn');
+  if (!btn) return;
+  const saved = isFavourite();
+  btn.textContent = saved ? '★' : '☆';
+  btn.classList.toggle('saved', saved);
+  btn.title = saved ? t('favNoMore') : '☆';  // placeholder — just drives style
+}
+
+function toggleFav() {
+  if (!currentRoute || !timetable) return;
+  const id = currentFavId();
+  let favs = loadFavs();
+  if (favs.some(f => f.id === id)) {
+    // Remove
+    saveFavs(favs.filter(f => f.id !== id));
+  } else {
+    // Add — capture everything needed to restore this journey
+    const st = stops();
+    const stop = st[stopIdx];
+    const lastStop = st[st.length - 1];
+    favs.unshift({
+      id,
+      routeId:      currentRoute.id,
+      routeNumber:  currentRoute.number,
+      routeName_en: currentRoute.name_en,
+      routeName_ar: currentRoute.name_ar,
+      routeColor:   currentRoute.color,
+      dataFile:     currentRoute.data_file,
+      direction:    tab,
+      stopIdx,
+      fromStop_en:  stop.en,
+      fromStop_ar:  stop.ar,
+      toStop_en:    lastStop.en,
+      toStop_ar:    lastStop.ar,
+      sched:        autoSched(),
+      savedAt:      Date.now(),
+    });
+    saveFavs(favs);
+  }
+  updateFavBtn();
+  // Silently refresh favs page if open
+  if (page === 'favs') renderFavs();
+}
+
+// Compute next bus for a favourite without loading full route data into app state
+// Uses already-cached timetable data stored in favTimetableCache
+const favTimetableCache = {};  // routeId -> timetable
+
+async function getFavTimetable(fav) {
+  if (favTimetableCache[fav.routeId]) return favTimetableCache[fav.routeId];
+  // If currently loaded route matches, reuse it
+  if (currentRoute?.id === fav.routeId && timetable) {
+    favTimetableCache[fav.routeId] = timetable;
+    return timetable;
+  }
+  try {
+    const res = await fetch(fav.dataFile);
+    if (!res.ok) return null;
+    const raw = await res.json();
+    const tt = parseRouteJson(raw);
+    favTimetableCache[fav.routeId] = tt;
+    return tt;
+  } catch { return null; }
+}
+
+function favNextBus(tt, fav) {
+  // Returns {time, diffMins, status} where status: 'ok'|'nomore'|'noservice'
+  const s = autoSched();
+  const section = tt[fav.direction]?.[s];
+  if (!section) return {status:'noservice'};
+  const stop = section[fav.stopIdx];
+  if (!stop) return {status:'noservice'};
+  const n = nowMins();
+  const times = stop.times || [];
+  for (let i = 0; i < times.length; i++) {
+    const diff = t2m(times[i]) - n;
+    if (diff > -1) return {time: times[i], diffMins: Math.max(0,diff), status:'ok'};
+  }
+  return {status:'nomore'};
+}
+
+function renderFavNextBus(cardEl, nb) {
+  const el = cardEl.querySelector('.fav-next');
+  if (!el) return;
+  if (nb.status === 'noservice') {
+    el.innerHTML = `<span class="fav-next-nosvc">${t('favNoService')}</span>`;
+  } else if (nb.status === 'nomore') {
+    el.innerHTML = `<span class="fav-next-nosvc">${t('favNoMore')}</span>`;
+  } else {
+    const diff = nb.diffMins;
+    const diffTxt = diff === 0
+      ? t('favNow')
+      : `${t('favIn')} ${diff} ${t('favMins')}`;
+    el.innerHTML =
+      `<span class="fav-next-time">${nb.time}</span>`+
+      `<span class="fav-next-diff">${diffTxt}</span>`;
+  }
+}
+
+async function renderFavs() {
+  const favs = loadFavs();
+  const el = document.getElementById('favPage');
+  if (!el) return;
+
+  if (!favs.length) {
+    el.innerHTML = `
+      <div class="fav-empty">
+        <div class="big">☆</div>
+        <p><strong>${t('favEmpty')}</strong><br>${t('favHint')}</p>
+      </div>`;
+    return;
+  }
+
+  // Render cards with loading placeholders for next-bus
+  el.innerHTML = favs.map((fav, idx) => {
+    const fromName = lang==='ar' ? (fav.fromStop_ar||fav.fromStop_en) : fav.fromStop_en;
+    const toName   = lang==='ar' ? (fav.toStop_ar  ||fav.toStop_en)   : fav.toStop_en;
+    const rName    = lang==='ar' ? (fav.routeName_ar||fav.routeName_en): fav.routeName_en;
+    const dirArrow = fav.direction === 'outbound' ? '→' : '←';
+    return `
+    <div class="fav-card" id="favc-${idx}">
+      <div class="fav-card-color" style="background:${fav.routeColor}"></div>
+      <div class="fav-card-body" onclick="openFav(${idx})">
+        <div class="fav-route-num" style="background:${fav.routeColor}">${fav.routeNumber}</div>
+        <div class="fav-journey">${fromName} ${dirArrow} ${toName}</div>
+        <div class="fav-journey-sub">${rName}</div>
+        <div class="fav-next">
+          <span class="fav-next-nosvc">${t('favLoading')}</span>
+        </div>
+      </div>
+      <button class="fav-del" onclick="deleteFav('${fav.id}')" title="Remove">✕</button>
+    </div>`;
+  }).join('');
+
+  // Load next-bus times asynchronously per card
+  favs.forEach(async (fav, idx) => {
+    const tt = await getFavTimetable(fav);
+    const cardEl = document.getElementById(`favc-${idx}`);
+    if (!cardEl) return;
+    if (!tt) {
+      cardEl.querySelector('.fav-next').innerHTML =
+        `<span class="fav-next-nosvc">⚠ ${t('loading')}</span>`;
+      return;
+    }
+    renderFavNextBus(cardEl, favNextBus(tt, fav));
+  });
+}
+
+function deleteFav(id) {
+  saveFavs(loadFavs().filter(f => f.id !== id));
+  updateFavBtn();
+  renderFavs();
+}
+
+async function openFav(idx) {
+  const fav = loadFavs()[idx];
+  if (!fav) return;
+
+  // If route already loaded, just navigate
+  if (currentRoute?.id === fav.routeId && timetable) {
+    tab = fav.direction;
+    stopIdx = fav.stopIdx;
+    sched = autoSched();
+    syncSchedButtons();
+    document.getElementById('tab-out').classList.toggle('on', tab==='outbound');
+    document.getElementById('tab-in').classList.toggle('on', tab==='inbound');
+    buildStopSelect();
+    renderGrid();
+    refreshBanner();
+    setPage('times');
+    return;
+  }
+
+  // Need to load the route first
+  const meta = routesMeta.find(r => r.id === fav.routeId);
+  if (!meta) return;
+
+  // Navigate to route, then restore stop
+  currentRoute = meta;
+  setRouteColor(meta.color);
+  document.getElementById('rbadge').textContent = meta.number;
+  document.getElementById('routeTitle').textContent =
+    lang==='ar' ? (meta.name_ar||meta.name_en) : meta.name_en;
+  document.getElementById('routeSubtitle').textContent =
+    rf(meta,'origin') + ' → ' + rf(meta,'destination');
+
+  tab = fav.direction;
+  stopIdx = fav.stopIdx;
+  sched = autoSched();
+  syncSchedButtons();
+  showPage('loading');
+  document.getElementById('tabsBar').style.display = 'none';
+  document.getElementById('bnav').style.display = 'none';
+  timetable = null;
+
+  try {
+    const tt = await getFavTimetable(fav);
+    if (!tt) throw new Error('Could not load route data');
+    timetable = tt;
+    document.getElementById('tabsBar').style.display = 'flex';
+    document.getElementById('bnav').style.display = 'flex';
+    document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+    updateTabLabels();
+    document.getElementById('tab-out').classList.toggle('on', tab==='outbound');
+    document.getElementById('tab-in').classList.toggle('on', tab==='inbound');
+    buildStopSelect();
+    renderGrid();
+    refreshBanner();
+    updateFavBtn();
+    setPage('times');
+  } catch(e) {
+    document.getElementById('errMsg').textContent = e.message;
+    showPage('error');
+  }
+}
+
+// Refresh next-bus on favs page every 30s
+setInterval(() => { if (page === 'favs') renderFavs(); }, 30000);
+
 // ══════════════════════════════════════════════════════
 // NAVIGATION
 // ══════════════════════════════════════════════════════
@@ -923,12 +1265,13 @@ function setPage(p){
   document.getElementById('nv-'+p).classList.add('on');
   if(p==='route'){tripIdx=Math.max(0,nextTripIdx());buildPills();renderRoute();}
   if(p==='info') renderInfo();
+  if(p==='favs') renderFavs();
 }
 function setTab(t){
   tab=t; stopIdx=0;
   document.getElementById('tab-out').classList.toggle('on',t==='outbound');
   document.getElementById('tab-in').classList.toggle('on',t==='inbound');
-  buildStopSelect();renderGrid();refreshBanner();
+  buildStopSelect();renderGrid();refreshBanner();updateFavBtn();
   if(page==='route'){tripIdx=Math.max(0,nextTripIdx());buildPills();renderRoute();}
   if(page==='info') renderInfo();
 }
