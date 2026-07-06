@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>hfpower-search — find the right dataset</title>
+<meta name="theme-color" content="#12232E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#12232E;
+    --ink-2:#1B3140;
+    --ink-3:#24404F;
+    --parchment:#F3E9D6;
+    --parchment-2:#EADFC7;
+    --copper:#C1793A;
+    --copper-dark:#9C5F2C;
+    --sage:#7C9C86;
+    --brick:#B1503F;
+    --ink-text:#EDE6D6;
+    --dim-text:#A9BAC2;
+    --dark-text:#26211A;
+    --card-radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--ink);
+    color:var(--ink-text);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  [dir="rtl"] body{font-family:'Inter','Tahoma',sans-serif;}
+  h1,h2,h3,.display{font-family:'Fraunces',serif;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+
+  header{
+    padding:28px 20px 18px;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:16px;
+    background:
+      radial-gradient(1200px 300px at 20% -40%, rgba(193,121,58,0.18), transparent 60%),
+      var(--ink);
+  }
+  .brand h1{
+    font-size:clamp(24px,4vw,34px);
+    margin:0 0 4px;
+    letter-spacing:-0.01em;
+    font-weight:700;
+  }
+  .brand h1 span{color:var(--copper);}
+  .brand p{margin:0;color:var(--dim-text);font-size:14px;max-width:52ch;}
+  .lang-toggle{
+    display:flex;gap:6px;background:var(--ink-2);
+    padding:4px;border-radius:999px;border:1px solid rgba(255,255,255,0.08);
+    flex-shrink:0;
+  }
+  .lang-toggle button{
+    border:none;background:transparent;color:var(--dim-text);
+    padding:7px 14px;border-radius:999px;font-size:13px;font-family:'JetBrains Mono',monospace;
+    cursor:pointer;transition:.15s;
+  }
+  .lang-toggle button.active{background:var(--copper);color:var(--ink);font-weight:700;}
+
+  main{max-width:1180px;margin:0 auto;padding:24px 20px 80px;}
+
+  .panel{
+    background:var(--ink-2);
+    border:1px solid rgba(255,255,255,0.07);
+    border-radius:18px;
+    padding:22px;
+    margin-bottom:22px;
+  }
+  .panel h2{margin:0 0 4px;font-size:19px;}
+  .panel .sub{color:var(--dim-text);font-size:13px;margin:0 0 16px;}
+
+  .searchrow{display:flex;gap:10px;margin-bottom:18px;}
+  .searchrow input[type=text]{
+    flex:1;background:var(--ink-3);border:1px solid rgba(255,255,255,0.1);
+    color:var(--ink-text);padding:13px 16px;border-radius:10px;font-size:15px;
+    font-family:'Inter',sans-serif;
+  }
+  .searchrow input[type=text]:focus{outline:2px solid var(--copper);outline-offset:1px;}
+  .searchrow button{
+    background:var(--copper);color:var(--ink);border:none;
+    padding:0 22px;border-radius:10px;font-weight:600;cursor:pointer;font-size:15px;
+    transition:.15s;
+  }
+  .searchrow button:hover{background:var(--copper-dark);color:var(--ink-text);}
+  .searchrow button:focus-visible, .chip:focus-visible, .lang-toggle button:focus-visible{
+    outline:2px solid var(--sage);outline-offset:2px;
+  }
+
+  .facet-group{margin-bottom:16px;}
+  .facet-label{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--dim-text);margin-bottom:8px;display:block;
+  }
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{
+    background:var(--ink-3);border:1px solid rgba(255,255,255,0.1);color:var(--ink-text);
+    padding:7px 13px;border-radius:999px;font-size:13px;cursor:pointer;transition:.12s;
+    user-select:none;
+  }
+  .chip:hover{border-color:var(--copper);}
+  .chip.active{background:var(--copper);border-color:var(--copper);color:var(--ink);font-weight:600;}
+  .chip.active.sage-active{background:var(--sage);border-color:var(--sage);}
+
+  select{
+    background:var(--ink-3);color:var(--ink-text);border:1px solid rgba(255,255,255,0.1);
+    padding:8px 12px;border-radius:8px;font-size:13px;font-family:'JetBrains Mono',monospace;
+  }
+
+  .checkrow{display:flex;align-items:center;gap:8px;margin-top:4px;}
+  .checkrow label{font-size:13px;color:var(--dim-text);cursor:pointer;}
+
+  .status{color:var(--dim-text);font-size:13px;margin:10px 0;min-height:18px;}
+  .status.err{color:var(--brick);}
+
+  .results{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;}
+
+  .card{
+    background:var(--parchment);color:var(--dark-text);
+    border-radius:var(--card-radius);padding:16px 16px 14px;
+    position:relative;
+    box-shadow:0 6px 16px rgba(0,0,0,0.25);
+    display:flex;flex-direction:column;gap:10px;
+  }
+  .card .tab{
+    position:absolute;top:-9px;left:16px;background:var(--copper);color:var(--ink);
+    font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
+    padding:2px 8px;border-radius:5px;letter-spacing:.05em;
+  }
+  [dir="rtl"] .card .tab{left:auto;right:16px;}
+  .card-top{display:flex;gap:12px;align-items:flex-start;}
+  .dial{flex-shrink:0;width:56px;height:56px;position:relative;}
+  .dial svg{transform:rotate(-90deg);}
+  .dial .score-num{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;
+  }
+  .card-title{flex:1;min-width:0;}
+  .card-title a{
+    font-family:'Fraunces',serif;font-weight:600;font-size:16px;color:var(--dark-text);
+    text-decoration:none;word-break:break-word;line-height:1.25;
+  }
+  .card-title a:hover{color:var(--copper-dark);text-decoration:underline;}
+  .verdict-line{font-size:12px;font-weight:600;margin-top:3px;font-family:'JetBrains Mono',monospace;}
+
+  .badges{display:flex;flex-wrap:wrap;gap:6px;}
+  .badge{
+    font-size:11px;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace;
+    background:rgba(0,0,0,0.06);
+  }
+  .badge.license-permissive{background:rgba(124,156,134,0.25);color:#3f5c47;}
+  .badge.license-restrictive{background:rgba(177,80,63,0.2);color:#7a3226;}
+  .badge.license-unclear{background:rgba(0,0,0,0.08);color:#55524a;}
+  .badge.gated{background:rgba(177,80,63,0.25);color:#7a3226;font-weight:700;}
+
+  .stats-row{display:flex;gap:14px;font-size:12px;color:#5c574c;font-family:'JetBrains Mono',monospace;}
+
+  .card-actions{display:flex;gap:8px;margin-top:2px;}
+  .card-actions button{
+    flex:1;font-size:11.5px;padding:7px 8px;border-radius:7px;border:1px solid rgba(0,0,0,0.15);
+    background:transparent;color:var(--dark-text);cursor:pointer;font-family:'JetBrains Mono',monospace;
+  }
+  .card-actions button:hover{background:rgba(0,0,0,0.06);}
+  .card-actions input[type=checkbox]{margin-right:5px;}
+
+  .compare-bar{
+    position:sticky;bottom:14px;margin-top:18px;
+    background:var(--ink-2);border:1px solid var(--copper);
+    padding:12px 16px;border-radius:12px;display:flex;justify-content:space-between;
+    align-items:center;gap:12px;font-size:13px;flex-wrap:wrap;
+  }
+  .compare-bar button{
+    background:var(--copper);color:var(--ink);border:none;padding:8px 14px;
+    border-radius:8px;font-weight:600;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12px;
+  }
+  .compare-bar .cmd{color:var(--ink-text);}
+
+  details.glossary{
+    background:var(--ink-2);border:1px solid rgba(255,255,255,0.07);
+    border-radius:18px;padding:0;margin-bottom:22px;overflow:hidden;
+  }
+  details.glossary summary{
+    cursor:pointer;padding:18px 22px;font-family:'Fraunces',serif;font-size:18px;font-weight:600;
+    list-style:none;display:flex;justify-content:space-between;align-items:center;
+  }
+  details.glossary summary::-webkit-details-marker{display:none;}
+  details.glossary summary::after{content:'+';color:var(--copper);font-size:20px;}
+  details.glossary[open] summary::after{content:'–';}
+  .glossary-body{padding:0 22px 22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px;}
+  .glossary-col h3{font-size:14px;color:var(--copper);margin:0 0 10px;font-family:'JetBrains Mono',monospace;text-transform:uppercase;letter-spacing:.05em;}
+  .glossary-col dl{margin:0;}
+  .glossary-col dt{font-weight:600;font-size:13.5px;margin-top:10px;color:var(--ink-text);}
+  .glossary-col dd{margin:2px 0 0;font-size:12.5px;color:var(--dim-text);line-height:1.5;}
+
+  .empty{color:var(--dim-text);text-align:center;padding:40px 10px;font-size:14px;}
+  footer{text-align:center;color:var(--dim-text);font-size:12px;padding:20px;opacity:.7;}
+
+  @media (max-width:640px){
+    header{flex-direction:column;}
+    .searchrow{flex-direction:column;}
+    .searchrow button{padding:12px;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1 id="titleText">hfpower<span>search</span></h1>
+    <p id="taglineText">A guided way to find the right Hugging Face dataset — filter by what you need, not just what's popular.</p>
+  </div>
+  <div class="lang-toggle">
+    <button id="btnEn" class="active" onclick="setLang('en')">EN</button>
+    <button id="btnAr" onclick="setLang('ar')">AR</button>
+  </div>
+</header>
+
+<main>
+
+  <section class="panel">
+    <h2 id="guideTitle">1. What are you looking for?</h2>
+    <p class="sub" id="guideSub">Pick the shape of dataset you need, then narrow by size, language, and license.</p>
+
+    <div class="searchrow">
+      <input type="text" id="searchInput" placeholder="Keyword (e.g. arabic poetry, medical, code review)">
+      <button onclick="doSearch()" id="searchBtn">Search</button>
+    </div>
+
+    <div class="facet-group">
+      <span class="facet-label" id="labelType">Dataset type</span>
+      <div class="chips" id="chipsType"></div>
+    </div>
+
+    <div class="facet-group">
+      <span class="facet-label" id="labelSize">Size</span>
+      <div class="chips" id="chipsSize"></div>
+    </div>
+
+    <div class="facet-group">
+      <span class="facet-label" id="labelLang">Language</span>
+      <div class="chips" id="chipsLang"></div>
+    </div>
+
+    <div class="checkrow">
+      <input type="checkbox" id="permissiveOnly">
+      <label for="permissiveOnly" id="labelPermissive">Show only permissive-license datasets (safe for commercial use)</label>
+    </div>
+
+    <div class="status" id="statusLine"></div>
+  </section>
+
+  <details class="glossary">
+    <summary id="glossarySummary">Not sure what these terms mean? A quick field guide</summary>
+    <div class="glossary-body" id="glossaryBody"></div>
+  </details>
+
+  <section>
+    <div class="results" id="results"></div>
+  </section>
+
+  <div class="compare-bar" id="compareBar" style="display:none;">
+    <span id="compareLabel"></span>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+      <span class="cmd mono" id="compareCmd"></span>
+      <button onclick="copyCompare()" id="copyCompareBtn">Copy command</button>
+    </div>
+  </div>
+
+</main>
+
+<footer id="footerText">Data from the Hugging Face Hub API · deep-dive any result with your hf_advisor.sh script</footer>
+
+<script>
+/* =========================================================
+   I18N
+   ========================================================= */
+const STR = {
+  en: {
+    title1:"hfpower", title2:"search",
+    tagline:"A guided way to find the right Hugging Face dataset — filter by what you need, not just what's popular.",
+    guideTitle:"1. What are you looking for?",
+    guideSub:"Pick the shape of dataset you need, then narrow by size, language, and license.",
+    searchPh:"Keyword (e.g. arabic poetry, medical, code review)",
+    searchBtn:"Search",
+    labelType:"Dataset type", labelSize:"Size", labelLang:"Language",
+    labelPermissive:"Show only permissive-license datasets (safe for commercial use)",
+    glossarySummary:"Not sure what these terms mean? A quick field guide",
+    footer:"Data from the Hugging Face Hub API · deep-dive any result with your hf_advisor.sh script",
+    searching:"Searching Hugging Face…",
+    resultsFound:n=>`${n} dataset${n===1?'':'s'} found`,
+    noResults:"No datasets matched. Try a broader keyword or fewer filters.",
+    errFetch:"Couldn't reach the Hugging Face API from this browser. If this keeps happening, your network may be blocking cross-origin requests — try a different network, or route the request through a small Cloudflare Worker proxy.",
+    gated:"Gated",
+    dl:"downloads", lk:"likes",
+    copyAdvisor:"Copy for hf_advisor",
+    copied:"Copied ✓",
+    compareSelect:"Select 2 datasets to compare",
+    compareLabel:n=>`${n} selected — pick 2 to compare`,
+    compareReady:"Ready to compare:",
+    copyCommand:"Copy command",
+    verdict:{use:"Strong candidate", caution:"Worth a look", avoid:"Proceed with caution"},
+    license:{permissive:"Permissive", restrictive:"Restrictive", unclear:"Unclear license"},
+    types:[
+      {key:'any', label:'Any'},
+      {key:'qa', label:'Question Answering', filter:'task_categories:question-answering'},
+      {key:'instruction', label:'Instruction', keyword:'instruction'},
+      {key:'textgen', label:'Text Generation', filter:'task_categories:text-generation'},
+      {key:'summarization', label:'Summarization', filter:'task_categories:summarization'},
+      {key:'translation', label:'Translation', filter:'task_categories:translation'},
+      {key:'classification', label:'Classification', filter:'task_categories:text-classification'},
+      {key:'corpus', label:'Raw Text Corpus', keyword:'corpus'},
+      {key:'preference', label:'Preference / RLHF pairs', keyword:'dpo'},
+    ],
+    sizes:[
+      {key:'any', label:'Any'},
+      {key:'small', label:'Small (~1K–10K rows)', filter:'size_categories:1K<n<10K'},
+      {key:'medium', label:'Medium (~100K–1M rows)', filter:'size_categories:100K<n<1M'},
+      {key:'large', label:'Large (~1M–10M rows)', filter:'size_categories:1M<n<10M'},
+      {key:'massive', label:'Massive (1B+ rows)', filter:'size_categories:n>1B'},
+    ],
+    langs:[
+      {key:'any', label:'Any'},
+      {key:'en', label:'English', filter:'language:en'},
+      {key:'ar', label:'Arabic', filter:'language:ar'},
+      {key:'multi', label:'Multilingual', keyword:'multilingual'},
+    ],
+    glossary:[
+      {h:"Dataset types", items:[
+        ["Instruction","Prompt + response pairs used to teach a model to follow commands (e.g. Alpaca-style)."],
+        ["Question Answering","Question paired with an answer, often with supporting context/passage."],
+        ["Text Corpus","Raw unstructured text, no labels — used for pretraining or embeddings."],
+        ["Classification","Text paired with a category label (sentiment, topic, spam, etc.)."],
+        ["Preference / RLHF","Pairs of responses ranked chosen-vs-rejected, used for DPO/RLHF alignment."],
+        ["Translation / Summarization","Source text paired with a translated or shortened target text."],
+      ]},
+      {h:"Model stages", items:[
+        ["Pretrained / Base","Trained on raw text to predict the next token. No instruction-following yet."],
+        ["Fine-tuned","Base model further trained on a narrower, labeled dataset for a specific task."],
+        ["Instruction-tuned","Fine-tuned specifically on instruction/response pairs to follow commands."],
+        ["RLHF / DPO-aligned","Further tuned using human preference data to be more helpful and safe."],
+        ["Quantized","Compressed to lower precision (4-bit/8-bit) to run faster on smaller hardware."],
+      ]},
+      {h:"Training & tuning tools", items:[
+        ["Transformers (HF)","The standard library for loading and training most open models."],
+        ["PEFT / LoRA / QLoRA","Lightweight fine-tuning methods that update a small fraction of weights — practical on consumer GPUs."],
+        ["TRL","Hugging Face's library for RLHF/DPO-style alignment training."],
+        ["Axolotl / LLaMA-Factory / Unsloth","Higher-level fine-tuning frameworks that wrap Transformers+PEFT with ready config files."],
+        ["Ollama","Runs quantized models locally with a simple CLI — good fit for Termux-style environments."],
+        ["vLLM","High-throughput inference server, typically used once a model is trained and needs serving."],
+      ]},
+    ],
+  },
+  ar: {
+    title1:"hfpower", title2:"search",
+    tagline:"طريقة موجّهة للعثور على مجموعة البيانات المناسبة من Hugging Face — صفّي حسب ما تحتاجه فعلاً، لا حسب الأكثر شيوعًا فقط.",
+    guideTitle:"١. عن ماذا تبحث؟",
+    guideSub:"اختر شكل البيانات الذي تحتاجه، ثم صفّي حسب الحجم واللغة والترخيص.",
+    searchPh:"كلمة مفتاحية (مثال: شعر عربي، طبي، مراجعة أكواد)",
+    searchBtn:"بحث",
+    labelType:"نوع البيانات", labelSize:"الحجم", labelLang:"اللغة",
+    labelPermissive:"إظهار مجموعات البيانات ذات الترخيص المرن فقط (آمنة للاستخدام التجاري)",
+    glossarySummary:"لست متأكدًا من هذه المصطلحات؟ دليل سريع",
+    footer:"البيانات من واجهة Hugging Face Hub · افحص أي نتيجة بعمق عبر سكربت hf_advisor.sh",
+    searching:"جارِ البحث في Hugging Face…",
+    resultsFound:n=>`تم العثور على ${n} مجموعة بيانات`,
+    noResults:"لا توجد نتائج مطابقة. جرّب كلمة أعم أو صفّيات أقل.",
+    errFetch:"تعذّر الوصول إلى واجهة Hugging Face من هذا المتصفح. إذا تكرر ذلك، قد تكون الشبكة تحجب الطلبات عبر النطاقات — جرّب شبكة أخرى أو مرّر الطلب عبر Cloudflare Worker بسيط.",
+    gated:"مقيّد",
+    dl:"تنزيلات", lk:"إعجابات",
+    copyAdvisor:"نسخ لأداة hf_advisor",
+    copied:"تم النسخ ✓",
+    compareSelect:"اختر مجموعتين للمقارنة",
+    compareLabel:n=>`تم اختيار ${n} — اختر ٢ للمقارنة`,
+    compareReady:"جاهز للمقارنة:",
+    copyCommand:"نسخ الأمر",
+    verdict:{use:"مرشّح قوي", caution:"يستحق النظر", avoid:"تعامل بحذر"},
+    license:{permissive:"ترخيص مرن", restrictive:"ترخيص مقيّد", unclear:"ترخيص غير واضح"},
+    types:[
+      {key:'any', label:'أي نوع'},
+      {key:'qa', label:'أسئلة وأجوبة', filter:'task_categories:question-answering'},
+      {key:'instruction', label:'تعليمات', keyword:'instruction'},
+      {key:'textgen', label:'توليد نصوص', filter:'task_categories:text-generation'},
+      {key:'summarization', label:'تلخيص', filter:'task_categories:summarization'},
+      {key:'translation', label:'ترجمة', filter:'task_categories:translation'},
+      {key:'classification', label:'تصنيف', filter:'task_categories:text-classification'},
+      {key:'corpus', label:'نصوص خام', keyword:'corpus'},
+      {key:'preference', label:'أزواج تفضيل RLHF', keyword:'dpo'},
+    ],
+    sizes:[
+      {key:'any', label:'أي حجم'},
+      {key:'small', label:'صغير (~١ك–١٠ك صف)', filter:'size_categories:1K<n<10K'},
+      {key:'medium', label:'متوسط (~١٠٠ك–١م صف)', filter:'size_categories:100K<n<1M'},
+      {key:'large', label:'كبير (~١م–١٠م صف)', filter:'size_categories:1M<n<10M'},
+      {key:'massive', label:'ضخم (+١ مليار صف)', filter:'size_categories:n>1B'},
+    ],
+    langs:[
+      {key:'any', label:'أي لغة'},
+      {key:'en', label:'الإنجليزية', filter:'language:en'},
+      {key:'ar', label:'العربية', filter:'language:ar'},
+      {key:'multi', label:'متعددة اللغات', keyword:'multilingual'},
+    ],
+    glossary:[
+      {h:"أنواع البيانات", items:[
+        ["تعليمات (Instruction)","أزواج أمر/استجابة تُستخدم لتعليم النموذج اتّباع التعليمات (مثل Alpaca)."],
+        ["أسئلة وأجوبة","سؤال مقترن بإجابة، غالبًا مع نص داعم."],
+        ["نصوص خام","نص غير مُصنَّف، يُستخدم للتدريب المسبق أو التضمينات."],
+        ["تصنيف","نص مقترن بتصنيف (مشاعر، موضوع، سبام...)."],
+        ["تفضيل / RLHF","أزواج استجابات مرتّبة (مقبولة/مرفوضة) تُستخدم لمحاذاة DPO/RLHF."],
+        ["ترجمة / تلخيص","نص مصدر مقترن بنص هدف مترجم أو ملخّص."],
+      ]},
+      {h:"مراحل النموذج", items:[
+        ["مُدرَّب مسبقًا (Base)","مدرَّب على نص خام للتنبؤ بالكلمة التالية، لا يتّبع التعليمات بعد."],
+        ["مضبوط دقيقًا (Fine-tuned)","نموذج أساسي دُرِّب إضافيًا على بيانات مصنَّفة لمهمة محددة."],
+        ["مضبوط للتعليمات","دُرِّب تحديدًا على أزواج أمر/استجابة لاتّباع التعليمات."],
+        ["محاذى بـ RLHF/DPO","دُرِّب إضافيًا على بيانات تفضيل بشرية ليكون أكثر فائدة وأمانًا."],
+        ["مُكمَّم (Quantized)","مضغوط لدقة أقل (٤ أو ٨ بت) ليعمل أسرع على أجهزة أصغر."],
+      ]},
+      {h:"أدوات التدريب والضبط", items:[
+        ["Transformers","المكتبة القياسية لتحميل وتدريب معظم النماذج المفتوحة."],
+        ["PEFT / LoRA / QLoRA","طرق ضبط دقيق خفيفة تُحدّث جزءًا صغيرًا من الأوزان — عملية على معالجات رسومية محدودة."],
+        ["TRL","مكتبة Hugging Face لتدريب المحاذاة بأسلوب RLHF/DPO."],
+        ["Axolotl / LLaMA-Factory / Unsloth","أطر ضبط دقيق أعلى مستوى تُغلِّف Transformers+PEFT بإعدادات جاهزة."],
+        ["Ollama","يشغّل نماذج مُكمَّمة محليًا بأمر بسيط — مناسب لبيئات مثل Termux."],
+        ["vLLM","خادم استدلال عالي الإنتاجية، يُستخدم عادة بعد تدريب النموذج لتقديمه."],
+      ]},
+    ],
+  }
+};
+
+let lang = 'en';
+let selType='any', selSize='any', selLang='any';
+let lastResults = [];
+let compareSet = new Set();
+
+/* =========================================================
+   LICENSE / SCORING (mirrors hf_advisor.sh logic)
+   ========================================================= */
+const PERMISSIVE = new Set(["mit","apache-2.0","apache2.0","bsd","bsd-3-clause","cc0-1.0","cc-by-4.0","cc-by-3.0","unlicense","openrail"]);
+const RESTRICTIVE_HINTS = ["nc","nd","gpl","research","proprietary"];
+
+function classifyLicense(lic){
+  const l = (lic||"").toLowerCase().trim();
+  if (PERMISSIVE.has(l)) return "permissive";
+  if (!l || l === "unknown") return "unclear";
+  if (RESTRICTIVE_HINTS.some(h => l.includes(h))) return "restrictive";
+  return "unclear";
+}
+
+function extractTagValue(tags, prefix){
+  const t = tags.find(t => t.startsWith(prefix+":"));
+  return t ? t.slice(prefix.length+1) : null;
+}
+
+function scoreDataset(ds){
+  const tags = ds.tags || [];
+  const license = extractTagValue(tags, "license") || ds.cardData?.license || "unknown";
+  const licenseClass = classifyLicense(license);
+  const taskCat = extractTagValue(tags, "task_categories");
+  const sizeCat = extractTagValue(tags, "size_categories");
+  const downloads = ds.downloads || 0;
+  const likes = ds.likes || 0;
+  const gated = !!ds.gated;
+
+  let score = 0;
+  score += licenseClass === "permissive" ? 30 : (licenseClass === "unclear" ? 15 : 0);
+  score += (downloads >= 10000 || likes >= 100) ? 25 : ((downloads >= 1000 || likes >= 20) ? 12 : 0);
+  score += taskCat ? 20 : 0;
+  score += sizeCat ? 15 : 0;
+  score += gated ? -10 : 10;
+  score = Math.max(0, Math.min(100, score));
+
+  let verdict = score >= 70 ? "use" : (score >= 45 ? "caution" : "avoid");
+
+  return {license, licenseClass, taskCat, sizeCat, downloads, likes, gated, score, verdict};
+}
+
+/* =========================================================
+   RENDER: chips / glossary / static text
+   ========================================================= */
+function renderChips(containerId, items, selectedKey, onPick){
+  const el = document.getElementById(containerId);
+  el.innerHTML = "";
+  items.forEach(it => {
+    const b = document.createElement("button");
+    b.className = "chip" + (it.key === selectedKey ? " active" : "");
+    b.textContent = it.label;
+    b.onclick = () => onPick(it.key);
+    el.appendChild(b);
+  });
+}
+
+function renderGlossary(){
+  const S = STR[lang];
+  const el = document.getElementById("glossaryBody");
+  el.innerHTML = "";
+  S.glossary.forEach(col => {
+    const div = document.createElement("div");
+    div.className = "glossary-col";
+    const h3 = document.createElement("h3");
+    h3.textContent = col.h;
+    div.appendChild(h3);
+    const dl = document.createElement("dl");
+    col.items.forEach(([term, def]) => {
+      const dt = document.createElement("dt"); dt.textContent = term;
+      const dd = document.createElement("dd"); dd.textContent = def;
+      dl.appendChild(dt); dl.appendChild(dd);
+    });
+    div.appendChild(dl);
+    el.appendChild(div);
+  });
+}
+
+function applyStaticText(){
+  const S = STR[lang];
+  document.getElementById("titleText").innerHTML = `${S.title1}<span>${S.title2}</span>`;
+  document.getElementById("taglineText").textContent = S.tagline;
+  document.getElementById("guideTitle").textContent = S.guideTitle;
+  document.getElementById("guideSub").textContent = S.guideSub;
+  document.getElementById("searchInput").placeholder = S.searchPh;
+  document.getElementById("searchBtn").textContent = S.searchBtn;
+  document.getElementById("labelType").textContent = S.labelType;
+  document.getElementById("labelSize").textContent = S.labelSize;
+  document.getElementById("labelLang").textContent = S.labelLang;
+  document.getElementById("labelPermissive").textContent = S.labelPermissive;
+  document.getElementById("glossarySummary").textContent = S.glossarySummary;
+  document.getElementById("footerText").textContent = S.footer;
+
+  renderChips("chipsType", S.types, selType, k => { selType = k; applyStaticText(); });
+  renderChips("chipsSize", S.sizes, selSize, k => { selSize = k; applyStaticText(); });
+  renderChips("chipsLang", S.langs, selLang, k => { selLang = k; applyStaticText(); });
+  renderGlossary();
+  if (lastResults.length) renderResults(lastResults);
+}
+
+function setLang(l){
+  lang = l;
+  document.documentElement.lang = l;
+  document.documentElement.dir = l === 'ar' ? 'rtl' : 'ltr';
+  document.getElementById("btnEn").classList.toggle("active", l==='en');
+  document.getElementById("btnAr").classList.toggle("active", l==='ar');
+  applyStaticText();
+}
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+async function doSearch(){
+  const S = STR[lang];
+  const statusEl = document.getElementById("statusLine");
+  statusEl.classList.remove("err");
+  statusEl.textContent = S.searching;
+  document.getElementById("results").innerHTML = "";
+  document.getElementById("compareBar").style.display = "none";
+  compareSet.clear();
+
+  const keyword = document.getElementById("searchInput").value.trim();
+  const typeObj = S.types.find(t => t.key === selType);
+  const sizeObj = S.sizes.find(t => t.key === selSize);
+  const langObj = S.langs.find(t => t.key === selLang);
+
+  let searchTerms = [keyword, typeObj.keyword, langObj.keyword].filter(Boolean).join(" ");
+  const filters = [typeObj.filter, sizeObj.filter, langObj.filter].filter(Boolean);
+
+  const params = new URLSearchParams();
+  if (searchTerms) params.set("search", searchTerms);
+  filters.forEach(f => params.append("filter", f));
+  params.set("sort", "downloads");
+  params.set("direction", "-1");
+  params.set("limit", "30");
+  params.set("full", "true");
+
+  const url = `https://huggingface.co/api/datasets?${params.toString()}`;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    lastResults = Array.isArray(data) ? data : [];
+    statusEl.textContent = S.resultsFound(lastResults.length);
+    renderResults(lastResults);
+  } catch (e) {
+    statusEl.classList.add("err");
+    statusEl.textContent = S.errFetch;
+    document.getElementById("results").innerHTML = "";
+  }
+}
+
+function scoreColor(score){
+  if (score >= 70) return "#7C9C86";
+  if (score >= 45) return "#C1793A";
+  return "#B1503F";
+}
+
+function dialSvg(score){
+  const r = 24, c = 2*Math.PI*r;
+  const offset = c - (score/100)*c;
+  const color = scoreColor(score);
+  return `<svg width="56" height="56" viewBox="0 0 56 56">
+    <circle cx="28" cy="28" r="${r}" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="5"/>
+    <circle cx="28" cy="28" r="${r}" fill="none" stroke="${color}" stroke-width="5"
+      stroke-dasharray="${c}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function renderResults(list){
+  const S = STR[lang];
+  const el = document.getElementById("results");
+  el.innerHTML = "";
+
+  let filtered = list;
+  if (document.getElementById("permissiveOnly").checked) {
+    filtered = list.filter(ds => classifyLicense(extractTagValue(ds.tags||[], "license") || ds.cardData?.license || "unknown") === "permissive");
+  }
+
+  if (!filtered.length) {
+    el.innerHTML = `<div class="empty">${S.noResults}</div>`;
+    return;
+  }
+
+  filtered.forEach((ds, i) => {
+    const info = scoreDataset(ds);
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const licBadgeClass = info.licenseClass === "permissive" ? "license-permissive"
+      : info.licenseClass === "restrictive" ? "license-restrictive" : "license-unclear";
+    const licLabel = S.license[info.licenseClass];
+
+    card.innerHTML = `
+      <span class="tab mono">#${String(i+1).padStart(2,'0')}</span>
+      <div class="card-top">
+        <div class="dial">
+          ${dialSvg(info.score)}
+          <div class="score-num" style="color:${scoreColor(info.score)}">${info.score}</div>
+        </div>
+        <div class="card-title">
+          <a href="https://huggingface.co/datasets/${ds.id}" target="_blank" rel="noopener">${ds.id}</a>
+          <div class="verdict-line" style="color:${scoreColor(info.score)}">${S.verdict[info.verdict]}</div>
+        </div>
+      </div>
+      <div class="badges">
+        <span class="badge ${licBadgeClass}">${licLabel}</span>
+        ${info.taskCat ? `<span class="badge">${info.taskCat}</span>` : ""}
+        ${info.sizeCat ? `<span class="badge">${info.sizeCat}</span>` : ""}
+        ${info.gated ? `<span class="badge gated">${S.gated}</span>` : ""}
+      </div>
+      <div class="stats-row">
+        <span>↓ ${info.downloads.toLocaleString()} ${S.dl}</span>
+        <span>♥ ${info.likes.toLocaleString()} ${S.lk}</span>
+      </div>
+      <div class="card-actions">
+        <button data-act="copyadv" data-id="${ds.id}">${S.copyAdvisor}</button>
+        <label style="display:flex;align-items:center;font-size:11.5px;gap:4px;cursor:pointer;">
+          <input type="checkbox" data-act="cmp" data-id="${ds.id}"> ${S.compareSelect.split(' ')[0]}
+        </label>
+      </div>
+    `;
+    el.appendChild(card);
+  });
+
+  el.querySelectorAll('[data-act="copyadv"]').forEach(btn => {
+    btn.onclick = () => {
+      navigator.clipboard.writeText(`./hf_advisor.sh ${btn.dataset.id}`).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = STR[lang].copied;
+        setTimeout(() => btn.textContent = orig, 1400);
+      });
+    };
+  });
+
+  el.querySelectorAll('[data-act="cmp"]').forEach(cb => {
+    cb.onchange = () => {
+      if (cb.checked) compareSet.add(cb.dataset.id); else compareSet.delete(cb.dataset.id);
+      updateCompareBar();
+    };
+  });
+}
+
+function updateCompareBar(){
+  const S = STR[lang];
+  const bar = document.getElementById("compareBar");
+  if (compareSet.size === 0) { bar.style.display = "none"; return; }
+  bar.style.display = "flex";
+  const ids = [...compareSet];
+  if (ids.length < 2) {
+    document.getElementById("compareLabel").textContent = S.compareLabel(ids.length);
+    document.getElementById("compareCmd").textContent = "";
+    document.getElementById("copyCompareBtn").style.display = "none";
+  } else {
+    const pair = ids.slice(0,2);
+    document.getElementById("compareLabel").textContent = S.compareReady;
+    document.getElementById("compareCmd").textContent = `./hf_advisor.sh --compare ${pair[0]} ${pair[1]}`;
+    document.getElementById("copyCompareBtn").style.display = "inline-block";
+    document.getElementById("copyCompareBtn").textContent = S.copyCommand;
+  }
+}
+
+function copyCompare(){
+  const ids = [...compareSet].slice(0,2);
+  if (ids.length < 2) return;
+  navigator.clipboard.writeText(`./hf_advisor.sh --compare ${ids[0]} ${ids[1]}`).then(() => {
+    document.getElementById("copyCompareBtn").textContent = STR[lang].copied;
+    setTimeout(() => document.getElementById("copyCompareBtn").textContent = STR[lang].copyCommand, 1400);
+  });
+}
+
+document.getElementById("searchInput").addEventListener("keydown", e => {
+  if (e.key === "Enter") doSearch();
+});
+document.getElementById("permissiveOnly").addEventListener("change", () => renderResults(lastResults));
+
+applyStaticText();
+</script>
+</body>
+</html>
+
