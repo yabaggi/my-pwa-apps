@@ -1,4 +1,17 @@
 [
+    {
+    "href": "hfpowersearch/",
+    "category": "Others",
+    "category-ar": "",
+    "keywords": "Nn",
+    "keywords-ar": "",
+    "icon": "📦",
+    "name": "Datasets Search",
+    "name-ar": "Datasets search",
+    "description": "Hugging face power search for datasets",
+    "description-ar": "Dataset search",
+    "badges": []
+  },
 
     {
     "href": "cup26app/",
@@ -404,4 +417,5 @@
     "badges": []
   }
 ]
+
 
