@@ -6,115 +6,61 @@
 <title>hfpower-search — find the right dataset</title>
 <meta name="theme-color" content="#12232E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 <style>
   :root{
-    --ink:#12232E;
-    --ink-2:#1B3140;
-    --ink-3:#24404F;
-    --parchment:#F3E9D6;
-    --parchment-2:#EADFC7;
-    --copper:#C1793A;
-    --copper-dark:#9C5F2C;
-    --sage:#7C9C86;
-    --brick:#B1503F;
-    --ink-text:#EDE6D6;
-    --dim-text:#A9BAC2;
-    --dark-text:#26211A;
-    --card-radius:14px;
+    --ink:#12232E; --ink-2:#1B3140; --ink-3:#24404F;
+    --parchment:#F3E9D6; --copper:#C1793A; --copper-dark:#9C5F2C;
+    --sage:#7C9C86; --brick:#B1503F; --ink-text:#EDE6D6; --dim-text:#A9BAC2;
+    --dark-text:#26211A; --card-radius:14px;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
-  body{
-    background:var(--ink);
-    color:var(--ink-text);
-    font-family:'Inter',sans-serif;
-    min-height:100vh;
-    -webkit-font-smoothing:antialiased;
-  }
-  [dir="rtl"] body{font-family:'Inter','Tahoma',sans-serif;}
+  body{background:var(--ink);color:var(--ink-text);font-family:'Inter',sans-serif;min-height:100vh;-webkit-font-smoothing:antialiased;}
   h1,h2,h3,.display{font-family:'Fraunces',serif;}
   .mono{font-family:'JetBrains Mono',monospace;}
 
   header{
-    padding:28px 20px 18px;
-    border-bottom:1px solid rgba(255,255,255,0.08);
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    gap:16px;
-    background:
-      radial-gradient(1200px 300px at 20% -40%, rgba(193,121,58,0.18), transparent 60%),
-      var(--ink);
+    padding:28px 20px 18px;border-bottom:1px solid rgba(255,255,255,0.08);
+    display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+    background:radial-gradient(1200px 300px at 20% -40%, rgba(193,121,58,0.18), transparent 60%), var(--ink);
   }
-  .brand h1{
-    font-size:clamp(24px,4vw,34px);
-    margin:0 0 4px;
-    letter-spacing:-0.01em;
-    font-weight:700;
-  }
+  .brand h1{font-size:clamp(24px,4vw,34px);margin:0 0 4px;letter-spacing:-0.01em;font-weight:700;}
   .brand h1 span{color:var(--copper);}
   .brand p{margin:0;color:var(--dim-text);font-size:14px;max-width:52ch;}
-  .lang-toggle{
-    display:flex;gap:6px;background:var(--ink-2);
-    padding:4px;border-radius:999px;border:1px solid rgba(255,255,255,0.08);
-    flex-shrink:0;
-  }
-  .lang-toggle button{
-    border:none;background:transparent;color:var(--dim-text);
-    padding:7px 14px;border-radius:999px;font-size:13px;font-family:'JetBrains Mono',monospace;
-    cursor:pointer;transition:.15s;
-  }
+  .lang-toggle{display:flex;gap:6px;background:var(--ink-2);padding:4px;border-radius:999px;border:1px solid rgba(255,255,255,0.08);flex-shrink:0;}
+  .lang-toggle button{border:none;background:transparent;color:var(--dim-text);padding:7px 14px;border-radius:999px;font-size:13px;font-family:'JetBrains Mono',monospace;cursor:pointer;transition:.15s;}
   .lang-toggle button.active{background:var(--copper);color:var(--ink);font-weight:700;}
 
   main{max-width:1180px;margin:0 auto;padding:24px 20px 80px;}
 
-  .panel{
-    background:var(--ink-2);
-    border:1px solid rgba(255,255,255,0.07);
-    border-radius:18px;
-    padding:22px;
-    margin-bottom:22px;
-  }
+  .panel{background:var(--ink-2);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:22px;margin-bottom:22px;}
   .panel h2{margin:0 0 4px;font-size:19px;}
   .panel .sub{color:var(--dim-text);font-size:13px;margin:0 0 16px;}
 
+  .source-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+  .source-tab{
+    flex:1;min-width:120px;background:var(--ink-3);border:1px solid rgba(255,255,255,0.1);color:var(--ink-text);
+    padding:10px 12px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:600;text-align:center;transition:.12s;
+  }
+  .source-tab.active{background:var(--copper);border-color:var(--copper);color:var(--ink);}
+  .source-note{font-size:11.5px;color:var(--dim-text);margin:-10px 0 16px;}
+
   .searchrow{display:flex;gap:10px;margin-bottom:18px;}
-  .searchrow input[type=text]{
-    flex:1;background:var(--ink-3);border:1px solid rgba(255,255,255,0.1);
-    color:var(--ink-text);padding:13px 16px;border-radius:10px;font-size:15px;
-    font-family:'Inter',sans-serif;
-  }
+  .searchrow input[type=text]{flex:1;background:var(--ink-3);border:1px solid rgba(255,255,255,0.1);color:var(--ink-text);padding:13px 16px;border-radius:10px;font-size:15px;font-family:'Inter',sans-serif;}
   .searchrow input[type=text]:focus{outline:2px solid var(--copper);outline-offset:1px;}
-  .searchrow button{
-    background:var(--copper);color:var(--ink);border:none;
-    padding:0 22px;border-radius:10px;font-weight:600;cursor:pointer;font-size:15px;
-    transition:.15s;
-  }
+  .searchrow button{background:var(--copper);color:var(--ink);border:none;padding:0 22px;border-radius:10px;font-weight:600;cursor:pointer;font-size:15px;transition:.15s;}
   .searchrow button:hover{background:var(--copper-dark);color:var(--ink-text);}
-  .searchrow button:focus-visible, .chip:focus-visible, .lang-toggle button:focus-visible{
-    outline:2px solid var(--sage);outline-offset:2px;
-  }
+  .searchrow button:focus-visible,.chip:focus-visible,.lang-toggle button:focus-visible,.source-tab:focus-visible{outline:2px solid var(--sage);outline-offset:2px;}
 
   .facet-group{margin-bottom:16px;}
-  .facet-label{
-    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;
-    text-transform:uppercase;color:var(--dim-text);margin-bottom:8px;display:block;
-  }
+  .facet-group.hidden{display:none;}
+  .facet-label{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim-text);margin-bottom:8px;display:block;}
   .chips{display:flex;flex-wrap:wrap;gap:8px;}
-  .chip{
-    background:var(--ink-3);border:1px solid rgba(255,255,255,0.1);color:var(--ink-text);
-    padding:7px 13px;border-radius:999px;font-size:13px;cursor:pointer;transition:.12s;
-    user-select:none;
-  }
+  .chip{background:var(--ink-3);border:1px solid rgba(255,255,255,0.1);color:var(--ink-text);padding:7px 13px;border-radius:999px;font-size:13px;cursor:pointer;transition:.12s;user-select:none;}
   .chip:hover{border-color:var(--copper);}
   .chip.active{background:var(--copper);border-color:var(--copper);color:var(--ink);font-weight:600;}
-  .chip.active.sage-active{background:var(--sage);border-color:var(--sage);}
-
-  select{
-    background:var(--ink-3);color:var(--ink-text);border:1px solid rgba(255,255,255,0.1);
-    padding:8px 12px;border-radius:8px;font-size:13px;font-family:'JetBrains Mono',monospace;
-  }
 
   .checkrow{display:flex;align-items:center;gap:8px;margin-top:4px;}
   .checkrow label{font-size:13px;color:var(--dim-text);cursor:pointer;}
@@ -122,76 +68,46 @@
   .status{color:var(--dim-text);font-size:13px;margin:10px 0;min-height:18px;}
   .status.err{color:var(--brick);}
 
+  .setup-msg{background:var(--ink-3);border:1px dashed var(--copper);border-radius:12px;padding:16px;font-size:13px;color:var(--ink-text);line-height:1.6;}
+  .setup-msg code{background:rgba(0,0,0,0.3);padding:2px 6px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:12px;}
+
   .results{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;}
 
-  .card{
-    background:var(--parchment);color:var(--dark-text);
-    border-radius:var(--card-radius);padding:16px 16px 14px;
-    position:relative;
-    box-shadow:0 6px 16px rgba(0,0,0,0.25);
-    display:flex;flex-direction:column;gap:10px;
-  }
-  .card .tab{
-    position:absolute;top:-9px;left:16px;background:var(--copper);color:var(--ink);
-    font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;
-    padding:2px 8px;border-radius:5px;letter-spacing:.05em;
-  }
+  .card{background:var(--parchment);color:var(--dark-text);border-radius:var(--card-radius);padding:16px 16px 14px;position:relative;box-shadow:0 6px 16px rgba(0,0,0,0.25);display:flex;flex-direction:column;gap:10px;}
+  .card .tab{position:absolute;top:-9px;left:16px;background:var(--copper);color:var(--ink);font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;letter-spacing:.05em;}
+  .card .src-tab{position:absolute;top:-9px;right:16px;background:var(--ink);color:var(--parchment);font-family:'JetBrains Mono',monospace;font-size:9px;font-weight:700;padding:2px 8px;border-radius:5px;letter-spacing:.05em;}
   [dir="rtl"] .card .tab{left:auto;right:16px;}
+  [dir="rtl"] .card .src-tab{right:auto;left:16px;}
   .card-top{display:flex;gap:12px;align-items:flex-start;}
   .dial{flex-shrink:0;width:56px;height:56px;position:relative;}
   .dial svg{transform:rotate(-90deg);}
-  .dial .score-num{
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
-    font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;
-  }
+  .dial .score-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:15px;}
   .card-title{flex:1;min-width:0;}
-  .card-title a{
-    font-family:'Fraunces',serif;font-weight:600;font-size:16px;color:var(--dark-text);
-    text-decoration:none;word-break:break-word;line-height:1.25;
-  }
+  .card-title a{font-family:'Fraunces',serif;font-weight:600;font-size:16px;color:var(--dark-text);text-decoration:none;word-break:break-word;line-height:1.25;}
   .card-title a:hover{color:var(--copper-dark);text-decoration:underline;}
   .verdict-line{font-size:12px;font-weight:600;margin-top:3px;font-family:'JetBrains Mono',monospace;}
 
   .badges{display:flex;flex-wrap:wrap;gap:6px;}
-  .badge{
-    font-size:11px;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace;
-    background:rgba(0,0,0,0.06);
-  }
+  .badge{font-size:11px;padding:3px 8px;border-radius:6px;font-family:'JetBrains Mono',monospace;background:rgba(0,0,0,0.06);}
   .badge.license-permissive{background:rgba(124,156,134,0.25);color:#3f5c47;}
   .badge.license-restrictive{background:rgba(177,80,63,0.2);color:#7a3226;}
   .badge.license-unclear{background:rgba(0,0,0,0.08);color:#55524a;}
-  .badge.gated{background:rgba(177,80,63,0.25);color:#7a3226;font-weight:700;}
+  .badge.flag{background:rgba(177,80,63,0.25);color:#7a3226;font-weight:700;}
 
   .stats-row{display:flex;gap:14px;font-size:12px;color:#5c574c;font-family:'JetBrains Mono',monospace;}
 
-  .card-actions{display:flex;gap:8px;margin-top:2px;}
-  .card-actions button{
-    flex:1;font-size:11.5px;padding:7px 8px;border-radius:7px;border:1px solid rgba(0,0,0,0.15);
-    background:transparent;color:var(--dark-text);cursor:pointer;font-family:'JetBrains Mono',monospace;
-  }
+  .card-actions{display:flex;gap:8px;margin-top:2px;align-items:center;flex-wrap:wrap;}
+  .card-actions button{flex:1;min-width:90px;font-size:11.5px;padding:7px 8px;border-radius:7px;border:1px solid rgba(0,0,0,0.15);background:transparent;color:var(--dark-text);cursor:pointer;font-family:'JetBrains Mono',monospace;}
   .card-actions button:hover{background:rgba(0,0,0,0.06);}
-  .card-actions input[type=checkbox]{margin-right:5px;}
+  .card-actions button.primary{background:var(--copper);color:var(--ink);border-color:var(--copper);font-weight:700;}
+  .card-actions label{display:flex;align-items:center;font-size:11.5px;gap:4px;cursor:pointer;white-space:nowrap;}
 
-  .compare-bar{
-    position:sticky;bottom:14px;margin-top:18px;
-    background:var(--ink-2);border:1px solid var(--copper);
-    padding:12px 16px;border-radius:12px;display:flex;justify-content:space-between;
-    align-items:center;gap:12px;font-size:13px;flex-wrap:wrap;
-  }
-  .compare-bar button{
-    background:var(--copper);color:var(--ink);border:none;padding:8px 14px;
-    border-radius:8px;font-weight:600;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12px;
-  }
+  .compare-bar{position:sticky;bottom:14px;margin-top:18px;background:var(--ink-2);border:1px solid var(--copper);padding:12px 16px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px;flex-wrap:wrap;}
+  .compare-bar button{background:var(--copper);color:var(--ink);border:none;padding:8px 14px;border-radius:8px;font-weight:600;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12px;}
   .compare-bar .cmd{color:var(--ink-text);}
 
-  details.glossary{
-    background:var(--ink-2);border:1px solid rgba(255,255,255,0.07);
-    border-radius:18px;padding:0;margin-bottom:22px;overflow:hidden;
-  }
-  details.glossary summary{
-    cursor:pointer;padding:18px 22px;font-family:'Fraunces',serif;font-size:18px;font-weight:600;
-    list-style:none;display:flex;justify-content:space-between;align-items:center;
-  }
+  details.glossary{background:var(--ink-2);border:1px solid rgba(255,255,255,0.07);border-radius:18px;padding:0;margin-bottom:22px;overflow:hidden;}
+  details.glossary summary{cursor:pointer;padding:18px 22px;font-family:'Fraunces',serif;font-size:18px;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center;}
   details.glossary summary::-webkit-details-marker{display:none;}
   details.glossary summary::after{content:'+';color:var(--copper);font-size:20px;}
   details.glossary[open] summary::after{content:'–';}
@@ -204,14 +120,71 @@
   .empty{color:var(--dim-text);text-align:center;padding:40px 10px;font-size:14px;}
   footer{text-align:center;color:var(--dim-text);font-size:12px;padding:20px;opacity:.7;}
 
-  @media (max-width:640px){
-    header{flex-direction:column;}
-    .searchrow{flex-direction:column;}
-    .searchrow button{padding:12px;}
+  /* ===== Modal / file browser ===== */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;
+    padding:16px;z-index:100;
   }
-  @media (prefers-reduced-motion: reduce){
-    *{transition:none !important;}
+  .modal-panel{
+    background:var(--ink-2);border:1px solid rgba(255,255,255,0.08);border-radius:16px;
+    width:min(760px,100%);max-height:88vh;display:flex;flex-direction:column;overflow:hidden;
   }
+  .modal-header{padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.08);display:flex;justify-content:space-between;align-items:flex-start;gap:12px;}
+  .modal-breadcrumb{font-size:11px;color:var(--dim-text);text-transform:uppercase;letter-spacing:.05em;}
+  .modal-header h3{margin:4px 0 0;font-size:17px;word-break:break-word;}
+  .modal-close{background:transparent;border:1px solid rgba(255,255,255,0.15);color:var(--ink-text);border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:14px;flex-shrink:0;}
+  .modal-close:hover{border-color:var(--copper);color:var(--copper);}
+  .modal-body{padding:16px 20px;overflow-y:auto;flex:1;}
+
+  .file-row{
+    display:flex;align-items:center;gap:10px;padding:10px 8px;border-radius:8px;cursor:pointer;
+    color:var(--ink-text);font-size:13.5px;border-bottom:1px solid rgba(255,255,255,0.05);
+  }
+  .file-row:hover{background:var(--ink-3);}
+  .file-icon{flex-shrink:0;width:22px;text-align:center;}
+  .file-name{flex:1;min-width:0;word-break:break-all;font-family:'JetBrains Mono',monospace;font-size:12.5px;}
+  .file-size{flex-shrink:0;font-size:11px;color:var(--dim-text);font-family:'JetBrains Mono',monospace;}
+
+  .preview-actions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+  .preview-actions button{
+    background:var(--copper);color:var(--ink);border:none;padding:8px 14px;border-radius:8px;
+    font-weight:600;cursor:pointer;font-family:'JetBrains Mono',monospace;font-size:12px;
+  }
+  .preview-note{font-size:12px;color:var(--dim-text);margin-bottom:10px;line-height:1.5;}
+  .preview-pre{
+    background:var(--ink-3);padding:14px;border-radius:10px;white-space:pre-wrap;word-break:break-word;
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;max-height:52vh;overflow:auto;margin:0;
+  }
+  .preview-pre.arabic-content{font-family:'Noto Sans Arabic','JetBrains Mono',monospace;font-size:14px;line-height:1.9;}
+  .preview-table-wrap{max-height:52vh;overflow:auto;border-radius:10px;border:1px solid rgba(255,255,255,0.08);}
+  table.preview-table{border-collapse:collapse;width:100%;font-size:12.5px;background:var(--parchment);color:var(--dark-text);}
+  table.preview-table th,table.preview-table td{padding:7px 10px;border-bottom:1px solid rgba(0,0,0,0.08);text-align:left;vertical-align:top;max-width:280px;}
+  table.preview-table.arabic-content th,table.preview-table.arabic-content td{font-family:'Noto Sans Arabic',sans-serif;font-size:13.5px;text-align:right;}
+  table.preview-table th{background:rgba(0,0,0,0.05);font-family:'JetBrains Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.03em;position:sticky;top:0;}
+  .loading-line{color:var(--dim-text);font-size:13px;padding:20px 0;text-align:center;}
+
+  .advisor-head{display:flex;gap:16px;align-items:center;margin-bottom:14px;}
+  .advisor-head .dial{width:72px;height:72px;}
+  .advisor-head .dial .score-num{font-size:19px;}
+  .advisor-verdict-name{font-family:'Fraunces',serif;font-weight:700;font-size:19px;}
+  .advisor-meta{font-size:12px;color:var(--dim-text);margin-top:2px;}
+  .advisor-section{margin-top:14px;}
+  .advisor-section h4{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--copper);font-family:'JetBrains Mono',monospace;}
+  .advisor-list{margin:0;padding:0;list-style:none;font-size:13px;line-height:1.6;}
+  .advisor-list li{padding-left:18px;position:relative;margin-bottom:4px;}
+  .advisor-list.for li::before{content:'+';color:var(--sage);position:absolute;left:0;font-weight:700;}
+  .advisor-list.against li::before{content:'–';color:var(--brick);position:absolute;left:0;font-weight:700;}
+  [dir="rtl"] .advisor-list li{padding-left:0;padding-right:18px;}
+  [dir="rtl"] .advisor-list.for li::before,[dir="rtl"] .advisor-list.against li::before{left:auto;right:0;}
+  .advisor-bottomline{background:var(--ink-3);border-radius:10px;padding:12px 14px;font-size:13px;margin-top:6px;}
+  .compare-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media (max-width:560px){.compare-columns{grid-template-columns:1fr;}}
+  .compare-col{background:var(--ink-3);border-radius:12px;padding:14px;}
+  .compare-col h4{margin:0 0 6px;font-size:13.5px;word-break:break-word;}
+  .pick-banner{background:var(--copper);color:var(--ink);border-radius:10px;padding:12px 14px;font-weight:700;font-size:13.5px;margin-top:14px;}
+
+  @media (max-width:640px){header{flex-direction:column;}.searchrow{flex-direction:column;}.searchrow button{padding:12px;}}
+  @media (prefers-reduced-motion: reduce){*{transition:none !important;}}
 </style>
 </head>
 <body>
@@ -219,7 +192,7 @@
 <header>
   <div class="brand">
     <h1 id="titleText">hfpower<span>search</span></h1>
-    <p id="taglineText">A guided way to find the right Hugging Face dataset — filter by what you need, not just what's popular.</p>
+    <p id="taglineText"></p>
   </div>
   <div class="lang-toggle">
     <button id="btnEn" class="active" onclick="setLang('en')">EN</button>
@@ -230,39 +203,42 @@
 <main>
 
   <section class="panel">
-    <h2 id="guideTitle">1. What are you looking for?</h2>
-    <p class="sub" id="guideSub">Pick the shape of dataset you need, then narrow by size, language, and license.</p>
+    <h2 id="guideTitle"></h2>
+    <p class="sub" id="guideSub"></p>
+
+    <div class="source-tabs" id="sourceTabs"></div>
+    <p class="source-note" id="sourceNote"></p>
 
     <div class="searchrow">
-      <input type="text" id="searchInput" placeholder="Keyword (e.g. arabic poetry, medical, code review)">
-      <button onclick="doSearch()" id="searchBtn">Search</button>
+      <input type="text" id="searchInput">
+      <button onclick="doSearch()" id="searchBtn"></button>
     </div>
 
-    <div class="facet-group">
-      <span class="facet-label" id="labelType">Dataset type</span>
+    <div class="facet-group" id="facetType">
+      <span class="facet-label" id="labelType"></span>
       <div class="chips" id="chipsType"></div>
     </div>
 
-    <div class="facet-group">
-      <span class="facet-label" id="labelSize">Size</span>
+    <div class="facet-group" id="facetSize">
+      <span class="facet-label" id="labelSize"></span>
       <div class="chips" id="chipsSize"></div>
     </div>
 
-    <div class="facet-group">
-      <span class="facet-label" id="labelLang">Language</span>
+    <div class="facet-group" id="facetLang">
+      <span class="facet-label" id="labelLang"></span>
       <div class="chips" id="chipsLang"></div>
     </div>
 
     <div class="checkrow">
       <input type="checkbox" id="permissiveOnly">
-      <label for="permissiveOnly" id="labelPermissive">Show only permissive-license datasets (safe for commercial use)</label>
+      <label for="permissiveOnly" id="labelPermissive"></label>
     </div>
 
     <div class="status" id="statusLine"></div>
   </section>
 
   <details class="glossary">
-    <summary id="glossarySummary">Not sure what these terms mean? A quick field guide</summary>
+    <summary id="glossarySummary"></summary>
     <div class="glossary-body" id="glossaryBody"></div>
   </details>
 
@@ -274,54 +250,117 @@
     <span id="compareLabel"></span>
     <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
       <span class="cmd mono" id="compareCmd"></span>
-      <button onclick="copyCompare()" id="copyCompareBtn">Copy command</button>
+      <button onclick="runComparison()" id="runComparisonBtn" style="display:none;"></button>
+      <button onclick="copyCompare()" id="copyCompareBtn"></button>
     </div>
   </div>
 
 </main>
 
-<footer id="footerText">Data from the Hugging Face Hub API · deep-dive any result with your hf_advisor.sh script</footer>
+<footer id="footerText"></footer>
+
+<!-- ===== File browser / preview modal ===== -->
+<div id="modalOverlay" class="modal-overlay" style="display:none;" onclick="if(event.target===this) closeModal()">
+  <div class="modal-panel">
+    <div class="modal-header">
+      <div>
+        <div class="modal-breadcrumb mono" id="modalBreadcrumb"></div>
+        <h3 id="modalTitle"></h3>
+      </div>
+      <button class="modal-close" onclick="closeModal()" id="modalCloseBtn">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
 
 <script>
+/* =========================================================
+   CONFIG
+   ========================================================= */
+const KAGGLE_PROXY_URL = ""; // e.g. "https://hfpower-kaggle-proxy.yoursubdomain.workers.dev"
+const PREVIEW_BYTE_LIMIT = 300000; // ~300KB preview cap per file
+const ADVISOR_BYTE_LIMIT = 1500000; // ~1.5MB sample cap for the in-browser advisor run
+
 /* =========================================================
    I18N
    ========================================================= */
 const STR = {
   en: {
     title1:"hfpower", title2:"search",
-    tagline:"A guided way to find the right Hugging Face dataset — filter by what you need, not just what's popular.",
+    tagline:"A guided way to find the right dataset across Hugging Face, GitHub, and Kaggle — then browse its files and preview content, right here.",
     guideTitle:"1. What are you looking for?",
-    guideSub:"Pick the shape of dataset you need, then narrow by size, language, and license.",
+    guideSub:"Pick a source, narrow by type/size/language, then search.",
     searchPh:"Keyword (e.g. arabic poetry, medical, code review)",
     searchBtn:"Search",
     labelType:"Dataset type", labelSize:"Size", labelLang:"Language",
     labelPermissive:"Show only permissive-license datasets (safe for commercial use)",
     glossarySummary:"Not sure what these terms mean? A quick field guide",
-    footer:"Data from the Hugging Face Hub API · deep-dive any result with your hf_advisor.sh script",
-    searching:"Searching Hugging Face…",
-    resultsFound:n=>`${n} dataset${n===1?'':'s'} found`,
-    noResults:"No datasets matched. Try a broader keyword or fewer filters.",
-    errFetch:"Couldn't reach the Hugging Face API from this browser. If this keeps happening, your network may be blocking cross-origin requests — try a different network, or route the request through a small Cloudflare Worker proxy.",
-    gated:"Gated",
-    dl:"downloads", lk:"likes",
-    copyAdvisor:"Copy for hf_advisor",
+    footer:"Search spans Hugging Face, GitHub, and Kaggle · browse files in-app or deep-dive HF results with hfadvisor.sh",
+    searching:"Searching…",
+    resultsFound:n=>`${n} result${n===1?'':'s'} found`,
+    noResults:"No results matched. Try a broader keyword or fewer filters.",
+    errFetch:"Couldn't reach that source's API from this browser. If this keeps happening, the network may be blocking cross-origin requests.",
+    gated:"Gated", archived:"Archived",
+    copyAdvisor:"Copy CLI",
+    copyId:"Copy ID",
     copied:"Copied ✓",
-    compareSelect:"Select 2 datasets to compare",
+    browseFiles:"Browse files",
+    runAdvisor:"Run Advisor",
+    compareSelect:"Compare",
     compareLabel:n=>`${n} selected — pick 2 to compare`,
     compareReady:"Ready to compare:",
     copyCommand:"Copy command",
+    runComparison:"Run comparison here",
     verdict:{use:"Strong candidate", caution:"Worth a look", avoid:"Proceed with caution"},
+    advisorBreadcrumb:"Advisor",
+    advisorRunning:"Running advisor — picking a sample file and analyzing it…",
+    advisorCannotAssess:"Couldn't find a parquet/csv/jsonl/json file in this repo to analyze.",
+    advisorNeedsLocal:n=>`Selected sample file (${n}) is Parquet — that needs a real parser, which isn't practical to run in-browser yet. Run the deep check locally instead:`,
+    advisorSampleFile:n=>`Sample file analyzed: ${n}`,
+    advisorSampleNote:"Based on the sample loaded above (not the full file) — treat exact row counts as directional, not exact.",
+    reasonsForTitle:"Reasons to use it",
+    reasonsAgainstTitle:"Reasons to think twice",
+    bottomLine:"Bottom line",
+    bottomLines:{
+      use:"Solid structure, decent volume, workable license — a good default choice.",
+      caution:"Workable but has at least one real gap above — plan for extra prep work.",
+      avoid:"Multiple red flags above. Worth checking sibling datasets or other shards first.",
+    },
+    comparisonTitle:"Head-to-head",
+    pickLabel:n=>`Pick: ${n}`,
     license:{permissive:"Permissive", restrictive:"Restrictive", unclear:"Unclear license"},
+    sources:[{key:'hf', label:'Hugging Face'},{key:'github', label:'GitHub'},{key:'kaggle', label:'Kaggle'}],
+    sourceNotes:{
+      hf:"Live search against the Hugging Face Hub API, no setup needed.",
+      github:"Live search against GitHub's public search API (unauthenticated, ~10 requests/min — fine for occasional lookups).",
+      kaggle:"Requires a small proxy — Kaggle's API needs a private key that can't be exposed in the browser. See kaggle-proxy-worker.js.",
+    },
+    statLabels:{hf:{a:'downloads', b:'likes'}, github:{a:'stars', b:'forks'}, kaggle:{a:'downloads', b:'votes'}},
+    kaggleSetupMsg:`Kaggle search isn't wired up yet. Deploy the included <code>kaggle-proxy-worker.js</code> to Cloudflare Workers, set your Kaggle username/key as Worker secrets, then set <code>KAGGLE_PROXY_URL</code> near the top of this file's script to your Worker's URL.`,
+    // file browser strings
+    filesBreadcrumb:"Files",
+    contentBreadcrumb:n=>`Files / ${n}`,
+    loadingFiles:"Loading file list…",
+    loadingContent:"Loading file…",
+    noFiles:"No files found in this repository.",
+    backToFiles:"⟵ Back to files",
+    truncatedNote:"Showing a preview only — this file is larger than what's shown here. Use the download command below for the full file.",
+    binaryNote:"This is a binary/columnar file and can't be previewed in the browser.",
+    fetchFileErr:"Couldn't load this file.",
+    copyDownload:"Copy download command",
+    copyRaw:"Copy raw file URL",
+    copyClone:"Copy git clone command",
+    kaggleFilesNote:"Kaggle file browsing isn't wired up yet — this proxy would need a small extra route. Open the dataset on Kaggle directly for now.",
     types:[
       {key:'any', label:'Any'},
-      {key:'qa', label:'Question Answering', filter:'task_categories:question-answering'},
-      {key:'instruction', label:'Instruction', keyword:'instruction'},
-      {key:'textgen', label:'Text Generation', filter:'task_categories:text-generation'},
-      {key:'summarization', label:'Summarization', filter:'task_categories:summarization'},
-      {key:'translation', label:'Translation', filter:'task_categories:translation'},
-      {key:'classification', label:'Classification', filter:'task_categories:text-classification'},
-      {key:'corpus', label:'Raw Text Corpus', keyword:'corpus'},
-      {key:'preference', label:'Preference / RLHF pairs', keyword:'dpo'},
+      {key:'qa', label:'Question Answering', filter:'task_categories:question-answering', genKeyword:'question answering dataset'},
+      {key:'instruction', label:'Instruction', keyword:'instruction', genKeyword:'instruction dataset'},
+      {key:'textgen', label:'Text Generation', filter:'task_categories:text-generation', genKeyword:'text generation dataset'},
+      {key:'summarization', label:'Summarization', filter:'task_categories:summarization', genKeyword:'summarization dataset'},
+      {key:'translation', label:'Translation', filter:'task_categories:translation', genKeyword:'translation dataset'},
+      {key:'classification', label:'Classification', filter:'task_categories:text-classification', genKeyword:'classification dataset'},
+      {key:'corpus', label:'Raw Text Corpus', keyword:'corpus', genKeyword:'text corpus'},
+      {key:'preference', label:'Preference / RLHF pairs', keyword:'dpo', genKeyword:'rlhf preference dataset'},
     ],
     sizes:[
       {key:'any', label:'Any'},
@@ -364,39 +403,79 @@ const STR = {
   },
   ar: {
     title1:"hfpower", title2:"search",
-    tagline:"طريقة موجّهة للعثور على مجموعة البيانات المناسبة من Hugging Face — صفّي حسب ما تحتاجه فعلاً، لا حسب الأكثر شيوعًا فقط.",
+    tagline:"طريقة موجّهة للعثور على مجموعة البيانات المناسبة عبر Hugging Face وGitHub وKaggle — ثم تصفّح ملفاتها ومعاينة محتواها من هنا مباشرة.",
     guideTitle:"١. عن ماذا تبحث؟",
-    guideSub:"اختر شكل البيانات الذي تحتاجه، ثم صفّي حسب الحجم واللغة والترخيص.",
+    guideSub:"اختر مصدرًا، صفّي حسب النوع/الحجم/اللغة، ثم ابحث.",
     searchPh:"كلمة مفتاحية (مثال: شعر عربي، طبي، مراجعة أكواد)",
     searchBtn:"بحث",
     labelType:"نوع البيانات", labelSize:"الحجم", labelLang:"اللغة",
     labelPermissive:"إظهار مجموعات البيانات ذات الترخيص المرن فقط (آمنة للاستخدام التجاري)",
     glossarySummary:"لست متأكدًا من هذه المصطلحات؟ دليل سريع",
-    footer:"البيانات من واجهة Hugging Face Hub · افحص أي نتيجة بعمق عبر سكربت hf_advisor.sh",
-    searching:"جارِ البحث في Hugging Face…",
-    resultsFound:n=>`تم العثور على ${n} مجموعة بيانات`,
+    footer:"البحث يشمل Hugging Face وGitHub وKaggle · تصفّح الملفات من التطبيق أو افحص نتائج HF بعمق عبر hfadvisor.sh",
+    searching:"جارِ البحث…",
+    resultsFound:n=>`تم العثور على ${n} نتيجة`,
     noResults:"لا توجد نتائج مطابقة. جرّب كلمة أعم أو صفّيات أقل.",
-    errFetch:"تعذّر الوصول إلى واجهة Hugging Face من هذا المتصفح. إذا تكرر ذلك، قد تكون الشبكة تحجب الطلبات عبر النطاقات — جرّب شبكة أخرى أو مرّر الطلب عبر Cloudflare Worker بسيط.",
-    gated:"مقيّد",
-    dl:"تنزيلات", lk:"إعجابات",
-    copyAdvisor:"نسخ لأداة hf_advisor",
+    errFetch:"تعذّر الوصول إلى واجهة هذا المصدر من هذا المتصفح. إذا تكرر ذلك، قد تكون الشبكة تحجب الطلبات عبر النطاقات.",
+    gated:"مقيّد", archived:"مؤرشف",
+    copyAdvisor:"نسخ أمر CLI",
+    copyId:"نسخ المعرّف",
     copied:"تم النسخ ✓",
-    compareSelect:"اختر مجموعتين للمقارنة",
+    browseFiles:"تصفح الملفات",
+    runAdvisor:"تشغيل المستشار",
+    compareSelect:"مقارنة",
     compareLabel:n=>`تم اختيار ${n} — اختر ٢ للمقارنة`,
     compareReady:"جاهز للمقارنة:",
     copyCommand:"نسخ الأمر",
+    runComparison:"تشغيل المقارنة هنا",
     verdict:{use:"مرشّح قوي", caution:"يستحق النظر", avoid:"تعامل بحذر"},
+    advisorBreadcrumb:"المستشار",
+    advisorRunning:"جارِ تشغيل المستشار — اختيار ملف عينة وتحليله…",
+    advisorCannotAssess:"لم يتم العثور على ملف parquet/csv/jsonl/json في هذا المستودع للتحليل.",
+    advisorNeedsLocal:n=>`ملف العينة المختار (${n}) بصيغة Parquet — يحتاج محلّلًا حقيقيًا لا يمكن تشغيله في المتصفح حاليًا. شغّل الفحص العميق محليًا بدلًا من ذلك:`,
+    advisorSampleFile:n=>`ملف العينة المحلَّل: ${n}`,
+    advisorSampleNote:"استنادًا إلى العينة المحمَّلة أعلاه (وليس الملف كاملًا) — اعتبر أعداد الصفوف تقريبية لا دقيقة.",
+    reasonsForTitle:"أسباب لاستخدامه",
+    reasonsAgainstTitle:"أسباب للتريّث",
+    bottomLine:"الخلاصة",
+    bottomLines:{
+      use:"بنية جيدة وحجم معقول وترخيص عملي — خيار افتراضي جيد.",
+      caution:"قابل للاستخدام لكن به ثغرة حقيقية واحدة على الأقل أعلاه — خطّط لعمل تحضيري إضافي.",
+      avoid:"عدة إشارات تحذيرية أعلاه. يستحق فحص مجموعات بيانات مشابهة أو أجزاء أخرى أولًا.",
+    },
+    comparisonTitle:"مقارنة مباشرة",
+    pickLabel:n=>`الاختيار: ${n}`,
     license:{permissive:"ترخيص مرن", restrictive:"ترخيص مقيّد", unclear:"ترخيص غير واضح"},
+    sources:[{key:'hf', label:'Hugging Face'},{key:'github', label:'GitHub'},{key:'kaggle', label:'Kaggle'}],
+    sourceNotes:{
+      hf:"بحث مباشر عبر واجهة Hugging Face Hub، بدون إعداد.",
+      github:"بحث مباشر عبر واجهة GitHub العامة (بدون مصادقة، ~١٠ طلبات/دقيقة — كافٍ للاستخدام العرضي).",
+      kaggle:"يتطلب وسيطًا بسيطًا — واجهة Kaggle تحتاج مفتاحًا خاصًا لا يمكن كشفه في المتصفح. راجع kaggle-proxy-worker.js.",
+    },
+    statLabels:{hf:{a:'تنزيلات', b:'إعجابات'}, github:{a:'نجوم', b:'تفرعات'}, kaggle:{a:'تنزيلات', b:'أصوات'}},
+    kaggleSetupMsg:`بحث Kaggle غير مُفعّل بعد. انشر <code>kaggle-proxy-worker.js</code> المرفق على Cloudflare Workers، وضع اسم مستخدم ومفتاح Kaggle كأسرار (secrets) للـ Worker، ثم عيّن <code>KAGGLE_PROXY_URL</code> أعلى سكربت هذا الملف إلى رابط الـ Worker.`,
+    filesBreadcrumb:"الملفات",
+    contentBreadcrumb:n=>`الملفات / ${n}`,
+    loadingFiles:"جارِ تحميل قائمة الملفات…",
+    loadingContent:"جارِ تحميل الملف…",
+    noFiles:"لا توجد ملفات في هذا المستودع.",
+    backToFiles:"⟶ رجوع لقائمة الملفات",
+    truncatedNote:"معاينة جزئية فقط — هذا الملف أكبر مما هو معروض هنا. استخدم أمر التنزيل أدناه للحصول على الملف كاملًا.",
+    binaryNote:"هذا ملف ثنائي/عمودي ولا يمكن معاينته في المتصفح.",
+    fetchFileErr:"تعذّر تحميل هذا الملف.",
+    copyDownload:"نسخ أمر التنزيل",
+    copyRaw:"نسخ رابط الملف الخام",
+    copyClone:"نسخ أمر git clone",
+    kaggleFilesNote:"تصفّح ملفات Kaggle غير مُفعّل بعد — يحتاج هذا الوسيط مسارًا إضافيًا بسيطًا. افتح مجموعة البيانات على Kaggle مباشرة في الوقت الحالي.",
     types:[
       {key:'any', label:'أي نوع'},
-      {key:'qa', label:'أسئلة وأجوبة', filter:'task_categories:question-answering'},
-      {key:'instruction', label:'تعليمات', keyword:'instruction'},
-      {key:'textgen', label:'توليد نصوص', filter:'task_categories:text-generation'},
-      {key:'summarization', label:'تلخيص', filter:'task_categories:summarization'},
-      {key:'translation', label:'ترجمة', filter:'task_categories:translation'},
-      {key:'classification', label:'تصنيف', filter:'task_categories:text-classification'},
-      {key:'corpus', label:'نصوص خام', keyword:'corpus'},
-      {key:'preference', label:'أزواج تفضيل RLHF', keyword:'dpo'},
+      {key:'qa', label:'أسئلة وأجوبة', filter:'task_categories:question-answering', genKeyword:'question answering dataset'},
+      {key:'instruction', label:'تعليمات', keyword:'instruction', genKeyword:'instruction dataset'},
+      {key:'textgen', label:'توليد نصوص', filter:'task_categories:text-generation', genKeyword:'text generation dataset'},
+      {key:'summarization', label:'تلخيص', filter:'task_categories:summarization', genKeyword:'summarization dataset'},
+      {key:'translation', label:'ترجمة', filter:'task_categories:translation', genKeyword:'translation dataset'},
+      {key:'classification', label:'تصنيف', filter:'task_categories:text-classification', genKeyword:'classification dataset'},
+      {key:'corpus', label:'نصوص خام', keyword:'corpus', genKeyword:'text corpus'},
+      {key:'preference', label:'أزواج تفضيل RLHF', keyword:'dpo', genKeyword:'rlhf preference dataset'},
     ],
     sizes:[
       {key:'any', label:'أي حجم'},
@@ -440,54 +519,102 @@ const STR = {
 };
 
 let lang = 'en';
+let source = 'hf';
 let selType='any', selSize='any', selLang='any';
 let lastResults = [];
 let compareSet = new Set();
+let modalCtx = null; // { source, id, branch, files }
 
 /* =========================================================
-   LICENSE / SCORING (mirrors hf_advisor.sh logic)
+   LICENSE CLASSIFICATION (shared across sources)
    ========================================================= */
-const PERMISSIVE = new Set(["mit","apache-2.0","apache2.0","bsd","bsd-3-clause","cc0-1.0","cc-by-4.0","cc-by-3.0","unlicense","openrail"]);
-const RESTRICTIVE_HINTS = ["nc","nd","gpl","research","proprietary"];
+const PERMISSIVE = new Set(["mit","apache-2.0","apache2.0","bsd","bsd-3-clause","cc0-1.0","cc-by-4.0","cc-by-3.0","unlicense","openrail","cc0"]);
+const RESTRICTIVE_HINTS = ["nc","nd","gpl","research","proprietary","other"];
 
 function classifyLicense(lic){
   const l = (lic||"").toLowerCase().trim();
   if (PERMISSIVE.has(l)) return "permissive";
-  if (!l || l === "unknown") return "unclear";
+  if (l.includes("cc0") || l.includes("public domain") || l === "mit" || l.includes("apache")) return "permissive";
+  if (!l || l === "unknown" || l === "noassertion") return "unclear";
   if (RESTRICTIVE_HINTS.some(h => l.includes(h))) return "restrictive";
   return "unclear";
 }
 
 function extractTagValue(tags, prefix){
-  const t = tags.find(t => t.startsWith(prefix+":"));
+  const t = (tags||[]).find(t => t.startsWith(prefix+":"));
   return t ? t.slice(prefix.length+1) : null;
 }
 
-function scoreDataset(ds){
-  const tags = ds.tags || [];
-  const license = extractTagValue(tags, "license") || ds.cardData?.license || "unknown";
-  const licenseClass = classifyLicense(license);
-  const taskCat = extractTagValue(tags, "task_categories");
-  const sizeCat = extractTagValue(tags, "size_categories");
-  const downloads = ds.downloads || 0;
-  const likes = ds.likes || 0;
-  const gated = !!ds.gated;
+function formatBytes(bytes){
+  if (!bytes) return null;
+  const units = ["B","KB","MB","GB","TB"];
+  let i = 0, n = bytes;
+  while (n >= 1024 && i < units.length-1){ n/=1024; i++; }
+  return `${n.toFixed(n<10?1:0)} ${units[i]}`;
+}
 
-  let score = 0;
-  score += licenseClass === "permissive" ? 30 : (licenseClass === "unclear" ? 15 : 0);
-  score += (downloads >= 10000 || likes >= 100) ? 25 : ((downloads >= 1000 || likes >= 20) ? 12 : 0);
-  score += taskCat ? 20 : 0;
-  score += sizeCat ? 15 : 0;
-  score += gated ? -10 : 10;
-  score = Math.max(0, Math.min(100, score));
-
-  let verdict = score >= 70 ? "use" : (score >= 45 ? "caution" : "avoid");
-
-  return {license, licenseClass, taskCat, sizeCat, downloads, likes, gated, score, verdict};
+function looksArabic(text){
+  const sample = (text||"").slice(0, 2000);
+  const arabicChars = (sample.match(/[\u0600-\u06FF]/g) || []).length;
+  const letters = (sample.match(/[^\s\d.,;:!?()\[\]{}'"-]/g) || []).length;
+  return letters > 0 && (arabicChars / letters) > 0.3;
 }
 
 /* =========================================================
-   RENDER: chips / glossary / static text
+   NORMALIZATION
+   ========================================================= */
+function normalizeHF(ds){
+  const tags = ds.tags || [];
+  const license = extractTagValue(tags, "license") || ds.cardData?.license || "unknown";
+  return {
+    source:'hf', id: ds.id, url:`https://huggingface.co/datasets/${ds.id}`, title: ds.id,
+    a: ds.downloads||0, b: ds.likes||0,
+    license, category: extractTagValue(tags,"task_categories"),
+    sizeLabel: extractTagValue(tags,"size_categories"),
+    flagKey: ds.gated ? 'gated' : null,
+  };
+}
+function normalizeGitHub(repo){
+  return {
+    source:'github', id: repo.full_name, url: repo.html_url, title: repo.full_name,
+    a: repo.stargazers_count||0, b: repo.forks_count||0,
+    license: repo.license?.spdx_id || "unknown",
+    category: repo.language || null,
+    sizeLabel: repo.size ? formatBytes(repo.size*1024) : null,
+    flagKey: repo.archived ? 'archived' : null,
+  };
+}
+function normalizeKaggle(ds){
+  return {
+    source:'kaggle', id: ds.ref, url:`https://www.kaggle.com/datasets/${ds.ref}`, title: ds.title || ds.ref,
+    a: ds.downloadCount||0, b: ds.voteCount||0,
+    license: ds.licenseName || "unknown",
+    category: (ds.tags && ds.tags[0] && (ds.tags[0].name||ds.tags[0])) || null,
+    sizeLabel: formatBytes(ds.totalBytes),
+    flagKey: null,
+    usability: typeof ds.usabilityRating === "number" ? ds.usabilityRating : null,
+  };
+}
+
+/* =========================================================
+   SCORING
+   ========================================================= */
+function scoreItem(n){
+  const licenseClass = classifyLicense(n.license);
+  let score = 0;
+  score += licenseClass === "permissive" ? 30 : (licenseClass === "unclear" ? 15 : 0);
+  score += (n.a >= 10000 || n.b >= 100) ? 25 : ((n.a >= 1000 || n.b >= 20) ? 12 : 0);
+  score += n.category ? 20 : 0;
+  score += n.sizeLabel ? 15 : 0;
+  score += n.flagKey ? -10 : 10;
+  if (typeof n.usability === "number") score += n.usability >= 0.7 ? 10 : (n.usability >= 0.4 ? 4 : -5);
+  score = Math.max(0, Math.min(100, score));
+  const verdict = score >= 70 ? "use" : (score >= 45 ? "caution" : "avoid");
+  return {...n, licenseClass, score, verdict};
+}
+
+/* =========================================================
+   RENDER: chips / source tabs / glossary / static text
    ========================================================= */
 function renderChips(containerId, items, selectedKey, onPick){
   const el = document.getElementById(containerId);
@@ -500,7 +627,22 @@ function renderChips(containerId, items, selectedKey, onPick){
     el.appendChild(b);
   });
 }
-
+function renderSourceTabs(){
+  const S = STR[lang];
+  const el = document.getElementById("sourceTabs");
+  el.innerHTML = "";
+  S.sources.forEach(s => {
+    const b = document.createElement("button");
+    b.className = "source-tab" + (s.key === source ? " active" : "");
+    b.textContent = s.label;
+    b.onclick = () => { source = s.key; applyStaticText(); };
+    el.appendChild(b);
+  });
+  document.getElementById("sourceNote").textContent = S.sourceNotes[source];
+  const hfOnly = source === 'hf';
+  document.getElementById("facetSize").classList.toggle("hidden", !hfOnly);
+  document.getElementById("facetLang").classList.toggle("hidden", !hfOnly);
+}
 function renderGlossary(){
   const S = STR[lang];
   const el = document.getElementById("glossaryBody");
@@ -508,8 +650,7 @@ function renderGlossary(){
   S.glossary.forEach(col => {
     const div = document.createElement("div");
     div.className = "glossary-col";
-    const h3 = document.createElement("h3");
-    h3.textContent = col.h;
+    const h3 = document.createElement("h3"); h3.textContent = col.h;
     div.appendChild(h3);
     const dl = document.createElement("dl");
     col.items.forEach(([term, def]) => {
@@ -521,7 +662,6 @@ function renderGlossary(){
     el.appendChild(div);
   });
 }
-
 function applyStaticText(){
   const S = STR[lang];
   document.getElementById("titleText").innerHTML = `${S.title1}<span>${S.title2}</span>`;
@@ -536,14 +676,16 @@ function applyStaticText(){
   document.getElementById("labelPermissive").textContent = S.labelPermissive;
   document.getElementById("glossarySummary").textContent = S.glossarySummary;
   document.getElementById("footerText").textContent = S.footer;
+  document.getElementById("copyCompareBtn").textContent = S.copyCommand;
+  document.getElementById("runComparisonBtn").textContent = S.runComparison;
 
+  renderSourceTabs();
   renderChips("chipsType", S.types, selType, k => { selType = k; applyStaticText(); });
   renderChips("chipsSize", S.sizes, selSize, k => { selSize = k; applyStaticText(); });
   renderChips("chipsLang", S.langs, selLang, k => { selLang = k; applyStaticText(); });
   renderGlossary();
   if (lastResults.length) renderResults(lastResults);
 }
-
 function setLang(l){
   lang = l;
   document.documentElement.lang = l;
@@ -556,6 +698,46 @@ function setLang(l){
 /* =========================================================
    SEARCH
    ========================================================= */
+async function searchHF(keyword){
+  const S = STR[lang];
+  const typeObj = S.types.find(t => t.key === selType);
+  const sizeObj = S.sizes.find(t => t.key === selSize);
+  const langObj = S.langs.find(t => t.key === selLang);
+  const searchTerms = [keyword, typeObj.keyword, langObj.keyword].filter(Boolean).join(" ");
+  const filters = [typeObj.filter, sizeObj.filter, langObj.filter].filter(Boolean);
+  const params = new URLSearchParams();
+  if (searchTerms) params.set("search", searchTerms);
+  filters.forEach(f => params.append("filter", f));
+  params.set("sort", "downloads"); params.set("direction", "-1");
+  params.set("limit", "30"); params.set("full", "true");
+  const res = await fetch(`https://huggingface.co/api/datasets?${params.toString()}`);
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const data = await res.json();
+  return (Array.isArray(data) ? data : []).map(normalizeHF);
+}
+async function searchGitHub(keyword){
+  const S = STR[lang];
+  const typeObj = S.types.find(t => t.key === selType);
+  const q = [keyword, typeObj.genKeyword || "dataset"].filter(Boolean).join(" ");
+  const params = new URLSearchParams();
+  params.set("q", q); params.set("sort", "stars"); params.set("order", "desc"); params.set("per_page", "30");
+  const res = await fetch(`https://api.github.com/search/repositories?${params.toString()}`);
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const data = await res.json();
+  return (data.items || []).map(normalizeGitHub);
+}
+async function searchKaggle(keyword){
+  if (!KAGGLE_PROXY_URL) return { needsSetup: true };
+  const S = STR[lang];
+  const typeObj = S.types.find(t => t.key === selType);
+  const q = [keyword, typeObj.genKeyword].filter(Boolean).join(" ");
+  const params = new URLSearchParams();
+  if (q) params.set("search", q);
+  const res = await fetch(`${KAGGLE_PROXY_URL}?${params.toString()}`);
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const data = await res.json();
+  return (Array.isArray(data) ? data : []).map(normalizeKaggle);
+}
 async function doSearch(){
   const S = STR[lang];
   const statusEl = document.getElementById("statusLine");
@@ -564,32 +746,24 @@ async function doSearch(){
   document.getElementById("results").innerHTML = "";
   document.getElementById("compareBar").style.display = "none";
   compareSet.clear();
-
   const keyword = document.getElementById("searchInput").value.trim();
-  const typeObj = S.types.find(t => t.key === selType);
-  const sizeObj = S.sizes.find(t => t.key === selSize);
-  const langObj = S.langs.find(t => t.key === selLang);
-
-  let searchTerms = [keyword, typeObj.keyword, langObj.keyword].filter(Boolean).join(" ");
-  const filters = [typeObj.filter, sizeObj.filter, langObj.filter].filter(Boolean);
-
-  const params = new URLSearchParams();
-  if (searchTerms) params.set("search", searchTerms);
-  filters.forEach(f => params.append("filter", f));
-  params.set("sort", "downloads");
-  params.set("direction", "-1");
-  params.set("limit", "30");
-  params.set("full", "true");
-
-  const url = `https://huggingface.co/api/datasets?${params.toString()}`;
-
   try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("HTTP " + res.status);
-    const data = await res.json();
-    lastResults = Array.isArray(data) ? data : [];
-    statusEl.textContent = S.resultsFound(lastResults.length);
-    renderResults(lastResults);
+    let items;
+    if (source === 'hf') items = await searchHF(keyword);
+    else if (source === 'github') items = await searchGitHub(keyword);
+    else {
+      const r = await searchKaggle(keyword);
+      if (r.needsSetup) {
+        statusEl.textContent = "";
+        document.getElementById("results").innerHTML = `<div class="setup-msg">${S.kaggleSetupMsg}</div>`;
+        lastResults = [];
+        return;
+      }
+      items = r;
+    }
+    lastResults = items;
+    statusEl.textContent = S.resultsFound(items.length);
+    renderResults(items);
   } catch (e) {
     statusEl.classList.add("err");
     statusEl.textContent = S.errFetch;
@@ -597,16 +771,9 @@ async function doSearch(){
   }
 }
 
-function scoreColor(score){
-  if (score >= 70) return "#7C9C86";
-  if (score >= 45) return "#C1793A";
-  return "#B1503F";
-}
-
+function scoreColor(score){ if (score >= 70) return "#7C9C86"; if (score >= 45) return "#C1793A"; return "#B1503F"; }
 function dialSvg(score){
-  const r = 24, c = 2*Math.PI*r;
-  const offset = c - (score/100)*c;
-  const color = scoreColor(score);
+  const r = 24, c = 2*Math.PI*r; const offset = c - (score/100)*c; const color = scoreColor(score);
   return `<svg width="56" height="56" viewBox="0 0 56 56">
     <circle cx="28" cy="28" r="${r}" fill="none" stroke="rgba(0,0,0,0.1)" stroke-width="5"/>
     <circle cx="28" cy="28" r="${r}" fill="none" stroke="${color}" stroke-width="5"
@@ -618,74 +785,77 @@ function renderResults(list){
   const S = STR[lang];
   const el = document.getElementById("results");
   el.innerHTML = "";
-
   let filtered = list;
   if (document.getElementById("permissiveOnly").checked) {
-    filtered = list.filter(ds => classifyLicense(extractTagValue(ds.tags||[], "license") || ds.cardData?.license || "unknown") === "permissive");
+    filtered = list.filter(n => classifyLicense(n.license) === "permissive");
   }
+  if (!filtered.length) { el.innerHTML = `<div class="empty">${S.noResults}</div>`; return; }
 
-  if (!filtered.length) {
-    el.innerHTML = `<div class="empty">${S.noResults}</div>`;
-    return;
-  }
+  const statLabels = S.statLabels[source];
 
-  filtered.forEach((ds, i) => {
-    const info = scoreDataset(ds);
+  filtered.forEach((raw, i) => {
+    const n = scoreItem(raw);
     const card = document.createElement("div");
     card.className = "card";
-
-    const licBadgeClass = info.licenseClass === "permissive" ? "license-permissive"
-      : info.licenseClass === "restrictive" ? "license-restrictive" : "license-unclear";
-    const licLabel = S.license[info.licenseClass];
+    const licBadgeClass = n.licenseClass === "permissive" ? "license-permissive"
+      : n.licenseClass === "restrictive" ? "license-restrictive" : "license-unclear";
+    const licLabel = S.license[n.licenseClass];
+    const flagLabel = n.flagKey === 'gated' ? S.gated : n.flagKey === 'archived' ? S.archived : null;
 
     card.innerHTML = `
       <span class="tab mono">#${String(i+1).padStart(2,'0')}</span>
+      <span class="src-tab mono">${n.source}</span>
       <div class="card-top">
-        <div class="dial">
-          ${dialSvg(info.score)}
-          <div class="score-num" style="color:${scoreColor(info.score)}">${info.score}</div>
-        </div>
+        <div class="dial">${dialSvg(n.score)}<div class="score-num" style="color:${scoreColor(n.score)}">${n.score}</div></div>
         <div class="card-title">
-          <a href="https://huggingface.co/datasets/${ds.id}" target="_blank" rel="noopener">${ds.id}</a>
-          <div class="verdict-line" style="color:${scoreColor(info.score)}">${S.verdict[info.verdict]}</div>
+          <a href="${n.url}" target="_blank" rel="noopener">${n.title}</a>
+          <div class="verdict-line" style="color:${scoreColor(n.score)}">${S.verdict[n.verdict]}</div>
         </div>
       </div>
       <div class="badges">
         <span class="badge ${licBadgeClass}">${licLabel}</span>
-        ${info.taskCat ? `<span class="badge">${info.taskCat}</span>` : ""}
-        ${info.sizeCat ? `<span class="badge">${info.sizeCat}</span>` : ""}
-        ${info.gated ? `<span class="badge gated">${S.gated}</span>` : ""}
+        ${n.category ? `<span class="badge">${n.category}</span>` : ""}
+        ${n.sizeLabel ? `<span class="badge">${n.sizeLabel}</span>` : ""}
+        ${flagLabel ? `<span class="badge flag">${flagLabel}</span>` : ""}
       </div>
       <div class="stats-row">
-        <span>↓ ${info.downloads.toLocaleString()} ${S.dl}</span>
-        <span>♥ ${info.likes.toLocaleString()} ${S.lk}</span>
+        <span>↓ ${n.a.toLocaleString()} ${statLabels.a}</span>
+        <span>♥ ${n.b.toLocaleString()} ${statLabels.b}</span>
       </div>
       <div class="card-actions">
-        <button data-act="copyadv" data-id="${ds.id}">${S.copyAdvisor}</button>
-        <label style="display:flex;align-items:center;font-size:11.5px;gap:4px;cursor:pointer;">
-          <input type="checkbox" data-act="cmp" data-id="${ds.id}"> ${S.compareSelect.split(' ')[0]}
-        </label>
+        <button data-act="browse" data-src="${n.source}" data-id="${n.id}" class="primary">${S.browseFiles}</button>
+        ${n.source === 'hf'
+          ? `<button data-act="advisor" data-id="${n.id}" class="primary">${S.runAdvisor}</button>
+             <button data-act="copyadv" data-id="${n.id}">${S.copyAdvisor}</button>
+             <label><input type="checkbox" data-act="cmp" data-id="${n.id}"> ${S.compareSelect}</label>`
+          : `<button data-act="copyid" data-id="${n.id}">${S.copyId}</button>`
+        }
       </div>
     `;
     el.appendChild(card);
   });
 
+  el.querySelectorAll('[data-act="browse"]').forEach(btn => {
+    btn.onclick = () => openFileBrowser(btn.dataset.src, btn.dataset.id);
+  });
+  el.querySelectorAll('[data-act="advisor"]').forEach(btn => {
+    btn.onclick = () => runAdvisor(btn.dataset.id);
+  });
   el.querySelectorAll('[data-act="copyadv"]').forEach(btn => {
-    btn.onclick = () => {
-      navigator.clipboard.writeText(`./hf_advisor.sh ${btn.dataset.id}`).then(() => {
-        const orig = btn.textContent;
-        btn.textContent = STR[lang].copied;
-        setTimeout(() => btn.textContent = orig, 1400);
-      });
-    };
+    btn.onclick = () => { navigator.clipboard.writeText(`./hfadvisor.sh ${btn.dataset.id}`).then(() => flashCopied(btn)); };
   });
-
+  el.querySelectorAll('[data-act="copyid"]').forEach(btn => {
+    btn.onclick = () => { navigator.clipboard.writeText(btn.dataset.id).then(() => flashCopied(btn)); };
+  });
   el.querySelectorAll('[data-act="cmp"]').forEach(cb => {
-    cb.onchange = () => {
-      if (cb.checked) compareSet.add(cb.dataset.id); else compareSet.delete(cb.dataset.id);
-      updateCompareBar();
-    };
+    cb.onchange = () => { if (cb.checked) compareSet.add(cb.dataset.id); else compareSet.delete(cb.dataset.id); updateCompareBar(); };
   });
+}
+
+function flashCopied(btn){
+  const orig = btn.textContent;
+  btn.textContent = STR[lang].copied;
+  setTimeout(() => btn.textContent = orig, 1400);
 }
 
 function updateCompareBar(){
@@ -698,28 +868,462 @@ function updateCompareBar(){
     document.getElementById("compareLabel").textContent = S.compareLabel(ids.length);
     document.getElementById("compareCmd").textContent = "";
     document.getElementById("copyCompareBtn").style.display = "none";
+    document.getElementById("runComparisonBtn").style.display = "none";
   } else {
     const pair = ids.slice(0,2);
     document.getElementById("compareLabel").textContent = S.compareReady;
-    document.getElementById("compareCmd").textContent = `./hf_advisor.sh --compare ${pair[0]} ${pair[1]}`;
+    document.getElementById("compareCmd").textContent = `./hfadvisor.sh --compare ${pair[0]} ${pair[1]}`;
     document.getElementById("copyCompareBtn").style.display = "inline-block";
-    document.getElementById("copyCompareBtn").textContent = S.copyCommand;
+    document.getElementById("runComparisonBtn").style.display = "inline-block";
   }
 }
-
 function copyCompare(){
   const ids = [...compareSet].slice(0,2);
   if (ids.length < 2) return;
-  navigator.clipboard.writeText(`./hf_advisor.sh --compare ${ids[0]} ${ids[1]}`).then(() => {
+  navigator.clipboard.writeText(`./hfadvisor.sh --compare ${ids[0]} ${ids[1]}`).then(() => {
     document.getElementById("copyCompareBtn").textContent = STR[lang].copied;
     setTimeout(() => document.getElementById("copyCompareBtn").textContent = STR[lang].copyCommand, 1400);
   });
 }
 
-document.getElementById("searchInput").addEventListener("keydown", e => {
-  if (e.key === "Enter") doSearch();
-});
+/* =========================================================
+   FILE BROWSER / PREVIEW MODAL
+   ========================================================= */
+const FILE_ICONS = {
+  csv:'📄', tsv:'📄', txt:'📝', md:'📝', json:'🗂️', jsonl:'🗂️',
+  parquet:'🗄️', arrow:'🗄️', npy:'🧮', pkl:'🧮', safetensors:'🧮', bin:'🧮', pt:'🧮', ckpt:'🧮',
+  png:'🖼️', jpg:'🖼️', jpeg:'🖼️', gif:'🖼️', webp:'🖼️',
+  wav:'🔊', mp3:'🔊', flac:'🔊',
+  mp4:'🎬', mov:'🎬',
+  zip:'📦', gz:'📦', tar:'📦',
+};
+const TEXTISH_EXT = new Set(['csv','tsv','txt','md','jsonl','json','yaml','yml']);
+
+function fileIcon(name){
+  const ext = name.split('.').pop().toLowerCase();
+  return FILE_ICONS[ext] || '❔';
+}
+function fileExt(name){ return name.split('.').pop().toLowerCase(); }
+
+function openModal(){ document.getElementById("modalOverlay").style.display = "flex"; }
+function closeModal(){ document.getElementById("modalOverlay").style.display = "none"; modalCtx = null; }
+
+async function openFileBrowser(src, id){
+  const S = STR[lang];
+  modalCtx = { source: src, id, branch: null, files: [] };
+  document.getElementById("modalBreadcrumb").textContent = S.filesBreadcrumb;
+  document.getElementById("modalTitle").textContent = id;
+  document.getElementById("modalBody").innerHTML = `<div class="loading-line">${S.loadingFiles}</div>`;
+  openModal();
+
+  try {
+    if (src === 'hf') {
+      const res = await fetch(`https://huggingface.co/api/datasets/${id}?full=true`);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      modalCtx.files = (data.siblings || []).map(s => ({ path: s.rfilename, size: s.size || null }));
+    } else if (src === 'github') {
+      const repoRes = await fetch(`https://api.github.com/repos/${id}`);
+      if (!repoRes.ok) throw new Error("HTTP " + repoRes.status);
+      const repoData = await repoRes.json();
+      modalCtx.branch = repoData.default_branch || 'main';
+      const treeRes = await fetch(`https://api.github.com/repos/${id}/git/trees/${modalCtx.branch}?recursive=1`);
+      if (!treeRes.ok) throw new Error("HTTP " + treeRes.status);
+      const treeData = await treeRes.json();
+      modalCtx.files = (treeData.tree || []).filter(t => t.type === 'blob').map(t => ({ path: t.path, size: t.size || null }));
+    } else {
+      document.getElementById("modalBody").innerHTML = `<div class="setup-msg">${S.kaggleFilesNote}</div>`;
+      return;
+    }
+    renderFileList();
+  } catch (e) {
+    document.getElementById("modalBody").innerHTML = `<div class="setup-msg">${S.fetchFileErr}</div>`;
+  }
+}
+
+function renderFileList(){
+  const S = STR[lang];
+  const body = document.getElementById("modalBody");
+  if (!modalCtx.files.length) { body.innerHTML = `<div class="empty">${S.noFiles}</div>`; return; }
+  body.innerHTML = "";
+  modalCtx.files.forEach(f => {
+    const row = document.createElement("div");
+    row.className = "file-row";
+    row.innerHTML = `
+      <span class="file-icon">${fileIcon(f.path)}</span>
+      <span class="file-name">${f.path}</span>
+      <span class="file-size">${f.size ? formatBytes(f.size) : ''}</span>
+    `;
+    row.onclick = () => openFilePreview(f);
+    body.appendChild(row);
+  });
+}
+
+async function openFilePreview(file){
+  const S = STR[lang];
+  const { source: src, id, branch } = modalCtx;
+  document.getElementById("modalBreadcrumb").textContent = S.contentBreadcrumb(id);
+  document.getElementById("modalTitle").textContent = file.path;
+  const body = document.getElementById("modalBody");
+  body.innerHTML = `
+    <div class="preview-actions" id="previewActions"></div>
+    <div id="previewContent" class="loading-line">${S.loadingContent}</div>
+  `;
+  renderPreviewActions(file);
+
+  const ext = fileExt(file.path);
+  if (!TEXTISH_EXT.has(ext)) {
+    document.getElementById("previewContent").innerHTML = `<div class="preview-note">${S.binaryNote}</div>`;
+    return;
+  }
+
+  const rawUrl = src === 'hf'
+    ? `https://huggingface.co/datasets/${id}/resolve/main/${file.path.split('/').map(encodeURIComponent).join('/')}`
+    : `https://raw.githubusercontent.com/${id}/${branch}/${file.path.split('/').map(encodeURIComponent).join('/')}`;
+
+  try {
+    const res = await fetch(rawUrl, { headers: { Range: `bytes=0-${PREVIEW_BYTE_LIMIT}` } });
+    if (!res.ok && res.status !== 206) throw new Error("HTTP " + res.status);
+    let text = await res.text();
+    const truncated = text.length >= PREVIEW_BYTE_LIMIT;
+    if (truncated) text = text.slice(0, PREVIEW_BYTE_LIMIT);
+    renderFileContent(ext, text, truncated);
+  } catch (e) {
+    document.getElementById("previewContent").innerHTML = `<div class="preview-note">${S.fetchFileErr}</div>`;
+  }
+}
+
+function renderPreviewActions(file){
+  const S = STR[lang];
+  const { source: src, id, branch } = modalCtx;
+  const wrap = document.getElementById("previewActions");
+  const backBtn = document.createElement("button");
+  backBtn.textContent = S.backToFiles;
+  backBtn.onclick = () => { document.getElementById("modalBreadcrumb").textContent = S.filesBreadcrumb; document.getElementById("modalTitle").textContent = id; renderFileList(); };
+  wrap.appendChild(backBtn);
+
+  const dlBtn = document.createElement("button");
+  if (src === 'hf') {
+    dlBtn.textContent = S.copyDownload;
+    dlBtn.onclick = () => { navigator.clipboard.writeText(`hf download ${id} ${file.path} --repo-type dataset --local-dir .`).then(() => flashCopied(dlBtn)); };
+  } else {
+    dlBtn.textContent = S.copyRaw;
+    dlBtn.onclick = () => {
+      const rawUrl = `https://raw.githubusercontent.com/${id}/${branch}/${file.path}`;
+      navigator.clipboard.writeText(rawUrl).then(() => flashCopied(dlBtn));
+    };
+  }
+  wrap.appendChild(dlBtn);
+}
+
+function renderFileContent(ext, text, truncated){
+  const S = STR[lang];
+  const container = document.getElementById("previewContent");
+  const isArabic = looksArabic(text);
+  const note = truncated ? `<div class="preview-note">${S.truncatedNote}</div>` : "";
+
+  if ((ext === 'csv' || ext === 'tsv') && window.Papa) {
+    try {
+      const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, delimiter: ext === 'tsv' ? '\t' : ',' });
+      let rows = parsed.data;
+      if (truncated && rows.length) rows = rows.slice(0, -1);
+      if (!rows.length) throw new Error("empty");
+      const cols = Object.keys(rows[0]).slice(0, 8);
+      let html = `<table class="preview-table${isArabic?' arabic-content':''}"><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>`;
+      rows.slice(0, 100).forEach(r => {
+        html += `<tr>${cols.map(c => `<td>${String(r[c] ?? '').slice(0,300)}</td>`).join('')}</tr>`;
+      });
+      html += `</tbody></table>`;
+      container.innerHTML = note + `<div class="preview-table-wrap">${html}</div>`;
+      return;
+    } catch (e) { /* fall through to raw text */ }
+  }
+
+  if (ext === 'jsonl') {
+    const lines = text.split(/\r?\n/).filter(Boolean);
+    const usableLines = truncated ? lines.slice(0, -1) : lines;
+    const rows = [];
+    for (const ln of usableLines) { try { rows.push(JSON.parse(ln)); } catch(e){} if (rows.length >= 100) break; }
+    if (rows.length) {
+      const cols = Object.keys(rows[0]).slice(0, 8);
+      let html = `<table class="preview-table${isArabic?' arabic-content':''}"><thead><tr>${cols.map(c=>`<th>${c}</th>`).join('')}</tr></thead><tbody>`;
+      rows.forEach(r => { html += `<tr>${cols.map(c => `<td>${String(r[c] ?? '').slice(0,300)}</td>`).join('')}</tr>`; });
+      html += `</tbody></table>`;
+      container.innerHTML = note + `<div class="preview-table-wrap">${html}</div>`;
+      return;
+    }
+  }
+
+  if (ext === 'json' && !truncated) {
+    try {
+      const obj = JSON.parse(text);
+      container.innerHTML = note + `<pre class="preview-pre${isArabic?' arabic-content':''}" dir="auto">${escapeHtml(JSON.stringify(obj, null, 2))}</pre>`;
+      return;
+    } catch (e) { /* fall through */ }
+  }
+
+  container.innerHTML = note + `<pre class="preview-pre${isArabic?' arabic-content':''}" dir="auto">${escapeHtml(text)}</pre>`;
+}
+
+function escapeHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* =========================================================
+   IN-BROWSER ADVISOR — mirrors hfadvisor.sh's logic
+   ========================================================= */
+const ADVISOR_TEXT_EXT = ['parquet','jsonl','json','csv'];
+
+function pickAdvisorFile(siblings){
+  const langPref = (selLang !== 'any') ? selLang : 'en';
+  const candidates = siblings.map(s => s.rfilename);
+  let picked = candidates.find(f => f.includes(`.${langPref}/`) && ADVISOR_TEXT_EXT.some(e => f.endsWith('.'+e)));
+  if (!picked) picked = candidates.find(f => ADVISOR_TEXT_EXT.some(e => f.endsWith('.'+e)));
+  return picked || null;
+}
+
+function classifyDtype(cols){
+  const set = new Set(cols.map(c => c.toLowerCase()));
+  if (set.has('instruction') && set.has('output')) return 'Instruction Tuning';
+  if (set.has('question') && set.has('answer')) return 'Question Answering';
+  if (set.has('text')) return 'Text Corpus';
+  return 'Unknown';
+}
+function findTextColumn(cols){
+  const pref = ['text','content','body','instruction','question','prompt'];
+  const lower = cols.map(c => c.toLowerCase());
+  for (const p of pref){ const idx = lower.indexOf(p); if (idx !== -1) return cols[idx]; }
+  return null;
+}
+
+function computeAdvisorFromRows(rows){
+  if (!rows.length) return null;
+  const cols = Object.keys(rows[0]);
+  const dtype = classifyDtype(cols);
+  const textCol = findTextColumn(cols);
+  let missingCount = 0, nested = false;
+  rows.forEach(r => {
+    cols.forEach(c => {
+      const v = r[c];
+      if (v === null || v === undefined || v === "") missingCount++;
+      if (v && typeof v === "object") nested = true;
+    });
+  });
+  const missingRatio = missingCount / (rows.length * cols.length);
+  return { rows: rows.length, cols: cols.length, columns: cols, dtype, textCol, missingRatio, nested };
+}
+
+function buildAdvisorVerdict(facts, meta){
+  const S = STR[lang];
+  const licenseClass = classifyLicense(meta.license);
+  const reasonsFor = [], reasonsAgainst = [];
+
+  if (facts.dtype !== 'Unknown') reasonsFor.push(`Clear structure detected (${facts.dtype}).`);
+  else reasonsAgainst.push(`Schema doesn't match a recognizable pattern (columns: ${facts.columns.slice(0,6).join(', ')}).`);
+
+  if (facts.rows >= 10000) reasonsFor.push(`Good sample volume: ${facts.rows.toLocaleString()} rows loaded.`);
+  else if (facts.rows < 500) reasonsAgainst.push(`Small sample: only ${facts.rows.toLocaleString()} rows loaded from this file.`);
+
+  if (facts.missingRatio < 0.02) reasonsFor.push('Very few missing values in the sample.');
+  else if (facts.missingRatio > 0.15) reasonsAgainst.push(`~${(facts.missingRatio*100).toFixed(0)}% missing values in the sample.`);
+
+  if (licenseClass === 'permissive') reasonsFor.push('Permissive license — free for commercial + research use.');
+  else if (licenseClass === 'restrictive') reasonsAgainst.push(`License '${meta.license}' likely restricts commercial use or requires copyleft.`);
+  else reasonsAgainst.push(`License unclear ('${meta.license}') — verify terms before shipping.`);
+
+  if (meta.downloads >= 10000 || meta.likes >= 100) reasonsFor.push(`Community-validated: ${meta.downloads.toLocaleString()} downloads, ${meta.likes.toLocaleString()} likes.`);
+  else if (meta.downloads < 100 && meta.likes < 5) reasonsAgainst.push(`Low adoption so far (${meta.downloads.toLocaleString()} downloads, ${meta.likes.toLocaleString()} likes).`);
+
+  if (facts.nested) reasonsAgainst.push('Contains nested (object/array) values — needs flattening before most pipelines can use it.');
+  if (meta.taskCategories) reasonsFor.push(`Declared task categories: ${meta.taskCategories}`);
+
+  let score = 0;
+  score += facts.dtype !== 'Unknown' ? 25 : 0;
+  score += facts.rows >= 10000 ? 20 : (facts.rows < 500 ? 0 : 10);
+  score += facts.missingRatio < 0.02 ? 15 : (facts.missingRatio > 0.15 ? 0 : 8);
+  score += licenseClass === 'permissive' ? 25 : (licenseClass === 'restrictive' ? 0 : 10);
+  score += (meta.downloads >= 10000 || meta.likes >= 100) ? 15 : 5;
+  score = Math.max(0, Math.min(100, score));
+  const verdict = score >= 70 ? 'use' : (score >= 45 ? 'caution' : 'avoid');
+
+  return { score, verdict, licenseClass, reasonsFor, reasonsAgainst };
+}
+
+async function fetchDatasetMeta(id){
+  const res = await fetch(`https://huggingface.co/api/datasets/${id}?full=true`);
+  if (!res.ok) throw new Error("HTTP " + res.status);
+  const data = await res.json();
+  const tags = data.tags || [];
+  return {
+    license: extractTagValue(tags, "license") || data.cardData?.license || "unknown",
+    downloads: data.downloads || 0,
+    likes: data.likes || 0,
+    taskCategories: extractTagValue(tags, "task_categories"),
+    siblings: data.siblings || [],
+  };
+}
+
+async function runAdvisorAnalysis(id){
+  const meta = await fetchDatasetMeta(id);
+  const file = pickAdvisorFile(meta.siblings);
+  if (!file) return { error: 'noFile' };
+  if (file.endsWith('.parquet')) return { needsLocal: true, file, id };
+
+  const url = `https://huggingface.co/datasets/${id}/resolve/main/${file.split('/').map(encodeURIComponent).join('/')}`;
+  const res = await fetch(url, { headers: { Range: `bytes=0-${ADVISOR_BYTE_LIMIT}` } });
+  if (!res.ok && res.status !== 206) throw new Error("HTTP " + res.status);
+  let text = await res.text();
+  const truncated = text.length >= ADVISOR_BYTE_LIMIT;
+  if (truncated) text = text.slice(0, ADVISOR_BYTE_LIMIT);
+
+  const ext = fileExt(file);
+  let rows = [];
+  if (ext === 'csv' || ext === 'tsv') {
+    const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, delimiter: ext === 'tsv' ? '\t' : ',' });
+    rows = parsed.data;
+    if (truncated && rows.length) rows = rows.slice(0, -1);
+  } else if (ext === 'jsonl') {
+    const lines = text.split(/\r?\n/).filter(Boolean);
+    const usable = truncated ? lines.slice(0, -1) : lines;
+    for (const ln of usable) { try { rows.push(JSON.parse(ln)); } catch(e){} }
+  } else if (ext === 'json' && !truncated) {
+    try { const obj = JSON.parse(text); rows = Array.isArray(obj) ? obj : [obj]; } catch(e){}
+  }
+
+  const facts = computeAdvisorFromRows(rows);
+  if (!facts) return { error: 'noRows', file, id };
+
+  const result = buildAdvisorVerdict(facts, meta);
+  return { ...result, facts, meta, file, id, truncated };
+}
+
+function dialSvgBig(score){
+  const r = 30, c = 2*Math.PI*r; const offset = c - (score/100)*c; const color = scoreColor(score);
+  return `<svg width="72" height="72" viewBox="0 0 72 72" style="transform:rotate(-90deg);">
+    <circle cx="36" cy="36" r="${r}" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="6"/>
+    <circle cx="36" cy="36" r="${r}" fill="none" stroke="${color}" stroke-width="6"
+      stroke-dasharray="${c}" stroke-dashoffset="${offset}" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function renderAdvisorPanel(r){
+  const S = STR[lang];
+  const body = document.getElementById("modalBody");
+
+  if (r.error === 'noFile' || r.error === 'noRows') {
+    body.innerHTML = `<div class="setup-msg">${S.advisorCannotAssess}</div>`;
+    return;
+  }
+  if (r.needsLocal) {
+    body.innerHTML = `
+      <div class="setup-msg" style="margin-bottom:12px;">${S.advisorNeedsLocal(r.file)}</div>
+      <div class="preview-actions"><button id="copyLocalAdvisorBtn">${S.copyAdvisor}</button></div>
+    `;
+    document.getElementById("copyLocalAdvisorBtn").onclick = (e) => {
+      navigator.clipboard.writeText(`./hfadvisor.sh ${r.id}`).then(() => flashCopied(e.target));
+    };
+    return;
+  }
+
+  const forList = r.reasonsFor.map(x => `<li>${x}</li>`).join('') || '<li>—</li>';
+  const againstList = r.reasonsAgainst.map(x => `<li>${x}</li>`).join('') || '<li>—</li>';
+
+  body.innerHTML = `
+    <div class="advisor-head">
+      <div class="dial">${dialSvgBig(r.score)}<div class="score-num" style="color:${scoreColor(r.score)}">${r.score}</div></div>
+      <div>
+        <div class="advisor-verdict-name" style="color:${scoreColor(r.score)}">${S.verdict[r.verdict]}</div>
+        <div class="advisor-meta">${S.advisorSampleFile(r.file)}</div>
+      </div>
+    </div>
+    <div class="advisor-section">
+      <h4>${S.reasonsForTitle}</h4>
+      <ul class="advisor-list for">${forList}</ul>
+    </div>
+    <div class="advisor-section">
+      <h4>${S.reasonsAgainstTitle}</h4>
+      <ul class="advisor-list against">${againstList}</ul>
+    </div>
+    <div class="advisor-section">
+      <h4>${S.bottomLine}</h4>
+      <div class="advisor-bottomline">${S.bottomLines[r.verdict]}</div>
+    </div>
+    <div class="preview-note" style="margin-top:12px;">${S.advisorSampleNote}</div>
+  `;
+}
+
+async function runAdvisor(id){
+  const S = STR[lang];
+  document.getElementById("modalBreadcrumb").textContent = S.advisorBreadcrumb;
+  document.getElementById("modalTitle").textContent = id;
+  document.getElementById("modalBody").innerHTML = `<div class="loading-line">${S.advisorRunning}</div>`;
+  openModal();
+  try {
+    const result = await runAdvisorAnalysis(id);
+    renderAdvisorPanel(result);
+  } catch (e) {
+    document.getElementById("modalBody").innerHTML = `<div class="setup-msg">${S.fetchFileErr}</div>`;
+  }
+}
+
+async function runComparison(){
+  const ids = [...compareSet].slice(0,2);
+  if (ids.length < 2) return;
+  const S = STR[lang];
+  document.getElementById("modalBreadcrumb").textContent = S.comparisonTitle;
+  document.getElementById("modalTitle").textContent = `${ids[0]} vs ${ids[1]}`;
+  document.getElementById("modalBody").innerHTML = `<div class="loading-line">${S.advisorRunning}</div>`;
+  openModal();
+  try {
+    const [r1, r2] = await Promise.all([runAdvisorAnalysis(ids[0]), runAdvisorAnalysis(ids[1])]);
+    renderComparisonPanel(ids, r1, r2);
+  } catch (e) {
+    document.getElementById("modalBody").innerHTML = `<div class="setup-msg">${S.fetchFileErr}</div>`;
+  }
+}
+
+function miniAdvisorCol(id, r){
+  const S = STR[lang];
+  if (r.error || r.needsLocal) {
+    return `<div class="compare-col"><h4>${id}</h4><div class="preview-note">${r.needsLocal ? S.advisorNeedsLocal(r.file) : S.advisorCannotAssess}</div></div>`;
+  }
+  const forList = r.reasonsFor.slice(0,4).map(x => `<li>${x}</li>`).join('') || '<li>—</li>';
+  const againstList = r.reasonsAgainst.slice(0,4).map(x => `<li>${x}</li>`).join('') || '<li>—</li>';
+  return `
+    <div class="compare-col">
+      <h4>${id}</h4>
+      <div class="advisor-head" style="margin-bottom:10px;">
+        <div class="dial" style="width:56px;height:56px;">${dialSvg(r.score)}<div class="score-num" style="color:${scoreColor(r.score)}">${r.score}</div></div>
+        <div class="advisor-verdict-name" style="font-size:15px;color:${scoreColor(r.score)}">${S.verdict[r.verdict]}</div>
+      </div>
+      <ul class="advisor-list for">${forList}</ul>
+      <ul class="advisor-list against">${againstList}</ul>
+    </div>
+  `;
+}
+
+function renderComparisonPanel(ids, r1, r2){
+  const S = STR[lang];
+  const body = document.getElementById("modalBody");
+  let pick = null;
+  if (!r1.error && !r2.error && !r1.needsLocal && !r2.needsLocal) {
+    if (r1.score !== r2.score) pick = r1.score > r2.score ? ids[0] : ids[1];
+    else if (r1.licenseClass === 'permissive' && r2.licenseClass !== 'permissive') pick = ids[0];
+    else if (r2.licenseClass === 'permissive' && r1.licenseClass !== 'permissive') pick = ids[1];
+    else pick = r1.meta.downloads >= r2.meta.downloads ? ids[0] : ids[1];
+  }
+  body.innerHTML = `
+    <div class="compare-columns">
+      ${miniAdvisorCol(ids[0], r1)}
+      ${miniAdvisorCol(ids[1], r2)}
+    </div>
+    ${pick ? `<div class="pick-banner">${S.pickLabel(pick)}</div>` : ''}
+  `;
+}
+
+document.getElementById("searchInput").addEventListener("keydown", e => { if (e.key === "Enter") doSearch(); });
 document.getElementById("permissiveOnly").addEventListener("change", () => renderResults(lastResults));
+document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal(); });
 
 applyStaticText();
 </script>
