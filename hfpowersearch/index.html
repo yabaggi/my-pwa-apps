@@ -295,7 +295,7 @@ const STR = {
     labelType:"Dataset type", labelSize:"Size", labelLang:"Language",
     labelPermissive:"Show only permissive-license datasets (safe for commercial use)",
     glossarySummary:"Not sure what these terms mean? A quick field guide",
-    footer:"Search spans Hugging Face, GitHub, and Kaggle · browse files in-app or deep-dive HF results with hfadvisor.sh",
+    footer:"Search spans Hugging Face, GitHub, and Kaggle · browse files in-app or deep-dive HF results with hf_advisor.sh",
     searching:"Searching…",
     resultsFound:n=>`${n} result${n===1?'':'s'} found`,
     noResults:"No results matched. Try a broader keyword or fewer filters.",
@@ -350,6 +350,7 @@ const STR = {
     copyDownload:"Copy download command",
     copyRaw:"Copy raw file URL",
     copyClone:"Copy git clone command",
+    copyKaggleCli:"Copy kaggle CLI command",
     kaggleFilesNote:"Kaggle file browsing isn't wired up yet — this proxy would need a small extra route. Open the dataset on Kaggle directly for now.",
     types:[
       {key:'any', label:'Any'},
@@ -411,7 +412,7 @@ const STR = {
     labelType:"نوع البيانات", labelSize:"الحجم", labelLang:"اللغة",
     labelPermissive:"إظهار مجموعات البيانات ذات الترخيص المرن فقط (آمنة للاستخدام التجاري)",
     glossarySummary:"لست متأكدًا من هذه المصطلحات؟ دليل سريع",
-    footer:"البحث يشمل Hugging Face وGitHub وKaggle · تصفّح الملفات من التطبيق أو افحص نتائج HF بعمق عبر hfadvisor.sh",
+    footer:"البحث يشمل Hugging Face وGitHub وKaggle · تصفّح الملفات من التطبيق أو افحص نتائج HF بعمق عبر hf_advisor.sh",
     searching:"جارِ البحث…",
     resultsFound:n=>`تم العثور على ${n} نتيجة`,
     noResults:"لا توجد نتائج مطابقة. جرّب كلمة أعم أو صفّيات أقل.",
@@ -465,6 +466,7 @@ const STR = {
     copyDownload:"نسخ أمر التنزيل",
     copyRaw:"نسخ رابط الملف الخام",
     copyClone:"نسخ أمر git clone",
+    copyKaggleCli:"نسخ أمر kaggle CLI",
     kaggleFilesNote:"تصفّح ملفات Kaggle غير مُفعّل بعد — يحتاج هذا الوسيط مسارًا إضافيًا بسيطًا. افتح مجموعة البيانات على Kaggle مباشرة في الوقت الحالي.",
     types:[
       {key:'any', label:'أي نوع'},
@@ -842,7 +844,7 @@ function renderResults(list){
     btn.onclick = () => runAdvisor(btn.dataset.id);
   });
   el.querySelectorAll('[data-act="copyadv"]').forEach(btn => {
-    btn.onclick = () => { navigator.clipboard.writeText(`./hfadvisor.sh ${btn.dataset.id}`).then(() => flashCopied(btn)); };
+    btn.onclick = () => { navigator.clipboard.writeText(`./hf_advisor.sh ${btn.dataset.id}`).then(() => flashCopied(btn)); };
   });
   el.querySelectorAll('[data-act="copyid"]').forEach(btn => {
     btn.onclick = () => { navigator.clipboard.writeText(btn.dataset.id).then(() => flashCopied(btn)); };
@@ -872,7 +874,7 @@ function updateCompareBar(){
   } else {
     const pair = ids.slice(0,2);
     document.getElementById("compareLabel").textContent = S.compareReady;
-    document.getElementById("compareCmd").textContent = `./hfadvisor.sh --compare ${pair[0]} ${pair[1]}`;
+    document.getElementById("compareCmd").textContent = `./hf_advisor.sh --compare ${pair[0]} ${pair[1]}`;
     document.getElementById("copyCompareBtn").style.display = "inline-block";
     document.getElementById("runComparisonBtn").style.display = "inline-block";
   }
@@ -880,7 +882,7 @@ function updateCompareBar(){
 function copyCompare(){
   const ids = [...compareSet].slice(0,2);
   if (ids.length < 2) return;
-  navigator.clipboard.writeText(`./hfadvisor.sh --compare ${ids[0]} ${ids[1]}`).then(() => {
+  navigator.clipboard.writeText(`./hf_advisor.sh --compare ${ids[0]} ${ids[1]}`).then(() => {
     document.getElementById("copyCompareBtn").textContent = STR[lang].copied;
     setTimeout(() => document.getElementById("copyCompareBtn").textContent = STR[lang].copyCommand, 1400);
   });
@@ -932,8 +934,21 @@ async function openFileBrowser(src, id){
       const treeData = await treeRes.json();
       modalCtx.files = (treeData.tree || []).filter(t => t.type === 'blob').map(t => ({ path: t.path, size: t.size || null }));
     } else {
-      document.getElementById("modalBody").innerHTML = `<div class="setup-msg">${S.kaggleFilesNote}</div>`;
-      return;
+      if (!KAGGLE_PROXY_URL) {
+        document.getElementById("modalBody").innerHTML = `<div class="setup-msg">${S.kaggleSetupMsg}</div>`;
+        return;
+      }
+      const [owner, ...rest] = id.split('/');
+      const datasetSlug = rest.join('/');
+      const res = await fetch(`${KAGGLE_PROXY_URL}/files?owner=${encodeURIComponent(owner)}&dataset=${encodeURIComponent(datasetSlug)}`);
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+      // Kaggle's file-list shape isn't fully documented publicly — probe common key names defensively.
+      const rawFiles = data.datasetFiles || data.files || (Array.isArray(data) ? data : []);
+      modalCtx.files = rawFiles.map(f => ({
+        path: f.name || f.fileName || f.ref || f.path,
+        size: f.totalBytes || f.size || null,
+      })).filter(f => f.path);
     }
     renderFileList();
   } catch (e) {
@@ -977,9 +992,16 @@ async function openFilePreview(file){
     return;
   }
 
-  const rawUrl = src === 'hf'
-    ? `https://huggingface.co/datasets/${id}/resolve/main/${file.path.split('/').map(encodeURIComponent).join('/')}`
-    : `https://raw.githubusercontent.com/${id}/${branch}/${file.path.split('/').map(encodeURIComponent).join('/')}`;
+  let rawUrl;
+  if (src === 'hf') {
+    rawUrl = `https://huggingface.co/datasets/${id}/resolve/main/${file.path.split('/').map(encodeURIComponent).join('/')}`;
+  } else if (src === 'github') {
+    rawUrl = `https://raw.githubusercontent.com/${id}/${branch}/${file.path.split('/').map(encodeURIComponent).join('/')}`;
+  } else {
+    const [owner, ...rest] = id.split('/');
+    const datasetSlug = rest.join('/');
+    rawUrl = `${KAGGLE_PROXY_URL}/download?owner=${encodeURIComponent(owner)}&dataset=${encodeURIComponent(datasetSlug)}&file=${encodeURIComponent(file.path)}`;
+  }
 
   try {
     const res = await fetch(rawUrl, { headers: { Range: `bytes=0-${PREVIEW_BYTE_LIMIT}` } });
@@ -1006,11 +1028,16 @@ function renderPreviewActions(file){
   if (src === 'hf') {
     dlBtn.textContent = S.copyDownload;
     dlBtn.onclick = () => { navigator.clipboard.writeText(`hf download ${id} ${file.path} --repo-type dataset --local-dir .`).then(() => flashCopied(dlBtn)); };
-  } else {
+  } else if (src === 'github') {
     dlBtn.textContent = S.copyRaw;
     dlBtn.onclick = () => {
       const rawUrl = `https://raw.githubusercontent.com/${id}/${branch}/${file.path}`;
       navigator.clipboard.writeText(rawUrl).then(() => flashCopied(dlBtn));
+    };
+  } else {
+    dlBtn.textContent = S.copyKaggleCli;
+    dlBtn.onclick = () => {
+      navigator.clipboard.writeText(`kaggle datasets download -d ${id} -f "${file.path}"`).then(() => flashCopied(dlBtn));
     };
   }
   wrap.appendChild(dlBtn);
@@ -1070,7 +1097,7 @@ function escapeHtml(s){
 }
 
 /* =========================================================
-   IN-BROWSER ADVISOR — mirrors hfadvisor.sh's logic
+   IN-BROWSER ADVISOR — mirrors hf_advisor.sh's logic
    ========================================================= */
 const ADVISOR_TEXT_EXT = ['parquet','jsonl','json','csv'];
 
@@ -1220,7 +1247,7 @@ function renderAdvisorPanel(r){
       <div class="preview-actions"><button id="copyLocalAdvisorBtn">${S.copyAdvisor}</button></div>
     `;
     document.getElementById("copyLocalAdvisorBtn").onclick = (e) => {
-      navigator.clipboard.writeText(`./hfadvisor.sh ${r.id}`).then(() => flashCopied(e.target));
+      navigator.clipboard.writeText(`./hf_advisor.sh ${r.id}`).then(() => flashCopied(e.target));
     };
     return;
   }
