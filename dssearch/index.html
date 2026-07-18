@@ -186,6 +186,9 @@
   @media (max-width:640px){header{flex-direction:column;}.searchrow{flex-direction:column;}.searchrow button{padding:12px;}}
   @media (prefers-reduced-motion: reduce){*{transition:none !important;}}
 </style>
+    <link rel="manifest" href="/my-pwa-apps/dssearch/manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="/my-pwa-apps/dssearch/icons/icon-192x192.png">
 </head>
 <body>
 
@@ -318,6 +321,7 @@ const STR = {
     advisorNeedsLocal:n=>`Selected sample file (${n}) is Parquet — that needs a real parser, which isn't practical to run in-browser yet. Run the deep check locally instead:`,
     advisorSampleFile:n=>`Sample file analyzed: ${n}`,
     advisorSampleNote:"Based on the sample loaded above (not the full file) — treat exact row counts as directional, not exact.",
+    advisorShallowNote:"No sample data file found in this repo — this is a metadata-only estimate.",
     reasonsForTitle:"Reasons to use it",
     reasonsAgainstTitle:"Reasons to think twice",
     bottomLine:"Bottom line",
@@ -435,6 +439,7 @@ const STR = {
     advisorNeedsLocal:n=>`ملف العينة المختار (${n}) بصيغة Parquet — يحتاج محلّلًا حقيقيًا لا يمكن تشغيله في المتصفح حاليًا. شغّل الفحص العميق محليًا بدلًا من ذلك:`,
     advisorSampleFile:n=>`ملف العينة المحلَّل: ${n}`,
     advisorSampleNote:"استنادًا إلى العينة المحمَّلة أعلاه (وليس الملف كاملًا) — اعتبر أعداد الصفوف تقريبية لا دقيقة.",
+    advisorShallowNote:"لم يتم العثور على ملف بيانات في هذا المستودع — هذا تقدير استنادًا إلى البيانات الوصفية فقط.",
     reasonsForTitle:"أسباب لاستخدامه",
     reasonsAgainstTitle:"أسباب للتريّث",
     bottomLine:"الخلاصة",
@@ -826,12 +831,9 @@ function renderResults(list){
       </div>
       <div class="card-actions">
         <button data-act="browse" data-src="${n.source}" data-id="${n.id}" class="primary">${S.browseFiles}</button>
-        ${n.source === 'hf'
-          ? `<button data-act="advisor" data-id="${n.id}" class="primary">${S.runAdvisor}</button>
-             <button data-act="copyadv" data-id="${n.id}">${S.copyAdvisor}</button>
-             <label><input type="checkbox" data-act="cmp" data-id="${n.id}"> ${S.compareSelect}</label>`
-          : `<button data-act="copyid" data-id="${n.id}">${S.copyId}</button>`
-        }
+        <button data-act="advisor" data-src="${n.source}" data-id="${n.id}" class="primary">${S.runAdvisor}</button>
+        ${n.source === 'hf' ? `<button data-act="copyadv" data-id="${n.id}">${S.copyAdvisor}</button>` : ""}
+        <label><input type="checkbox" data-act="cmp" data-src="${n.source}" data-id="${n.id}" ${compareSet.has(n.source+'::'+n.id)?'checked':''}> ${S.compareSelect}</label>
       </div>
     `;
     el.appendChild(card);
@@ -841,7 +843,7 @@ function renderResults(list){
     btn.onclick = () => openFileBrowser(btn.dataset.src, btn.dataset.id);
   });
   el.querySelectorAll('[data-act="advisor"]').forEach(btn => {
-    btn.onclick = () => runAdvisor(btn.dataset.id);
+    btn.onclick = () => runAdvisor(btn.dataset.src, btn.dataset.id);
   });
   el.querySelectorAll('[data-act="copyadv"]').forEach(btn => {
     btn.onclick = () => { navigator.clipboard.writeText(`./hf_advisor.sh ${btn.dataset.id}`).then(() => flashCopied(btn)); };
@@ -850,7 +852,11 @@ function renderResults(list){
     btn.onclick = () => { navigator.clipboard.writeText(btn.dataset.id).then(() => flashCopied(btn)); };
   });
   el.querySelectorAll('[data-act="cmp"]').forEach(cb => {
-    cb.onchange = () => { if (cb.checked) compareSet.add(cb.dataset.id); else compareSet.delete(cb.dataset.id); updateCompareBar(); };
+    cb.onchange = () => {
+      const key = cb.dataset.src + '::' + cb.dataset.id;
+      if (cb.checked) compareSet.add(key); else compareSet.delete(key);
+      updateCompareBar();
+    };
   });
 }
 
@@ -865,24 +871,30 @@ function updateCompareBar(){
   const bar = document.getElementById("compareBar");
   if (compareSet.size === 0) { bar.style.display = "none"; return; }
   bar.style.display = "flex";
-  const ids = [...compareSet];
-  if (ids.length < 2) {
-    document.getElementById("compareLabel").textContent = S.compareLabel(ids.length);
+  const keys = [...compareSet];
+  if (keys.length < 2) {
+    document.getElementById("compareLabel").textContent = S.compareLabel(keys.length);
     document.getElementById("compareCmd").textContent = "";
     document.getElementById("copyCompareBtn").style.display = "none";
     document.getElementById("runComparisonBtn").style.display = "none";
   } else {
-    const pair = ids.slice(0,2);
+    const pair = keys.slice(0,2).map(k => k.split('::'));
+    const bothHF = pair.every(([src]) => src === 'hf');
     document.getElementById("compareLabel").textContent = S.compareReady;
-    document.getElementById("compareCmd").textContent = `./hf_advisor.sh --compare ${pair[0]} ${pair[1]}`;
-    document.getElementById("copyCompareBtn").style.display = "inline-block";
     document.getElementById("runComparisonBtn").style.display = "inline-block";
+    if (bothHF) {
+      document.getElementById("compareCmd").textContent = `./hf_advisor.sh --compare ${pair[0][1]} ${pair[1][1]}`;
+      document.getElementById("copyCompareBtn").style.display = "inline-block";
+    } else {
+      document.getElementById("compareCmd").textContent = "";
+      document.getElementById("copyCompareBtn").style.display = "none";
+    }
   }
 }
 function copyCompare(){
-  const ids = [...compareSet].slice(0,2);
-  if (ids.length < 2) return;
-  navigator.clipboard.writeText(`./hf_advisor.sh --compare ${ids[0]} ${ids[1]}`).then(() => {
+  const keys = [...compareSet].slice(0,2).map(k => k.split('::'));
+  if (keys.length < 2 || !keys.every(([src]) => src === 'hf')) return;
+  navigator.clipboard.writeText(`./hf_advisor.sh --compare ${keys[0][1]} ${keys[1][1]}`).then(() => {
     document.getElementById("copyCompareBtn").textContent = STR[lang].copied;
     setTimeout(() => document.getElementById("copyCompareBtn").textContent = STR[lang].copyCommand, 1400);
   });
@@ -1097,16 +1109,24 @@ function escapeHtml(s){
 }
 
 /* =========================================================
-   IN-BROWSER ADVISOR — mirrors hf_advisor.sh's logic
+   IN-BROWSER ADVISOR — mirrors hf_advisor.sh's logic, generalized
+   across sources (HF/GitHub/Kaggle)
    ========================================================= */
 const ADVISOR_TEXT_EXT = ['parquet','jsonl','json','csv'];
 
-function pickAdvisorFile(siblings){
-  const langPref = (selLang !== 'any') ? selLang : 'en';
-  const candidates = siblings.map(s => s.rfilename);
-  let picked = candidates.find(f => f.includes(`.${langPref}/`) && ADVISOR_TEXT_EXT.some(e => f.endsWith('.'+e)));
-  if (!picked) picked = candidates.find(f => ADVISOR_TEXT_EXT.some(e => f.endsWith('.'+e)));
-  return picked || null;
+function findResultById(src, id){
+  return lastResults.find(r => r.source === src && r.id === id) || null;
+}
+
+function pickAdvisorFile(src, files){
+  // files: array of {path, size}
+  if (src === 'hf') {
+    const langPref = (selLang !== 'any') ? selLang : 'en';
+    const picked = files.find(f => f.path.includes(`.${langPref}/`) && ADVISOR_TEXT_EXT.some(e => f.path.endsWith('.'+e)));
+    if (picked) return picked.path;
+  }
+  const generic = files.find(f => ADVISOR_TEXT_EXT.some(e => f.path.endsWith('.'+e)));
+  return generic ? generic.path : null;
 }
 
 function classifyDtype(cols){
@@ -1140,8 +1160,9 @@ function computeAdvisorFromRows(rows){
   return { rows: rows.length, cols: cols.length, columns: cols, dtype, textCol, missingRatio, nested };
 }
 
-function buildAdvisorVerdict(facts, meta){
-  const S = STR[lang];
+// meta: { license, a, b, category }  — a/b are the source's two popularity stats
+// statLabels: { a: 'downloads'|'stars'|..., b: 'likes'|'forks'|'votes' }
+function buildAdvisorVerdict(facts, meta, statLabels){
   const licenseClass = classifyLicense(meta.license);
   const reasonsFor = [], reasonsAgainst = [];
 
@@ -1158,45 +1179,107 @@ function buildAdvisorVerdict(facts, meta){
   else if (licenseClass === 'restrictive') reasonsAgainst.push(`License '${meta.license}' likely restricts commercial use or requires copyleft.`);
   else reasonsAgainst.push(`License unclear ('${meta.license}') — verify terms before shipping.`);
 
-  if (meta.downloads >= 10000 || meta.likes >= 100) reasonsFor.push(`Community-validated: ${meta.downloads.toLocaleString()} downloads, ${meta.likes.toLocaleString()} likes.`);
-  else if (meta.downloads < 100 && meta.likes < 5) reasonsAgainst.push(`Low adoption so far (${meta.downloads.toLocaleString()} downloads, ${meta.likes.toLocaleString()} likes).`);
+  if (meta.a >= 10000 || meta.b >= 100) reasonsFor.push(`Community-validated: ${meta.a.toLocaleString()} ${statLabels.a}, ${meta.b.toLocaleString()} ${statLabels.b}.`);
+  else if (meta.a < 100 && meta.b < 5) reasonsAgainst.push(`Low adoption so far (${meta.a.toLocaleString()} ${statLabels.a}, ${meta.b.toLocaleString()} ${statLabels.b}).`);
 
   if (facts.nested) reasonsAgainst.push('Contains nested (object/array) values — needs flattening before most pipelines can use it.');
-  if (meta.taskCategories) reasonsFor.push(`Declared task categories: ${meta.taskCategories}`);
+  if (meta.category) reasonsFor.push(`Declared category/topic: ${meta.category}`);
 
   let score = 0;
   score += facts.dtype !== 'Unknown' ? 25 : 0;
   score += facts.rows >= 10000 ? 20 : (facts.rows < 500 ? 0 : 10);
   score += facts.missingRatio < 0.02 ? 15 : (facts.missingRatio > 0.15 ? 0 : 8);
   score += licenseClass === 'permissive' ? 25 : (licenseClass === 'restrictive' ? 0 : 10);
-  score += (meta.downloads >= 10000 || meta.likes >= 100) ? 15 : 5;
+  score += (meta.a >= 10000 || meta.b >= 100) ? 15 : 5;
   score = Math.max(0, Math.min(100, score));
   const verdict = score >= 70 ? 'use' : (score >= 45 ? 'caution' : 'avoid');
 
   return { score, verdict, licenseClass, reasonsFor, reasonsAgainst };
 }
 
-async function fetchDatasetMeta(id){
-  const res = await fetch(`https://huggingface.co/api/datasets/${id}?full=true`);
+// Fallback when no analyzable data file exists (common for GitHub code repos) —
+// score from search-result metadata alone, same weights as the card list view.
+function buildShallowFallback(src, id, ctx){
+  const n = { source: src, id, a: ctx.a, b: ctx.b, license: ctx.license, category: ctx.category, sizeLabel: null, flagKey: null };
+  const scored = scoreItem(n);
+  const statLabels = STR[lang].statLabels[src];
+  const reasonsFor = [], reasonsAgainst = [];
+  if (scored.licenseClass === 'permissive') reasonsFor.push('Permissive license — free for commercial + research use.');
+  else if (scored.licenseClass === 'restrictive') reasonsAgainst.push(`License '${ctx.license}' likely restricts commercial use or requires copyleft.`);
+  else reasonsAgainst.push(`License unclear ('${ctx.license}') — verify terms before shipping.`);
+  if (ctx.a >= 10000 || ctx.b >= 100) reasonsFor.push(`Community-validated: ${ctx.a.toLocaleString()} ${statLabels.a}, ${ctx.b.toLocaleString()} ${statLabels.b}.`);
+  else if (ctx.a < 100 && ctx.b < 5) reasonsAgainst.push(`Low adoption so far (${ctx.a.toLocaleString()} ${statLabels.a}, ${ctx.b.toLocaleString()} ${statLabels.b}).`);
+  if (ctx.category) reasonsFor.push(`Declared category/topic: ${ctx.category}`);
+  else reasonsAgainst.push('No declared category or topic found.');
+  return { ...scored, reasonsFor, reasonsAgainst, shallow: true, id, src };
+}
+
+async function fetchAdvisorContext(src, id){
+  if (src === 'hf') {
+    const res = await fetch(`https://huggingface.co/api/datasets/${id}?full=true`);
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    const tags = data.tags || [];
+    return {
+      license: extractTagValue(tags, "license") || data.cardData?.license || "unknown",
+      a: data.downloads || 0, b: data.likes || 0,
+      category: extractTagValue(tags, "task_categories"),
+      files: (data.siblings || []).map(s => ({ path: s.rfilename, size: s.size || null })),
+      branch: null,
+    };
+  }
+  if (src === 'github') {
+    const repoRes = await fetch(`https://api.github.com/repos/${id}`);
+    if (!repoRes.ok) throw new Error("HTTP " + repoRes.status);
+    const repoData = await repoRes.json();
+    const branch = repoData.default_branch || 'main';
+    const treeRes = await fetch(`https://api.github.com/repos/${id}/git/trees/${branch}?recursive=1`);
+    if (!treeRes.ok) throw new Error("HTTP " + treeRes.status);
+    const treeData = await treeRes.json();
+    return {
+      license: repoData.license?.spdx_id || "unknown",
+      a: repoData.stargazers_count || 0, b: repoData.forks_count || 0,
+      category: repoData.language || (repoData.topics && repoData.topics[0]) || null,
+      files: (treeData.tree || []).filter(t => t.type === 'blob').map(t => ({ path: t.path, size: t.size || null })),
+      branch,
+    };
+  }
+  // kaggle
+  if (!KAGGLE_PROXY_URL) return { needsProxySetup: true };
+  const [owner, ...rest] = id.split('/');
+  const datasetSlug = rest.join('/');
+  const res = await fetch(`${KAGGLE_PROXY_URL}/files?owner=${encodeURIComponent(owner)}&dataset=${encodeURIComponent(datasetSlug)}`);
   if (!res.ok) throw new Error("HTTP " + res.status);
   const data = await res.json();
-  const tags = data.tags || [];
+  const rawFiles = data.datasetFiles || data.files || (Array.isArray(data) ? data : []);
+  const files = rawFiles.map(f => ({ path: f.name || f.fileName || f.ref || f.path, size: f.totalBytes || f.size || null })).filter(f => f.path);
+  const known = findResultById(src, id);
   return {
-    license: extractTagValue(tags, "license") || data.cardData?.license || "unknown",
-    downloads: data.downloads || 0,
-    likes: data.likes || 0,
-    taskCategories: extractTagValue(tags, "task_categories"),
-    siblings: data.siblings || [],
+    license: known?.license || "unknown",
+    a: known?.a || 0, b: known?.b || 0,
+    category: known?.category || null,
+    files, branch: null,
   };
 }
 
-async function runAdvisorAnalysis(id){
-  const meta = await fetchDatasetMeta(id);
-  const file = pickAdvisorFile(meta.siblings);
-  if (!file) return { error: 'noFile' };
-  if (file.endsWith('.parquet')) return { needsLocal: true, file, id };
+function buildRawUrl(src, id, branch, filePath){
+  const enc = filePath.split('/').map(encodeURIComponent).join('/');
+  if (src === 'hf') return `https://huggingface.co/datasets/${id}/resolve/main/${enc}`;
+  if (src === 'github') return `https://raw.githubusercontent.com/${id}/${branch}/${enc}`;
+  const [owner, ...rest] = id.split('/');
+  const datasetSlug = rest.join('/');
+  return `${KAGGLE_PROXY_URL}/download?owner=${encodeURIComponent(owner)}&dataset=${encodeURIComponent(datasetSlug)}&file=${encodeURIComponent(filePath)}`;
+}
 
-  const url = `https://huggingface.co/datasets/${id}/resolve/main/${file.split('/').map(encodeURIComponent).join('/')}`;
+async function runAdvisorAnalysis(src, id){
+  const ctx = await fetchAdvisorContext(src, id);
+  if (ctx.needsProxySetup) return { needsProxySetup: true };
+
+  const file = pickAdvisorFile(src, ctx.files);
+  if (!file) return buildShallowFallback(src, id, ctx);
+  if (file.endsWith('.parquet')) return { needsLocal: true, file, id, src };
+
+  const url = buildRawUrl(src, id, ctx.branch, file);
   const res = await fetch(url, { headers: { Range: `bytes=0-${ADVISOR_BYTE_LIMIT}` } });
   if (!res.ok && res.status !== 206) throw new Error("HTTP " + res.status);
   let text = await res.text();
@@ -1218,10 +1301,12 @@ async function runAdvisorAnalysis(id){
   }
 
   const facts = computeAdvisorFromRows(rows);
-  if (!facts) return { error: 'noRows', file, id };
+  if (!facts) return buildShallowFallback(src, id, ctx);
 
-  const result = buildAdvisorVerdict(facts, meta);
-  return { ...result, facts, meta, file, id, truncated };
+  const meta = { license: ctx.license, a: ctx.a, b: ctx.b, category: ctx.category };
+  const statLabels = STR[lang].statLabels[src];
+  const result = buildAdvisorVerdict(facts, meta, statLabels);
+  return { ...result, facts, meta, file, id, src, truncated, statLabels };
 }
 
 function dialSvgBig(score){
@@ -1237,30 +1322,36 @@ function renderAdvisorPanel(r){
   const S = STR[lang];
   const body = document.getElementById("modalBody");
 
-  if (r.error === 'noFile' || r.error === 'noRows') {
-    body.innerHTML = `<div class="setup-msg">${S.advisorCannotAssess}</div>`;
+  if (r.needsProxySetup) {
+    body.innerHTML = `<div class="setup-msg">${S.kaggleSetupMsg}</div>`;
     return;
   }
   if (r.needsLocal) {
-    body.innerHTML = `
-      <div class="setup-msg" style="margin-bottom:12px;">${S.advisorNeedsLocal(r.file)}</div>
-      <div class="preview-actions"><button id="copyLocalAdvisorBtn">${S.copyAdvisor}</button></div>
-    `;
-    document.getElementById("copyLocalAdvisorBtn").onclick = (e) => {
-      navigator.clipboard.writeText(`./hf_advisor.sh ${r.id}`).then(() => flashCopied(e.target));
-    };
+    if (r.src === 'hf') {
+      body.innerHTML = `
+        <div class="setup-msg" style="margin-bottom:12px;">${S.advisorNeedsLocal(r.file)}</div>
+        <div class="preview-actions"><button id="copyLocalAdvisorBtn">${S.copyAdvisor}</button></div>
+      `;
+      document.getElementById("copyLocalAdvisorBtn").onclick = (e) => {
+        navigator.clipboard.writeText(`./hf_advisor.sh ${r.id}`).then(() => flashCopied(e.target));
+      };
+    } else {
+      body.innerHTML = `<div class="setup-msg">${S.advisorNeedsLocal(r.file)}</div>`;
+    }
     return;
   }
 
   const forList = r.reasonsFor.map(x => `<li>${x}</li>`).join('') || '<li>—</li>';
   const againstList = r.reasonsAgainst.map(x => `<li>${x}</li>`).join('') || '<li>—</li>';
+  const metaLine = r.shallow ? S.advisorShallowNote : S.advisorSampleFile(r.file);
+  const footNote = r.shallow ? '' : `<div class="preview-note" style="margin-top:12px;">${S.advisorSampleNote}</div>`;
 
   body.innerHTML = `
     <div class="advisor-head">
       <div class="dial">${dialSvgBig(r.score)}<div class="score-num" style="color:${scoreColor(r.score)}">${r.score}</div></div>
       <div>
         <div class="advisor-verdict-name" style="color:${scoreColor(r.score)}">${S.verdict[r.verdict]}</div>
-        <div class="advisor-meta">${S.advisorSampleFile(r.file)}</div>
+        <div class="advisor-meta">${metaLine}</div>
       </div>
     </div>
     <div class="advisor-section">
@@ -1275,18 +1366,18 @@ function renderAdvisorPanel(r){
       <h4>${S.bottomLine}</h4>
       <div class="advisor-bottomline">${S.bottomLines[r.verdict]}</div>
     </div>
-    <div class="preview-note" style="margin-top:12px;">${S.advisorSampleNote}</div>
+    ${footNote}
   `;
 }
 
-async function runAdvisor(id){
+async function runAdvisor(src, id){
   const S = STR[lang];
   document.getElementById("modalBreadcrumb").textContent = S.advisorBreadcrumb;
   document.getElementById("modalTitle").textContent = id;
   document.getElementById("modalBody").innerHTML = `<div class="loading-line">${S.advisorRunning}</div>`;
   openModal();
   try {
-    const result = await runAdvisorAnalysis(id);
+    const result = await runAdvisorAnalysis(src, id);
     renderAdvisorPanel(result);
   } catch (e) {
     document.getElementById("modalBody").innerHTML = `<div class="setup-msg">${S.fetchFileErr}</div>`;
@@ -1294,26 +1385,32 @@ async function runAdvisor(id){
 }
 
 async function runComparison(){
-  const ids = [...compareSet].slice(0,2);
-  if (ids.length < 2) return;
+  const pairs = [...compareSet].slice(0,2).map(k => k.split('::')); // [[src,id],[src,id]]
+  if (pairs.length < 2) return;
   const S = STR[lang];
   document.getElementById("modalBreadcrumb").textContent = S.comparisonTitle;
-  document.getElementById("modalTitle").textContent = `${ids[0]} vs ${ids[1]}`;
+  document.getElementById("modalTitle").textContent = `${pairs[0][1]} vs ${pairs[1][1]}`;
   document.getElementById("modalBody").innerHTML = `<div class="loading-line">${S.advisorRunning}</div>`;
   openModal();
   try {
-    const [r1, r2] = await Promise.all([runAdvisorAnalysis(ids[0]), runAdvisorAnalysis(ids[1])]);
-    renderComparisonPanel(ids, r1, r2);
+    const [r1, r2] = await Promise.all([
+      runAdvisorAnalysis(pairs[0][0], pairs[0][1]),
+      runAdvisorAnalysis(pairs[1][0], pairs[1][1]),
+    ]);
+    renderComparisonPanel(pairs.map(p => p[1]), r1, r2);
   } catch (e) {
     document.getElementById("modalBody").innerHTML = `<div class="setup-msg">${S.fetchFileErr}</div>`;
   }
 }
 
+function statsOf(r){
+  return r.meta ? { a: r.meta.a, b: r.meta.b } : { a: r.a || 0, b: r.b || 0 };
+}
+
 function miniAdvisorCol(id, r){
   const S = STR[lang];
-  if (r.error || r.needsLocal) {
-    return `<div class="compare-col"><h4>${id}</h4><div class="preview-note">${r.needsLocal ? S.advisorNeedsLocal(r.file) : S.advisorCannotAssess}</div></div>`;
-  }
+  if (r.needsProxySetup) return `<div class="compare-col"><h4>${id}</h4><div class="preview-note">${S.kaggleSetupMsg}</div></div>`;
+  if (r.needsLocal) return `<div class="compare-col"><h4>${id}</h4><div class="preview-note">${S.advisorNeedsLocal(r.file)}</div></div>`;
   const forList = r.reasonsFor.slice(0,4).map(x => `<li>${x}</li>`).join('') || '<li>—</li>';
   const againstList = r.reasonsAgainst.slice(0,4).map(x => `<li>${x}</li>`).join('') || '<li>—</li>';
   return `
@@ -1333,11 +1430,11 @@ function renderComparisonPanel(ids, r1, r2){
   const S = STR[lang];
   const body = document.getElementById("modalBody");
   let pick = null;
-  if (!r1.error && !r2.error && !r1.needsLocal && !r2.needsLocal) {
+  if (!r1.needsProxySetup && !r2.needsProxySetup && !r1.needsLocal && !r2.needsLocal) {
     if (r1.score !== r2.score) pick = r1.score > r2.score ? ids[0] : ids[1];
     else if (r1.licenseClass === 'permissive' && r2.licenseClass !== 'permissive') pick = ids[0];
     else if (r2.licenseClass === 'permissive' && r1.licenseClass !== 'permissive') pick = ids[1];
-    else pick = r1.meta.downloads >= r2.meta.downloads ? ids[0] : ids[1];
+    else { const s1 = statsOf(r1), s2 = statsOf(r2); pick = s1.a >= s2.a ? ids[0] : ids[1]; }
   }
   body.innerHTML = `
     <div class="compare-columns">
@@ -1354,6 +1451,43 @@ document.addEventListener("keydown", e => { if (e.key === "Escape") closeModal()
 
 applyStaticText();
 </script>
+
+    <script>
+        // PWA Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/my-pwa-apps/dssearch/sw.js', { scope: '/my-pwa-apps/dssearch/' })
+                    .then(registration => {
+                        console.log('[PWA] Service Worker registered:', registration.scope);
+                    })
+                    .catch(error => {
+                        console.error('[PWA] Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('[PWA] App can be installed');
+        });
+
+        // Call this function from a custom install button in your UI
+        async function installPWA() {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+            console.log('[PWA] Install prompt outcome:', outcome);
+            deferredPrompt = null;
+        }
+
+        window.addEventListener('appinstalled', () => {
+            console.log('[PWA] App installed successfully');
+            deferredPrompt = null;
+        });
+    </script>
 </body>
 </html>
 
