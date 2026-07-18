@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>hfpower-search — find the right dataset</title>
+<title>dspower-search — find the right dataset</title>
 <meta name="theme-color" content="#12232E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&family=Noto+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
@@ -186,15 +186,15 @@
   @media (max-width:640px){header{flex-direction:column;}.searchrow{flex-direction:column;}.searchrow button{padding:12px;}}
   @media (prefers-reduced-motion: reduce){*{transition:none !important;}}
 </style>
-    <link rel="manifest" href="/my-pwa-apps/dssearch/manifest.json">
+    <link rel="manifest" href="/dssearch/manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link rel="apple-touch-icon" href="/my-pwa-apps/dssearch/icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="/dssearch/icons/icon-192x192.png">
 </head>
 <body>
 
 <header>
   <div class="brand">
-    <h1 id="titleText">hfpower<span>search</span></h1>
+    <h1 id="titleText">dspower<span>search</span></h1>
     <p id="taglineText"></p>
   </div>
   <div class="lang-toggle">
@@ -280,7 +280,7 @@
 /* =========================================================
    CONFIG
    ========================================================= */
-const KAGGLE_PROXY_URL = "https://hfpower-kaggle-proxy.yabaggi.workers.dev"; // e.g. "https://hfpower-kaggle-proxy.yoursubdomain.workers.dev"
+const KAGGLE_PROXY_URL = "https://hfpower-kaggle-proxy.yabaggi.workers.dev"; // e.g. "https://dspower-kaggle-proxy.yoursubdomain.workers.dev"
 const PREVIEW_BYTE_LIMIT = 300000; // ~300KB preview cap per file
 const ADVISOR_BYTE_LIMIT = 1500000; // ~1.5MB sample cap for the in-browser advisor run
 
@@ -289,7 +289,7 @@ const ADVISOR_BYTE_LIMIT = 1500000; // ~1.5MB sample cap for the in-browser advi
    ========================================================= */
 const STR = {
   en: {
-    title1:"hfpower", title2:"search",
+    title1:"dspower", title2:"search",
     tagline:"A guided way to find the right dataset across Hugging Face, GitHub, and Kaggle — then browse its files and preview content, right here.",
     guideTitle:"1. What are you looking for?",
     guideSub:"Pick a source, narrow by type/size/language, then search.",
@@ -407,7 +407,7 @@ const STR = {
     ],
   },
   ar: {
-    title1:"hfpower", title2:"search",
+    title1:"dspower", title2:"search",
     tagline:"طريقة موجّهة للعثور على مجموعة البيانات المناسبة عبر Hugging Face وGitHub وKaggle — ثم تصفّح ملفاتها ومعاينة محتواها من هنا مباشرة.",
     guideTitle:"١. عن ماذا تبحث؟",
     guideSub:"اختر مصدرًا، صفّي حسب النوع/الحجم/اللغة، ثم ابحث.",
@@ -1456,7 +1456,7 @@ applyStaticText();
         // PWA Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/my-pwa-apps/dssearch/sw.js', { scope: '/my-pwa-apps/dssearch/' })
+                navigator.serviceWorker.register('/dssearch/sw.js', { scope: '/dssearch/' })
                     .then(registration => {
                         console.log('[PWA] Service Worker registered:', registration.scope);
                     })

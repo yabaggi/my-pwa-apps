@@ -1,35 +1,35 @@
 {
   "id": "dssearch-id",
-  "name": "hfpower-search — find the right dataset",
-  "short_name": "hfpower-sear",
+  "name": "dspower-search — find the right dataset",
+  "short_name": "dspower-sear",
   "description": "",
-  "start_url": "/my-pwa-apps/dssearch/",
-  "scope": "/my-pwa-apps/dssearch/",
+  "start_url": "/dssearch/",
+  "scope": "/dssearch/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#12232e",
   "background_color": "#ffffff",
   "icons": [
     {
-      "src": "/my-pwa-apps/dssearch/icons/icon-72x72.png",
+      "src": "/dssearch/icons/icon-72x72.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/my-pwa-apps/dssearch/icons/icon-192x192.png",
+      "src": "/dssearch/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/my-pwa-apps/dssearch/icons/icon-384x384.png",
+      "src": "/dssearch/icons/icon-384x384.png",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/my-pwa-apps/dssearch/icons/icon-512x512.png",
+      "src": "/dssearch/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
